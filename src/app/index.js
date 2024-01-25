@@ -1,6 +1,4 @@
-import {useCallback, useContext, useEffect, useState} from 'react';
 import {Routes, Route} from 'react-router-dom';
-import useSelector from "@src/hooks/use-selector";
 import useStore from "@src/hooks/use-store";
 import useInit from "@src/hooks/use-init";
 import Main from "./main";
@@ -10,6 +8,8 @@ import Login from "./login";
 import Profile from "./profile";
 import Protected from "@src/containers/protected";
 import {useSelector as useSelectorRedux} from 'react-redux';
+
+import CountToAdd from '@src/containers/count-to-add';
 
 /**
  * Приложение
@@ -34,6 +34,7 @@ function App() {
       </Routes>
 
       {activeModal === 'basket' && <Basket/>}
+      {activeModal === 'countToAdd' && <CountToAdd />}
     </>
   );
 }

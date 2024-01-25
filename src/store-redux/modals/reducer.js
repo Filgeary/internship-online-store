@@ -1,6 +1,7 @@
 // Начальное состояние
 const initialState = {
-  name: ''
+  // name: 'countToAdd'
+  name: '',
 }
 
 // Обработчик действий

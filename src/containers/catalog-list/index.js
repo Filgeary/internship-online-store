@@ -1,4 +1,4 @@
-import {memo, useCallback} from "react";
+import {memo, useCallback, useEffect} from "react";
 import useStore from "@src/hooks/use-store";
 import useSelector from "@src/hooks/use-selector";
 import useTranslate from "@src/hooks/use-translate";
@@ -7,8 +7,12 @@ import List from "@src/components/list";
 import Pagination from "@src/components/pagination";
 import Spinner from "@src/components/spinner";
 
+import { useDispatch } from "react-redux";
+import modalsActions from '@src/store-redux/modals/actions';
+
 function CatalogList() {
   const store = useStore();
+  const dispatch = useDispatch();
 
   const select = useSelector(state => ({
     list: state.catalog.list,
@@ -18,6 +22,10 @@ function CatalogList() {
     waiting: state.catalog.waiting,
   }));
 
+  useEffect(() => {
+    console.log(select.list);
+  }, [select.list]);
+
   const callbacks = {
     // Добавление в корзину
     addToBasket: useCallback(_id => store.actions.basket.addToBasket(_id), [store]),
@@ -26,14 +34,23 @@ function CatalogList() {
     // генератор ссылки для пагинатора
     makePaginatorLink: useCallback((page) => {
       return `?${new URLSearchParams({page, limit: select.limit, sort: select.sort, query: select.query})}`;
-    }, [select.limit, select.sort, select.query])
-  }
+    }, [select.limit, select.sort, select.query]),
+    // Открыть модалку с выбором количества товара для добавления
+    openModalOfCount: useCallback((_id) => {
+      console.log(select.list, '<--');
+      store.actions.basket.setActive(
+        _id
+        // select.list.find((elem) => elem._id === _id),
+      );
+      dispatch(modalsActions.open('countToAdd'));
+    }, [select.list]),
+  };
 
   const {t} = useTranslate();
 
   const renders = {
     item: useCallback(item => (
-      <Item item={item} onAdd={callbacks.addToBasket} link={`/articles/${item._id}`} labelAdd={t('article.add')}/>
+      <Item item={item} onAdd={callbacks.openModalOfCount} link={`/articles/${item._id}`} labelAdd={t('article.add')} />
     ), [callbacks.addToBasket, t]),
   };
 

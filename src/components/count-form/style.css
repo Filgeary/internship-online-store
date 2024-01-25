@@ -1,0 +1,35 @@
+.CountForm {
+  display: flex;
+  justify-content: center;
+}
+
+.CountForm-row {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  row-gap: 15px;
+}
+
+.CountForm-field {
+  display: flex;
+  column-gap: 10px;
+  align-items: center;
+}
+
+.CountForm-input {
+  padding: 5px;
+}
+
+.CountForm-footer {
+  display: flex;
+  column-gap: 7.5px;
+}
+
+.CountForm-button {
+  padding: 5px 15px;
+  cursor: pointer;
+
+  &:disabled {
+    cursor: default;
+  }
+}
