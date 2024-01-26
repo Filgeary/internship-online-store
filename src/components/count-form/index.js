@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import './style.css';
@@ -7,6 +7,7 @@ import { cn as bem } from '@bem-react/classname';
 function CountForm(props) {
   const cn = bem('CountForm');
 
+  const inputRef = useRef(null);
   const [count, setCount] = useState(1);
   const isSubmitDisabled = count == 0 || props.isSuccess;
 
@@ -61,6 +62,10 @@ function CountForm(props) {
     paste: (e) => e.preventDefault(),
   };
 
+  useEffect(() => {
+    inputRef.current.focus();
+  }, []);
+
   return (
     <form onSubmit={callbacks.submit} className={cn()}>
 
@@ -88,6 +93,7 @@ function CountForm(props) {
             onPaste={handlers.paste}
             value={count}
             placeholder="0-999"
+            ref={inputRef}
           />
         </div>
 
@@ -113,6 +119,7 @@ CountForm.propTypes = {
   labelOfCancel: PropTypes.string,
   labelOfOk: PropTypes.string,
   successText: PropTypes.func,
+  initialFocus: PropTypes.bool,
 };
 
 CountForm.defaultProps = {
@@ -120,6 +127,7 @@ CountForm.defaultProps = {
   labelOfCancel: 'Отмена',
   labelOfOk: 'Ok',
   successText: () => {},
+  initialFocus: false,
 };
 
 export default CountForm;

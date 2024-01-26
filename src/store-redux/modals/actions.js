@@ -11,7 +11,7 @@ export default {
    * Закрытие модалки
    * @param dataObj
    */
-  close: (dataObj = {}) => {
-    return {type: 'modal/close', payload: { dataObj }}
+  close: (dataObj) => {
+    return {type: 'modal/close', payload: dataObj}
   }
 }

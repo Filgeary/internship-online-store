@@ -29,14 +29,27 @@ function CountToAdd() {
     },
 
     closeModal: useCallback((willBeAdd = isSuccess) => {
-      // Альтернатива эффекту в catalog-list
+      // Альтернатива эффекту в app/main
       // if (willBeAdd) {
-      //   store.actions.basket.addToBasket(
-      //     select.activeItemBasket._id,
-      //     select.activeItemBasket.countToAdd,
-      //   );
+        // store.actions.basket.addToBasket(
+        //   select.activeItemBasket._id,
+        //   select.activeItemBasket.countToAdd,
+        // );
       // }
-      dispatch(modalsActions.close({ willBeAdd }));
+
+      // Был вариант с добавлением bool-значения и проверкой значения
+      // В самом эффекте app/main и последующим вызовом функции
+      // dispatch(modalsActions.close({ willBeAdd })); 
+
+      const addToBasket = () => {
+        store.actions.basket.addToBasket(
+          select.activeItemBasket._id,
+          select.activeItemBasket.countToAdd,
+        );
+      };
+
+      const catalogFn = willBeAdd ? addToBasket : null;
+      dispatch(modalsActions.close({ catalogFn }));
     }, [store, isSuccess]),
 
     cancel() {
@@ -46,7 +59,7 @@ function CountToAdd() {
   };
 
   const renders = {
-    successText: (count) => t('countModal.success').replace(/\[:count:\]/i, count), 
+    successText: (count) => t('countModal.success').replace(/\[:count:\]/gi, count), 
   };
 
   return (
@@ -64,6 +77,7 @@ function CountToAdd() {
         labelOfCancel={t('countModal.cancel')}
         labelOfOk={t('countModal.ok')}
         successText={renders.successText}
+        initialFocus={true}
       />
     </Modal>
   );

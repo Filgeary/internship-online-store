@@ -24,10 +24,6 @@ function CatalogList() {
     activeItemBasket: state.basket.active,
   }));
 
-  const selectRedux = useSelectorRedux((state) => ({
-    dataObj: state.modals.dataObj,
-  }))
-
   const callbacks = {
     // Добавление в корзину
     addToBasket: useCallback(_id => store.actions.basket.addToBasket(_id), [store]),
@@ -55,15 +51,6 @@ function CatalogList() {
       <Item item={item} onAdd={callbacks.openModalOfCount} link={`/articles/${item._id}`} labelAdd={t('article.add')} />
     ), [callbacks.addToBasket, callbacks.openModalOfCount, t]),
   };
-
-  useEffect(() => {
-    if (selectRedux.dataObj?.willBeAdd) {
-      store.actions.basket.addToBasket(
-        select.activeItemBasket._id,
-        select.activeItemBasket.countToAdd,
-      );
-    }
-  }, [select.activeItemBasket, selectRedux.dataObj]);
 
   return (
     <Spinner active={select.waiting}>

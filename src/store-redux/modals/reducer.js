@@ -11,7 +11,7 @@ function reducer(state = initialState, action) {
     case 'modal/open':
       return {...state, name: action.payload.name, dataObj: {}};
     case 'modal/close':
-      return {...state, name: null, dataObj: action.payload.dataObj};
+      return {...state, name: null, dataObj: action.payload};
     default:
       return state;
   }
