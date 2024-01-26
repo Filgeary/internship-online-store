@@ -27,9 +27,9 @@ class BasketState extends StoreModule {
       let result = item;
       if (item._id === _id) {
         exist = true; // Запомним, что был найден в корзине
-        if (item.amount + count <= 999) {
-          result = {...item, amount: item.amount + count};
-        }
+        // if (item.amount + count <= 999) {
+        result = {...item, amount: item.amount + count};
+        // }
       }
       sum += result.price * result.amount;
       return result;
@@ -73,10 +73,10 @@ class BasketState extends StoreModule {
     }, 'Удаление из корзины');
   }
 
-  setActive(_id) {
+  setActive(item) {
     this.setState({
       ...this.getState(),
-      active: _id
+      active: item
     });
   }
 }

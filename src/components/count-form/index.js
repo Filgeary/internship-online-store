@@ -58,7 +58,7 @@ function CountForm(props) {
             Отмена
           </button>
           <button disabled={isSubmitDisabled} className={cn('button')} type="submit">
-            В корзину
+            Ок
           </button>
         </div>
       </div>

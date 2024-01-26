@@ -15,12 +15,9 @@ function CountToAdd() {
     activeItemBasket: state.basket.active,
   }));
 
-  console.log('Basket active:', select.activeItemBasket);
-
   const callbacks = {
     onSubmit: (data) => {
-      console.log(data);
-      store.actions.basket.addToBasket(select.activeItemBasket, Number(data.count));
+      store.actions.basket.addToBasket(select.activeItemBasket._id, Number(data.count));
       dispatch(modalsActions.close());
     },
 
@@ -28,7 +25,6 @@ function CountToAdd() {
       dispatch(modalsActions.close());
     }, [store]),
   };
-
 
   return (
     <Modal title="Введите количество">

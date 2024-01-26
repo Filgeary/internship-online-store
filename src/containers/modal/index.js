@@ -19,7 +19,7 @@ function Modal({children, ...props}) {
   };
 
   return (
-    <ModalLayout {...props} onClose={callbacks.closeModal}>
+    <ModalLayout {...props} onClose={props.onClose || callbacks.closeModal}>
       {children}
     </ModalLayout>    
   );
@@ -30,6 +30,7 @@ Modal.propTypes = {
   title: PropTypes.string,
   children: PropTypes.node,
   labelClose: PropTypes.string,
+  onClose: PropTypes.func,
 };
 
 Modal.defaultProps = {

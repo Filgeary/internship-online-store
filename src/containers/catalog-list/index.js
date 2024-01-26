@@ -22,10 +22,6 @@ function CatalogList() {
     waiting: state.catalog.waiting,
   }));
 
-  useEffect(() => {
-    console.log(select.list);
-  }, [select.list]);
-
   const callbacks = {
     // Добавление в корзину
     addToBasket: useCallback(_id => store.actions.basket.addToBasket(_id), [store]),
@@ -36,11 +32,11 @@ function CatalogList() {
       return `?${new URLSearchParams({page, limit: select.limit, sort: select.sort, query: select.query})}`;
     }, [select.limit, select.sort, select.query]),
     // Открыть модалку с выбором количества товара для добавления
-    openModalOfCount: useCallback((_id) => {
-      console.log(select.list, '<--');
+    openModalOfCount: useCallback((item) => {
       store.actions.basket.setActive(
-        _id
+        // _id
         // select.list.find((elem) => elem._id === _id),
+        item
       );
       dispatch(modalsActions.open('countToAdd'));
     }, [select.list]),
@@ -51,7 +47,7 @@ function CatalogList() {
   const renders = {
     item: useCallback(item => (
       <Item item={item} onAdd={callbacks.openModalOfCount} link={`/articles/${item._id}`} labelAdd={t('article.add')} />
-    ), [callbacks.addToBasket, t]),
+    ), [callbacks.addToBasket, callbacks.openModalOfCount, t]),
   };
 
   return (
