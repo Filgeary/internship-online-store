@@ -41,8 +41,9 @@ function CountForm(props) {
 
     keyDown: (e) => {
       const tabCode = 9;
-      const backSpaceCode = 0;
-      const notBeAffectedCodes = [tabCode, backSpaceCode];
+      const backSpaceCode = 8;
+      const [arrowDown, arrowUp] = [40, 38];
+      const notBeAffectedCodes = [tabCode, backSpaceCode, arrowDown, arrowUp];
 
       const higherWillBeOnlyNums = 48;
 
@@ -72,7 +73,7 @@ function CountForm(props) {
             type="number"
             name="count"
             id="count"
-            min={1}
+            min={0}
             max={999}
             onKeyDown={handlers.keyDown}
             onChange={handlers.countChange}

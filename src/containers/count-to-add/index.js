@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
 import useStore from '@src/hooks/use-store';
@@ -28,8 +28,8 @@ function CountToAdd() {
       // dispatch(modalsActions.close());
     },
 
-    closeModal: useCallback(() => {
-      if (isSuccess) {
+    closeModal: useCallback((willBeAdd = isSuccess) => {
+      if (willBeAdd) {
         store.actions.basket.addToBasket(
           select.activeItemBasket._id,
           select.activeItemBasket.countToAdd,
@@ -37,6 +37,11 @@ function CountToAdd() {
       }
       dispatch(modalsActions.close());
     }, [store, isSuccess]),
+
+    cancel() {
+      setIsSuccess(false);
+      callbacks.closeModal(false);
+    },
   };
 
   const renders = {
@@ -52,7 +57,7 @@ function CountToAdd() {
       <CountForm
         isSuccess={isSuccess}
         setIsSuccess={setIsSuccess}
-        onCancel={callbacks.closeModal}
+        onCancel={() => callbacks.cancel()}
         onSubmit={callbacks.onSubmit}
         labelOfInput={t('countModal.countInput')}
         labelOfCancel={t('countModal.cancel')}
