@@ -20,5 +20,11 @@
   "auth.password": "Password",
   "auth.signIn": "Sign in",
   "session.signIn": "Sign In",
-  "session.signOut": "Sign Out"
+  "session.signOut": "Sign Out",
+  "countModal.title": "Enter the count",
+  "countModal.close": "Close",
+  "countModal.countInput": "Enter the count",
+  "countModal.cancel": "Cancel",
+  "countModal.ok": "Ok",
+  "countModal.success": "Product quantity [:count:] pcs. will be added to cart."
 }

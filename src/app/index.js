@@ -1,3 +1,5 @@
+import { useRef } from 'react';
+
 import {Routes, Route} from 'react-router-dom';
 import useStore from "@src/hooks/use-store";
 import useInit from "@src/hooks/use-init";
@@ -15,6 +17,7 @@ import  AllModals from '@src/containers/all-modals';
  */
 function App() {
   const store = useStore();
+  const contentRef = useRef(null);
 
   useInit(async () => {
     await store.actions.session.remind();
@@ -22,14 +25,18 @@ function App() {
 
   return (
     <>
-      <Routes>
-        <Route path={''} element={<Main/>}/>
-        <Route path={'/articles/:id'} element={<Article/>}/>
-        <Route path={"/login"} element={<Login/>}/>
-        <Route path={"/profile"} element={<Protected redirect='/login'><Profile/></Protected>}/>
-      </Routes>
+      <div ref={contentRef}>
+        <Routes>
+          <Route path={''} element={<Main/>}/>
+          <Route path={'/articles/:id'} element={<Article/>}/>
+          <Route path={"/login"} element={<Login/>}/>
+          <Route path={"/profile"} element={<Protected redirect='/login'><Profile/></Protected>}/>
+        </Routes>
+      </div>
 
-      <AllModals />
+      <AllModals
+        toDisableFocus={contentRef}
+      />
     </>
   );
 }

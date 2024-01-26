@@ -79,6 +79,16 @@ class BasketState extends StoreModule {
       active: item
     });
   }
+
+  setCountToAdd(count) {
+    this.setState({
+      ...this.getState(),
+      active: {
+        ...this.getState().active,
+        countToAdd: count,
+      }
+    })
+  }
 }
 
 export default BasketState;

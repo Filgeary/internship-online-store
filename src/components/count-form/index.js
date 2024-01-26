@@ -8,7 +8,7 @@ function CountForm(props) {
   const cn = bem('CountForm');
 
   const [count, setCount] = useState(1);
-  const isSubmitDisabled = count == 0;
+  const isSubmitDisabled = count == 0 || props.isSuccess;
 
   const callbacks = {
     submit: (e) => {
@@ -24,6 +24,7 @@ function CountForm(props) {
 
   const handlers = {
     countChange: (e) => {
+      props.setIsSuccess(false);
       const isEmpty = e.target.value === '';
 
       // Чтобы пользователь мог стереть (т.к. Math-операции преобразуют в '' -> 0)
@@ -32,21 +33,48 @@ function CountForm(props) {
         return;
       }
 
-      const count = Math.abs(e.target.value);
-      setCount(Math.min(count, options.maxVal));
+      // Для избежания лидирующих нулей (05 ; 020)
+      const value = Number(e.target.value);
+      const res = Math.min(value, options.maxVal);
+      setCount(res.toString());
+    },
+
+    keyDown: (e) => {
+      const tabCode = 9;
+      const backSpaceCode = 0;
+      const notBeAffectedCodes = [tabCode, backSpaceCode];
+
+      const higherWillBeOnlyNums = 48;
+
+      if (e.keyCode < higherWillBeOnlyNums && !notBeAffectedCodes.includes(e.keyCode)) {
+        e.preventDefault();
+      }
     },
   };
 
   return (
     <form onSubmit={callbacks.submit} className={cn()}>
+
       <div className={cn('row')}>
+        {
+          props.isSuccess &&
+          <h3
+            className={cn('title', { success: true })}
+          >
+            {props.successText(count)}
+          </h3>
+        }
+
         <div className={cn('field')}>
-          <label htmlFor="count">Введите количество:</label>
+          <label htmlFor="count">{props.labelOfInput}:</label>
           <input
             className={cn('input')}
             type="number"
             name="count"
             id="count"
+            min={1}
+            max={999}
+            onKeyDown={handlers.keyDown}
             onChange={handlers.countChange}
             value={count}
             placeholder="0-999"
@@ -55,10 +83,10 @@ function CountForm(props) {
 
         <div className={cn('footer')}>
           <button className={cn('button')} type="button" onClick={props.onCancel}>
-            Отмена
+            {props.labelOfCancel}
           </button>
           <button disabled={isSubmitDisabled} className={cn('button')} type="submit">
-            Ок
+            {props.labelOfOk}
           </button>
         </div>
       </div>
@@ -69,6 +97,19 @@ function CountForm(props) {
 CountForm.propTypes = {
   onSubmit: PropTypes.func,
   onCancel: PropTypes.func,
+  isSuccess: PropTypes.bool,
+  setIsSuccess: PropTypes.func,
+  labelOfInput: PropTypes.string,
+  labelOfCancel: PropTypes.string,
+  labelOfOk: PropTypes.string,
+  successText: PropTypes.func,
+};
+
+CountForm.defaultProps = {
+  labelOfInput: 'Введите количество',
+  labelOfCancel: 'Отмена',
+  labelOfOk: 'Ok',
+  successText: () => {},
 };
 
 export default CountForm;

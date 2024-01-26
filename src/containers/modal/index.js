@@ -25,7 +25,6 @@ function Modal({children, ...props}) {
   );
 }
 
-
 Modal.propTypes = {
   title: PropTypes.string,
   children: PropTypes.node,

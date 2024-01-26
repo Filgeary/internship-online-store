@@ -33,3 +33,15 @@
     cursor: default;
   }
 }
+
+.CountForm-title {
+  padding: 7.5px 15px;
+  border-radius: 2px;
+  max-width: 320px;
+  text-align: center;
+}
+
+.CountForm-title_success {
+  background-color: green;
+  color: #fff;
+}
