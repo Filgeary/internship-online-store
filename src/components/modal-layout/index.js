@@ -1,10 +1,9 @@
-import {memo, useEffect, useRef} from "react";
+import React, {memo, useEffect, useRef} from "react";
 import PropTypes from "prop-types";
 import {cn as bem} from '@bem-react/classname';
 import './style.css';
 
-function ModalLayout(props) {
-
+const ModalLayout = React.forwardRef((props, outerRef) => {
   const cn = bem('ModalLayout');
 
   // Корректировка центра, если модалка больше окна браузера.
@@ -29,12 +28,19 @@ function ModalLayout(props) {
     }
   }, []);
 
+  const callbacks = {
+    close: (e) => {
+      e.preventDefault();
+      props.onClose();
+    }
+  };
+
   return (
     <div className={cn()} ref={layout}>
-      <div className={cn('frame')} ref={frame}>
+      <div className={cn('frame')} ref={(el) => { frame.current = el; outerRef.current = el}}>
         <div className={cn('head')}>
           <h1 className={cn('title')}>{props.title}</h1>
-          <button className={cn('close')} onClick={props.onClose}>{props.labelClose}</button>
+          <button className={cn('close')} onClick={callbacks.close}>{props.labelClose}</button>
         </div>
         <div className={cn('content')}>
           {props.children}
@@ -42,7 +48,7 @@ function ModalLayout(props) {
       </div>
     </div>
   );
-}
+});
 
 ModalLayout.propTypes = {
   title: PropTypes.string,
@@ -54,8 +60,7 @@ ModalLayout.propTypes = {
 ModalLayout.defaultProps = {
   title: 'Модалка',
   labelClose: 'Закрыть',
-  onClose: () => {
-  }
+  onClose: () => {}
 };
 
-export default memo(ModalLayout);
+export default ModalLayout;

@@ -40,17 +40,25 @@ function CountForm(props) {
     },
 
     keyDown: (e) => {
-      const tabCode = 9;
-      const backSpaceCode = 8;
+      const [tabCode, backSpaceCode, enterCode] = [9, 8, 13];
+      const [minusCode, plusCode] = [189, 187];
       const [arrowDown, arrowUp] = [40, 38];
-      const notBeAffectedCodes = [tabCode, backSpaceCode, arrowDown, arrowUp];
+
+      const notBeAffectedCodes = [tabCode, backSpaceCode, arrowDown, arrowUp, enterCode];
+      const affectedReject = [minusCode, plusCode];
 
       const higherWillBeOnlyNums = 48;
 
-      if (e.keyCode < higherWillBeOnlyNums && !notBeAffectedCodes.includes(e.keyCode)) {
+      if (
+        (e.keyCode < higherWillBeOnlyNums && !notBeAffectedCodes.includes(e.keyCode))
+        ||
+        affectedReject.includes(e.keyCode)
+      ) {
         e.preventDefault();
       }
     },
+
+    paste: (e) => e.preventDefault(),
   };
 
   return (
@@ -77,6 +85,7 @@ function CountForm(props) {
             max={999}
             onKeyDown={handlers.keyDown}
             onChange={handlers.countChange}
+            onPaste={handlers.paste}
             value={count}
             placeholder="0-999"
           />

@@ -9,9 +9,9 @@ export default {
 
   /**
    * Закрытие модалки
-   * @param name
+   * @param dataObj
    */
-  close: () => {
-    return {type: 'modal/close'}
+  close: (dataObj = {}) => {
+    return {type: 'modal/close', payload: { dataObj }}
   }
 }

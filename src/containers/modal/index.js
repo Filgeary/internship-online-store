@@ -1,16 +1,19 @@
 import PropTypes from 'prop-types';
 
-import React, { useCallback, createContext } from 'react';
+import React, { useCallback, useRef, memo } from 'react';
 import { useDispatch } from 'react-redux';
 
 import useStore from '@src/hooks/use-store';
 import modalsActions from '@src/store-redux/modals/actions';
 
 import ModalLayout from '@src/components/modal-layout';
+import useOnClickOutside from '@src/hooks/use-on-click-outside';
 
-function Modal({children, ...props}) {
+const Modal = ({children, ...props}) => {
   const store = useStore();
   const dispatch = useDispatch();
+
+  const modalRef = useRef(null);
 
   const callbacks = {
     closeModal: useCallback(() => {
@@ -18,12 +21,20 @@ function Modal({children, ...props}) {
     }, [store]),
   };
 
+  const closeHandler = props.onClose || callbacks.closeModal;
+
+  useOnClickOutside(modalRef, closeHandler);
+
   return (
-    <ModalLayout {...props} onClose={props.onClose || callbacks.closeModal}>
+    <ModalLayout
+      {...props}
+      ref={modalRef}
+      onClose={closeHandler}
+    >
       {children}
     </ModalLayout>    
   );
-}
+};
 
 Modal.propTypes = {
   title: PropTypes.string,
@@ -37,4 +48,4 @@ Modal.defaultProps = {
   labelClose: 'Закрыть',
 };
 
-export default Modal;
+export default memo(Modal);

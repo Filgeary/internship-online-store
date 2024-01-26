@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 
 import useStore from '@src/hooks/use-store';
@@ -29,13 +29,14 @@ function CountToAdd() {
     },
 
     closeModal: useCallback((willBeAdd = isSuccess) => {
-      if (willBeAdd) {
-        store.actions.basket.addToBasket(
-          select.activeItemBasket._id,
-          select.activeItemBasket.countToAdd,
-        );
-      }
-      dispatch(modalsActions.close());
+      // Альтернатива эффекту в catalog-list
+      // if (willBeAdd) {
+      //   store.actions.basket.addToBasket(
+      //     select.activeItemBasket._id,
+      //     select.activeItemBasket.countToAdd,
+      //   );
+      // }
+      dispatch(modalsActions.close({ willBeAdd }));
     }, [store, isSuccess]),
 
     cancel() {

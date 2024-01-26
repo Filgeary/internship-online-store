@@ -7,7 +7,7 @@ import List from "@src/components/list";
 import Pagination from "@src/components/pagination";
 import Spinner from "@src/components/spinner";
 
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector as useSelectorRedux } from "react-redux";
 import modalsActions from '@src/store-redux/modals/actions';
 
 function CatalogList() {
@@ -20,7 +20,13 @@ function CatalogList() {
     limit: state.catalog.params.limit,
     count: state.catalog.count,
     waiting: state.catalog.waiting,
+
+    activeItemBasket: state.basket.active,
   }));
+
+  const selectRedux = useSelectorRedux((state) => ({
+    dataObj: state.modals.dataObj,
+  }))
 
   const callbacks = {
     // Добавление в корзину
@@ -49,6 +55,15 @@ function CatalogList() {
       <Item item={item} onAdd={callbacks.openModalOfCount} link={`/articles/${item._id}`} labelAdd={t('article.add')} />
     ), [callbacks.addToBasket, callbacks.openModalOfCount, t]),
   };
+
+  useEffect(() => {
+    if (selectRedux.dataObj?.willBeAdd) {
+      store.actions.basket.addToBasket(
+        select.activeItemBasket._id,
+        select.activeItemBasket.countToAdd,
+      );
+    }
+  }, [select.activeItemBasket, selectRedux.dataObj]);
 
   return (
     <Spinner active={select.waiting}>
