@@ -2,13 +2,14 @@ import Basket from "@src/app/basket";
 import CountForm from "@src/components/count-form";
 import useSelector from "@src/hooks/use-selector";
 import useStore from "@src/hooks/use-store";
-import PropTypes from "prop-types";
 import React, { memo, useCallback } from "react";
 import { useDispatch } from "react-redux";
 import modalsActions from "@src/store-redux/modals/actions";
 import useTranslate from "@src/hooks/use-translate";
+import { useSelector as useSelectorRedux } from "react-redux";
 
-const Modals = ({ activeModal }) => {
+const Modals = () => {
+  const activeModal = useSelectorRedux((state) => state.modals.name);
   const id = useSelector((state) => state.basket.active);
   const dispatch = useDispatch();
   const store = useStore();
@@ -48,11 +49,5 @@ const Modals = ({ activeModal }) => {
     </>
   );
 };
-
-Modals.propTypes = {
-  activeModal: PropTypes.string,
-};
-
-Modals.defaultProps = {};
 
 export default memo(Modals);
