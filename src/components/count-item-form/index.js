@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, memo } from "react";
 import PropTypes from "prop-types";
 import { cn as bem } from "@bem-react/classname";
 import 'style.css';
@@ -53,4 +53,4 @@ CountItemForm.propTypes = {
   onSubmit: PropTypes.func,
 };
 
-export default CountItemForm;
+export default memo(CountItemForm);

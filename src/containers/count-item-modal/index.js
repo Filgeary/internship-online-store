@@ -28,7 +28,7 @@ function CountItemModal() {
       dispatch(modalsActions.close());
     }, [store, select.activeItem]),
     onSubmit: (count) => {
-      store.actions.basket.setCount(count);
+      store.actions.basket.setCount(+count);
     },
   };
 
