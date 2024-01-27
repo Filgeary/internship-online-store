@@ -6,9 +6,12 @@ import Item from "@src/components/item";
 import List from "@src/components/list";
 import Pagination from "@src/components/pagination";
 import Spinner from "@src/components/spinner";
+import {useDispatch} from "react-redux";
+import modalsActions from "@src/store-redux/modals/actions";
 
 function CatalogList() {
   const store = useStore();
+  const dispatch = useDispatch()
 
   const select = useSelector(state => ({
     list: state.catalog.list,
@@ -20,7 +23,10 @@ function CatalogList() {
 
   const callbacks = {
     // Добавление в корзину
-    addToBasket: useCallback(_id => store.actions.basket.addToBasket(_id), [store]),
+    addToBasket: useCallback(_id => {
+      store.actions.basket.addToBasket(_id)
+      dispatch(modalsActions.open('adding'));
+    }, [store]),
     // Пагинация
     onPaginate: useCallback(page => store.actions.catalog.setParams({page}), [store]),
     // генератор ссылки для пагинатора

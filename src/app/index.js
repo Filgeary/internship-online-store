@@ -10,6 +10,7 @@ import Login from "./login";
 import Profile from "./profile";
 import Protected from "@src/containers/protected";
 import {useSelector as useSelectorRedux} from 'react-redux';
+import AddToBasket from "src/app/add-to-basket";
 
 /**
  * Приложение
@@ -33,7 +34,8 @@ function App() {
         <Route path={"/profile"} element={<Protected redirect='/login'><Profile/></Protected>}/>
       </Routes>
 
-      {activeModal === 'basket' && <Basket/>}
+      {activeModal === 'basket' && <Basket/>
+      || activeModal === 'adding' && <AddToBasket/>}
     </>
   );
 }
