@@ -27,9 +27,7 @@ class BasketState extends StoreModule {
       let result = item;
       if (item._id === _id) {
         exist = true; // Запомним, что был найден в корзине
-        // if (item.amount + count <= 999) {
         result = {...item, amount: item.amount + count};
-        // }
       }
       sum += result.price * result.amount;
       return result;
@@ -49,7 +47,8 @@ class BasketState extends StoreModule {
       ...this.getState(),
       list,
       sum,
-      amount: list.length
+      amount: list.length,
+      active: null,
     }, 'Добавление в корзину');
   }
 
@@ -73,6 +72,10 @@ class BasketState extends StoreModule {
     }, 'Удаление из корзины');
   }
 
+  /**
+   * Добавление активного элемента
+   * @param item
+   */
   setActive(item) {
     this.setState({
       ...this.getState(),
@@ -80,6 +83,20 @@ class BasketState extends StoreModule {
     });
   }
 
+  /**
+   * Удаление активного элемента
+   */
+  resetActive() {
+    this.setState({
+      ...this.getState(),
+      active: null,
+    });
+  }
+
+  /**
+   * Добавление к активному элементу количества
+   * @param count
+   */
   setCountToAdd(count) {
     this.setState({
       ...this.getState(),
@@ -87,7 +104,7 @@ class BasketState extends StoreModule {
         ...this.getState().active,
         countToAdd: count,
       }
-    })
+    });
   }
 }
 

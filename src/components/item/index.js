@@ -10,18 +10,22 @@ function Item(props){
   const cn = bem('Item');
 
   const callbacks = {
-    onAdd: (e) => props.onAdd(props.item),
-  }
+    onAdd: () => props.onAdd(props.item),
+  };
 
   return (
     <div className={cn()}>
-      {/*<div className={cn('code')}>{props.item._id}</div>*/}
       <div className={cn('title')}>
         <Link to={props.link}>{props.item.title}</Link>
       </div>
       <div className={cn('actions')}>
         <div className={cn('price')}>{numberFormat(props.item.price)} {props.labelCurr}</div>
-        <button onClick={callbacks.onAdd}>{props.labelAdd}</button>
+        <button
+          onClick={callbacks.onAdd}
+          disabled={props.disabledAddBtn}
+        >
+          {props.labelAdd}
+        </button>
       </div>
     </div>
   );
@@ -36,13 +40,15 @@ Item.propTypes = {
   link: PropTypes.string,
   onAdd: PropTypes.func,
   labelCurr: PropTypes.string,
-  labelAdd: PropTypes.string
+  labelAdd: PropTypes.string,
+  disabledAddBtn: PropTypes.bool,
 };
 
 Item.defaultProps = {
   onAdd: () => {},
   labelCurr: '₽',
-  labelAdd: 'Добавить'
+  labelAdd: 'Добавить',
+  disabledAddBtn: false,
 }
 
 export default memo(Item);

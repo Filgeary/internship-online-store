@@ -10,6 +10,8 @@ import CountForm from '@src/components/count-form';
 
 import useTranslate from '@src/hooks/use-translate';
 
+import preBasketActions from '@src/store-redux/pre-basket/actions';
+
 function CountToAdd() {
   const store = useStore();
   const dispatch = useDispatch();
@@ -24,6 +26,7 @@ function CountToAdd() {
     onSubmit: (data) => {
       // store.actions.basket.addToBasket(select.activeItemBasket._id, Number(data.count));
       store.actions.basket.setCountToAdd(Number(data.count));
+      // dispatch(preBasketActions.setCountToAdd(Number(data.count)));
       setIsSuccess(true);
       // dispatch(modalsActions.close());
     },
@@ -49,6 +52,11 @@ function CountToAdd() {
       };
 
       const catalogFn = willBeAdd ? addToBasket : null;
+
+      if (!willBeAdd) {
+        store.actions.basket.resetActive();
+      }
+      
       dispatch(modalsActions.close({ catalogFn }));
     }, [store, isSuccess]),
 

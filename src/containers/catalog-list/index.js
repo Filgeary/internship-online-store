@@ -1,4 +1,6 @@
 import {memo, useCallback, useEffect} from "react";
+import { useDispatch, useSelector as useSelectorRedux } from "react-redux";
+
 import useStore from "@src/hooks/use-store";
 import useSelector from "@src/hooks/use-selector";
 import useTranslate from "@src/hooks/use-translate";
@@ -7,8 +9,8 @@ import List from "@src/components/list";
 import Pagination from "@src/components/pagination";
 import Spinner from "@src/components/spinner";
 
-import { useDispatch, useSelector as useSelectorRedux } from "react-redux";
 import modalsActions from '@src/store-redux/modals/actions';
+import preBasketActions from '@src/store-redux/pre-basket/actions';
 
 function CatalogList() {
   const store = useStore();
@@ -40,6 +42,7 @@ function CatalogList() {
         // select.list.find((elem) => elem._id === _id),
         item
       );
+      // dispatch(preBasketActions.setActive(item));
       dispatch(modalsActions.open('countToAdd'));
     }, [select.list]),
   };
@@ -48,8 +51,14 @@ function CatalogList() {
 
   const renders = {
     item: useCallback(item => (
-      <Item item={item} onAdd={callbacks.openModalOfCount} link={`/articles/${item._id}`} labelAdd={t('article.add')} />
-    ), [callbacks.addToBasket, callbacks.openModalOfCount, t]),
+        <Item
+          disabledAddBtn={item._id === select.activeItemBasket?._id}
+          item={item}
+          onAdd={callbacks.openModalOfCount}
+          link={`/articles/${item._id}`}
+          labelAdd={t('article.add')}
+        />
+      ), [select.activeItemBasket, callbacks.addToBasket, callbacks.openModalOfCount, t]),
   };
 
   return (

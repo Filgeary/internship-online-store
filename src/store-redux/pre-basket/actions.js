@@ -1,7 +1,7 @@
 export default {
   /**
    * Добавление активного элемента
-   * @param name
+   * @param item
    */
   setActive: (item) => {
     return {type: 'preBasket/set', payload: {item}};
@@ -11,7 +11,7 @@ export default {
    * Добавление к активному элементу количества
    * @param count
    */
-  close: (count) => {
+  setCountToAdd: (count) => {
     return {type: 'preBasket/setCount', payload: {count}}
   }
 }
