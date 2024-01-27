@@ -6,12 +6,13 @@ import PropTypes from "prop-types";
 import React, { memo, useCallback } from "react";
 import { useDispatch } from "react-redux";
 import modalsActions from "@src/store-redux/modals/actions";
+import useTranslate from "@src/hooks/use-translate";
 
 const Modals = ({ activeModal }) => {
   const id = useSelector((state) => state.basket.active);
   const dispatch = useDispatch();
   const store = useStore();
-
+  const { t } = useTranslate();
   const callbacks = {
     // Добавление в корзину
     addToBasket: useCallback(
@@ -38,6 +39,10 @@ const Modals = ({ activeModal }) => {
         <CountForm
           onSubmit={callbacks.onSubmit}
           closeModal={callbacks.closeModal}
+          basketUnit={t("basket.unit")}
+          title={t("count.form.title")}
+          ok={t("count.form.ok")}
+          cancel={t("count.form.cancel")}
         />
       )}
     </>
@@ -47,5 +52,7 @@ const Modals = ({ activeModal }) => {
 Modals.propTypes = {
   activeModal: PropTypes.string,
 };
+
+Modals.defaultProps = {};
 
 export default memo(Modals);

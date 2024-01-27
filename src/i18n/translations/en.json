@@ -20,5 +20,8 @@
   "auth.password": "Password",
   "auth.signIn": "Sign in",
   "session.signIn": "Sign In",
-  "session.signOut": "Sign Out"
+  "session.signOut": "Sign Out",
+  "count.form.title":"Enter the quantity of the article",
+  "count.form.ok":"Ok",
+  "count.form.cancel":"Cancel"
 }

@@ -1,5 +1,6 @@
 import React, { memo, useCallback, useRef, useState } from "react";
 import { cn as bem } from "@bem-react/classname";
+import PropTypes from "prop-types";
 
 import "./style.css";
 
@@ -29,7 +30,9 @@ const CountForm = (props) => {
   return (
     <form onSubmit={callbacks.onSubmit} className={cn()}>
       <div className={cn("frame")} ref={frame}>
-        <h3>Введите количество товара (1-99), шт:</h3>
+        <h3>
+          {props.title} (1-99), {props.basketUnit}:
+        </h3>
         <input
           name="count"
           type="number"
@@ -43,18 +46,36 @@ const CountForm = (props) => {
           className={cn("input")}
         />
         <button type="submit" className={cn("btn")}>
-          {"Ok"}
+          {props.ok}
         </button>
         <button
           type="button"
           className={cn("btn")}
           onClick={callbacks.closeModal}
         >
-          {"Cancel"}
+          {props.cancel}
         </button>
       </div>
     </form>
   );
+};
+
+CountForm.propTypes = {
+  onSubmit: PropTypes.func,
+  closeModal: PropTypes.func,
+  basketUnit: PropTypes.string,
+  title: PropTypes.string,
+  ok: PropTypes.string,
+  cancel: PropTypes.string,
+};
+
+CountForm.defaultProps = {
+  onSubmit: () => {},
+  closeModal: () => {},
+  basketUnit: "шт",
+  title: "Введите количество товара",
+  ok: "Ок",
+  cancel: "Отмена",
 };
 
 export default memo(CountForm);
