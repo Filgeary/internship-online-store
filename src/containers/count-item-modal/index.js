@@ -33,6 +33,10 @@ function CountItemModal() {
   };
 
   const { t } = useTranslate();
+  const labelCount = t("count.count").replace(
+    "[product]",
+    select.activeItem.title
+  );
 
   return (
     <ModalLayout
@@ -43,9 +47,7 @@ function CountItemModal() {
       <CountItemForm
         title={select.activeItem.title}
         onSubmit={callbacks.onSubmit}
-        labelCount={t("count.count")}
-        labelBuy={t("count.buy")}
-        labelError={t("count.error")}
+        labelCount={labelCount}
         labelSuccess={t("count.success")}
       />
     </ModalLayout>

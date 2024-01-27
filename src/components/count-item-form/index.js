@@ -1,4 +1,4 @@
-import { useState, memo } from "react";
+import { useState, memo, Fragment } from "react";
 import PropTypes from "prop-types";
 import { cn as bem } from "@bem-react/classname";
 import 'style.css';
@@ -24,11 +24,12 @@ function CountItemForm(props) {
 
   return (
     <form onSubmit={callbacks.onSubmit} className={cn()}>
-      <div className={cn("success")}>{successText && <span>{successText}</span>}</div>
+      <div className={cn("success")}>
+        {successText && <span className={cn("success-text")}>{successText}</span>}
+      </div>
       <div className={cn("field")}>
         <label htmlFor="count" className={cn("label")}>
-          {props.labelCount} {props.title}
-          {props.labelBuy}
+          {props.labelCount}
         </label>
         <input
           id="count"
@@ -48,8 +49,8 @@ function CountItemForm(props) {
 }
 
 CountItemForm.propTypes = {
-  title: PropTypes.string,
   labelCount: PropTypes.string,
+  labelSuccess: PropTypes.string,
   onSubmit: PropTypes.func,
 };
 

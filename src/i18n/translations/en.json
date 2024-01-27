@@ -22,9 +22,7 @@
   "session.signIn": "Sign In",
   "session.signOut": "Sign Out",
   "count.title": "The number of products",
-  "count.count": "Enter the number of product ",
-  "count.buy": " you would like to buy",
-  "count.error": "The number of product cannot be equal to 0",
+  "count.count": "Enter the number of product [product] you would like to buy",
   "count.success": "Great! After closing the modal window, the product [product] will be added to the basket in the amount of [count] pcs",
   "count.close": "Close"
 }
