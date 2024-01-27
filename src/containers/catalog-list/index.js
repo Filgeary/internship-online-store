@@ -1,14 +1,17 @@
 import {memo, useCallback} from "react";
 import useStore from "@src/hooks/use-store";
 import useSelector from "@src/hooks/use-selector";
+import { useDispatch } from "react-redux";
 import useTranslate from "@src/hooks/use-translate";
 import Item from "@src/components/item";
 import List from "@src/components/list";
 import Pagination from "@src/components/pagination";
 import Spinner from "@src/components/spinner";
+import modalsActions from "@src/store-redux/modals/actions";
 
 function CatalogList() {
   const store = useStore();
+  const dispatch = useDispatch();
 
   const select = useSelector(state => ({
     list: state.catalog.list,
@@ -19,22 +22,38 @@ function CatalogList() {
   }));
 
   const callbacks = {
-    // Добавление в корзину
-    addToBasket: useCallback(_id => store.actions.basket.addToBasket(_id), [store]),
     // Пагинация
-    onPaginate: useCallback(page => store.actions.catalog.setParams({page}), [store]),
+    onPaginate: useCallback(
+      (page) => store.actions.catalog.setParams({ page }),
+      [store]
+    ),
     // генератор ссылки для пагинатора
-    makePaginatorLink: useCallback((page) => {
-      return `?${new URLSearchParams({page, limit: select.limit, sort: select.sort, query: select.query})}`;
-    }, [select.limit, select.sort, select.query])
-  }
+    makePaginatorLink: useCallback(
+      (page) => {
+        return `?${new URLSearchParams({
+          page,
+          limit: select.limit,
+          sort: select.sort,
+          query: select.query,
+        })}`;
+      },
+      [select.limit, select.sort, select.query]
+    ),
+    openCountItemModal: useCallback(
+      ( item ) => {
+        store.actions.basket.setActiveToAdd(item);
+        dispatch(modalsActions.open("count"));
+      },
+      [store]
+    ),
+  };
 
   const {t} = useTranslate();
 
   const renders = {
     item: useCallback(item => (
-      <Item item={item} onAdd={callbacks.addToBasket} link={`/articles/${item._id}`} labelAdd={t('article.add')}/>
-    ), [callbacks.addToBasket, t]),
+      <Item item={item} onAdd={callbacks.openCountItemModal} link={`/articles/${item._id}`} labelAdd={t('article.add')}/>
+    ), [callbacks.openCountItemModal, t]),
   };
 
   return (

@@ -22,5 +22,11 @@
   "auth.password": "Пароль",
   "auth.signIn": "Войти",
   "session.signIn": "Вход",
-  "session.signOut": "Выход"
+  "session.signOut": "Выход",
+  "count.title": "Количество товара",
+  "count.count": "Введите количество товара ",
+  "count.buy": ", которое Вы бы хотели купить",
+  "count.error": "Количество товара не может быть равно 0",
+  "count.success": "Отлично! После закрытия модального окна товар [product] будет добавлен в корзину в количестве [count] шт",
+  "count.close": "Закрыть"
 }
