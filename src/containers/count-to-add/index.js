@@ -48,6 +48,7 @@ function CountToAdd() {
         store.actions.basket.addToBasket(
           select.activeItemBasket._id,
           select.activeItemBasket.countToAdd,
+          // selectRedux.activeItemBasket.countToAdd
         );
       };
 
