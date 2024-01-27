@@ -7,7 +7,7 @@ import List from "@src/components/list";
 import Pagination from "@src/components/pagination";
 import Spinner from "@src/components/spinner";
 
-function CatalogList() {
+function CatalogList(props) {
   const store = useStore();
 
   const select = useSelector(state => ({
@@ -20,7 +20,11 @@ function CatalogList() {
 
   const callbacks = {
     // Добавление в корзину
-    addToBasket: useCallback(_id => store.actions.basket.addToBasket(_id), [store]),
+    addToBasket: useCallback(async (_id) => {
+      const amount = await props.openAddToBasketDialog()
+      if (!amount) return
+      store.actions.basket.addToBasket(_id, amount)
+    }, [store]),
     // Пагинация
     onPaginate: useCallback(page => store.actions.catalog.setParams({page}), [store]),
     // генератор ссылки для пагинатора
