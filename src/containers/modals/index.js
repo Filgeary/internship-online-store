@@ -1,6 +1,6 @@
 import { useSelector as useSelectorRedux } from "react-redux";
 import { memo } from "react";
-import Basket from "../basket";
+import Basket from "../../app/basket";
 import CountItemModal from "@src/containers/count-item-modal";
 
 function Modals() {

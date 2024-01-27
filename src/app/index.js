@@ -8,7 +8,7 @@ import Article from "./article";
 import Login from "./login";
 import Profile from "./profile";
 import Protected from "@src/containers/protected";
-import Modals from './modals';
+import Modals from '../containers/modals';
 
 /**
  * Приложение
