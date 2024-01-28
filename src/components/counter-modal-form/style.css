@@ -1,0 +1,26 @@
+.CounterModalForm {
+
+}
+
+.CounterModalForm-center {
+    display: flex;
+    justify-content: center;
+    padding: 0;
+    align-items: center;
+}
+
+.CounterModalForm-right {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.CounterModalForm-button {
+    padding: 5px 10px;
+    margin: 0 5px;
+}
+
+.CounterModalForm-input {
+    padding: 5px 10px;
+    margin: 5px;
+    width: 50px;
+}

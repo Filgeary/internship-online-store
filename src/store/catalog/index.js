@@ -26,6 +26,17 @@ class CatalogState extends StoreModule {
   }
 
   /**
+   * Смена ожидания
+   * @param [waiting] {Boolean}
+   */
+  setWaiting(waiting) {
+    this.setState({
+      ...this.getState(),
+      waiting
+    }, "Смена состояния ожидания");
+  }
+
+  /**
    * Инициализация параметров.
    * Восстановление из адреса
    * @param [newParams] {Object} Новые параметры

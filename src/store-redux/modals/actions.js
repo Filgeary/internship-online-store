@@ -11,7 +11,14 @@ export default {
    * Закрытие модалки
    * @param name
    */
-  close: () => {
-    return {type: 'modal/close'}
+  close: (result = null) => {
+    return {type: 'modal/close', payload: {result}}
+  },
+
+  /**
+   * Сброс результатов модалок
+   */
+  resetModalResult: () => {
+    return {type: 'modal/reset-result'};
   }
 }

@@ -20,5 +20,8 @@
   "auth.password": "Password",
   "auth.signIn": "Sign in",
   "session.signIn": "Sign In",
-  "session.signOut": "Sign Out"
+  "session.signOut": "Sign Out",
+  "counter-modal.title": "Entering the quantity of goods",
+  "modal.close": "Close",
+  "couter-modal.form.title": "Enter the quantity of the product:"
 }

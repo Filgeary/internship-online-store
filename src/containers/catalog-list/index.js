@@ -6,9 +6,13 @@ import Item from "@src/components/item";
 import List from "@src/components/list";
 import Pagination from "@src/components/pagination";
 import Spinner from "@src/components/spinner";
+import { useDispatch } from "react-redux";
+import modalsActions from '@src/store-redux/modals/actions';
+import useWaitModal from "@src/hooks/use-wait-modal";
 
 function CatalogList() {
   const store = useStore();
+  const dispatch = useDispatch();
 
   const select = useSelector(state => ({
     list: state.catalog.list,
@@ -18,15 +22,30 @@ function CatalogList() {
     waiting: state.catalog.waiting,
   }));
 
+  useWaitModal("counter-modal", async (result) => {
+    if (result > 0) {
+      await store.actions.basket.addActiveItem(result);
+    }
+    store.actions.catalog.setWaiting(false);
+  }, [store]);
+
   const callbacks = {
     // Добавление в корзину
-    addToBasket: useCallback(_id => store.actions.basket.addToBasket(_id), [store]),
+    // addToBasket: useCallback((_id, number) => store.actions.basket.addToBasket(_id, number), [store]),
     // Пагинация
     onPaginate: useCallback(page => store.actions.catalog.setParams({page}), [store]),
     // генератор ссылки для пагинатора
     makePaginatorLink: useCallback((page) => {
       return `?${new URLSearchParams({page, limit: select.limit, sort: select.sort, query: select.query})}`;
-    }, [select.limit, select.sort, select.query])
+    }, [select.limit, select.sort, select.query]),
+    // Добавление в корзину c вызовом Модалки для ввода количества
+    addToBasket: useCallback((_id) => {
+      if (!select.waiting) {
+        store.actions.basket.setActiveItemId(_id);
+        store.actions.catalog.setWaiting(true);
+        dispatch(modalsActions.open("counter-modal"));
+      }
+    }, [store, dispatch, select.waiting])
   }
 
   const {t} = useTranslate();
