@@ -13,6 +13,8 @@
     "one": "article",
     "other": "articles"
   },
+  "count.title": "Choose count",
+  "count.cancel": "Cancel",
   "article.add": "Add",
   "filter.reset": "Reset",
   "auth.title": "Sign In",
