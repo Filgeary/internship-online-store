@@ -15,6 +15,9 @@ function ItemAdd(props) {
 
   return (
     <div className={cn()}>
+      <div className={cn('title')}>
+        {props.title}
+      </div>
       <div className={cn("right")}>
         <input className={cn("cell")} type="number" min={1} value={value} onChange={callbacks.onChangeValue} />
         <div className={cn("cell")}>
@@ -26,6 +29,7 @@ function ItemAdd(props) {
 }
 
 ItemAdd.propTypes = {
+  title: PropTypes.string,
   initial: PropTypes.number,
   btnTitle: PropTypes.string,
   setCount: PropTypes.func,

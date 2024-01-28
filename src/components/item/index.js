@@ -10,7 +10,7 @@ function Item(props){
   const cn = bem('Item');
 
   const callbacks = {
-    onAdd: (e) => props.onAdd(props.item._id),
+    onAdd: (e) => props.onAdd(props.item._id, props.item.title),
   }
 
   return (

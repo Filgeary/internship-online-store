@@ -32,9 +32,9 @@ function CatalogList() {
   const callbacks = {
     // Добавление в корзину
     //addToBasket: useCallback(_id => store.actions.basket.addToBasket(_id), [store]),
-    arcticleCount: useCallback((_id) => {
+    arcticleCount: useCallback((_id, _title) => {
       dispatch(modalsActions.open("addToBasket"));
-      dispatch(addingActions.open(_id));
+      dispatch(addingActions.open(_id, _title));
     }, [store]),
     // Пагинация
     onPaginate: useCallback(page => store.actions.catalog.setParams({page}), [store]),

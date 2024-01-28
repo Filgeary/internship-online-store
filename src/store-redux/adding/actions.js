@@ -2,10 +2,10 @@ export default {
   /**
    * Модалка для выбора количества товара по id
    * @param id
-   * @param count
+   * @param title
    */
-  open: (id) => {
-    return {type: 'adding/open', payload: {id}};
+  open: (id, title) => {
+    return {type: 'adding/open', payload: {id, title}};
   },
 
   /**
