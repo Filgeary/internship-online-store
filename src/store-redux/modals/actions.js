@@ -13,5 +13,13 @@ export default {
    */
   close: () => {
     return {type: 'modal/close'}
+  },
+
+/**
+ * Статус открытости модального окна
+ * @param status
+ */
+  changeActiveModal: (status) => {
+    return {type: 'modal/active', payload: {status}}
   }
 }

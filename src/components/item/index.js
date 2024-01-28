@@ -10,7 +10,7 @@ function Item(props){
   const cn = bem('Item');
 
   const callbacks = {
-    onAdd: (e) => props.onAdd(props.item._id),
+    onOpenModal: (e) => props.onOpenModal(props.item._id)
   }
 
   return (
@@ -21,7 +21,7 @@ function Item(props){
       </div>
       <div className={cn('actions')}>
         <div className={cn('price')}>{numberFormat(props.item.price)} {props.labelCurr}</div>
-        <button onClick={callbacks.onAdd}>{props.labelAdd}</button>
+        <button onClick={callbacks.onOpenModal}>{props.labelAdd}</button>
       </div>
     </div>
   );
@@ -34,13 +34,13 @@ Item.propTypes = {
     price: PropTypes.number
   }).isRequired,
   link: PropTypes.string,
-  onAdd: PropTypes.func,
+  onOpenModal: PropTypes.func,
   labelCurr: PropTypes.string,
   labelAdd: PropTypes.string
 };
 
 Item.defaultProps = {
-  onAdd: () => {},
+  onOpenModal: () => {},
   labelCurr: '₽',
   labelAdd: 'Добавить'
 }

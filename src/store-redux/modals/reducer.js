@@ -1,6 +1,7 @@
 // Начальное состояние
 const initialState = {
-  name: ''
+  name: '',
+  activeModal: false
 }
 
 // Обработчик действий
@@ -9,7 +10,9 @@ function reducer(state = initialState, action) {
     case 'modal/open':
       return {...state, name: action.payload.name};
     case 'modal/close':
-      return {...state, name: null};
+      return {...state, name: null, activeModal: false};
+    case 'modal/active': 
+      return {...state, activeModal: action.payload.status}
     default:
       return state;
   }
