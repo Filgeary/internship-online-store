@@ -10,7 +10,6 @@ import Pagination from "@src/components/pagination";
 import Spinner from "@src/components/spinner";
 
 import modalsActions from '@src/store-redux/modals/actions';
-import preBasketActions from '@src/store-redux/pre-basket/actions';
 
 function CatalogList() {
   const store = useStore();
@@ -37,12 +36,7 @@ function CatalogList() {
     }, [select.limit, select.sort, select.query]),
     // Открыть модалку с выбором количества товара для добавления
     openModalOfCount: useCallback((item) => {
-      store.actions.basket.setActive(
-        // _id
-        // select.list.find((elem) => elem._id === _id),
-        item
-      );
-      // dispatch(preBasketActions.setActive(item));
+      store.actions.basket.setActive(item);
       dispatch(modalsActions.open('countToAdd'));
     }, [select.list]),
   };

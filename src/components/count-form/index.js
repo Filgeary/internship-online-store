@@ -8,19 +8,19 @@ function CountForm(props) {
   const cn = bem('CountForm');
 
   const inputRef = useRef(null);
-  const [count, setCount] = useState(1);
+  const [count, setCount] = useState(props.min === 0 ? props.min + 1 : props.min);
   const isSubmitDisabled = count == 0 || props.isSuccess;
 
   const callbacks = {
     submit: (e) => {
       e.preventDefault();
-
       props.onSubmit({ count });
     },
   };
 
   const options = {
-    maxVal: 999,
+    minVal: props.min,
+    maxVal: props.max,
   };
 
   const handlers = {
@@ -86,13 +86,13 @@ function CountForm(props) {
             type="number"
             name="count"
             id="count"
-            min={0}
-            max={999}
+            min={options.minVal}
+            max={options.maxVal}
             onKeyDown={handlers.keyDown}
             onChange={handlers.countChange}
             onPaste={handlers.paste}
             value={count}
-            placeholder="0-999"
+            placeholder={`${options.minVal}-${options.maxVal}`}
             ref={inputRef}
           />
         </div>
@@ -120,6 +120,8 @@ CountForm.propTypes = {
   labelOfOk: PropTypes.string,
   successText: PropTypes.func,
   initialFocus: PropTypes.bool,
+  min: PropTypes.number,
+  max: PropTypes.number,
 };
 
 CountForm.defaultProps = {
@@ -128,6 +130,8 @@ CountForm.defaultProps = {
   labelOfOk: 'Ok',
   successText: () => {},
   initialFocus: false,
+  min: 0,
+  max: 999,
 };
 
 export default CountForm;
