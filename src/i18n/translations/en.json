@@ -13,6 +13,9 @@
     "one": "article",
     "other": "articles"
   },
+  "adding.title": "Article quantity",
+  "adding.cancel": "Cancel",
+  "adding.ok": "Ok",
   "article.add": "Add",
   "filter.reset": "Reset",
   "auth.title": "Sign In",

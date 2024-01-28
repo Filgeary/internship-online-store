@@ -15,6 +15,9 @@
     "many": "товаров",
     "other": "товара"
   },
+  "adding.title": "Количество товара",
+  "adding.cancel": "Отмена",
+  "adding.ok": "Ок",
   "article.add": "Добавить",
   "filter.reset": "Сбросить",
   "auth.title": "Вход",
