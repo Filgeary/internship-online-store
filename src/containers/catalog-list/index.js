@@ -8,6 +8,7 @@ import List from "@src/components/list";
 import Pagination from "@src/components/pagination";
 import Spinner from "@src/components/spinner";
 import modalsActions from "@src/store-redux/modals/actions";
+import activeActions from "@src/store-redux/count/actions";
 
 function CatalogList() {
   const store = useStore();
@@ -39,13 +40,12 @@ function CatalogList() {
       },
       [select.limit, select.sort, select.query]
     ),
-    openCountItemModal: useCallback(
+    openCountItemModal:
       ( item ) => {
-        store.actions.basket.setActiveToAdd(item);
+        dispatch(activeActions.setActive(item));
         dispatch(modalsActions.open("count"));
-      },
-      [store]
-    ),
+      }
+
   };
 
   const {t} = useTranslate();

@@ -6,6 +6,7 @@ import {I18nProvider} from "./i18n/context";
 import App from './app';
 import Services from "./services";
 import config from "./config";
+import './global.css';
 
 const services = new Services(config);
 

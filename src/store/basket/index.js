@@ -10,7 +10,6 @@ class BasketState extends StoreModule {
       list: [],
       sum: 0,
       amount: 0,
-      activeItem: null,
     }
   }
 
@@ -68,36 +67,6 @@ class BasketState extends StoreModule {
       sum,
       amount: list.length
     }, 'Удаление из корзины');
-  }
-
-  setActiveToAdd(item) {
-    this.setState(
-      {
-        ...this.getState(),
-        activeItem: item,
-      },
-      "Выбор продукта для добавления"
-    );
-  }
-
-  setCount(count) {
-    this.setState(
-      {
-        ...this.getState(),
-        activeItem: {
-          ...this.getState().activeItem,
-          count
-        },
-      },
-      "Установка количества товара"
-    );
-  }
-
-  resetActiveItem() {
-    this.setState({
-      ...this.getState(),
-      activeItem: null,
-    }, "Сброс выбранного продукта");
   }
 }
 
