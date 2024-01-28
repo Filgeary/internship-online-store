@@ -10,18 +10,20 @@ function Item(props){
   const cn = bem('Item');
 
   const callbacks = {
-    onAdd: (e) => props.onAdd(props.item),
-  }
+    onOpenModal: (e) => props.onOpenModal(props.item._id),
+  };
 
   return (
     <div className={cn()}>
       {/*<div className={cn('code')}>{props.item._id}</div>*/}
-      <div className={cn('title')}>
+      <div className={cn("title")}>
         <Link to={props.link}>{props.item.title}</Link>
       </div>
-      <div className={cn('actions')}>
-        <div className={cn('price')}>{numberFormat(props.item.price)} {props.labelCurr}</div>
-        <button onClick={callbacks.onAdd}>{props.labelAdd}</button>
+      <div className={cn("actions")}>
+        <div className={cn("price")}>
+          {numberFormat(props.item.price)} {props.labelCurr}
+        </div>
+        <button onClick={callbacks.onOpenModal}>{props.labelAdd}</button>
       </div>
     </div>
   );

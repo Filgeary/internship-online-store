@@ -47,7 +47,7 @@ function Basket() {
 
   return (
     <ModalLayout title={t('basket.title')} labelClose={t('basket.close')}
-                 onClose={callbacks.closeModal}>
+                 onClose={callbacks.closeModal} isClose={true}>
       <List list={select.list} renderItem={renders.itemBasket}/>
       <BasketTotal sum={select.sum} t={t}/>
     </ModalLayout>

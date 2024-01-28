@@ -20,7 +20,7 @@
 .CountItemForm-input {
   padding: 5px 10px;
   border: none;
-  outline: 2px solid rgb(8, 51, 8);
+  outline: 2px solid rgb(7, 63, 7);
   border-radius: 1px;
 }
 
@@ -31,22 +31,13 @@
   border-radius: 1px;
 }
 
-.CountItemForm-submit {
-  align-self: flex-end;
-  padding: 0 15px;
-}
-
-.CountItemForm-success {
+.CountItemForm-buttons {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  color: rgb(16, 90, 16);
-  min-height: 30px;
+  align-self: center;
+  gap: 20px;
 }
 
-.CountItemForm-success-text {
-  border: 1px solid rgb(16, 90, 16);
-  border-radius: 5px;
-  background-color: rgba(237, 255, 237, 0.5);
-  padding: 5px 10px;
+.CountItemForm-submit,
+.CountItemForm-cancel {
+  width: 70px;
 }

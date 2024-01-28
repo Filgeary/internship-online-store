@@ -6,27 +6,20 @@ import 'style.css';
 function CountItemForm(props) {
   const cn = bem("CountItemForm");
   const [count, setCount] = useState("1");
-  const [successText, setSuccessText] = useState('');
 
   const callbacks = {
     onChange: (e) => {
       let value = Number(e.target.value).toString().slice(0, 3);
       setCount(value);
-      setSuccessText('');
     },
     onSubmit: (e) => {
       e.preventDefault();
-      const text = props.labelSuccess.replace("[count]", count).replace("[product]", props.title);
-      setSuccessText(text);
       props.onSubmit(count);
     }
   }
 
   return (
     <form onSubmit={callbacks.onSubmit} className={cn()}>
-      <div className={cn("success")}>
-        {successText && <span className={cn("success-text")}>{successText}</span>}
-      </div>
       <div className={cn("field")}>
         <label htmlFor="count" className={cn("label")}>
           {props.labelCount}
@@ -40,18 +33,23 @@ function CountItemForm(props) {
           className={cn("input")}
         />
       </div>
-
-      <button className={cn("submit")} type="submit">
-        OK
-      </button>
+      <div className={cn("buttons")}>
+        <button className={cn("cancel")} type="button" onClick={props.onCancel}>
+          {props.labelCancel}
+        </button>
+        <button className={cn("submit")} type="submit">
+          OK
+        </button>
+      </div>
     </form>
   );
 }
 
 CountItemForm.propTypes = {
   labelCount: PropTypes.string,
-  labelSuccess: PropTypes.string,
+  labelCancel: PropTypes.string,
   onSubmit: PropTypes.func,
+  onCancel: PropTypes.func,
 };
 
 export default memo(CountItemForm);

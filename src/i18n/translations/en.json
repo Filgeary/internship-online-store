@@ -21,8 +21,7 @@
   "auth.signIn": "Sign in",
   "session.signIn": "Sign In",
   "session.signOut": "Sign Out",
-  "count.title": "The number of products",
-  "count.count": "Enter the number of product [product] you would like to buy",
-  "count.success": "Great! After closing the modal window, the product [product] will be added to the basket in the amount of [count] pcs",
-  "count.close": "Close"
+  "count.title": "Quantity of goods",
+  "count.count": "Enter the quantity of goods you would like to buy",
+  "count.cancel": "Cancel"
 }

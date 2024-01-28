@@ -3,8 +3,8 @@ export default {
    * Добавление активного товара
    * @param item
    */
-  setActive: (item) => {
-    return { type: "count/setActive", payload: { item } };
+  setActive: (_id) => {
+    return { type: "count/setActive", payload: { _id } };
   },
 
   /**

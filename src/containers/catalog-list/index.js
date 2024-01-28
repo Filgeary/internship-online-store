@@ -1,7 +1,7 @@
-import {memo, useCallback} from "react";
+import {memo, useCallback, useEffect} from "react";
 import useStore from "@src/hooks/use-store";
 import useSelector from "@src/hooks/use-selector";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector as useSelectorRedux } from "react-redux";
 import useTranslate from "@src/hooks/use-translate";
 import Item from "@src/components/item";
 import List from "@src/components/list";
@@ -9,6 +9,7 @@ import Pagination from "@src/components/pagination";
 import Spinner from "@src/components/spinner";
 import modalsActions from "@src/store-redux/modals/actions";
 import activeActions from "@src/store-redux/count/actions";
+import shallowequal from "shallowequal";
 
 function CatalogList() {
   const store = useStore();
@@ -21,6 +22,21 @@ function CatalogList() {
     count: state.catalog.count,
     waiting: state.catalog.waiting,
   }));
+
+  const selectRedux = useSelectorRedux(
+    (state) => ({
+      _id: state.active._id,
+      count: state.active.count
+    }),
+    shallowequal
+  );
+
+  useEffect(() => {
+    if (selectRedux.count) {
+      store.actions.basket.addToBasket(selectRedux._id, selectRedux.count);
+      dispatch(activeActions.reset());
+    }
+  }, [selectRedux.count]);
 
   const callbacks = {
     // Пагинация
@@ -41,18 +57,17 @@ function CatalogList() {
       [select.limit, select.sort, select.query]
     ),
     openCountItemModal:
-      ( item ) => {
-        dispatch(activeActions.setActive(item));
+      ( _id ) => {
+        dispatch(activeActions.setActive(_id));
         dispatch(modalsActions.open("count"));
       }
-
   };
 
   const {t} = useTranslate();
 
   const renders = {
     item: useCallback(item => (
-      <Item item={item} onAdd={callbacks.openCountItemModal} link={`/articles/${item._id}`} labelAdd={t('article.add')}/>
+      <Item item={item} onOpenModal={callbacks.openCountItemModal} link={`/articles/${item._id}`} labelAdd={t('article.add')}/>
     ), [callbacks.openCountItemModal, t]),
   };
 
