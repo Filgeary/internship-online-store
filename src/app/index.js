@@ -10,7 +10,7 @@ import Login from "./login";
 import Profile from "./profile";
 import Protected from "@src/containers/protected";
 import {useSelector as useSelectorRedux} from 'react-redux';
-import AddToBasket from "src/app/add-to-basket";
+import ModalWindow from "@src/containers/modal-window";
 
 /**
  * Приложение
@@ -23,8 +23,6 @@ function App() {
     await store.actions.session.remind();
   })
 
-  const activeModal = useSelectorRedux(state => state.modals.name);
-
   return (
     <>
       <Routes>
@@ -33,9 +31,7 @@ function App() {
         <Route path={"/login"} element={<Login/>}/>
         <Route path={"/profile"} element={<Protected redirect='/login'><Profile/></Protected>}/>
       </Routes>
-
-      {activeModal === 'basket' && <Basket/>
-      || activeModal === 'adding' && <AddToBasket/>}
+      <ModalWindow/>
     </>
   );
 }

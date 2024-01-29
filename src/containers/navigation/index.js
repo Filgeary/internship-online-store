@@ -22,7 +22,7 @@ function Navigation() {
     // Открытие модалки корзины
     openModalBasket: useCallback(() => {
       //store.actions.modals.open('basket')
-      dispatch(modalsActions.open('basket'));
+      dispatch(modalsActions.open('basket', {}));
     }, [store]),
 
     // Обработка перехода на главную

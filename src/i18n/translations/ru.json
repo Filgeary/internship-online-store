@@ -15,6 +15,16 @@
     "many": "товаров",
     "other": "товара"
   },
+  "modalAdd.article": {
+    "one": "товар",
+    "few": "товара",
+    "many": "товаров",
+    "other": "товара"
+  },
+  "modalAdd.close": "закрыть",
+  "modalAdd.sum": "на сумму",
+  "modalAdd.cancel": "отмена",
+  "modalAdd.ok": "ок",
   "article.add": "Добавить",
   "filter.reset": "Сбросить",
   "auth.title": "Вход",

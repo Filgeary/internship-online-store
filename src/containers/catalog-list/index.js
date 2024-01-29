@@ -1,4 +1,4 @@
-import {memo, useCallback} from "react";
+import {memo, useCallback, useEffect, useState} from "react";
 import useStore from "@src/hooks/use-store";
 import useSelector from "@src/hooks/use-selector";
 import useTranslate from "@src/hooks/use-translate";
@@ -8,10 +8,16 @@ import Pagination from "@src/components/pagination";
 import Spinner from "@src/components/spinner";
 import {useDispatch} from "react-redux";
 import modalsActions from "@src/store-redux/modals/actions";
+import ModalLayout from "@src/components/modal-layout";
+import {useSelector as useSelectorRedux} from "react-redux/es/hooks/useSelector";
+import ModalAddBasket from "@src/components/modal-add-basket";
+import articleActions from "@src/store-redux/article/actions";
 
-function CatalogList() {
+function CatalogList(callback, deps) {
   const store = useStore();
   const dispatch = useDispatch()
+
+  const {t} = useTranslate();
 
   const select = useSelector(state => ({
     list: state.catalog.list,
@@ -23,10 +29,27 @@ function CatalogList() {
 
   const callbacks = {
     // Добавление в корзину
-    addToBasket: useCallback(_id => {
-      store.actions.basket.addToBasket(_id)
-      dispatch(modalsActions.open('adding'));
-    }, [store]),
+    addToBasket: useCallback( item => {
+      dispatch(modalsActions.open(`adding`, {
+        _id: item._id,
+        title: item.title,
+        price: item.price,
+        handleSubmit: callbacks.handleSubmit,
+      }));
+    }, []),
+    // Закрытие модалки
+    onClose: useCallback(() => {
+      dispatch(modalsActions.close())
+    }, []),
+    // Добавление товара в корзину
+    handleSubmit: useCallback((_id, quantity) => {
+      if(quantity > 0) {
+        store.actions.basket.addToBasket(_id, quantity)
+        dispatch(modalsActions.close())
+      } else {
+        alert('Введите число больше нуля')
+      }
+    }, []),
     // Пагинация
     onPaginate: useCallback(page => store.actions.catalog.setParams({page}), [store]),
     // генератор ссылки для пагинатора
@@ -35,7 +58,6 @@ function CatalogList() {
     }, [select.limit, select.sort, select.query])
   }
 
-  const {t} = useTranslate();
 
   const renders = {
     item: useCallback(item => (
@@ -52,4 +74,4 @@ function CatalogList() {
   );
 }
 
-export default memo(CatalogList);
+export default  memo(CatalogList);

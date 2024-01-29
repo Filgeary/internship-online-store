@@ -13,6 +13,14 @@
     "one": "article",
     "other": "articles"
   },
+  "modalAdd.article": {
+    "one": "article",
+    "other": "articles"
+  },
+  "modalAdd.close": "close",
+  "modalAdd.sum": "for the amount",
+  "modalAdd.cancel": "cancel",
+  "modalAdd.ok": "ok",
   "article.add": "Add",
   "filter.reset": "Reset",
   "auth.title": "Sign In",

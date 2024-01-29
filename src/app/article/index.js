@@ -13,6 +13,7 @@ import TopHead from "@src/containers/top-head";
 import {useDispatch, useSelector} from 'react-redux';
 import shallowequal from "shallowequal";
 import articleActions from '@src/store-redux/article/actions';
+import modalsActions from "@src/store-redux/modals/actions";
 
 function Article() {
   const store = useStore();
@@ -36,7 +37,24 @@ function Article() {
 
   const callbacks = {
     // Добавление в корзину
-    addToBasket: useCallback(_id => store.actions.basket.addToBasket(_id), [store]),
+    addToBasket: useCallback(_id => {
+      // Я посчитал логичным, что модальное окно по добавлению товара будет вызываться со страницы товара
+      dispatch(modalsActions.open(`adding`, {
+        _id: select.article._id,
+        title: select.article.title,
+        price: select.article.price,
+        handleSubmit: callbacks.handleSubmit,
+      }));
+    }, [select.article, store]),
+    // Добавление товара в корзину
+    handleSubmit: useCallback((_id, quantity) => {
+      if(quantity > 0) {
+        store.actions.basket.addToBasket(_id, quantity)
+        dispatch(modalsActions.close())
+      } else {
+        alert('Введите число больше нуля')
+      }
+    }, []),
   }
 
   return (
