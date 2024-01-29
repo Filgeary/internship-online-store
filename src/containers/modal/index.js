@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
 
 import React, { useCallback, useRef, memo } from 'react';
-import { useDispatch, useSelector as useSelectorRedux } from 'react-redux';
 
 import useStore from '@src/hooks/use-store';
 import modalsActions from '@src/store-redux/modals/actions';
@@ -11,17 +10,11 @@ import useOnClickOutside from '@src/hooks/use-on-click-outside';
 
 const Modal = ({children, ...props}) => {
   const store = useStore();
-  const dispatch = useDispatch();
-
-  const selectRedux = useSelectorRedux((state) => ({
-    activeModals: state.modals.activeModals,
-  }));
 
   const modalRef = useRef(null);
 
   const callbacks = {
     closeModal: useCallback(() => {
-      // dispatch(modalsActions.close());
       store.actions.modals.close();
     }, [store]),
   };

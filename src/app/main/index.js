@@ -1,5 +1,4 @@
 import {memo, useEffect} from 'react';
-import { useSelector as useSelectorRedux } from 'react-redux';
 
 import useStore from "@src/hooks/use-store";
 import useSelector from '@src/hooks/use-selector';

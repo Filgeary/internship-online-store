@@ -1,12 +1,9 @@
 import React, { useCallback, useState, memo } from 'react';
-import { shallowEqual, useDispatch } from 'react-redux';
 
 import useStore from '@src/hooks/use-store';
 import useSelector from "@src/hooks/use-selector";
-import modalsActions from '@src/store-redux/modals/actions';
 
 import Modal from '@src/containers/modal';
-import CountForm from '@src/components/count-form';
 
 import useTranslate from '@src/hooks/use-translate';
 import CatalogList from '../catalog-list';
@@ -14,7 +11,6 @@ import CatalogFilter from '../catalog-filter';
 
 function CatalogModal() {
   const store = useStore();
-  const dispatch = useDispatch();
   const [updatedItems, setUpdatedItems] = useState({});
 
   const callbacks = {
@@ -22,6 +18,7 @@ function CatalogModal() {
       const basketFn = async () => {
         console.log('UpdatedItems:', updatedItems);
         store.actions.basket.addMany(updatedItems);
+        store.actions.modals.resetDataObj();
       };
       // dispatch(modalsActions.close({ basketFn }));
       store.actions.modals.close({ basketFn });

@@ -1,5 +1,4 @@
 import { memo, useCallback } from "react";
-import { useDispatch } from "react-redux";
 
 import PropTypes from 'prop-types';
 
@@ -11,11 +10,8 @@ import List from "@src/components/list";
 import Pagination from "@src/components/pagination";
 import Spinner from "@src/components/spinner";
 
-import modalsActions from '@src/store-redux/modals/actions';
-
 function CatalogList(props) {
   const store = useStore();
-  const dispatch = useDispatch();
   
   const select = useSelector(state => ({
     list: state.catalog.list,
@@ -39,7 +35,6 @@ function CatalogList(props) {
     // Открыть модалку с выбором количества товара для добавления
     openModalOfCount: useCallback((item) => {
       store.actions.basket.setActive(item);
-      // dispatch(modalsActions.open('countToAdd'));
       store.actions.modals.open('countToAdd');
     }, [store, select.list]),
     // Добавить к количеству товара в корзине
