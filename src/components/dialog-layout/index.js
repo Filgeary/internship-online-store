@@ -2,11 +2,10 @@ import {memo, useEffect, useRef} from "react";
 import PropTypes from "prop-types";
 import {cn as bem} from '@bem-react/classname';
 import './style.css';
-import Button from "../button";
 
-function ModalLayout(props) {
+function DialogLayout(props) {
 
-  const cn = bem('ModalLayout');
+  const cn = bem('DialogLayout');
 
   // Корректировка центра, если модалка больше окна браузера.
   const layout = useRef();
@@ -21,6 +20,8 @@ function ModalLayout(props) {
         ? 'flex-start'
         : 'center';
     });
+    layout.current.style.paddingTop = `${props.index * 20}px`;
+    layout.current.style.paddingLeft = `${props.index*20}px`;
     // Следим за изменениями размеров layout
     resizeObserver.observe(layout.current);
     document.body.style.overflow = 'hidden';
@@ -34,14 +35,11 @@ function ModalLayout(props) {
   }, []);
 
   return (
-    <div className={cn()} ref={layout}>
-      <div className={cn('frame')} ref={frame}>
+    <div className={cn()} onClick={props.onClose} ref={layout}>
+      <div className={cn('frame')} onClick={(e) => e.stopPropagation()} ref={frame}>
         <div className={cn('head')}>
           <h1 className={cn('title')}>{props.title}</h1>
-          { /* TODO: Для теста, удалить потом */}
-          <Button className={cn('close')} onClick={props.openTestDialog} value='test: открыть диалог поверх модалки' />
-
-          <button className={cn('close')} onClick={props.onClose}>{props.labelClose}</button>
+          {/*<button className={cn('close')} onClick={props.onClose}>{props.labelClose}</button>*/}
         </div>
         <div className={cn('content')}>
           {props.children}
@@ -51,18 +49,18 @@ function ModalLayout(props) {
   );
 }
 
-ModalLayout.propTypes = {
+DialogLayout.propTypes = {
   title: PropTypes.string,
   onClose: PropTypes.func,
   children: PropTypes.node,
   labelClose: PropTypes.string
 };
 
-ModalLayout.defaultProps = {
-  title: 'Модалка',
+DialogLayout.defaultProps = {
+  title: 'Диалоговое окно',
   labelClose: 'Закрыть',
   onClose: () => {
   }
 };
 
-export default memo(ModalLayout);
+export default memo(DialogLayout);

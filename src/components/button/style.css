@@ -1,0 +1,16 @@
+.Button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  font-size: 13px;
+  height: 21px;
+  padding-left: 8px;
+  padding-right: 8px;
+  min-width: 80px;
+  text-wrap: nowrap;
+}
+
+.Button:disabled {
+  cursor: auto;
+}

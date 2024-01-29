@@ -17,8 +17,21 @@ function Input(props) {
 
   // Обработчик изменений в поле
   const onChange = (event) => {
-    setValue(event.target.value);
-    onChangeDebounce(event.target.value);
+    let newValue = event.target.value;
+    if (props.validation === 'onlyNumber') {
+      const onlyNumber = newValue.replace(/[^\d]/g, '');
+      // `String(Number(..))` делает: '00012' -> '12'
+      newValue = onlyNumber ? String(Number(onlyNumber)) : '';
+      if (props.defaultValue) {
+        if (newValue === '0') newValue = props.defaultValue;
+      }
+    }
+
+    if (newValue !== value) {
+      setValue(newValue);
+      onChangeDebounce(newValue);
+    }
+
   };
 
   // Обновление стейта, если передан новый value

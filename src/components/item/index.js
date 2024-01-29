@@ -4,14 +4,18 @@ import {cn as bem} from '@bem-react/classname';
 import numberFormat from "@src/utils/number-format";
 import './style.css';
 import {Link} from "react-router-dom";
+import Button from "../button";
 
 function Item(props){
 
   const cn = bem('Item');
 
   const callbacks = {
-    onAdd: (e) => props.onAdd(props.item._id),
+    onAdd: (e) => props.onAdd(props.item),
+    // onAdd: (e) => props.onAdd(props.item._id),
   }
+
+  const isClicked = props.item._id === props.clickedItem;
 
   return (
     <div className={cn()}>
@@ -21,7 +25,7 @@ function Item(props){
       </div>
       <div className={cn('actions')}>
         <div className={cn('price')}>{numberFormat(props.item.price)} {props.labelCurr}</div>
-        <button onClick={callbacks.onAdd}>{props.labelAdd}</button>
+        <Button onClick={callbacks.onAdd} value={props.labelAdd} isLoading={isClicked} />
       </div>
     </div>
   );

@@ -1,0 +1,58 @@
+body:has(.DialogLayout){
+  overflow: hidden;
+}
+
+.DialogLayout {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow-x: auto;
+  background: rgba(0,0,0,0);
+  z-index: 9999;
+  padding: 10px;
+  min-height: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.DialogLayout-frame {
+  position: relative;
+  background: #ffffff;
+  margin: 0 auto;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 2px 5px 10px rgb(42 61 83 / 40%);
+  border: solid 1px #d1d1d1;
+  min-width: 600px;
+  width: min(100%, 760px);
+}
+
+.DialogLayout-head {
+  height: 60px;
+  background: #f5f5f5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 30px 0 20px;
+}
+
+.DialogLayout-close{
+  align-self: center;
+}
+
+.DialogLayout-title{
+  margin: 0;
+  /* padding: 20px 0 10px; */
+  font-size: 1.4rem;
+  color: #aeaeae;
+}
+
+.DialogLayout-content {
+  /* min-height: 100px; */
+  padding: 40px;
+}
