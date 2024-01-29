@@ -1,4 +1,5 @@
 import { memo, useCallback } from "react";
+import PropTypes from "prop-types";
 import {cn as bem} from '@bem-react/classname';
 import './style.css';
 
@@ -16,7 +17,7 @@ function NumberInput(props) {
       } else if (value < props.min) {
         value = props.min
       }
-      props.setValue(value)
+      props.setValue(Number(value))
     }, [props.setValue, props.max, props.min])
   }
 
@@ -39,5 +40,19 @@ function NumberInput(props) {
     </div>
   )
 }
+
+NumberInput.propTypes = {
+  value: PropTypes.number,
+  setValue: PropTypes.func,
+  min: PropTypes.number,
+  max: PropTypes.number,
+  step: PropTypes.number,
+};
+
+NumberInput.defaultProps = {
+  setValue: () => {
+  },
+  value: 0
+};
 
 export default memo(NumberInput)

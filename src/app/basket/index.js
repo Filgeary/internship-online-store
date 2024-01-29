@@ -1,19 +1,18 @@
 import {memo, useCallback} from 'react';
-import {useDispatch, useStore as useStoreRedux} from 'react-redux';
 import useStore from "@src/hooks/use-store";
 import useSelector from "@src/hooks/use-selector";
-import useInit from "@src/hooks/use-init";
 import useTranslate from "@src/hooks/use-translate";
 import ItemBasket from "@src/components/item-basket";
 import List from "@src/components/list";
 import ModalLayout from "@src/components/modal-layout";
 import BasketTotal from "@src/components/basket-total";
-import modalsActions from '@src/store-redux/modals/actions';
+import useServices from '@src/hooks/use-services';
+import useModal from '@src/hooks/use-modal';
 
 function Basket() {
 
   const store = useStore();
-  const dispatch = useDispatch();
+  const modal =  useModal()
 
   const select = useSelector(state => ({
     list: state.basket.list,
@@ -26,8 +25,7 @@ function Basket() {
     removeFromBasket: useCallback(_id => store.actions.basket.removeFromBasket(_id), [store]),
     // Закрытие любой модалки
     closeModal: useCallback(() => {
-      //store.actions.modals.close();
-      dispatch(modalsActions.close());
+      modal.close();
     }, [store]),
   }
 

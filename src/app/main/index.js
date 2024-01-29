@@ -10,7 +10,7 @@ import CatalogList from "@src/containers/catalog-list";
 import LocaleSelect from "@src/containers/locale-select";
 import TopHead from "@src/containers/top-head";
 
-function Main(props) {
+function Main() {
 
   const store = useStore();
 
@@ -31,7 +31,7 @@ function Main(props) {
       </Head>
       <Navigation/>
       <CatalogFilter/>
-      <CatalogList openAddToBasketDialog={props.openAddToBasketDialog}/>
+      <CatalogList/>
     </PageLayout>
   );
 }

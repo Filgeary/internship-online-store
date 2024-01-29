@@ -1,4 +1,4 @@
-import {memo, useCallback, useMemo} from 'react';
+import {memo, useCallback} from 'react';
 import {useParams} from "react-router-dom";
 import useStore from "@src/hooks/use-store";
 import useTranslate from "@src/hooks/use-translate";
@@ -13,9 +13,11 @@ import TopHead from "@src/containers/top-head";
 import {useDispatch, useSelector} from 'react-redux';
 import shallowequal from "shallowequal";
 import articleActions from '@src/store-redux/article/actions';
+import useModal from '@src/hooks/use-modal';
 
 function Article() {
   const store = useStore();
+  const modal = useModal()
 
   const dispatch = useDispatch();
   // Параметры из пути /articles/:id
@@ -36,7 +38,12 @@ function Article() {
 
   const callbacks = {
     // Добавление в корзину
-    addToBasket: useCallback(_id => store.actions.basket.addToBasket(_id), [store]),
+    addToBasket: useCallback(async (_id) => {
+      const amount = await modal.open(modal.list.addToBasket)
+      if (amount) {
+        store.actions.basket.addToBasket(_id, amount)
+      }
+    }, [store, modal]),
   }
 
   return (

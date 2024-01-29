@@ -38,7 +38,7 @@ class BasketState extends StoreModule {
 
       list.push({...item, amount}); // list уже новый, в него можно пушить.
       // Добавляем к сумме.
-      sum += item.price;
+      sum += item.price*amount;
     }
 
     this.setState({
