@@ -10,9 +10,11 @@ function Input(props) {
   // Внутренний стейт для быстрого отображения ввода
   const [value, setValue] = useState(props.value);
 
+  const delay = props.delay ?? 0;
+
   const onChangeDebounce = useCallback(
-    debounce(value => props.onChange(value, props.name), 600),
-    [props.onChange, props.name]
+    debounce(value => props.onChange(value, props.name), delay),
+    [props.onChange, props.name, delay]
   );
 
   // Обработчик изменений в поле

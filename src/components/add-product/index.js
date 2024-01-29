@@ -29,7 +29,6 @@ function AddProduct(props) {
               theme={'nano'}
               validation={'onlyNumber'}
               defaultValue={'1'}
-              delay={1000}
             /> шт
           </div>
           {/* <div className={cn('cell')}>{numberFormat(props.item.amount || 0)} шт</div> */}
