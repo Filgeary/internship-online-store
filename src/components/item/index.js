@@ -6,22 +6,22 @@ import './style.css';
 import {Link} from "react-router-dom";
 
 function Item(props){
-
   const cn = bem('Item');
 
-  const callbacks = {
-    onAdd: () => props.onAdd(props.item),
+  const options = {
+    showAppendix: props.isSelectable && props.item.count > 0,
   };
 
   return (
-    <div className={cn()}>
+    <div onClick={props.onClick} className={cn({ selectable: props.isSelectable })}>
       <div className={cn('title')}>
         <Link to={props.link}>{props.item.title}</Link>
+        {options.showAppendix && <span> | Будет добавлено: {props.item.count} шт.</span>}
       </div>
       <div className={cn('actions')}>
         <div className={cn('price')}>{numberFormat(props.item.price)} {props.labelCurr}</div>
         <button
-          onClick={callbacks.onAdd}
+          onClick={props.onAdd}
           disabled={props.disabledAddBtn}
         >
           {props.labelAdd}
@@ -35,17 +35,21 @@ Item.propTypes = {
   item: PropTypes.shape({
     _id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     title: PropTypes.string,
-    price: PropTypes.number
+    price: PropTypes.number,
+    count: PropTypes.number,
   }).isRequired,
   link: PropTypes.string,
   onAdd: PropTypes.func,
+  onClick: PropTypes.func,
   labelCurr: PropTypes.string,
   labelAdd: PropTypes.string,
   disabledAddBtn: PropTypes.bool,
+  isSelectable: PropTypes.bool,
 };
 
 Item.defaultProps = {
   onAdd: () => {},
+  onClick: () => {},
   labelCurr: '₽',
   labelAdd: 'Добавить',
   disabledAddBtn: false,

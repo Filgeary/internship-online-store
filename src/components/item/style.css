@@ -1,7 +1,7 @@
 .Item {
   display: flex;
   justify-content: flex-start;
-  transition: background-color 1s;
+  /* transition: background-color 1s; */
   padding-left: 10px
 }
 
@@ -35,6 +35,15 @@
   justify-content: flex-end;
   align-items: center;
   gap: 20px
+}
+
+.Item_selectable:hover {
+  background: rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}
+
+.Item_selectable:active {
+  opacity: 0.6;
 }
 
 .Item-price {

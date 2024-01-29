@@ -100,6 +100,25 @@ class CatalogState extends StoreModule {
       waiting: false
     }, 'Загружен список товаров из АПИ');
   }
+
+  /**
+   * Увеличить количество товара в корзине
+   * @param item
+   */
+  incrementCount(item) {
+    const list = this.getState().list.map((elem) => {
+      if (elem._id === item._id) {
+        return { ...elem, count: elem.count ? elem.count + 1 : 1 };
+      }
+      
+      return elem;
+    });
+
+    this.setState({
+      ...this.getState(),
+      list,
+    });
+  }
 }
 
 export default CatalogState;

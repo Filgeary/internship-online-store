@@ -23,7 +23,7 @@ const Modal = ({children, ...props}) => {
 
   const closeHandler = props.onClose || callbacks.closeModal;
 
-  useOnClickOutside(modalRef, closeHandler);
+  // useOnClickOutside(modalRef, closeHandler);
 
   return (
     <ModalLayout

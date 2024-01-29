@@ -12,6 +12,13 @@ export default {
    * @param dataObj
    */
   close: (dataObj) => {
-    return {type: 'modal/close', payload: dataObj}
+    return {type: 'modal/close', payload: dataObj};
+  },
+
+  /**
+   * Сброс dataObj модалки
+   */
+  resetDataObj: () => {
+    return {type: 'modal/resetDataObj'};
   }
 }

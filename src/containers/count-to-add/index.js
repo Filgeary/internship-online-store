@@ -40,6 +40,7 @@ function CountToAdd() {
           select.activeItemBasket._id,
           select.activeItemBasket.countToAdd,
         );
+        dispatch(modalsActions.resetDataObj());
       };
 
       const catalogFn = willBeAdd ? addToBasket : null;

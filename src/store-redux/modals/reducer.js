@@ -1,7 +1,8 @@
 // Начальное состояние
 const initialState = {
   // name: 'countToAdd'
-  name: '',
+  // name: 'catalogModal',
+  activeModals: [], // Стек открытых окон. Именно Стек
   dataObj: {},
 }
 
@@ -9,9 +10,22 @@ const initialState = {
 function reducer(state = initialState, action) {
   switch (action.type) {
     case 'modal/open':
-      return {...state, name: action.payload.name, dataObj: {}};
+      return {
+        ...state,
+        activeModals: [
+          ...state.activeModals,
+          action.payload.name,
+        ],
+        dataObj: {},
+      };
     case 'modal/close':
-      return {...state, name: null, dataObj: action.payload};
+      return {
+        ...state,
+        activeModals: state.activeModals.slice(0, -1),
+        dataObj: action.payload
+      };
+    case 'modal/resetDataObj':
+      return {...state, dataObj: null};
     default:
       return state;
   }

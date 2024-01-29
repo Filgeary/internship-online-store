@@ -21,9 +21,8 @@ const ModalLayout = React.forwardRef((props, outerRef) => {
     });
     // Следим за изменениями размеров layout
     resizeObserver.observe(layout.current);
-    document.body.style.overflow = 'hidden';
+    
     return () => {
-      document.body.style.overflow = 'auto';
       resizeObserver.disconnect();
     }
   }, []);

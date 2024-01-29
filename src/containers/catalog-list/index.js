@@ -1,6 +1,8 @@
 import { memo, useCallback } from "react";
 import { useDispatch } from "react-redux";
 
+import PropTypes from 'prop-types';
+
 import useStore from "@src/hooks/use-store";
 import useSelector from "@src/hooks/use-selector";
 import useTranslate from "@src/hooks/use-translate";
@@ -11,7 +13,7 @@ import Spinner from "@src/components/spinner";
 
 import modalsActions from '@src/store-redux/modals/actions';
 
-function CatalogList() {
+function CatalogList(props) {
   const store = useStore();
   const dispatch = useDispatch();
 
@@ -38,7 +40,11 @@ function CatalogList() {
     openModalOfCount: useCallback((item) => {
       store.actions.basket.setActive(item);
       dispatch(modalsActions.open('countToAdd'));
-    }, [select.list]),
+    }, [store, select.list]),
+    // Добавить к количеству товара в корзине
+    addCountOfItem: useCallback((item) => {
+      store.actions.catalog.incrementCount(item);
+    }, [store]),
   };
 
   const {t} = useTranslate();
@@ -48,7 +54,9 @@ function CatalogList() {
         <Item
           disabledAddBtn={item._id === select.activeItemBasket?._id}
           item={item}
-          onAdd={callbacks.openModalOfCount}
+          isSelectable={props.isItemsSelectable}
+          onAdd={() => callbacks.openModalOfCount(item)}
+          onClick={() => callbacks.addCountOfItem(item)}
           link={`/articles/${item._id}`}
           labelAdd={t('article.add')}
         />
@@ -63,5 +71,13 @@ function CatalogList() {
     </Spinner>
   );
 }
+
+CatalogList.propTypes = {
+  isItemsSelectable: PropTypes.bool,
+};
+
+CatalogList.defaultProps = {
+  isItemsSelectable: false,
+};
 
 export default memo(CatalogList);
