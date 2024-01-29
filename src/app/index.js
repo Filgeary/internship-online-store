@@ -9,7 +9,7 @@ import Login from "./login";
 import Profile from "./profile";
 import Protected from "@src/containers/protected";
 
-import  AllModals from '@src/containers/all-modals';
+import AllModals from '@src/containers/all-modals';
 
 /**
  * Приложение

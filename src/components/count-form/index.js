@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, memo } from 'react';
 import PropTypes from 'prop-types';
 
 import './style.css';
@@ -21,6 +21,7 @@ function CountForm(props) {
   const options = {
     minVal: props.min,
     maxVal: props.max,
+    placeholder: props.max !== Infinity ? `${props.min}-${props.max}` : `${props.min}-...`,
   };
 
   const handlers = {
@@ -68,7 +69,6 @@ function CountForm(props) {
 
   return (
     <form onSubmit={callbacks.submit} className={cn()}>
-
       <div className={cn('row')}>
         {
           props.isSuccess &&
@@ -92,7 +92,7 @@ function CountForm(props) {
             onChange={handlers.countChange}
             onPaste={handlers.paste}
             value={count}
-            placeholder={`${options.minVal}-${options.maxVal}`}
+            placeholder={options.placeholder}
             ref={inputRef}
           />
         </div>
@@ -134,4 +134,4 @@ CountForm.defaultProps = {
   max: 999,
 };
 
-export default CountForm;
+export default memo(CountForm);

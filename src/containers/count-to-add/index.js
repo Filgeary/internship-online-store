@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useRef } from 'react';
+import React, { useCallback, useState, memo } from 'react';
 import { useDispatch } from 'react-redux';
 
 import useStore from '@src/hooks/use-store';
@@ -47,7 +47,7 @@ function CountToAdd() {
       if (!willBeAdd) {
         store.actions.basket.resetActive();
       }
-      
+
       dispatch(modalsActions.close({ catalogFn }));
     }, [store, isSuccess]),
 
@@ -82,4 +82,4 @@ function CountToAdd() {
   );
 }
 
-export default CountToAdd;
+export default memo(CountToAdd);

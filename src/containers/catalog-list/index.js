@@ -1,5 +1,5 @@
-import {memo, useCallback, useEffect} from "react";
-import { useDispatch, useSelector as useSelectorRedux } from "react-redux";
+import { memo, useCallback } from "react";
+import { useDispatch } from "react-redux";
 
 import useStore from "@src/hooks/use-store";
 import useSelector from "@src/hooks/use-selector";
@@ -52,7 +52,7 @@ function CatalogList() {
           link={`/articles/${item._id}`}
           labelAdd={t('article.add')}
         />
-      ), [select.activeItemBasket, callbacks.addToBasket, callbacks.openModalOfCount, t]),
+      ), [select.activeItemBasket, callbacks.openModalOfCount, t]),
   };
 
   return (
