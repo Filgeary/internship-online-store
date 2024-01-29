@@ -1,19 +1,20 @@
-import { useDispatch } from "react-redux";
+import useStore from "@src/hooks/use-store";
+import useSelector from "@src/hooks/use-selector";
 import useTranslate from "@src/hooks/use-translate";
 import CountItemForm from "@src/components/count-item-form";
 import ModalLayout from "@src/components/modal-layout";
-import modalsActions from "@src/store-redux/modals/actions";
-import activeActions from "@src/store-redux/count/actions";
 
 function CountItemModal() {
-  const dispatch = useDispatch();
+  const store = useStore();
+
+  const resolve = useSelector((state) => state.modals.resolve)
 
   const callbacks = {
-    // Закрытие любой модалки
-    closeModal: () => dispatch(modalsActions.close()),
+    // Закрытие модалки
+    closeModal: () => store.actions.modals.close(),
     onSubmit: (count) => {
-      dispatch(activeActions.setCount(+count));
-      dispatch(modalsActions.close());
+      resolve(+count);
+      store.actions.modals.close();
     },
   };
 

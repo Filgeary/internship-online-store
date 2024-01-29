@@ -4,16 +4,22 @@ class ModalsState extends StoreModule {
 
   initState() {
     return {
-      name: null
+      name: null,
+      list: [],
+      resolve: null
     }
   }
 
   open(name){
-    this.setState({name}, `Открытие модалки ${name}`);
+    this.setState({...this.getState(), name}, `Открытие модалки ${name}`);
   }
 
   close(){
-    this.setState({name: null}, `Закрытие модалки`);
+    this.setState({...this.getState(), name: null, resolve: null }, `Закрытие модалки`);
+  }
+
+  resolve(resolve) {
+    this.setState({...this.getState(), resolve });
   }
 }
 

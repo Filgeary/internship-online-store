@@ -5,12 +5,9 @@ import useTranslate from "@src/hooks/use-translate";
 import Menu from "@src/components/menu";
 import BasketTool from "@src/components/basket-tool";
 import SideLayout from "@src/components/side-layout";
-import {useDispatch} from 'react-redux';
-import modalsActions from '@src/store-redux/modals/actions';
 
 function Navigation() {
   const store = useStore();
-  const dispatch = useDispatch();
 
   const select = useSelector(state => ({
     amount: state.basket.amount,
@@ -21,8 +18,7 @@ function Navigation() {
   const callbacks = {
     // Открытие модалки корзины
     openModalBasket: useCallback(() => {
-      //store.actions.modals.open('basket')
-      dispatch(modalsActions.open('basket'));
+      store.actions.modals.open('basket')
     }, [store]),
 
     // Обработка перехода на главную
