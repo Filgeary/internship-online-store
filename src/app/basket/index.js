@@ -1,5 +1,5 @@
-import {memo, useCallback} from 'react';
-import {useDispatch, useStore as useStoreRedux} from 'react-redux';
+import {memo, useCallback, useEffect} from 'react';
+import {useDispatch, useStore as useStoreRedux, useSelector as useSelectorRedux} from 'react-redux';
 import useStore from "@src/hooks/use-store";
 import useSelector from "@src/hooks/use-selector";
 import useTranslate from "@src/hooks/use-translate";
@@ -19,6 +19,10 @@ function Basket() {
     list: state.basket.list,
     amount: state.basket.amount,
     sum: state.basket.sum
+  }));
+
+  const selectRedux = useSelectorRedux((state) => ({
+    dataObj: state.modals.dataObj,
   }));
 
   const callbacks = {
@@ -43,6 +47,10 @@ function Basket() {
       />
     ), [callbacks.removeFromBasket, t]),
   };
+
+  useEffect(() => {
+    selectRedux.dataObj?.basketFn?.();
+  }, [selectRedux.dataObj?.basketFn]);
 
   return (
     <Modal title={t('basket.title')} labelClose={t('basket.close')}>

@@ -1,27 +1,36 @@
-import {memo, useState} from "react";
-import PropTypes from "prop-types";
-import {cn as bem} from '@bem-react/classname';
-import numberFormat from "@src/utils/number-format";
 import './style.css';
+import {memo, useState} from "react";
 import {Link} from "react-router-dom";
+import PropTypes from "prop-types";
+
+import {cn as bem} from '@bem-react/classname';
+
+import numberFormat from "@src/utils/number-format";
 
 function Item(props){
   const cn = bem('Item');
 
   const options = {
-    showAppendix: props.isSelectable && props.item.count > 0,
+    showAppendix: props.isSelectable && props.count > 0,
+  };
+
+  const callbacks = {
+    onAdd: (e) => {
+      e.stopPropagation();
+      props.onAdd();
+    },
   };
 
   return (
     <div onClick={props.onClick} className={cn({ selectable: props.isSelectable })}>
       <div className={cn('title')}>
         <Link to={props.link}>{props.item.title}</Link>
-        {options.showAppendix && <span> | Будет добавлено: {props.item.count} шт.</span>}
+        {options.showAppendix && <span> | Будет добавлено: {props.count} шт.</span>}
       </div>
       <div className={cn('actions')}>
         <div className={cn('price')}>{numberFormat(props.item.price)} {props.labelCurr}</div>
         <button
-          onClick={props.onAdd}
+          onClick={callbacks.onAdd}
           disabled={props.disabledAddBtn}
         >
           {props.labelAdd}

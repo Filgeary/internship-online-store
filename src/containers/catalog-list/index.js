@@ -16,7 +16,7 @@ import modalsActions from '@src/store-redux/modals/actions';
 function CatalogList(props) {
   const store = useStore();
   const dispatch = useDispatch();
-
+  
   const select = useSelector(state => ({
     list: state.catalog.list,
     page: state.catalog.params.page,
@@ -43,24 +43,28 @@ function CatalogList(props) {
     }, [store, select.list]),
     // Добавить к количеству товара в корзине
     addCountOfItem: useCallback((item) => {
-      store.actions.catalog.incrementCount(item);
-    }, [store]),
+      if (!props.isItemsSelectable) return;
+      props.onItemClick(item);
+    }, [props.onItemClick]),
   };
 
   const {t} = useTranslate();
+
+  console.log('@@@', props.countOfItems);
 
   const renders = {
     item: useCallback(item => (
         <Item
           disabledAddBtn={item._id === select.activeItemBasket?._id}
           item={item}
+          count={props.countOfItems[item._id]}
           isSelectable={props.isItemsSelectable}
           onAdd={() => callbacks.openModalOfCount(item)}
           onClick={() => callbacks.addCountOfItem(item)}
           link={`/articles/${item._id}`}
           labelAdd={t('article.add')}
         />
-      ), [select.activeItemBasket, callbacks.openModalOfCount, t]),
+      ), [props.countOfItems, select.activeItemBasket, callbacks.openModalOfCount, t]),
   };
 
   return (
@@ -73,11 +77,14 @@ function CatalogList(props) {
 }
 
 CatalogList.propTypes = {
+  onItemClick: PropTypes.func,
   isItemsSelectable: PropTypes.bool,
+  countOfItems: PropTypes.object,
 };
 
 CatalogList.defaultProps = {
   isItemsSelectable: false,
+  countOfItems: {},
 };
 
 export default memo(CatalogList);
