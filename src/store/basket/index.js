@@ -26,7 +26,9 @@ class BasketState extends StoreModule {
       let result = item;
       if (item._id === _id) {
         exist = true; // Запомним, что был найден в корзине
-        result = {...item, amount: item.amount + amountGoods};
+        amountGoods 
+        ? result = {...item, amount: item.amount + amountGoods}
+        : result = {...item, amount: item.amount + 1}
       }
       sum += result.price * result.amount;
       return result;
@@ -37,9 +39,11 @@ class BasketState extends StoreModule {
       const res = await this.services.api.request({url: `/api/v1/articles/${_id}`});
       const item = res.data.result;
 
-      list.push({...item, amount: amountGoods}); // list уже новый, в него можно пушить.
+      list.push({...item, amount: amountGoods ? amountGoods : 1}); // list уже новый, в него можно пушить.
       // Добавляем к сумме.
-       sum += item.price * amountGoods;
+      amountGoods 
+        ? sum += item.price * amountGoods
+        : sum += item.price
     }
     this.setState({
       ...this.getState(),
