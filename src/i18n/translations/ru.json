@@ -28,5 +28,6 @@
   "countModal.countInput": "Введите количество",
   "countModal.cancel": "Отмена",
   "countModal.ok": "Ок",
-  "countModal.success": "Товар в количестве [:count:] шт. будет добавлен в корзину."
+  "countModal.success": "Товар в количестве [:count:] шт. будет добавлен в корзину.",
+  "catalogModal.title": "Дополнительный выбор"
 }

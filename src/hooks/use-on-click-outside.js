@@ -5,32 +5,29 @@ function useOnClickOutside(ref, ...handlers) {
     const runHandlers = () => handlers.forEach((handler) => handler());
 
     const listener = (e) => {
-      // Клик был внутри
-      if (!ref.current || ref.current?.contains(e.target)) {
-        return;
-      }
-
-      runHandlers();
-    };
-
-    const keyListener = (e) => {
-      const escCode = 27;
-
-      if (e.keyCode === escCode) {
+      if (e.currentTarget === e.target) {
         runHandlers();
       }
     };
 
-    document.addEventListener('mousedown', listener);
-    document.addEventListener('touchstart', listener);
+    // const keyListener = (e) => {
+    //   const escCode = 27;
 
-    document.addEventListener('keydown', keyListener);
+    //   if (e.keyCode === escCode) {
+    //     runHandlers();
+    //   }
+    // };
+
+    ref.current.addEventListener('click', listener);
+    ref.current.addEventListener('touchstart', listener);
+
+    // document.addEventListener('keydown', keyListener);
     
     return () => {
-      document.removeEventListener('mousedown', listener);
-      document.removeEventListener('touchstart', listener);
+      ref.current?.removeEventListener('click', listener);
+      ref.current?.removeEventListener('touchstart', listener);
 
-      document.removeEventListener('keydown', keyListener);
+      // document.addEventListener('keydown', keyListener);
     };
   }, [ref, handlers]);
 }

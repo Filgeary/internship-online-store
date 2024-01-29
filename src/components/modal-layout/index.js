@@ -35,8 +35,8 @@ const ModalLayout = React.forwardRef((props, outerRef) => {
   };
 
   return (
-    <div className={cn()} ref={layout}>
-      <div className={cn('frame')} ref={(el) => { frame.current = el; outerRef.current = el}}>
+    <div className={cn()} ref={(el) => { layout.current = el; outerRef.current = el }}>
+      <div className={cn('frame')} ref={frame}>
         <div className={cn('head')}>
           <h1 className={cn('title')}>{props.title}</h1>
           <button className={cn('close')} onClick={callbacks.close}>{props.labelClose}</button>

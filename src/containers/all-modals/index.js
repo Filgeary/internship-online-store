@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
-import { useSelector } from "react-redux";
+// import { useSelector } from "react-redux";
+import useSelector from "@src/hooks/use-selector";
 
 import PropTypes from 'prop-types';
 
@@ -8,7 +9,7 @@ import CountToAdd from "@src/containers/count-to-add";
 import CatalogModal from "@src/containers/catalog-modal";
 
 function AllModals({ toDisableFocus }) {
-  const activeModals = useSelector(state => state.modals.activeModals);
+  const activeModals = useSelector((state) => state.modals.activeModals);
 
   useEffect(() => {
     if (!toDisableFocus.current) return;

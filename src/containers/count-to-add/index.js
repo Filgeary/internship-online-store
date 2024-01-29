@@ -49,7 +49,8 @@ function CountToAdd() {
         store.actions.basket.resetActive();
       }
 
-      dispatch(modalsActions.close({ catalogFn }));
+      // dispatch(modalsActions.close({ catalogFn }));
+      store.actions.modals.close({ catalogFn });
     }, [store, isSuccess]),
 
     cancel() {

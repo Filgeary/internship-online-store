@@ -21,10 +21,15 @@ function Item(props){
     },
   };
 
+  const renders = {
+    link: () => 
+      props.isSelectable ? <span>{props.item.title}</span> : <Link to={props.link}>{props.item.title}</Link>,
+  };
+
   return (
     <div onClick={props.onClick} className={cn({ selectable: props.isSelectable })}>
       <div className={cn('title')}>
-        <Link to={props.link}>{props.item.title}</Link>
+        {renders.link()}
         {options.showAppendix && <span> | Будет добавлено: {props.count} шт.</span>}
       </div>
       <div className={cn('actions')}>

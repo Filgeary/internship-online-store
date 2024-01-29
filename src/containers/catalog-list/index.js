@@ -39,7 +39,8 @@ function CatalogList(props) {
     // Открыть модалку с выбором количества товара для добавления
     openModalOfCount: useCallback((item) => {
       store.actions.basket.setActive(item);
-      dispatch(modalsActions.open('countToAdd'));
+      // dispatch(modalsActions.open('countToAdd'));
+      store.actions.modals.open('countToAdd');
     }, [store, select.list]),
     // Добавить к количеству товара в корзине
     addCountOfItem: useCallback((item) => {
@@ -49,8 +50,6 @@ function CatalogList(props) {
   };
 
   const {t} = useTranslate();
-
-  console.log('@@@', props.countOfItems);
 
   const renders = {
     item: useCallback(item => (

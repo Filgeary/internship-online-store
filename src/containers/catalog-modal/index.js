@@ -21,11 +21,10 @@ function CatalogModal() {
     closeModal: useCallback(() => {
       const basketFn = async () => {
         console.log('UpdatedItems:', updatedItems);
-        for (const itemId in updatedItems) {
-          await store.actions.basket.addToBasket(itemId, updatedItems[itemId]);
-        }
+        store.actions.basket.addMany(updatedItems);
       };
-      dispatch(modalsActions.close({ basketFn }));
+      // dispatch(modalsActions.close({ basketFn }));
+      store.actions.modals.close({ basketFn });
     }, [store, updatedItems]),
 
     update: (item) => {
@@ -36,11 +35,12 @@ function CatalogModal() {
     },
   };
 
+  const {t} = useTranslate();
+
   return (
     <Modal
       onClose={callbacks.closeModal}
-      title={'Список товаров'}
-      labelClose={'Закрыть'}
+      title={t('catalogModal.title')}
     >
       <CatalogFilter />
       <CatalogList

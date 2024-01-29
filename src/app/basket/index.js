@@ -18,10 +18,7 @@ function Basket() {
   const select = useSelector(state => ({
     list: state.basket.list,
     amount: state.basket.amount,
-    sum: state.basket.sum
-  }));
-
-  const selectRedux = useSelectorRedux((state) => ({
+    sum: state.basket.sum,
     dataObj: state.modals.dataObj,
   }));
 
@@ -30,7 +27,8 @@ function Basket() {
     removeFromBasket: useCallback(_id => store.actions.basket.removeFromBasket(_id), [store]),
     // Открыть модалку каталога
     openCatalogModal: useCallback(() => {
-      dispatch(modalsActions.open('catalogModal'));
+      // dispatch(modalsActions.open('catalogModal'));
+      store.actions.modals.open('catalogModal');
     }, [store]),
   };
 
@@ -49,8 +47,8 @@ function Basket() {
   };
 
   useEffect(() => {
-    selectRedux.dataObj?.basketFn?.();
-  }, [selectRedux.dataObj?.basketFn]);
+    select.dataObj?.basketFn?.();
+  }, [select.dataObj?.basketFn]);
 
   return (
     <Modal title={t('basket.title')} labelClose={t('basket.close')}>

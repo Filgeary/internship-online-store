@@ -19,10 +19,10 @@ body:has(.ModalLayout){
   flex-direction: row;
   justify-content: center;
   align-items: center;
-}
 
-.ModalLayout:last-child {
-  overflow-y: auto;
+  &:last-child {
+    overflow-y: auto;
+  }
 }
 
 .ModalLayout-frame {

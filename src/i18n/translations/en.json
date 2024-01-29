@@ -26,5 +26,6 @@
   "countModal.countInput": "Enter the count",
   "countModal.cancel": "Cancel",
   "countModal.ok": "Ok",
-  "countModal.success": "Product quantity [:count:] pcs. will be added to cart."
+  "countModal.success": "Product quantity [:count:] pcs. will be added to cart.",
+  "catalogModal.title": "Additional selection"
 }
