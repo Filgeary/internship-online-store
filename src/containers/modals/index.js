@@ -7,9 +7,10 @@ import { useDispatch } from "react-redux";
 import modalsActions from "@src/store-redux/modals/actions";
 import useTranslate from "@src/hooks/use-translate";
 import { useSelector as useSelectorRedux } from "react-redux";
+import CatalogModal from "@src/app/catalog-modal";
 
 const Modals = () => {
-  const activeModal = useSelectorRedux((state) => state.modals.name);
+  const activeModal = useSelectorRedux((state) => state.modals);
   const id = useSelector((state) => state.basket.active);
   const dispatch = useDispatch();
   const store = useStore();
@@ -30,21 +31,27 @@ const Modals = () => {
 
     // Закрытие модалки
     closeModal: useCallback(() => {
-      dispatch(modalsActions.close());
+      dispatch(modalsActions.close("articleCount"));
     }, [store]),
   };
+  console.log(activeModal.list);
   return (
     <>
-      {activeModal === "basket" && <Basket />}
-      {activeModal === "articleCount" && (
-        <CountForm
-          onSubmit={callbacks.onSubmit}
-          closeModal={callbacks.closeModal}
-          basketUnit={t("basket.unit")}
-          title={t("count.form.title")}
-          ok={t("count.form.ok")}
-          cancel={t("count.form.cancel")}
-        />
+      {activeModal.list.map(
+        (el, i) =>
+          (el === "basket" && <Basket key={i} />) ||
+          (el === "articleCount" && (
+            <CountForm
+              onSubmit={callbacks.onSubmit}
+              closeModal={callbacks.closeModal}
+              basketUnit={t("basket.unit")}
+              title={t("count.form.title")}
+              ok={t("count.form.ok")}
+              cancel={t("count.form.cancel")}
+              key={i}
+            />
+          )) ||
+          (el === "catalog" && <CatalogModal key={i}/>)
       )}
     </>
   );

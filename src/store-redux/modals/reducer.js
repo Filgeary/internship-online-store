@@ -1,15 +1,15 @@
 // Начальное состояние
 const initialState = {
-  name: ''
+  list:[]
 }
 
 // Обработчик действий
 function reducer(state = initialState, action) {
   switch (action.type) {
     case 'modal/open':
-      return {...state, name: action.payload.name};
+      return {...state, list:[...state.list, action.payload.name]};
     case 'modal/close':
-      return {...state, name: null};
+      return {...state, list: state.list.filter((el) => el !== action.payload.name),};
     default:
       return state;
   }

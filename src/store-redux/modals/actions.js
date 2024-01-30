@@ -11,7 +11,7 @@ export default {
    * Закрытие модалки
    * @param name
    */
-  close: () => {
-    return {type: 'modal/close'}
+  close: (name) => {
+    return {type: 'modal/close', payload: {name}}
   }
 }

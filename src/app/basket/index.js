@@ -24,11 +24,15 @@ function Basket() {
   const callbacks = {
     // Удаление из корзины
     removeFromBasket: useCallback(_id => store.actions.basket.removeFromBasket(_id), [store]),
-    // Закрытие любой модалки
+    // Закрытие модалки корзины
     closeModal: useCallback(() => {
       //store.actions.modals.close();
-      dispatch(modalsActions.close());
+      dispatch(modalsActions.close('basket'));
     }, [store]),
+    // Открытие модалки добавления еще товаров
+    openModal: useCallback(()=>{
+      dispatch(modalsActions.open('catalog'))
+    }, [store])
   }
 
   const {t} = useTranslate();
@@ -49,7 +53,7 @@ function Basket() {
     <ModalLayout title={t('basket.title')} labelClose={t('basket.close')}
                  onClose={callbacks.closeModal}>
       <List list={select.list} renderItem={renders.itemBasket}/>
-      <BasketTotal sum={select.sum} t={t}/>
+      <BasketTotal sum={select.sum} t={t} open={callbacks.openModal}/>
     </ModalLayout>
   );
 }

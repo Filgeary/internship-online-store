@@ -1,5 +1,6 @@
 {
   "title": "Shop",
+  "catalog":"Catalog",
   "menu.main": "Main",
   "basket.title": "Cart",
   "basket.open": "Open",
@@ -7,6 +8,7 @@
   "basket.inBasket": "In cart",
   "basket.empty": "empty",
   "basket.total": "Total",
+  "basket.select.more":"Select more article",
   "basket.unit": "pcs",
   "basket.delete": "Delete",
   "basket.articles": {

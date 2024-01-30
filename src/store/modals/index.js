@@ -1,4 +1,4 @@
-import StoreModule from "../module";
+/* import StoreModule from "../module";
 
 class ModalsState extends StoreModule {
 
@@ -18,3 +18,4 @@ class ModalsState extends StoreModule {
 }
 
 export default ModalsState;
+ */

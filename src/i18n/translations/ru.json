@@ -1,5 +1,6 @@
 {
   "title": "Магазин",
+  "catalog":"Каталог",
   "menu.main": "Главная",
   "basket.title": "Корзина",
   "basket.open": "Перейти",
@@ -7,6 +8,7 @@
   "basket.inBasket": "В корзине",
   "basket.empty": "пусто",
   "basket.total": "Итого",
+  "basket.select.more":"Выбрать ещё товар",
   "basket.unit": "шт",
   "basket.delete": "Удалить",
   "basket.articles": {
