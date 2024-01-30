@@ -15,13 +15,7 @@ function CatalogModal() {
 
   const callbacks = {
     closeModal: useCallback(() => {
-      const basketFn = async () => {
-        console.log('UpdatedItems:', updatedItems);
-        store.actions.basket.addMany(updatedItems);
-        store.actions.modals.resetDataObj();
-      };
-      // dispatch(modalsActions.close({ basketFn }));
-      store.actions.modals.close({ basketFn });
+      store.actions.modals.close(updatedItems);
     }, [store, updatedItems]),
 
     update: (item) => {

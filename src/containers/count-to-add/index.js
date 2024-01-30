@@ -1,21 +1,13 @@
 import React, { useCallback, useState, memo } from 'react';
-import { useDispatch } from 'react-redux';
 
 import useStore from '@src/hooks/use-store';
-import useSelector from "@src/hooks/use-selector";
-import modalsActions from '@src/store-redux/modals/actions';
+import useTranslate from '@src/hooks/use-translate';
 
 import Modal from '@src/containers/modal';
 import CountForm from '@src/components/count-form';
 
-import useTranslate from '@src/hooks/use-translate';
-
 function CountToAdd() {
   const store = useStore();
-  const dispatch = useDispatch();
-  const select = useSelector((state) => ({
-    activeItemBasket: state.basket.active,
-  }));
 
   const [isSuccess, setIsSuccess] = useState(false);
   const {t} = useTranslate();
@@ -27,30 +19,11 @@ function CountToAdd() {
     },
 
     closeModal: useCallback((willBeAdd = isSuccess) => {
-      // Альтернатива эффекту в app/main
-      // if (willBeAdd) {
-        // store.actions.basket.addToBasket(
-        //   select.activeItemBasket._id,
-        //   select.activeItemBasket.countToAdd,
-        // );
-      // }
-
-      const addToBasket = () => {
-        store.actions.basket.addToBasket(
-          select.activeItemBasket._id,
-          select.activeItemBasket.countToAdd,
-        );
-        dispatch(modalsActions.resetDataObj());
-      };
-
-      const catalogFn = willBeAdd ? addToBasket : null;
-
-      if (!willBeAdd) {
-        store.actions.basket.resetActive();
+      if (willBeAdd) {
+        store.actions.modals.close();
+      } else {
+        store.actions.modals.closeRej();
       }
-
-      // dispatch(modalsActions.close({ catalogFn }));
-      store.actions.modals.close({ catalogFn });
     }, [store, isSuccess]),
 
     cancel() {

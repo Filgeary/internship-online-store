@@ -9,11 +9,8 @@ import Modal from "@src/containers/modal";
 import BasketTotal from "@src/components/basket-total";
 import BasketFooter from '@src/components/basket-footer';
 
-import modalsActions from '@src/store-redux/modals/actions';
-
 function Basket() {
   const store = useStore();
-  const dispatch = useDispatch();
 
   const select = useSelector(state => ({
     list: state.basket.list,
@@ -27,8 +24,12 @@ function Basket() {
     removeFromBasket: useCallback(_id => store.actions.basket.removeFromBasket(_id), [store]),
     // Открыть модалку каталога
     openCatalogModal: useCallback(() => {
-      // dispatch(modalsActions.open('catalogModal'));
-      store.actions.modals.open('catalogModal');
+      const promiseOfModal = store.actions.modals.open('catalogModal');
+
+      promiseOfModal.then((updatedItems) => {
+        store.actions.basket.addMany(updatedItems);
+        store.actions.modals.resetDataObj();
+      });
     }, [store]),
   };
 
@@ -45,10 +46,6 @@ function Basket() {
       />
     ), [callbacks.removeFromBasket, t]),
   };
-
-  useEffect(() => {
-    select.dataObj?.basketFn?.();
-  }, [select.dataObj?.basketFn]);
 
   return (
     <Modal title={t('basket.title')} labelClose={t('basket.close')}>

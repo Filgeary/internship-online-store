@@ -16,10 +16,6 @@ import TopHead from "@src/containers/top-head";
 function Main() {
   const store = useStore();
 
-  const select = useSelector((state) => ({
-    dataObj: state.modals.dataObj,
-  }));
-
   useInit(async () => {
     await Promise.all([
       store.actions.catalog.initParams(),
@@ -28,10 +24,6 @@ function Main() {
   }, [], true);
 
   const {t} = useTranslate();
-
-  useEffect(() => {
-    select.dataObj?.catalogFn?.();
-  }, [select.dataObj?.catalogFn]);
 
   return (
     <PageLayout>

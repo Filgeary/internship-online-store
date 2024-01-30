@@ -1,4 +1,4 @@
-import { memo, useCallback } from "react";
+import { memo, useCallback, useEffect } from "react";
 
 import PropTypes from 'prop-types';
 
@@ -35,7 +35,16 @@ function CatalogList(props) {
     // Открыть модалку с выбором количества товара для добавления
     openModalOfCount: useCallback((item) => {
       store.actions.basket.setActive(item);
-      store.actions.modals.open('countToAdd');
+      const promiseOfModal = store.actions.modals.open('countToAdd');
+
+      promiseOfModal
+        .then(() => {
+          store.actions.basket.addActiveToBasket();
+        })
+        .finally(() => {
+          store.actions.basket.resetActive();
+        });
+
     }, [store, select.list]),
     // Добавить к количеству товара в корзине
     addCountOfItem: useCallback((item) => {
