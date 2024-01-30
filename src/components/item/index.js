@@ -34,12 +34,16 @@ function Item(props){
       </div>
       <div className={cn('actions')}>
         <div className={cn('price')}>{numberFormat(props.item.price)} {props.labelCurr}</div>
-        <button
-          onClick={callbacks.onAdd}
-          disabled={props.disabledAddBtn}
-        >
-          {props.labelAdd}
-        </button>
+        {
+          !props.isSelectable && (
+            <button
+              onClick={callbacks.onAdd}
+              disabled={props.disabledAddBtn}
+            >
+              {props.labelAdd}
+            </button>
+          )
+        }
       </div>
     </div>
   );
@@ -67,6 +71,6 @@ Item.defaultProps = {
   labelCurr: '₽',
   labelAdd: 'Добавить',
   disabledAddBtn: false,
-}
+};
 
 export default memo(Item);

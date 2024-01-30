@@ -16,6 +16,7 @@ function CatalogModal() {
   const callbacks = {
     closeModal: useCallback(() => {
       store.actions.modals.close(updatedItems);
+      store.actions.catalog.clearQueries();
     }, [store, updatedItems]),
 
     update: (item) => {
@@ -33,7 +34,10 @@ function CatalogModal() {
       onClose={callbacks.closeModal}
       title={t('catalogModal.title')}
     >
-      <CatalogFilter />
+      <CatalogFilter
+        watchQueries={true}
+        ignoreHistory={true}
+      />
       <CatalogList
         countOfItems={updatedItems}
         onItemClick={callbacks.update}

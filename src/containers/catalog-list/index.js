@@ -41,6 +41,7 @@ function CatalogList(props) {
         .then(() => {
           store.actions.basket.addActiveToBasket();
         })
+        .catch(() => {})
         .finally(() => {
           store.actions.basket.resetActive();
         });

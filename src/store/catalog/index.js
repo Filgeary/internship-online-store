@@ -21,7 +21,8 @@ class CatalogState extends StoreModule {
         category: ''
       },
       count: 0,
-      waiting: false
+      waiting: false,
+      queries: [],
     }
   }
 
@@ -58,10 +59,19 @@ class CatalogState extends StoreModule {
    * Установка параметров и загрузка списка товаров
    * @param [newParams] {Object} Новые параметры
    * @param [replaceHistory] {Boolean} Заменить адрес (true) или новая запись в истории браузера (false)
+   * @param [setQueries] {Boolean} Нужно ли вести историю состояний (для undo)
+   * @param [ignoreHistory] {Boolean} Нужно ли записывать стейт в window.history
    * @returns {Promise<void>}
    */
-  async setParams(newParams = {}, replaceHistory = false) {
+  async setParams(newParams = {}, replaceHistory = false, setQueries = false, ignoreHistory = false) {
     const params = {...this.getState().params, ...newParams};
+
+    if (setQueries) {
+      this.setState({
+        ...this.getState(),
+        queries: [...this.getState().queries, this.getState().params]
+      });
+    }
 
     // Установка новых параметров и признака загрузки
     this.setState({
@@ -73,10 +83,13 @@ class CatalogState extends StoreModule {
     // Сохранить параметры в адрес страницы
     let urlSearch = new URLSearchParams(exclude(params, this.initState().params)).toString();
     const url = window.location.pathname + (urlSearch ? `?${urlSearch}`: '') + window.location.hash;
-    if (replaceHistory) {
-      window.history.replaceState({}, '', url);
-    } else {
-      window.history.pushState({}, '', url);
+
+    if (!ignoreHistory) {
+      if (replaceHistory) {
+        window.history.replaceState({}, '', url);
+      } else {
+        window.history.pushState({}, '', url);
+      }
     }
 
     const apiParams = exclude({
@@ -93,12 +106,40 @@ class CatalogState extends StoreModule {
     });
 
     const res = await this.services.api.request({url: `/api/v1/articles?${new URLSearchParams(apiParams)}`});
-    this.setState({
+
+    const newState = {
       ...this.getState(),
       list: res.data.result.items,
       count: res.data.result.count,
       waiting: false
-    }, 'Загружен список товаров из АПИ');
+    };
+
+    this.setState(newState, 'Загружен список товаров из АПИ');
+  }
+
+  /**
+   * Очистить список состояний
+   * @param [clearBy] {Number} Насколько очистить
+   */
+  undoBy(clearBy = 1) {
+    this.setState({
+      ...this.getState(),
+      queries: this.getState().queries.slice(0, clearBy),
+    });
+  }
+
+  /**
+   * Очистить список состояний
+   */
+  clearQueries() {
+    const firstQuery = this.getState().queries[0];
+
+    this.setState({
+      ...this.getState(),
+      queries: [],
+    }, 'Очищен список состояний');
+
+    this.setParams(firstQuery);
   }
 
   /**

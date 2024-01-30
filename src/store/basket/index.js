@@ -11,6 +11,7 @@ class BasketState extends StoreModule {
       sum: 0,
       amount: 0,
       active: null,
+      waiting: false,
     }
   }
 
@@ -52,10 +53,24 @@ class BasketState extends StoreModule {
     }, 'Добавление в корзину');
   }
 
+  /**
+   * Добавление в корзину сразу нескольких элементов
+   * @param items {Array} @example {id: 1, count: 5}
+   */
   async addMany(items) {
+    this.setState({
+      ...this.getState(),
+      waiting: true,
+    });
+
     for (const itemId in items) {
       await this.addToBasket(itemId, items[itemId]);
     }
+    
+    this.setState({
+      ...this.getState(),
+      waiting: false,
+    });
   }
 
   /**
