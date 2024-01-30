@@ -22,5 +22,9 @@
   "auth.password": "Пароль",
   "auth.signIn": "Войти",
   "session.signIn": "Вход",
-  "session.signOut": "Выход"
+  "session.signOut": "Выход",
+  "dialogAmount.title": "Количество",
+  "dialog.close": "Закрыть",
+  "dialog.confirm": "Подтвердить",
+  "dialog.cancel": "Отменить"
 }

@@ -20,5 +20,9 @@
   "auth.password": "Password",
   "auth.signIn": "Sign in",
   "session.signIn": "Sign In",
-  "session.signOut": "Sign Out"
+  "session.signOut": "Sign Out",
+  "dialogAmount.title": "Amount",
+  "dialog.close": "Close",
+  "dialog.confirm": "Confirm",
+  "dialog.cancel": "Cancel"
 }

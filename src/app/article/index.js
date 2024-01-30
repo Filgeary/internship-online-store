@@ -1,18 +1,18 @@
-import {memo, useCallback, useMemo} from 'react';
-import {useParams} from "react-router-dom";
+import ArticleCard from "@src/components/article-card";
+import Head from "@src/components/head";
+import PageLayout from "@src/components/page-layout";
+import Spinner from "@src/components/spinner";
+import LocaleSelect from "@src/containers/locale-select";
+import Navigation from "@src/containers/navigation";
+import TopHead from "@src/containers/top-head";
+import useInit from "@src/hooks/use-init";
 import useStore from "@src/hooks/use-store";
 import useTranslate from "@src/hooks/use-translate";
-import useInit from "@src/hooks/use-init";
-import PageLayout from "@src/components/page-layout";
-import Head from "@src/components/head";
-import Navigation from "@src/containers/navigation";
-import Spinner from "@src/components/spinner";
-import ArticleCard from "@src/components/article-card";
-import LocaleSelect from "@src/containers/locale-select";
-import TopHead from "@src/containers/top-head";
-import {useDispatch, useSelector} from 'react-redux';
+import articleActions from "@src/store-redux/article/actions";
+import { memo, useCallback } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 import shallowequal from "shallowequal";
-import articleActions from '@src/store-redux/article/actions';
 
 function Article() {
   const store = useStore();
@@ -27,27 +27,43 @@ function Article() {
     dispatch(articleActions.load(params.id));
   }, [params.id]);
 
-  const select = useSelector(state => ({
-    article: state.article.data,
-    waiting: state.article.waiting,
-  }), shallowequal); // Нужно указать функцию для сравнения свойства объекта, так как хуком вернули объект
+  const select = useSelector(
+    (state) => ({
+      article: state.article.data,
+      waiting: state.article.waiting,
+    }),
+    shallowequal
+  ); // Нужно указать функцию для сравнения свойства объекта, так как хуком вернули объект
 
-  const {t} = useTranslate();
+  const { t } = useTranslate();
 
   const callbacks = {
     // Добавление в корзину
-    addToBasket: useCallback(_id => store.actions.basket.addToBasket(_id), [store]),
-  }
+    addToBasket: useCallback(
+      (_id, amount) => store.actions.basket.addToBasket(_id, amount),
+      [store]
+    ),
+  };
+
+  const openDialogAmount = useCallback(
+    (_id) => {
+      store.actions.modals.open(
+        "dialogAmount",
+        callbacks.addToBasket.bind(null, _id)
+      );
+    },
+    [store]
+  );
 
   return (
     <PageLayout>
-      <TopHead/>
+      <TopHead />
       <Head title={select.article.title}>
-        <LocaleSelect/>
+        <LocaleSelect />
       </Head>
-      <Navigation/>
+      <Navigation />
       <Spinner active={select.waiting}>
-        <ArticleCard article={select.article} onAdd={callbacks.addToBasket} t={t}/>
+        <ArticleCard article={select.article} onAdd={openDialogAmount} t={t} />
       </Spinner>
     </PageLayout>
   );
