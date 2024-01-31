@@ -1,10 +1,15 @@
-import React from 'react';
 import './style.css';
+
+import React from 'react';
+import { cn as bem } from '@bem-react/classname';
+
 import PropTypes from 'prop-types';
 
 function BasketFooter({ children }) {
+  const cn = bem('BasketFooter');
+
   return (
-    <div className="BasketFooter">
+    <div className={cn()}>
       {children}
     </div>
   )

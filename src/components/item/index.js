@@ -1,5 +1,6 @@
 import './style.css';
-import {memo, useState} from "react";
+
+import {memo} from "react";
 import {Link} from "react-router-dom";
 import PropTypes from "prop-types";
 
@@ -12,6 +13,11 @@ function Item(props){
 
   const options = {
     showAppendix: props.isSelectable && props.count > 0,
+    // selectable: props.isSelectable && !props.count,
+    // block: props.count > 0,
+
+    selectable: props.isSelectable,
+    block: false,
   };
 
   const callbacks = {
@@ -27,7 +33,10 @@ function Item(props){
   };
 
   return (
-    <div onClick={props.onClick} className={cn({ selectable: props.isSelectable })}>
+    <div
+      onClick={props.onClick}
+      className={cn({ selectable: options.selectable, block: options.block })}
+    >
       <div className={cn('title')}>
         {renders.link()}
         {options.showAppendix && <span> | Будет добавлено: {props.count} шт.</span>}

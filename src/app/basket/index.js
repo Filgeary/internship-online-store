@@ -27,10 +27,12 @@ function Basket() {
     openCatalogModal: useCallback(() => {
       const promiseOfModal = store.actions.modals.open('catalogModal');
 
-      promiseOfModal.then((updatedItems) => {
-        store.actions.basket.addMany(updatedItems);
-        store.actions.modals.resetDataObj();
-      });
+      promiseOfModal
+        .then((updatedItems) => {
+          store.actions.basket.addMany(updatedItems);
+          store.actions.modals.resetDataObj();
+        })
+        .catch(() => {});
     }, [store]),
   };
 
@@ -56,7 +58,9 @@ function Basket() {
       </Spinner>
 
       <BasketFooter>
-        <button onClick={callbacks.openCatalogModal}>Добавить ещё товары</button>
+        <button onClick={callbacks.openCatalogModal}>
+          Добавить ещё товары
+        </button>
       </BasketFooter>
     </Modal>
   );

@@ -5,7 +5,6 @@ class ModalsState extends StoreModule {
     return {
       activeModals: [], // Стек открытых окон. Именно Стек
       events: [], // Стек событий, которые должны произойти
-      dataObj: {},
     }
   }
 
@@ -20,15 +19,16 @@ class ModalsState extends StoreModule {
         ...this.getState().activeModals,
         name,
       ],
-      dataObj: {},
     });
 
     const promise = new Promise((resolve, reject) => {
       this.setState({
         ...this.getState(),
-        events: [...this.getState().events, {resolve, reject}],
+        events: [...this.getState().events, {resolve, reject, name}],
       });
     });
+
+    console.log(`Открываю модалку ${name}`);
 
     return promise;
   }
@@ -38,14 +38,16 @@ class ModalsState extends StoreModule {
    * @param data 
    */
   close(data){
-    const { resolve: lastEvent } = this.getState().events.at(-1);
+    console.log('Щас буду закрывать');
+    console.log(this.getState().events);
+    const { resolve: lastEvent, name } = this.getState().events.at(-1);
+    console.log(`Закрываю модалку ${name}`);
     lastEvent(data);
     
     this.setState({
       ...this.getState(),
       activeModals: this.getState().activeModals.slice(0, -1),
       events: this.getState().events.slice(0, -1),
-      dataObj: data,
     });
   }
 
@@ -61,17 +63,6 @@ class ModalsState extends StoreModule {
       ...this.getState(),
       activeModals: this.getState().activeModals.slice(0, -1),
       events: this.getState().events.slice(0, -1),
-      dataObj: data,
-    });
-  }
-
-  /**
-   * Сбросить dataObj
-   */
-  resetDataObj() {
-    this.setState({
-      ...this.getState(),
-      dataObj: {},
     });
   }
 }

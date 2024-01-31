@@ -108,7 +108,13 @@ class CatalogState extends StoreModule {
       'search[category]': ''
     });
 
-    const res = await this.services.api.request({url: `/api/v1/articles?${new URLSearchParams(apiParams)}`});
+    let res = null;
+    try {
+      res = await this.services.api.request({url: `/api/v1/articles?${new URLSearchParams(apiParams)}`, timeout: 5000});
+    } catch (err) {
+      alert(err.message);
+      return;
+    }
 
     const newState = {
       ...this.getState(),
@@ -118,7 +124,6 @@ class CatalogState extends StoreModule {
     };
 
     this.setState(newState, 'Загружен список товаров из АПИ');
-    console.log('@@', this.getState().queries);
   }
 
   /**
