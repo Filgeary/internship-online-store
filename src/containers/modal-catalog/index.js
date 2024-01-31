@@ -26,8 +26,14 @@ function ModalCatalog() {
 
   const renders = {
     items: useCallback(
-      (item) => <ItemModal item={item} onSelect={callbacks.onSelect} />,
-      [callbacks.onSelect, t]
+      (item) => {
+        let selected = false;
+        if (select.selected.includes(item._id)) {
+          selected = true;
+        }
+      return <ItemModal item={item} selected={selected} onSelect={callbacks.onSelect} />
+    },
+      [callbacks.onSelect, select.selected, t]
     ),
   };
 

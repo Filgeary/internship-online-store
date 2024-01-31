@@ -1,20 +1,18 @@
-import { memo, useState, useEffect } from "react";
+import { memo, useState } from "react";
 import PropTypes from "prop-types";
 import { cn as bem } from "@bem-react/classname";
 import numberFormat from "@src/utils/number-format";
 import "./style.css";
 
 function ItemModal(props) {
-  const [selected, setSelected] = useState(false);
   const cn = bem("ItemModal");
 
   const onSelect = () => {
     props.onSelect(props.item._id);
-    setSelected(props.item.selected);
   };
 
   return (
-    <div className={cn() + (selected ? " ItemModal_selected" : "")} onClick={onSelect}>
+    <div className={cn({selected: props.selected})} onClick={onSelect}>
       <div className={cn("title")}>{props.item.title}</div>
       <div className={cn("price")}>
         {numberFormat(props.item.price)} {props.labelCurr}
@@ -31,10 +29,12 @@ ItemModal.propTypes = {
   }).isRequired,
   onSelect: PropTypes.func,
   labelCurr: PropTypes.string,
+  selected: PropTypes.bool,
 };
 
 ItemModal.defaultProps = {
   onSelect: () => {},
+  selected: false,
   labelCurr: "₽",
 };
 
