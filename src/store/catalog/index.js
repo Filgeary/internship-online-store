@@ -128,34 +128,28 @@ class CatalogState extends StoreModule {
    * @param _id
    */
   selectItem(_id) {
-    const exist = this.getState().selected.includes(_id);
-    if (!exist) {
-      this.setState({
-        ...this.getState(),
-        list: this.getState().list.map((item) => {
-          if (item._id === _id) {
-            item.selected = !item.selected;
-            this.getState().selected.push(item._id);
-          }
-          return item;
-        }),
-      }, "Выделение товара");
-    } else {
-      const selectedItems = this.getState().selected.filter((item) => item!==_id);
-      this.setState(
-        {
-          ...this.getState(),
-          list: this.getState().list.map((item) => {
-            if (item._id === _id) {
-              item.selected = !item.selected;
-            }
-            return item;
-          }),
-          selected: selectedItems,
-        },
-        "Выделение с товара снято"
-      );
+    let exist = false;
+    const selected = this.getState().selected.map(item => {
+      let result = item;
+      if(item === _id) {
+        exist = true;
+        return;
+      }
+      return result;
+    })
+
+    if(!exist) {
+      selected.push(_id);
     }
+
+    this.setState({
+      ...this.getState(),
+      selected,
+    }, "Выбор товара для добавления в корзину")
+  }
+
+  resetSelectItems() {
+    this.setState({...this.getState(), selected: []}, "Сброс выбранных товаров")
   }
 }
 
