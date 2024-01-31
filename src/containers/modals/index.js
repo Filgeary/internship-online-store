@@ -7,7 +7,7 @@ import { useDispatch } from "react-redux";
 import modalsActions from "@src/store-redux/modals/actions";
 import useTranslate from "@src/hooks/use-translate";
 import { useSelector as useSelectorRedux } from "react-redux";
-import CatalogModal from "@src/app/catalog-modal";
+import CatalogModal from "@src/containers/catalog-modal";
 
 const Modals = () => {
   const activeModal = useSelectorRedux((state) => state.modals);
@@ -19,7 +19,7 @@ const Modals = () => {
     // Добавление в корзину
     addToBasket: useCallback(
       (id, count) => store.actions.basket.addToBasket(id, count),
-      [store]
+      []
     ),
 
     // Событие формы
@@ -33,8 +33,17 @@ const Modals = () => {
     closeModal: useCallback(() => {
       dispatch(modalsActions.close("articleCount"));
     }, [store]),
+
+    // Закрытие модалки каталога и мультидобавление товара в корзину
+    closeModalCatalog: useCallback(
+      (data) => {
+        store.actions.basket.multiAddToBasket(data);
+        dispatch(modalsActions.close("catalog"));
+      },
+      [store]
+    ),
   };
-  console.log(activeModal.list);
+
   return (
     <>
       {activeModal.list.map(
@@ -51,7 +60,9 @@ const Modals = () => {
               key={i}
             />
           )) ||
-          (el === "catalog" && <CatalogModal key={i}/>)
+          (el === "catalog" && (
+            <CatalogModal closeModal={callbacks.closeModalCatalog} key={i} />
+          ))
       )}
     </>
   );

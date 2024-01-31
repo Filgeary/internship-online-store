@@ -43,6 +43,7 @@ class BasketState extends StoreModule {
       // Добавляем к сумме.
       sum += item.price * count;
     }
+  
 
     this.setState(
       {
@@ -53,6 +54,24 @@ class BasketState extends StoreModule {
       },
       "Добавление в корзину"
     );
+  }
+
+
+  // мультидобавление в корзину
+  async multiAddToBasket(list) {
+    this.setState({
+      ...this.getState(),
+      waiting: true,
+    });
+
+    for (const item of list) {
+      await this.addToBasket(item.id);
+    }
+    
+    this.setState({
+      ...this.getState(),
+      waiting: false,
+    });
   }
 
   /**

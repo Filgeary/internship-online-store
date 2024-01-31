@@ -5,7 +5,11 @@
   padding-left: 10px
 }
 
-.Item_selected {
+.Item-pointer{
+  cursor: pointer;
+}
+
+.Item-selected {
   background: #75aaf1;
   color: #fff;
 }
