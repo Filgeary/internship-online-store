@@ -1,4 +1,4 @@
-import { useCallback, useState, memo } from "react";
+import { useCallback, memo } from "react";
 import ModalLayout from "@src/components/modal-layout";
 import useStore from "@src/hooks/use-store";
 import useSelector from "@src/hooks/use-selector";
@@ -21,8 +21,11 @@ function ModalCatalog() {
 
   const callbacks = {
     onClose: () => {
+      console.log(select.selected);
       store.actions.modals.close(select.selected);
       store.actions.catalog.resetSelectItems();
+      store.actions.catalog.setIsModal(false);
+      store.actions.catalog.initParams();
     },
     onSelect: useCallback((_id) => store.actions.catalog.selectItem(_id), [store])
   }

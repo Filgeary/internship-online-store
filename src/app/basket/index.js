@@ -27,9 +27,14 @@ function Basket() {
       store.actions.modals.close();
     }, [store]),
     addToBasket: useCallback(async ()=> {
-        store.actions.modals.open("catalog").then((selectedItems) =>
-        store.actions.basket.addManyToBasket(selectedItems)
-      ).catch(err => console.error(err));
+        store.actions.catalog.setIsModal(true);
+        store.actions.catalog.resetParams();
+        store.actions.modals
+          .open("catalog")
+          .then((selectedItems) =>
+            store.actions.basket.addManyToBasket(selectedItems)
+          )
+          .catch((err) => console.error(err));
     }, [store])
   }
 

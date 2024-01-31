@@ -22,6 +22,7 @@ class CatalogState extends StoreModule {
       count: 0,
       selected: [],
       waiting: false,
+      isModal: false,
     };
   }
 
@@ -78,19 +79,20 @@ class CatalogState extends StoreModule {
       },
       "Установлены параметры каталога"
     );
-
-    // Сохранить параметры в адрес страницы
-    let urlSearch = new URLSearchParams(
-      exclude(params, this.initState().params)
-    ).toString();
-    const url =
-      window.location.pathname +
-      (urlSearch ? `?${urlSearch}` : "") +
-      window.location.hash;
-    if (replaceHistory) {
-      window.history.replaceState({}, "", url);
-    } else {
-      window.history.pushState({}, "", url);
+    if (!this.getState().isModal) {
+      // Сохранить параметры в адрес страницы
+      let urlSearch = new URLSearchParams(
+        exclude(params, this.initState().params)
+      ).toString();
+      const url =
+        window.location.pathname +
+        (urlSearch ? `?${urlSearch}` : "") +
+        window.location.hash;
+      if (replaceHistory) {
+        window.history.replaceState({}, "", url);
+      } else {
+        window.history.pushState({}, "", url);
+      }
     }
 
     const apiParams = exclude(
@@ -128,28 +130,29 @@ class CatalogState extends StoreModule {
    * @param _id
    */
   selectItem(_id) {
-    let exist = false;
-    const selected = this.getState().selected.map(item => {
-      let result = item;
-      if(item === _id) {
-        exist = true;
-        return;
-      }
-      return result;
-    })
-
-    if(!exist) {
-      selected.push(_id);
-    }
-
-    this.setState({
-      ...this.getState(),
-      selected,
-    }, "Выбор товара для добавления в корзину")
+    const exist = this.getState().selected.includes(_id);
+    if (!exist) {
+      this.setState({
+        ...this.getState(),
+        selected: [...this.getState().selected, _id],
+      }, "Выделение товара");
+    } else {
+      const selectedItems = this.getState().selected.filter((item) => item !==_id);
+      this.setState(
+        {
+          ...this.getState(),
+          selected: selectedItems,
+        },
+        "Выделение с товара снято"
+      )};
   }
 
   resetSelectItems() {
     this.setState({...this.getState(), selected: []}, "Сброс выбранных товаров")
+  }
+
+  setIsModal(value) {
+    this.setState({...this.getState(), isModal: value})
   }
 }
 

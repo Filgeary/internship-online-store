@@ -1,5 +1,4 @@
 import useStore from "@src/hooks/use-store";
-import useSelector from "@src/hooks/use-selector";
 import useTranslate from "@src/hooks/use-translate";
 import CountItemForm from "@src/components/count-item-form";
 import ModalLayout from "@src/components/modal-layout";

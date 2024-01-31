@@ -17,6 +17,7 @@ function CatalogFilter() {
     query: state.catalog.params.query,
     category: state.catalog.params.category,
     categories: state.categories.list,
+    isModal: state.catalog.isModal
   }));
 
   const callbacks = {

@@ -20,7 +20,7 @@ function Modals() {
 
   return (
     <>
-      {!!activeModals.length && activeModals.map((modal) => {
+      {activeModals.length && activeModals.map((modal) => {
         return <Fragment key={modal}>{modals(modal)}</Fragment>;
       })}
     </>
