@@ -10,6 +10,7 @@ class BasketState extends StoreModule {
       list: [],
       sum: 0,
       amount: 0,
+      waiting: false,
     }
   }
 
@@ -18,6 +19,7 @@ class BasketState extends StoreModule {
    * @param _id {String} Код товара
    */
   async addToBasket(_id, count = 1) {
+    console.log(count)
     let sum = 0;
     // Ищем товар в корзине, чтобы увеличить его количество
     let exist = false;
@@ -41,7 +43,6 @@ class BasketState extends StoreModule {
       sum += item.price*count;
     }
 
-    console.log(list)
     this.setState({
       ...this.getState(),
       list,
@@ -55,8 +56,16 @@ class BasketState extends StoreModule {
    * @param arr Массив с кодами товаров
    */
 
-  addManyToBasket(items) {
-    items.forEach(async(item) => await this.addToBasket(item));
+  async addManyToBasket(items) {
+    this.setState({...this.getState(),
+      waiting: true
+    });
+
+    for(const item of items) {
+      await this.addToBasket(item);
+    }
+
+    this.setState({ ...this.getState(), waiting: false });
   }
 
   /**

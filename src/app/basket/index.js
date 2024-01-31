@@ -7,6 +7,7 @@ import List from "@src/components/list";
 import ModalLayout from "@src/components/modal-layout";
 import BasketTotal from "@src/components/basket-total";
 import Controls from '@src/components/controls';
+import Spinner from '@src/components/spinner';
 
 function Basket() {
   const store = useStore();
@@ -14,7 +15,8 @@ function Basket() {
   const select = useSelector(state => ({
     list: state.basket.list,
     amount: state.basket.amount,
-    sum: state.basket.sum
+    sum: state.basket.sum,
+    waiting: state.basket.waiting
   }));
 
   const callbacks = {
@@ -48,8 +50,10 @@ function Basket() {
   return (
     <ModalLayout title={t('basket.title')} labelClose={t('basket.close')}
                  onClose={callbacks.closeModal} isClose={true}>
-      <List list={select.list} renderItem={renders.itemBasket}/>
-      <BasketTotal sum={select.sum} t={t}/>
+      <Spinner active={select.waiting}>
+        <List list={select.list} renderItem={renders.itemBasket}/>
+        <BasketTotal sum={select.sum} t={t}/>
+      </Spinner>
       <Controls labelChoice={t('basket.choice')} onAdd={callbacks.addToBasket}/>
     </ModalLayout>
   );
