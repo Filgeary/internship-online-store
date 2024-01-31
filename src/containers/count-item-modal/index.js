@@ -9,7 +9,7 @@ function CountItemModal() {
 
   const callbacks = {
     // Закрытие модалки
-    closeModal: () => store.actions.modals.close('count'),
+    closeModal: () => store.actions.modals.close(),
     onSubmit: (count) => {
       store.actions.modals.close([+count]);
     },

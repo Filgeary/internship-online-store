@@ -40,7 +40,6 @@ function ModalCatalog() {
     ),
   };
 
-
   return (
     <ModalLayout
       labelClose={t("modal.close")}

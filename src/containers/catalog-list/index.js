@@ -17,8 +17,10 @@ function CatalogList() {
 
   const callbacks = {
     addToBasket: useCallback( async( _id ) => {
-      store.actions.modals.open("count")
-        .then(count => store.actions.basket.addToBasket(_id, count[0]));
+      store.actions.modals
+        .open("count")
+        .then((count) => store.actions.basket.addToBasket(_id, count[0]))
+        .catch((err) => console.error(err));
       }, [store])
   };
 

@@ -19,7 +19,6 @@ class BasketState extends StoreModule {
    * @param _id {String} Код товара
    */
   async addToBasket(_id, count = 1) {
-    console.log(count)
     let sum = 0;
     // Ищем товар в корзине, чтобы увеличить его количество
     let exist = false;

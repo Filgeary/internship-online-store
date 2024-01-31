@@ -29,8 +29,8 @@ function Basket() {
     addToBasket: useCallback(async ()=> {
         store.actions.modals.open("catalog").then((selectedItems) =>
         store.actions.basket.addManyToBasket(selectedItems)
-      );
-    },[store])
+      ).catch(err => console.error(err));
+    }, [store])
   }
 
   const {t} = useTranslate();

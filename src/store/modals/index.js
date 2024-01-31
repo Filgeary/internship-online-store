@@ -21,8 +21,11 @@ class ModalsState extends StoreModule {
   }
 
   close(data = []){
-    const { resolve } = this.getState().events.at(-1);
-    resolve(data);
+    if (data.length) {
+      const { resolve, reject } = this.getState().events.at(-1);
+      resolve(data);
+      reject("Что-то пошло не так!");
+    }
 
     this.setState(
       {
