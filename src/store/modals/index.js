@@ -18,7 +18,10 @@ class ModalsState extends StoreModule {
   }
 
   close(name, data) {
-    const { cb } = this.getState().data.find((item) => item.name === name);
+    const modalsData = this.getState().data;
+    const lastIndex = modalsData.findLastIndex((el) => el.name === name);
+    const cb = modalsData[lastIndex]?.cb;
+
     if (cb) {
       if (data) cb(data);
       else cb();
@@ -27,7 +30,7 @@ class ModalsState extends StoreModule {
     this.setState(
       {
         ...this.getState(),
-        data: this.getState().data.filter((item) => item.name !== name),
+        data: modalsData.toSpliced(lastIndex, 1),
       },
       `Закрытие модалки ${name}`
     );

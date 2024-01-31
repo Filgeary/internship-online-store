@@ -15,6 +15,7 @@
     "many": "товаров",
     "other": "товара"
   },
+  "basket.selectMoreProducts": "Выбрать ещё товар",
   "article.add": "Добавить",
   "filter.reset": "Сбросить",
   "auth.title": "Вход",
@@ -26,5 +27,9 @@
   "dialogAmount.title": "Количество",
   "dialog.close": "Закрыть",
   "dialog.confirm": "Подтвердить",
-  "dialog.cancel": "Отменить"
+  "dialog.cancel": "Отменить",
+  "modalCatalog.title": "Список товаров",
+  "modalCatalog.addProducts": "Добавить товары",
+  "modalCatalog.selectedProducts": "Выбранные товары",
+  "modal.close": "Закрыть"
 }

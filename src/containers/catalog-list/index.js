@@ -1,13 +1,16 @@
+import PropTypes from "prop-types";
+import { memo, useCallback } from "react";
+
 import Item from "@src/components/item";
+import ItemModalCatalog from "@src/components/item-modal-catalog";
 import List from "@src/components/list";
 import Pagination from "@src/components/pagination";
 import Spinner from "@src/components/spinner";
 import useSelector from "@src/hooks/use-selector";
 import useStore from "@src/hooks/use-store";
 import useTranslate from "@src/hooks/use-translate";
-import { memo, useCallback } from "react";
 
-function CatalogList() {
+function CatalogList({ isSelectionMode, onSelectItem }) {
   const store = useStore();
 
   const select = useSelector((state) => ({
@@ -67,13 +70,27 @@ function CatalogList() {
           labelAdd={t("article.add")}
         />
       ),
-      [callbacks.addToBasket, t]
+      [openDialogAmount, t]
+    ),
+    itemModalCatalog: useCallback(
+      (item) => (
+        <ItemModalCatalog
+          item={item}
+          onAdd={openDialogAmount}
+          onSelectItem={onSelectItem}
+          labelAdd={t("article.add")}
+        />
+      ),
+      [openDialogAmount, t]
     ),
   };
 
   return (
     <Spinner active={select.waiting}>
-      <List list={select.list} renderItem={renders.item} />
+      <List
+        list={select.list}
+        renderItem={isSelectionMode ? renders.itemModalCatalog : renders.item}
+      />
       <Pagination
         count={select.count}
         page={select.page}
@@ -84,5 +101,10 @@ function CatalogList() {
     </Spinner>
   );
 }
+
+CatalogList.propTypes = {
+  isSelectionMode: PropTypes.bool,
+  onSelectItem: PropTypes.func,
+};
 
 export default memo(CatalogList);
