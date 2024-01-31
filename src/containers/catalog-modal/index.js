@@ -1,17 +1,12 @@
-import React, { memo, useCallback, useState } from "react";
+import React, { memo, useState } from "react";
 import ModalLayout from "@src/components/modal-layout";
-import PageLayout from "@src/components/page-layout";
 import CatalogFilter from "@src/containers/catalog-filter";
 import CatalogList from "@src/containers/catalog-list";
-import useStore from "@src/hooks/use-store";
 import useTranslate from "@src/hooks/use-translate";
-import { useDispatch } from "react-redux";
-import modalsActions from "@src/store-redux/modals/actions";
+import PropTypes from "prop-types";
 
 const CatalogModal = (props) => {
   const { t } = useTranslate();
-  const store = useStore();
-  const dispatch = useDispatch();
   const [selectItem, setSelectItem] = useState([]);
 
   const callbacks = {
@@ -46,6 +41,14 @@ const CatalogModal = (props) => {
       <CatalogList onSelect={callbacks.onSelectItem} />
     </ModalLayout>
   );
+};
+
+CatalogModal.propTypes = {
+  closeModal: PropTypes.func,
+};
+
+CatalogModal.defaultProps = {
+  closeModal: () => {},
 };
 
 export default memo(CatalogModal);

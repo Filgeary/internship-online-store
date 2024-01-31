@@ -1,4 +1,4 @@
-import { memo, useCallback, useState } from "react";
+import { memo, useCallback} from "react";
 import useStore from "@src/hooks/use-store";
 import useSelector from "@src/hooks/use-selector";
 import useTranslate from "@src/hooks/use-translate";
@@ -9,6 +9,7 @@ import Spinner from "@src/components/spinner";
 import { useDispatch } from "react-redux";
 import modalsActions from "@src/store-redux/modals/actions";
 import { useSelector as useSelectorRedux } from "react-redux";
+import PropTypes from "prop-types";
 
 function CatalogList(props) {
   const store = useStore();
@@ -88,5 +89,13 @@ function CatalogList(props) {
     </Spinner>
   );
 }
+
+CatalogList.propTypes = {
+  onSelect: PropTypes.func,
+};
+
+CatalogList.defaultProps = {
+  onSelect: () => {},
+};
 
 export default memo(CatalogList);

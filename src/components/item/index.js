@@ -57,12 +57,14 @@ Item.propTypes = {
   labelCurr: PropTypes.string,
   labelAdd: PropTypes.string,
   catalog: PropTypes.bool,
+  onSelect: PropTypes.func,
 };
 
 Item.defaultProps = {
   onAdd: () => {},
   labelCurr: "₽",
   labelAdd: "Добавить",
+  onSelect: () => {},
 };
 
 export default memo(Item);
