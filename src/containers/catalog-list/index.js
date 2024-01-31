@@ -27,7 +27,7 @@ function CatalogList(props) {
     // Добавление в корзину
     addToBasket: useCallback(_id => store.actions.basket.addToBasket(_id), [store]),
     // Пагинация
-    onPaginate: useCallback(page => store.actions.catalog.setParams({page}), [store]),
+    onPaginate: useCallback(page => store.actions.catalog.setParams({page}, false, props.watchQueries, props.ignoreHistory), [store]),
     // генератор ссылки для пагинатора
     makePaginatorLink: useCallback((page) => {
       return `?${new URLSearchParams({page, limit: select.limit, sort: select.sort, query: select.query})}`;
@@ -74,8 +74,13 @@ function CatalogList(props) {
   return (
     <Spinner active={select.waiting}>
       <List list={select.list} renderItem={renders.item}/>
-      <Pagination count={select.count} page={select.page} limit={select.limit}
-                  onChange={callbacks.onPaginate} makeLink={callbacks.makePaginatorLink}/>
+      <Pagination
+        count={select.count}
+        page={select.page}
+        limit={select.limit}
+        onChange={callbacks.onPaginate}
+        makeLink={callbacks.makePaginatorLink}
+      />
     </Spinner>
   );
 }
@@ -84,11 +89,15 @@ CatalogList.propTypes = {
   onItemClick: PropTypes.func,
   isItemsSelectable: PropTypes.bool,
   countOfItems: PropTypes.object,
+  watchQueries: PropTypes.bool,
+  ignoreHistory: PropTypes.bool,
 };
 
 CatalogList.defaultProps = {
   isItemsSelectable: false,
   countOfItems: {},
+  watchQueries: false,
+  ignoreHistory: false,
 };
 
 export default memo(CatalogList);

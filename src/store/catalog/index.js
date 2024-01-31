@@ -66,10 +66,13 @@ class CatalogState extends StoreModule {
   async setParams(newParams = {}, replaceHistory = false, setQueries = false, ignoreHistory = false) {
     const params = {...this.getState().params, ...newParams};
 
-    if (setQueries) {
+    if (setQueries && this.getState().queries.length === 0) {
       this.setState({
         ...this.getState(),
-        queries: [...this.getState().queries, this.getState().params]
+        queries: [
+          ...this.getState().queries,
+          this.getState(),
+        ],
       });
     }
 
@@ -115,6 +118,7 @@ class CatalogState extends StoreModule {
     };
 
     this.setState(newState, 'Загружен список товаров из АПИ');
+    console.log('@@', this.getState().queries);
   }
 
   /**
@@ -139,7 +143,11 @@ class CatalogState extends StoreModule {
       queries: [],
     }, 'Очищен список состояний');
 
-    this.setParams(firstQuery);
+    // this.setParams(firstQuery);
+    this.setState({
+      ...this.getState(),
+      ...firstQuery
+    });
   }
 
   /**

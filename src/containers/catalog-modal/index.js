@@ -27,6 +27,11 @@ function CatalogModal() {
     },
   };
 
+  const options = {
+    watchQueries: true,
+    ignoreHistory: true,
+  };
+
   const {t} = useTranslate();
 
   return (
@@ -35,13 +40,15 @@ function CatalogModal() {
       title={t('catalogModal.title')}
     >
       <CatalogFilter
-        watchQueries={true}
-        ignoreHistory={true}
+        watchQueries={options.watchQueries}
+        ignoreHistory={options.ignoreHistory}
       />
       <CatalogList
         countOfItems={updatedItems}
         onItemClick={callbacks.update}
         isItemsSelectable={true}
+        watchQueries={options.watchQueries}
+        ignoreHistory={options.ignoreHistory}
       />
     </Modal>
   );
