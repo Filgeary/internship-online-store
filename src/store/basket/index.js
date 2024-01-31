@@ -36,7 +36,18 @@ class BasketState extends StoreModule {
 
     if (!exist) {
       // Поиск товара в каталоге, чтобы его добавить в корзину.
-      const res = await this.services.api.request({url: `/api/v1/articles/${_id}`});
+      let res = null;
+      try {
+        res = await this.services.api.request({url: `/api/v1/articles/${_id}`, timeout: 5000});
+      } catch (err) {
+        alert(err.message);
+        this.setState({
+          ...this.getState(),
+          active: null,
+        })
+        return;
+      }
+
       const item = res.data.result;
 
       list.push({...item, amount: count}); // list уже новый, в него можно пушить.
