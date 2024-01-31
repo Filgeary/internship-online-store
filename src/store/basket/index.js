@@ -41,12 +41,22 @@ class BasketState extends StoreModule {
       sum += item.price*count;
     }
 
+    console.log(list)
     this.setState({
       ...this.getState(),
       list,
       sum,
       amount: list.length
     }, 'Добавление в корзину');
+  }
+
+  /**
+   * Добавление нескольких товаров
+   * @param arr Массив с кодами товаров
+   */
+
+  addManyToBasket(items) {
+    items.forEach(async(item) => await this.addToBasket(item));
   }
 
   /**

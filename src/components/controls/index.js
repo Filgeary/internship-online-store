@@ -2,19 +2,21 @@ import {memo} from "react";
 import PropTypes from 'prop-types';
 import './style.css';
 
-function Controls({onAdd}){
+function Controls({onAdd, labelChoice}){
   return (
     <div className='Controls'>
-      <button onClick={() => onAdd()}>Добавить</button>
+      <button onClick={() => onAdd()}>{labelChoice}</button>
     </div>
   )
 }
 
 Controls.propTypes = {
-  onAdd: PropTypes.func
+  onAdd: PropTypes.func,
+  labelChoice: PropTypes.string
 };
 
 Controls.defaultProps = {
+  labelChoice: "Выбрать еще товар",
   onAdd: () => {}
 }
 

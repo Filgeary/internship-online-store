@@ -1,12 +1,12 @@
 import {memo, useCallback} from 'react';
 import useStore from "@src/hooks/use-store";
 import useSelector from "@src/hooks/use-selector";
-import useInit from "@src/hooks/use-init";
 import useTranslate from "@src/hooks/use-translate";
 import ItemBasket from "@src/components/item-basket";
 import List from "@src/components/list";
 import ModalLayout from "@src/components/modal-layout";
 import BasketTotal from "@src/components/basket-total";
+import Controls from '@src/components/controls';
 
 function Basket() {
   const store = useStore();
@@ -24,6 +24,14 @@ function Basket() {
     closeModal: useCallback(() => {
       store.actions.modals.close();
     }, [store]),
+    addToBasket: useCallback(async ()=> {
+      return new Promise(async (resolve) => {
+        store.actions.modals.open("catalog");
+        store.actions.modals.resolve("catalog", resolve);
+      }).then((selectedItems) =>
+        store.actions.basket.addManyToBasket(selectedItems)
+      );
+    },[store])
   }
 
   const {t} = useTranslate();
@@ -45,6 +53,7 @@ function Basket() {
                  onClose={callbacks.closeModal} isClose={true}>
       <List list={select.list} renderItem={renders.itemBasket}/>
       <BasketTotal sum={select.sum} t={t}/>
+      <Controls labelChoice={t('basket.choice')} onAdd={callbacks.addToBasket}/>
     </ModalLayout>
   );
 }

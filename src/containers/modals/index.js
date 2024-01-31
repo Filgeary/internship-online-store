@@ -1,15 +1,28 @@
-import { memo } from "react";
+import { memo, Fragment } from "react";
 import useSelector from "@src/hooks/use-selector";
 import Basket from "../../app/basket";
 import CountItemModal from "@src/containers/count-item-modal";
+import ModalCatalog from "../modal-catalog";
 
 function Modals() {
-  const activeModal = useSelector((state) => state.modals.name);
+  const activeModals = useSelector((state) => state.modals.list);
+
+  const modals = (name) => {
+    switch (name) {
+      case "basket":
+        return <Basket />;
+      case "count":
+        return <CountItemModal />;
+      case "catalog":
+        return <ModalCatalog />;
+    }
+  };
 
   return (
     <>
-      {activeModal === "basket" && <Basket />}
-      {activeModal ===  "count" && <CountItemModal />}
+      {!!activeModals.length && activeModals.map((modal) => {
+        return <Fragment key={modal}>{modals(modal)}</Fragment>;
+      })}
     </>
   );
 }

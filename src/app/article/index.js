@@ -39,8 +39,8 @@ function Article() {
     addToBasket: useCallback(async (_id) => {
       return new Promise(async (resolve) => {
         store.actions.modals.open("count");
-        store.actions.modals.resolve(resolve);
-      }).then((count) => store.actions.basket.addToBasket(_id, count));
+        store.actions.modals.resolve("count", resolve);
+      }).then((count) => store.actions.basket.addToBasket(_id, count[0]));
     }, [store]),
   };
 

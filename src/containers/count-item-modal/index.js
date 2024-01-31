@@ -7,14 +7,11 @@ import ModalLayout from "@src/components/modal-layout";
 function CountItemModal() {
   const store = useStore();
 
-  const resolve = useSelector((state) => state.modals.resolve)
-
   const callbacks = {
     // Закрытие модалки
-    closeModal: () => store.actions.modals.close(),
+    closeModal: () => store.actions.modals.close('count'),
     onSubmit: (count) => {
-      resolve(+count);
-      store.actions.modals.close();
+      store.actions.modals.close("count", [+count]);
     },
   };
 

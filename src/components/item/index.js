@@ -10,7 +10,7 @@ function Item(props){
   const cn = bem('Item');
 
   const callbacks = {
-    onOpenModal: (e) => props.onOpenModal(props.item._id),
+    onAdd: (e) => props.onAdd(props.item._id),
   };
 
   return (
@@ -23,7 +23,7 @@ function Item(props){
         <div className={cn("price")}>
           {numberFormat(props.item.price)} {props.labelCurr}
         </div>
-        <button onClick={callbacks.onOpenModal}>{props.labelAdd}</button>
+        <button onClick={callbacks.onAdd}>{props.labelAdd}</button>
       </div>
     </div>
   );

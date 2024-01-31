@@ -13,6 +13,7 @@
     "one": "article",
     "other": "articles"
   },
+  "basket.choice": "Select another product",
   "article.add": "Add",
   "filter.reset": "Reset",
   "auth.title": "Sign In",
@@ -23,5 +24,7 @@
   "session.signOut": "Sign Out",
   "count.title": "Quantity of goods",
   "count.count": "Enter the quantity of goods you would like to buy",
-  "count.cancel": "Cancel"
+  "count.cancel": "Cancel",
+  "modal.close": "Close",
+  "modal.catalog": "List of products"
 }

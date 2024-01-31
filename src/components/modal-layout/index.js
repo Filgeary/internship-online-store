@@ -55,6 +55,7 @@ ModalLayout.propTypes = {
 ModalLayout.defaultProps = {
   title: 'Модалка',
   labelClose: 'Закрыть',
+  isClose: true,
   onClose: () => {
   }
 };

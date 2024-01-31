@@ -15,6 +15,7 @@
     "many": "товаров",
     "other": "товара"
   },
+  "basket.choice": "Выбрать еще товар",
   "article.add": "Добавить",
   "filter.reset": "Сбросить",
   "auth.title": "Вход",
@@ -25,5 +26,7 @@
   "session.signOut": "Выход",
   "count.title": "Количество товара",
   "count.count": "Введите количество товара, которое Вы бы хотели купить",
-  "count.cancel": "Отмена"
+  "count.cancel": "Отмена",
+  "modal.close": "Закрыть",
+  "modal.catalog": "Список товаров"
 }
