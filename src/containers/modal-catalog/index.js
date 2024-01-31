@@ -20,7 +20,7 @@ function ModalCatalog() {
   }));
 
   const callbacks = {
-    onClose: () => store.actions.modals.close("catalog", select.selected),
+    onClose: () => store.actions.modals.close(select.selected),
     onSelect: useCallback((_id) => store.actions.catalog.selectItem(_id), [store])
   }
 

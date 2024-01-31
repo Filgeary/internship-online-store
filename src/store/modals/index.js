@@ -5,37 +5,34 @@ class ModalsState extends StoreModule {
   initState() {
     return {
       list: [],
-      resolve: new Map()
+      events: []
     }
   }
 
   open(name){
-    this.setState({...this.getState(), list: [...this.getState().list, name]}, `Открытие модалки ${name}`);
-    
+    return new Promise((resolve, reject) =>
+      this.setState(
+        { ...this.getState(),
+          list: [...this.getState().list, name],
+          events: [...this.getState().events, {resolve, reject}] },
+        `Открытие модалки ${name}`
+      )
+    );
   }
 
-  close(name = '', data = []){
-    if(!!data.length && name) {
-      const resolve = this.getState().resolve.get(name);
-      resolve(data);
-      this.getState().resolve.delete(name);
-    }
+  close(data = []){
+    const { resolve } = this.getState().events.at(-1);
+    resolve(data);
 
     this.setState(
       {
         ...this.getState(),
         list: this.getState().list.slice(0, -1),
+        events: this.getState().events.slice(0, -1),
       },
       `Закрытие модалки`
     );
   }
-
-    resolve(name, resolve) {
-      this.setState({
-        ...this.getState(),
-        resolve: this.getState().resolve.set(name, resolve),
-      });
-    }
 }
 
 export default ModalsState;

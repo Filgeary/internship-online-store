@@ -11,7 +11,7 @@ function CountItemModal() {
     // Закрытие модалки
     closeModal: () => store.actions.modals.close('count'),
     onSubmit: (count) => {
-      store.actions.modals.close("count", [+count]);
+      store.actions.modals.close([+count]);
     },
   };
 

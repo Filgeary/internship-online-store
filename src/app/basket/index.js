@@ -25,10 +25,7 @@ function Basket() {
       store.actions.modals.close();
     }, [store]),
     addToBasket: useCallback(async ()=> {
-      return new Promise(async (resolve) => {
-        store.actions.modals.open("catalog");
-        store.actions.modals.resolve("catalog", resolve);
-      }).then((selectedItems) =>
+        store.actions.modals.open("catalog").then((selectedItems) =>
         store.actions.basket.addManyToBasket(selectedItems)
       );
     },[store])
