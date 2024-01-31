@@ -34,20 +34,18 @@ class BasketState extends StoreModule {
     });
 
     if (!exist) {
-      // Обработчик ошибки при запросе.
-      let rejected = false;
-      const errorHandler = (data) => {
-        if (data.message) alert(data.message);
+      // Поиск товара в каталоге, чтобы его добавить в корзину.
+      let res = null;
+      try {
+        res = await this.services.api.request({url: `/api/v1/articles/${_id}`, timeout: 5000});
+      } catch (err) {
+        alert(err.message);
         this.setState({
           ...this.getState(),
           active: null,
-        });
-        
-        rejected = true;
-      };
-      // Поиск товара в каталоге, чтобы его добавить в корзину.
-      const res = await this.services.api.request({url: `/api/v1/articles/${_id}`, timeout: 5000, onErr: errorHandler});
-      if (rejected) return;
+        })
+        return;
+      }
 
       const item = res.data.result;
 

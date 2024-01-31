@@ -17,6 +17,8 @@ class APIService {
    * @param url
    * @param method
    * @param headers
+   * @param timeout
+   * @param onErr
    * @param options
    * @returns {Promise<{}>}
    */
@@ -45,10 +47,7 @@ class APIService {
 
       return {data: await res.json(), status: res.status, headers: res.headers};
     } catch (err) {
-      const errorMessage = 'Неполадки на сервере, повторите попытку позже.';
-      onErr({ message: errorMessage });
-
-      return { data: errorMessage, status: 503 };
+      throw new Error('Ошибка на сервере, попробуйте позже...');
     }
   }
 

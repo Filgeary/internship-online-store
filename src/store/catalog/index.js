@@ -92,7 +92,14 @@ class CatalogState extends StoreModule {
       'search[category]': ''
     });
 
-    const res = await this.services.api.request({url: `/api/v1/articles?${new URLSearchParams(apiParams)}`});
+    let res = null;
+    try {
+      res = await this.services.api.request({url: `/api/v1/articles?${new URLSearchParams(apiParams)}`});
+    } catch(err) {
+      alert(err.message);
+      return;
+    }
+
     this.setState({
       ...this.getState(),
       list: res.data.result.items,
