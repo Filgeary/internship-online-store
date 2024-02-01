@@ -17,6 +17,8 @@ function Main() {
   const store = useStore();
 
   useInit(async () => {
+    store.make('catalog 2', 'catalog');
+
     await Promise.all([
       store.actions.catalog.initParams(),
       store.actions.categories.load()

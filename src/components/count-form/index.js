@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import './style.css';
 import { cn as bem } from '@bem-react/classname';
+import SuccessBlock from '../success-block';
 
 function CountForm(props) {
   const cn = bem('CountForm');
@@ -71,12 +72,11 @@ function CountForm(props) {
     <form onSubmit={callbacks.submit} className={cn()}>
       <div className={cn('row')}>
         {
-          props.isSuccess &&
-          <h3
-            className={cn('title', { success: true })}
-          >
-            {props.successText(count)}
-          </h3>
+          props.isSuccess && (
+            <SuccessBlock>
+              {props.successText(count)}
+            </SuccessBlock>
+          )
         }
 
         <div className={cn('field')}>

@@ -10,7 +10,7 @@ import SideLayout from "@src/components/side-layout";
 import treeToList from "@src/utils/tree-to-list";
 import listToTree from "@src/utils/list-to-tree";
 
-function CatalogFilter({ watchQueries, ignoreHistory }) {
+function CatalogFilter({ stateName, watchQueries, ignoreHistory }) {
   const store = useStore();
 
   const select = useSelector(state => ({

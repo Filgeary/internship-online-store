@@ -1,35 +1,59 @@
-import React, { useCallback, useState, memo } from 'react';
+import React, { useCallback, useState, memo, useEffect } from 'react';
 
 import useStore from '@src/hooks/use-store';
-import useSelector from "@src/hooks/use-selector";
 
 import Modal from '@src/containers/modal';
 
 import useTranslate from '@src/hooks/use-translate';
+
 import CatalogList from '../catalog-list';
 import CatalogFilter from '../catalog-filter';
+import SuccessBlock from '@src/components/success-block';
+import Entities from '@src/components/entities';
+
 
 function CatalogModal() {
   const store = useStore();
   const [updatedItems, setUpdatedItems] = useState({});
+  const [isSuccess, setIsSuccess] = useState(false);
 
   const callbacks = {
     closeModal: useCallback(() => {
-      store.actions.modals.close(updatedItems);
+      if (isSuccess) {
+        store.actions.modals.close(updatedItems);
+      } else {
+        store.actions.modals.closeRej('Не добавляем');
+      }
+
       store.actions.catalog.clearQueries();
-    }, [store, updatedItems]),
+    }, [store, updatedItems, isSuccess]),
+
+    delete: (item) => {
+      setUpdatedItems((prev) => {
+        const newUpdatedItems = {...prev};
+        delete newUpdatedItems[item._id];
+
+        return newUpdatedItems;
+      });
+    },
 
     update: (item) => {
       setUpdatedItems({
         ...updatedItems,
         [item._id]: updatedItems[item._id] ? updatedItems[item._id] + 1 : 1,
       });
+      setIsSuccess(false);
+    },
+
+    setSuccessToAdd: () => {
+      setIsSuccess(true);
     },
   };
 
   const options = {
     watchQueries: true,
     ignoreHistory: true,
+    isBtnDisabled: Object.keys(updatedItems).length === 0 || isSuccess,
   };
 
   const {t} = useTranslate();
@@ -47,9 +71,25 @@ function CatalogModal() {
         countOfItems={updatedItems}
         onItemClick={callbacks.update}
         isItemsSelectable={true}
+        isItemsDeletable={true}
+        onDeleteItem={callbacks.delete}
         watchQueries={options.watchQueries}
         ignoreHistory={options.ignoreHistory}
       />
+
+      <Entities>
+        {
+          isSuccess && (
+            <SuccessBlock>
+              Выбранные товары будут добавлены в корзину.
+            </SuccessBlock>
+          )
+        }
+
+        <button disabled={options.isBtnDisabled} onClick={callbacks.setSuccessToAdd}>
+          Добавить выбранные товары
+        </button>
+      </Entities>
     </Modal>
   );
 }

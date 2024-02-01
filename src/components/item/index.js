@@ -25,12 +25,19 @@ function Item(props){
       e.stopPropagation();
       props.onAdd();
     },
+
+    onDelete: (e) => {
+      e.stopPropagation();
+      props.onDelete();
+    },
   };
 
   const renders = {
     link: () => 
       props.isSelectable ? <span>{props.item.title}</span> : <Link to={props.link}>{props.item.title}</Link>,
   };
+
+  console.log(props.item.title, props.count);
 
   return (
     <div
@@ -53,6 +60,16 @@ function Item(props){
             </button>
           )
         }
+
+        {
+          props.isDeletable && props.count && (
+            <button
+              onClick={callbacks.onDelete}
+            >
+              {props.labelDelete}
+            </button>
+          )
+        }
       </div>
     </div>
   );
@@ -68,18 +85,26 @@ Item.propTypes = {
   link: PropTypes.string,
   onAdd: PropTypes.func,
   onClick: PropTypes.func,
+  onDelete: PropTypes.func,
   labelCurr: PropTypes.string,
   labelAdd: PropTypes.string,
+  labelDelete: PropTypes.string,
   disabledAddBtn: PropTypes.bool,
   isSelectable: PropTypes.bool,
+  isDeletable: PropTypes.bool,
+  count: PropTypes.number,
 };
 
 Item.defaultProps = {
   onAdd: () => {},
   onClick: () => {},
+  onDelete: () => {},
   labelCurr: '₽',
   labelAdd: 'Добавить',
+  labelDelete: 'Удалить',
   disabledAddBtn: false,
+  isSelectable: false,
+  isDeletable: false,
 };
 
 export default memo(Item);

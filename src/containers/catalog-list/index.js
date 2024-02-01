@@ -63,8 +63,10 @@ function CatalogList(props) {
           item={item}
           count={props.countOfItems[item._id]}
           isSelectable={props.isItemsSelectable}
+          isDeletable={props.isItemsDeletable}
           onAdd={() => callbacks.openModalOfCount(item)}
           onClick={() => callbacks.addCountOfItem(item)}
+          onDelete={() => props.onDeleteItem(item)}
           link={`/articles/${item._id}`}
           labelAdd={t('article.add')}
         />
@@ -88,16 +90,20 @@ function CatalogList(props) {
 CatalogList.propTypes = {
   onItemClick: PropTypes.func,
   isItemsSelectable: PropTypes.bool,
+  isItemsDeletable: PropTypes.bool,
   countOfItems: PropTypes.object,
   watchQueries: PropTypes.bool,
   ignoreHistory: PropTypes.bool,
+  onDelete: PropTypes.func,
 };
 
 CatalogList.defaultProps = {
   isItemsSelectable: false,
+  isItemsDeletable: false,
   countOfItems: {},
   watchQueries: false,
   ignoreHistory: false,
+  onDelete: () => {},
 };
 
 export default memo(CatalogList);

@@ -33,6 +33,16 @@ class Store {
   }
 
   /**
+   * Создать копию,на основе существующего
+   * @param name {String}
+   * @param base {String}
+   */  
+  make(name, base) {
+    this.actions[name] = new modules[base](this, name, this.config?.modules[base] || {});
+    this.state[name] = this.actions[name].initState();
+  }
+
+  /**
    * Подписка слушателя на изменения состояния
    * @param listener {Function}
    * @returns {Function} Функция отписки

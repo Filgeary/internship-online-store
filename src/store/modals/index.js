@@ -24,7 +24,7 @@ class ModalsState extends StoreModule {
     const promise = new Promise((resolve, reject) => {
       this.setState({
         ...this.getState(),
-        events: [...this.getState().events, {resolve, reject, name}],
+        events: [...this.getState().events, {resolve, reject}],
       });
     });
 
@@ -36,7 +36,7 @@ class ModalsState extends StoreModule {
    * @param data 
    */
   close(data){
-    const { resolve: lastEvent, name } = this.getState().events.at(-1);
+    const { resolve: lastEvent } = this.getState().events.at(-1);
     lastEvent(data);
     
     this.setState({
