@@ -30,7 +30,7 @@ function DialogLayout(props) {
   }, []);
 
   return (
-    <div className={cn()} ref={layout}>
+    <div className={cn({background: String(props.background)})} ref={layout}>
       <div className={cn('frame')} ref={frame}>
         <div className={cn('head')}>
           <h1 className={cn('title')}>{props.title}</h1>
@@ -58,7 +58,8 @@ DialogLayout.propTypes = {
   children: PropTypes.node,
   labelClose: PropTypes.string,
   labelSubmit: PropTypes.string,
-  submitDisabled: PropTypes.bool
+  submitDisabled: PropTypes.bool,
+  background: PropTypes.bool,
 };
 
 DialogLayout.defaultProps = {
@@ -68,7 +69,8 @@ DialogLayout.defaultProps = {
   onClose: () => {
   },
   onSubmit: () => {
-  }
+  },
+  background: false
 };
 
 export default memo(DialogLayout);

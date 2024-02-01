@@ -20,7 +20,7 @@ function Navigation() {
   const callbacks = {
     // Открытие модалки корзины
     openModalBasket: useCallback(() => {
-      modal.open(modal.list.basket)
+      modal.open({type: modal.types.basket})
     }, [store]),
 
     // Обработка перехода на главную

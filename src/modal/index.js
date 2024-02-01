@@ -1,3 +1,5 @@
+import codeGenerator from "@src/utils/code-generator";
+
 class ModalService {
 
   /**
@@ -6,16 +8,15 @@ class ModalService {
    */
   constructor(services, config = {}) {
     this.services = services;
-    this.activeName = undefined
     this.listeners = [];
-    this.resolve = undefined;
-    this.list = {
+    this.types = {
       basket: 'basket',
-      addToBasket: 'addToBasket'
+      amount: 'amount',
+      selectItems: 'selectItems',
+      page: 'page'
     },
-    this.async = [
-      this.list.addToBasket
-    ]
+    this.generateId = codeGenerator()
+    this.stack = [] // {
   }
 
   subscribe(listener) {
@@ -30,28 +31,24 @@ class ModalService {
     for (const listener of this.listeners) listener();
   }
 
-  open(name) {
-    if (this.resolve) {
-      this.resolve();
-      this.resolve = undefined;
-    }
-    this.activeName = name;
-    if (this.async.includes(name)) {
-      return new Promise((res) => {
-        this.resolve = res;
-        this.broadcast();
-      })
-    } else {
-      this.broadcast();
-    }
+  open({type, extraData, resolve}) {
+    this.stack = [
+      ...this.stack,
+      { type, extraData, resolve, _id: this.generateId()}  
+    ]
+    this.broadcast()
   }
 
-  close(result) {
-    this.activeName = undefined;
-    if (this.resolve && result) {
-      this.resolve(result);
+  close(id, result) {
+    const index = this.stack.findIndex(m => m._id === id)
+    const modal = this.stack[index]
+    this.stack = [
+      ...this.stack.slice(0, index),
+      ...this.stack.slice(index + 1, this.stack.length)
+    ]
+    if (modal.resolve && result) {
+      modal.resolve(result)
     }
-    this.resolve = undefined;
     this.broadcast();
   }
 }

@@ -50,6 +50,17 @@ class Services {
       }
       return this._modal;
     }
+
+    dublicateServicesWithLocalStore(localModules) {
+      const localServices = {
+        ...this
+      };
+      Object.setPrototypeOf(localServices, this);
+
+      const {store, unsubscribe} = this.store.createLocalStore(localModules)
+      localServices._store = store
+      return {localServices, unsubscribe}
+    }
 }
 
 export default Services;

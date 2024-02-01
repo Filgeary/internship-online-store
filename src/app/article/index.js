@@ -25,7 +25,6 @@ function Article() {
   const params = useParams();
 
   useInit(() => {
-    //store.actions.article.load(params.id);
     dispatch(articleActions.load(params.id));
   }, [params.id]);
 
@@ -39,11 +38,18 @@ function Article() {
   const callbacks = {
     // Добавление в корзину
     addToBasket: useCallback(async (_id) => {
-      const amount = await modal.open(modal.list.addToBasket)
+      const amount = await modal.open(modal.types.amount)
       if (amount) {
         store.actions.basket.addToBasket(_id, amount)
       }
     }, [store, modal]),
+
+    openPageModal: useCallback(() => modal.open({
+      type: modal.types.page,
+      extraData: {
+        title: 'Тест модалки со страницей'
+      }
+    }), [])
   }
 
   return (
@@ -52,6 +58,7 @@ function Article() {
       <Head title={select.article.title}>
         <LocaleSelect/>
       </Head>
+      <button onClick={callbacks.openPageModal}>Открыть модалку со страницей</button>
       <Navigation/>
       <Spinner active={select.waiting}>
         <ArticleCard article={select.article} onAdd={callbacks.addToBasket} t={t}/>

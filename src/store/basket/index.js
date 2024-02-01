@@ -49,6 +49,48 @@ class BasketState extends StoreModule {
     }, 'Добавление в корзину');
   }
 
+    /**
+   * Добавление нескольких товаров в корзину
+   * @param ids [String] Коды товаров
+   */
+    async addManyToBasket(ids) {
+      /// TODO оптимизировать метод
+      // Ищем товары в корзине, чтобы увеличить их количество
+      const existed = [];
+      let list = [...this.getState().list]
+      ids.forEach(id => {
+        const index = list.findIndex(item => item._id === id)
+        if (index !== -1) {
+          list = [
+            ...list.slice(0, index),
+            {
+              ...list[index],
+              amount: list[index].amount + 1
+            },
+            ...list.slice(index+1, list.length)
+          ]
+          existed.push(id)
+        }
+      });
+
+      const notExisted = ids.filter(id => !existed.includes(id))
+      if (notExisted.length) {
+        // Поиск товара в каталоге, чтобы его добавить в корзину.
+        const promises = notExisted.map(id => this.services.api.request({url: `/api/v1/articles/${id}`}))
+        const items = (await Promise.all(promises)).map(res => res.data.result)
+        items.forEach(item => list.push({...item, amount: 1}))
+      }
+
+      const sum = list.reduce((acc, item) => acc + item.price*item.amount, 0)
+  
+      this.setState({
+        ...this.getState(),
+        list,
+        sum,
+        amount: list.length
+      }, 'Добавление в корзину');
+    }
+
   /**
    * Удаление товара из корзины
    * @param _id Код товара

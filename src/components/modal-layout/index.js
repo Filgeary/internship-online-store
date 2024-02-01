@@ -30,7 +30,7 @@ function ModalLayout(props) {
   }, []);
 
   return (
-    <div className={cn()} ref={layout}>
+    <div className={cn({background: String(props.background)})} ref={layout}>
       <div className={cn('frame')} ref={frame}>
         <div className={cn('head')}>
           <h1 className={cn('title')}>{props.title}</h1>
@@ -39,6 +39,11 @@ function ModalLayout(props) {
         <div className={cn('content')}>
           {props.children}
         </div>
+       {props.appendSubmit && <div className={cn('controls')}>
+          <button className={cn('submit')} onClick={props.onSubmit} disabled={props.submitDisabled}>
+              {props.labelSubmit}
+          </button>
+        </div>}
       </div>
     </div>
   );
@@ -48,14 +53,23 @@ ModalLayout.propTypes = {
   title: PropTypes.string,
   onClose: PropTypes.func,
   children: PropTypes.node,
-  labelClose: PropTypes.string
+  labelClose: PropTypes.string,
+  background: PropTypes.bool,
+  labelSubmit: PropTypes.string,
+  onSubmit: PropTypes.func,
+  submitDisabled: PropTypes.bool,
+  appendSubmit: PropTypes.bool
 };
 
 ModalLayout.defaultProps = {
   title: 'Модалка',
   labelClose: 'Закрыть',
+  labelSubmit: 'Ок',
   onClose: () => {
-  }
+  },
+  onSubmit: () => {
+  },
+  background: false
 };
 
 export default memo(ModalLayout);

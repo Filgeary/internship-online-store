@@ -32,6 +32,10 @@ class StoreModule {
     }, description)
   }
 
+  getIsLocal() {
+    return Boolean(this.store.localModules?.includes(this.name))
+  }
+
 }
 
 export default StoreModule;

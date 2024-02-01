@@ -1,0 +1,44 @@
+/* Пункт списка */
+.ItemSelect {
+  display: flex;
+  justify-content: flex-start;
+  transition: background-color .3s;
+  padding-left: 10px;
+}
+
+.ItemSelect_selected_true{
+  background-color: aquamarine;
+}
+
+.ItemSelect-code {
+  padding: 20px 10px 20px 20px;
+}
+
+.ItemSelect-title {
+  width: 100%;
+  padding: 20px 10px;
+}
+
+.ItemSelect-title a{
+  color: #000;
+  text-decoration: none;
+}
+
+.ItemSelect-title a:hover{
+  color: #000;
+  text-decoration: underline;
+}
+
+.ItemSelect-right {
+  padding: 20px 20px 20px 10px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.ItemSelect-cell {
+  min-width: 95px;
+  text-align: right;
+  font-size: 18px;
+  white-space: nowrap;
+}

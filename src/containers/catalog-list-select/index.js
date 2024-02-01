@@ -6,11 +6,12 @@ import Item from "@src/components/item";
 import List from "@src/components/list";
 import Pagination from "@src/components/pagination";
 import Spinner from "@src/components/spinner";
-import useModal from "@src/hooks/use-modal";
+import PropTypes from "prop-types";
+import ItemSelect from "@src/components/item-select";
 
-function CatalogList() {
+
+function CatalogListSelect(props) {
   const store = useStore();
-  const modal = useModal()
 
   const select = useSelector(state => ({
     list: state.catalog.list,
@@ -21,19 +22,6 @@ function CatalogList() {
   }));
 
   const callbacks = {
-    // Добавление в корзину
-    addToBasket: useCallback((_id, itemTitle) => new Promise((res) => modal.open({
-      type: modal.types.amount,
-      resolve: res,
-      extraData: {
-        title: 'Количество товара ' + itemTitle
-      }
-    })).then(amount => {
-      if (amount) {
-        store.actions.basket.addToBasket(_id, amount)
-      }
-    })
-    , [store, modal]),
     // Пагинация
     onPaginate: useCallback(page => store.actions.catalog.setParams({page}), [store]),
     // генератор ссылки для пагинатора
@@ -46,8 +34,8 @@ function CatalogList() {
 
   const renders = {
     item: useCallback(item => (
-      <Item item={item} onAdd={callbacks.addToBasket} link={`/articles/${item._id}`} labelAdd={t('article.add')}/>
-    ), [callbacks.addToBasket, t]),
+      <ItemSelect item={item} onClick={props.toggleSelect} selected={props.selectedItems.includes(item._id)}/>
+    ), [callbacks.addToBasket, t, props.selectedItems]),
   };
 
   return (
@@ -59,4 +47,14 @@ function CatalogList() {
   );
 }
 
-export default memo(CatalogList);
+CatalogListSelect.propTypes = {
+  selectedItems: PropTypes.array,
+  toggleSelect: PropTypes.func
+}
+
+CatalogListSelect.defaultProps = {
+  selectedItems: [],
+  toggleSelect: () => {}
+}
+
+export default memo(CatalogListSelect);

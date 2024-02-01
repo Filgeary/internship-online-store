@@ -2,17 +2,17 @@ import {useLayoutEffect, useMemo, useState} from "react";
 import useModal from "./use-modal";
 
 /**
- * Хук для получения активной modal и отслеживания изменения}
+ * Хук для получения стека modal и отслеживания изменения}
  * @return {*}
  */
-export default function useActiveModal() {
+export default function useModalsStack() {
   const modal = useModal();
 
-  const [state, setState] = useState(modal.activeName);
+  const [state, setState] = useState(modal.stack);
 
   const unsubscribe = useMemo(() => {
     return modal.subscribe(() => {
-      const newState = modal.activeName
+      const newState = modal.stack
       setState(prevState => prevState === newState ? prevState : newState);
     });
   }, []);

@@ -9,7 +9,6 @@ body:has(.DialogLayout){
   width: 100%;
   height: 100%;
   overflow-x: auto;
-  background: rgba(0,0,0,0.7);
   z-index: 9999;
   padding: 10px;
   min-height: 100%;
@@ -18,6 +17,10 @@ body:has(.DialogLayout){
   flex-direction: row;
   justify-content: center;
   align-items: center;
+}
+
+.DialogLayout_background_true {
+  background: rgba(0,0,0,0.7);
 }
 
 .DialogLayout-frame {
@@ -31,7 +34,7 @@ body:has(.DialogLayout){
 }
 
 .DialogLayout-head {
-  height: 80px;
+  min-height: 80px;
   background: #f5f5f5;
   display: flex;
   /*align-items: stretch;*/

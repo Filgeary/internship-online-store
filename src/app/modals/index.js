@@ -1,17 +1,29 @@
-import useActiveModal from "@src/hooks/use-active-modal";
-import { memo } from "react";
-import AddToBasketDialog from "../add-to-basket-dialog";
+import useModalsStack from "@src/hooks/use-modals-stack";
+import { memo, useMemo } from "react";
+import AmountDialog from "../amount-dialog";
 import Basket from "../basket";
 import useModal from "@src/hooks/use-modal";
+import SelectItemsModal from "../select-items-modal";
+import pageModal from "../page-modal";
 
 function Modals() {
   const modal =  useModal()
-  const activeModal = useActiveModal()
-  switch (activeModal) {
-    case modal.list.basket: return <Basket/>;
-    case modal.list.addToBasket: return <AddToBasketDialog/>
-    default: return null
-  }
+  const modalStack = useModalsStack()
+
+  const modals = useMemo(() => ({
+    [modal.types.basket]: Basket,
+    [modal.types.amount]: AmountDialog,
+    [modal.types.selectItems]: SelectItemsModal,
+    [modal.types.page]: pageModal,
+  }), [])
+
+  return modalStack && modalStack.map((m,i) => {
+    const ModalComponent = modals[m.type]
+    return <ModalComponent background={(i + 1) === modalStack.length} 
+                           id={m._id} 
+                           key={m._id} 
+                           extraData={m.extraData}/>
+  })
 }
 
 export default memo(Modals)
