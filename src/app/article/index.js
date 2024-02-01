@@ -10,26 +10,23 @@ import Spinner from "@src/components/spinner";
 import ArticleCard from "@src/components/article-card";
 import LocaleSelect from "@src/containers/locale-select";
 import TopHead from "@src/containers/top-head";
-import {useDispatch, useSelector} from 'react-redux';
 import shallowequal from "shallowequal";
-import articleActions from '@src/store-redux/article/actions';
+import useSelector from '@src/hooks/use-selector';
 
 function Article() {
   const store = useStore();
 
-  const dispatch = useDispatch();
   // Параметры из пути /articles/:id
-
   const params = useParams();
 
   useInit(() => {
-    dispatch(articleActions.load(params.id));
-  }, [params.id]);
+    store.actions.article.load(params.id)
+  }, [params.id, store]);
 
   const select = useSelector(state => ({
     article: state.article.data,
     waiting: state.article.waiting,
-  }), shallowequal); // Нужно указать функцию для сравнения свойства объекта, так как хуком вернули объект
+  }));
 
   const {t} = useTranslate();
 

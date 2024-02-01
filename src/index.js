@@ -1,6 +1,5 @@
 import {createRoot} from 'react-dom/client';
 import {BrowserRouter} from "react-router-dom";
-import {Provider} from 'react-redux';
 import {ServicesContext} from "./context";
 import {I18nProvider} from "./i18n/context";
 import App from './app';
@@ -13,13 +12,11 @@ const root = createRoot(document.getElementById('root'));
 
 // Первый рендер приложения
 root.render(
-  <Provider store={services.redux}>
-    <ServicesContext.Provider value={services}>
-      <I18nProvider>
-        <BrowserRouter>
-          <App/>
-        </BrowserRouter>
-      </I18nProvider>
-    </ServicesContext.Provider>
-  </Provider>
+  <ServicesContext.Provider value={services}>
+    <I18nProvider>
+      <BrowserRouter>
+        <App/>
+      </BrowserRouter>
+    </I18nProvider>
+  </ServicesContext.Provider>
 );

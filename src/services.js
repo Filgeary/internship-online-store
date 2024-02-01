@@ -1,6 +1,5 @@
 import APIService from "./api";
 import Store from "./store";
-import createStoreRedux from "./store-redux";
 
 class Services {
 
@@ -28,16 +27,6 @@ class Services {
       this._store = new Store(this, this.config.store);
     }
     return this._store;
-  }
-
-  /**
-   * Redux store
-   */
-  get redux(){
-    if (!this._redux) {
-      this._redux = createStoreRedux(this, this.config.redux);
-    }
-    return this._redux;
   }
 }
 
