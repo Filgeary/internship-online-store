@@ -15,7 +15,7 @@ function AddManyProductsCard(props) {
       </div>
 
       <div className={cn('buttons')}>
-        <Button value='Добавить выбранные' onClick={props.onAddAll} />
+        <Button value='Добавить выбранные' onClick={props.onAddAll} disabled={!props.isAnySelected} />
         <Button value='Отмена' onClick={props.onCancel} />
       </div>
     </div>

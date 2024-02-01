@@ -59,9 +59,11 @@ function AddManyProducts(props) {
     }
   }, [select.waiting])
 
+  const isAnySelected = Boolean(select.selected.length)
+
   return (
     <DialogLayout title={context.title} onClose={callbacks.onCancel} indent={props.indent} theme={props.theme}>
-      <AddManyProductsCard onCancel={callbacks.onCancel} onAddAll={callbacks.onAddAll}>
+      <AddManyProductsCard onCancel={callbacks.onCancel} onAddAll={callbacks.onAddAll} isAnySelected={isAnySelected}>
         <CatalogFilter/>
         <CatalogList context={props.context} />
       </AddManyProductsCard>
