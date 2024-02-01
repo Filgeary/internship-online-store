@@ -11,7 +11,7 @@ function InputNumber(props) {
   const [value, setValue] = useState(props.value);
 
   const onChangeDebounce = useCallback(
-    debounce(value => props.onChange(Number(value), props.name), 200),
+    debounce(value => props.onChange(Number(value), props.name), 0),
     [props.onChange, props.name]
   );
 
@@ -46,7 +46,7 @@ function InputNumber(props) {
   // Обновление стейта, если передан новый value
   useLayoutEffect(() => setValue(props.value), [props.value]);
 
-  const cn = bem('Input');
+  const cn = bem('InputNumber');
   return (
     <input
       className={cn({theme: props.theme})}

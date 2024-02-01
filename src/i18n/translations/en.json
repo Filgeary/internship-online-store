@@ -13,6 +13,7 @@
     "one": "article",
     "other": "articles"
   },
+  "basket.add": "Add another product",
   "modalAdd.article": {
     "one": "article",
     "other": "articles"
@@ -21,6 +22,7 @@
   "modalAdd.sum": "for the amount",
   "modalAdd.cancel": "cancel",
   "modalAdd.ok": "ok",
+  "modalList.title": "Select products",
   "article.add": "Add",
   "filter.reset": "Reset",
   "auth.title": "Sign In",

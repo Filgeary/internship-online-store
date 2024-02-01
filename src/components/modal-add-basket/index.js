@@ -15,7 +15,7 @@ function ModalAddBasket(props) {
   const callback = {
     onSubmit: useCallback((e) => {
       e.preventDefault()
-      props.data.handleSubmit(props.data._id, Number(value))
+      props.onClose(value)
     }, [props.modalName, value]),
     onClose: useCallback((e) => {
       e.preventDefault()
@@ -24,8 +24,8 @@ function ModalAddBasket(props) {
   }
 
   return (
-      <ModalLayout title={props.data.title} labelClose={props.t('modalAdd.close')}
-                   onClose={props.onClose}>
+      <ModalLayout title={'Добавить в корзину: ' + props.data.title} labelClose={props.t('modalAdd.close')}
+                   onClose={callback.onClose}>
         <form className={cn('inputContainer')} onSubmit={callback.onSubmit}>
 
           <InputNumber max={props.max} theme={'inputContainer-input'}

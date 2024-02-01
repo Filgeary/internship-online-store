@@ -9,6 +9,7 @@ import List from "@src/components/list";
 import ModalLayout from "@src/components/modal-layout";
 import BasketTotal from "@src/components/basket-total";
 import modalsActions from '@src/store-redux/modals/actions';
+import Controls from "@src/components/controls";
 
 function Basket() {
 
@@ -25,10 +26,13 @@ function Basket() {
     // Удаление из корзины
     removeFromBasket: useCallback(_id => store.actions.basket.removeFromBasket(_id), [store]),
     // Закрытие любой модалки
-    closeModal: useCallback(() => {
-      //store.actions.modals.close();
-      dispatch(modalsActions.close());
+    closeModal: useCallback((value) => {
+      store.actions.modals.close(value);
     }, [store]),
+    openModalList: useCallback(async () => {
+      const result = await store.actions.modals.open('modalList')
+      await store.actions.basket.addListArticle(result)
+    }, [store])
   }
 
   const {t} = useTranslate();
@@ -50,6 +54,7 @@ function Basket() {
                  onClose={callbacks.closeModal}>
       <List list={select.list} renderItem={renders.itemBasket}/>
       <BasketTotal sum={select.sum} t={t}/>
+      <Controls title={t('basket.add')} onAdd={callbacks.openModalList}/>
     </ModalLayout>
   );
 }

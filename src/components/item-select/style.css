@@ -1,0 +1,48 @@
+.ItemSelect {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  transition: background-color 1s;
+  padding-left: 10px
+}
+
+.ItemSelect-selected {
+  background: #75aaf1;
+  color: #fff;
+}
+
+.ItemSelect-code {
+  padding: 20px 10px 20px 20px;
+}
+
+.ItemSelect-title {
+  width: 100%;
+  padding: 20px 10px;
+}
+
+.ItemSelect-title a{
+  color: #000;
+  text-decoration: none;
+}
+
+.ItemSelect-title a:hover{
+  color: #000;
+  text-decoration: underline;
+}
+
+.ItemSelect-actions {
+  padding: 20px 20px 20px 10px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 20px
+}
+
+.ItemSelect-price {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 110px;
+  white-space: nowrap;
+  font-size: 18px;
+}

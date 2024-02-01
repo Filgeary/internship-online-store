@@ -13,6 +13,7 @@ function Navigation() {
   const dispatch = useDispatch();
 
   const select = useSelector(state => ({
+    modalsList: state.modals.modalsList,
     amount: state.basket.amount,
     sum: state.basket.sum,
     lang: state.locale.lang
@@ -20,9 +21,8 @@ function Navigation() {
 
   const callbacks = {
     // Открытие модалки корзины
-    openModalBasket: useCallback(() => {
-      //store.actions.modals.open('basket')
-      dispatch(modalsActions.open('basket', {}));
+    openModalBasket: useCallback(async () => {
+      const result = await store.actions.modals.open('basket')
     }, [store]),
 
     // Обработка перехода на главную
@@ -30,6 +30,7 @@ function Navigation() {
       if (item.key === 1) store.actions.catalog.resetParams();
     }, [store])
   }
+
 
   // Функция для локализации текстов
   const {t} = useTranslate();

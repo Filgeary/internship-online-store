@@ -51,6 +51,16 @@ class BasketState extends StoreModule {
   }
 
   /**
+   * Добавление списка товаров
+   *
+   */
+  async addListArticle(list = {}) {
+    for (const key in list) {
+      await this.store.actions.basket.addToBasket(key, list[key])
+    }
+  }
+
+  /**
    * Удаление товара из корзины
    * @param _id Код товара
    */

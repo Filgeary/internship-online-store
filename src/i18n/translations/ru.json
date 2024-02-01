@@ -15,6 +15,7 @@
     "many": "товаров",
     "other": "товара"
   },
+  "basket.add": "Добавить еще товар",
   "modalAdd.article": {
     "one": "товар",
     "few": "товара",
@@ -25,6 +26,7 @@
   "modalAdd.sum": "на сумму",
   "modalAdd.cancel": "отмена",
   "modalAdd.ok": "ок",
+  "modalList.title": "Выберите товары",
   "article.add": "Добавить",
   "filter.reset": "Сбросить",
   "auth.title": "Вход",

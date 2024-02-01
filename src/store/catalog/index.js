@@ -79,6 +79,24 @@ class CatalogState extends StoreModule {
       window.history.pushState({}, '', url);
     }
 
+    const result = await this.store.actions.catalog.getNewValue(params)
+
+    this.setState({
+      ...this.getState(),
+      list: result.items,
+      count: result.count,
+      waiting: false
+    }, 'Загружен список товаров из АПИ');
+  }
+
+  /**
+   * Подгрузка данных по параметрам, вынесение логики
+   * @description Разделение этой части логики позволяет подгружать данные для других компонентов где требуется подгрузить список товаров, не затрагивая при этом CatalogState
+   * @param [params] {Object} Список параметров для запроса
+   * @return {Object} - полученный результат от сервера
+   * */
+  async getNewValue(params) {
+
     const apiParams = exclude({
       limit: params.limit,
       skip: (params.page - 1) * params.limit,
@@ -91,14 +109,9 @@ class CatalogState extends StoreModule {
       'search[query]': '',
       'search[category]': ''
     });
-
     const res = await this.services.api.request({url: `/api/v1/articles?${new URLSearchParams(apiParams)}`});
-    this.setState({
-      ...this.getState(),
-      list: res.data.result.items,
-      count: res.data.result.count,
-      waiting: false
-    }, 'Загружен список товаров из АПИ');
+
+    return res.data.result
   }
 }
 

@@ -1,4 +1,4 @@
-import {memo, useCallback, useMemo} from "react";
+import {memo, useCallback, useEffect, useMemo, useState} from "react";
 import useTranslate from "@src/hooks/use-translate";
 import useStore from "@src/hooks/use-store";
 import useSelector from "@src/hooks/use-selector";
@@ -8,27 +8,52 @@ import SideLayout from "@src/components/side-layout";
 import treeToList from "@src/utils/tree-to-list";
 import listToTree from "@src/utils/list-to-tree";
 
-function CatalogFilter() {
+function CatalogFilter({state, setParams, resetParams}) {
 
   const store = useStore();
 
   const select = useSelector(state => ({
-    sort: state.catalog.params.sort,
-    query: state.catalog.params.query,
-    category: state.catalog.params.category,
+    params: state.catalog.params,
     categories: state.categories.list,
   }));
 
+  const [localState, setLocalState] = useState(state || select)
+
+  // Чтобы избежать дублирования, функция будет вызываться в зависимости от того где она вызывается, идет определение, если мы находимся "внутри какого-либо компонента" то будем вызывать переданный им метод, если же нет, то брать функцию из стора, это поможет избежать лишних проверок
+  const resetParameters = useCallback(() => {
+    state ? resetParams() : store.actions.catalog.resetParams();
+  }, [])
+  // Идентичная ситуация
+  const setParameters = useCallback((parameters) => {
+    state ? setParams(parameters) : store.actions.catalog.setParams(parameters);
+  }, [])
+
+
+  useEffect(() => {
+    if (state) setLocalState(state)
+    else setLocalState(select)
+  }, [state, select.params, select.categories]);
+
+
   const callbacks = {
     // Сортировка
-    onSort: useCallback(sort => store.actions.catalog.setParams({sort}), [store]),
+    onSort: useCallback(sort => {
+      setParameters({sort})
+    }, [store, localState]),
     // Поиск
-    onSearch: useCallback(query => store.actions.catalog.setParams({query, page: 1}), [store]),
+    onSearch: useCallback(query => {
+      setParameters({query, page: 1})
+    }, [store, localState]),
     // Сброс
-    onReset: useCallback(() => store.actions.catalog.resetParams(), [store]),
+    onReset: useCallback(() => {
+      resetParameters()
+    }, [store, localState]),
     // Фильтр по категории
-    onCategory: useCallback(category => store.actions.catalog.setParams({category, page: 1}), [store]),
+    onCategory: useCallback(category => {
+      setParameters({category, page: 1})
+    }, [store, localState]),
   };
+
 
   const options = {
     sort: useMemo(() => ([
@@ -39,19 +64,19 @@ function CatalogFilter() {
     ]), []),
     categories: useMemo(() => ([
       {value: '', title: 'Все'},
-      ...treeToList(listToTree(select.categories), (item, level) => (
+      ...treeToList(listToTree(localState.categories), (item, level) => (
         {value: item._id, title: '- '.repeat(level) + item.title}
       ))
-    ]), [select.categories]),
+    ]), [localState.categories]),
   };
 
   const {t} = useTranslate();
 
   return (
     <SideLayout padding='medium'>
-      <Select options={options.categories} value={select.category} onChange={callbacks.onCategory}/>
-      <Select options={options.sort} value={select.sort} onChange={callbacks.onSort}/>
-      <Input value={select.query} onChange={callbacks.onSearch} placeholder={'Поиск'}
+      <Select options={options.categories} value={localState.params.category} onChange={callbacks.onCategory}/>
+      <Select options={options.sort} value={localState.params.sort} onChange={callbacks.onSort}/>
+      <Input value={localState.params.query} onChange={callbacks.onSearch} placeholder={'Поиск'}
              delay={1000}/>
       <button onClick={callbacks.onReset}>{t('filter.reset')}</button>
     </SideLayout>

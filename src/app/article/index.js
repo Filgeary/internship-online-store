@@ -37,24 +37,15 @@ function Article() {
 
   const callbacks = {
     // Добавление в корзину
-    addToBasket: useCallback(_id => {
+    addToBasket: useCallback(async _id => {
       // Я посчитал логичным, что модальное окно по добавлению товара будет вызываться со страницы товара
-      dispatch(modalsActions.open(`adding`, {
+      const result = await store.actions.modals.open(`adding`, {
         _id: select.article._id,
         title: select.article.title,
         price: select.article.price,
-        handleSubmit: callbacks.handleSubmit,
-      }));
+      })
+      store.actions.basket.addToBasket(_id, result)
     }, [select.article, store]),
-    // Добавление товара в корзину
-    handleSubmit: useCallback((_id, quantity) => {
-      if(quantity > 0) {
-        store.actions.basket.addToBasket(_id, quantity)
-        dispatch(modalsActions.close())
-      } else {
-        alert('Введите число больше нуля')
-      }
-    }, []),
   }
 
   return (
