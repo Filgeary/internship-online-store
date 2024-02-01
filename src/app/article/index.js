@@ -14,6 +14,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import shallowequal from "shallowequal";
 import articleActions from '@src/store-redux/article/actions';
 import dialogsActions from '@src/store-redux/dialogs/actions';
+import addToBasketActions from '@src/store-redux/add-to-basket/actions';
 
 function Article() {
   const store = useStore();
@@ -31,7 +32,7 @@ function Article() {
   const select = useSelector(state => ({
     article: state.article.data,
     waiting: state.article.waiting,
-    dialogsWaiting: state.dialogs.waiting,
+    addToBasketWaiting: state.addToBasket.waiting,
   }), shallowequal); // Нужно указать функцию для сравнения свойства объекта, так как хуком вернули объект
 
   const {t} = useTranslate();
@@ -39,17 +40,9 @@ function Article() {
   const callbacks = {
     // Открытие диалогового окна для добавления в корзину
     addToBasketDialog: useCallback(_id => {
-      dispatch(dialogsActions.open({
-        name: 'add-product',
-        title: 'Добавить в корзину',
-        _id,
-        content: { item: select.article },
-        result: { pcs: '1' }
-      }))
+      dispatch(dialogsActions.open('add-to-basket'));       // Открываем диалоговое окно
+      dispatch(addToBasketActions.setData(select.article)); // Отправляем ему данные
     }, [store, select.article]),
-
-    // Добавление в корзину
-    // addToBasket: useCallback(_id => store.actions.basket.addToBasket(_id), [store]),
   }
 
   return (
@@ -60,7 +53,11 @@ function Article() {
       </Head>
       <Navigation/>
       <Spinner active={select.waiting}>
-        <ArticleCard article={select.article} onAdd={callbacks.addToBasketDialog} t={t} isDialog={select.dialogsWaiting} />
+        <ArticleCard article={select.article}
+          onAdd={callbacks.addToBasketDialog}
+          isDialog={select.addToBasketWaiting}
+          t={t}
+        />
       </Spinner>
     </PageLayout>
   );

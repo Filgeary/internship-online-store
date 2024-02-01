@@ -20,8 +20,8 @@ function DialogLayout(props) {
         ? 'flex-start'
         : 'center';
     });
-    layout.current.style.paddingTop = `${props.index * 20}px`;
-    layout.current.style.paddingLeft = `${props.index*20}px`;
+    layout.current.style.paddingTop = props.indent > 0 ? `${props.indent * 20}px` : `10px`;
+    layout.current.style.paddingLeft = props.indent > 0 ? `${props.indent * 20}px` : `10px`;
     // Следим за изменениями размеров layout
     resizeObserver.observe(layout.current);
     document.body.style.overflow = 'hidden';
@@ -36,7 +36,7 @@ function DialogLayout(props) {
 
   return (
     <div className={cn()} onClick={props.onClose} ref={layout}>
-      <div className={cn('frame')} onClick={(e) => e.stopPropagation()} ref={frame}>
+      <div className={cn('frame', { theme: props.theme })} onClick={(e) => e.stopPropagation()} ref={frame}>
         <div className={cn('head')}>
           <h1 className={cn('title')}>{props.title}</h1>
           {/*<button className={cn('close')} onClick={props.onClose}>{props.labelClose}</button>*/}

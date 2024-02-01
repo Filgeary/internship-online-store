@@ -8,9 +8,16 @@ function BasketTotal({sum, t}) {
   const cn = bem('BasketTotal');
   return (
     <div className={cn()}>
-      <span className={cn('cell')}>{t('basket.total')}</span>
-      <span className={cn('cell')}> {numberFormat(sum)} ₽</span>
-      <span className={cn('cell')}></span>
+      {sum
+        ? (
+          <>
+            <span className={cn('cell')}>{t('basket.total')}</span>
+            <span className={cn('cell')}> {numberFormat(sum)} ₽</span>
+            <span className={cn('cell')}></span>
+          </>
+        )
+        : (<span className={cn('content')}><h2>Нет товаров 😢</h2></span>)
+      }
     </div>
   );
 }

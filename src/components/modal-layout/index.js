@@ -38,9 +38,6 @@ function ModalLayout(props) {
       <div className={cn('frame')} ref={frame}>
         <div className={cn('head')}>
           <h1 className={cn('title')}>{props.title}</h1>
-          { /* TODO: Для теста, удалить потом */}
-          <Button className={cn('close')} onClick={props.openTestDialog} value='test: открыть диалог поверх модалки' />
-
           <button className={cn('close')} onClick={props.onClose}>{props.labelClose}</button>
         </div>
         <div className={cn('content')}>

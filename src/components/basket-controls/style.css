@@ -1,11 +1,11 @@
 /* Итого в корзине */
-.BasketTotal {
+.BasketControls {
   display: flex;
-  justify-content: flex-end;
-  padding: 20px;
+  justify-content: center;
+  margin-top: 20px;
 }
 
-.BasketTotal-cell {
+.BasketControls-cell {
   min-width: 85px;
   text-align: right;
   font-weight: bold;
@@ -13,14 +13,12 @@
   padding-left: 10px;
   white-space: nowrap;
 }
-.BasketTotal-content {
+.BasketControls-content {
   width: 100%;
 }
-.BasketTotal-content h2 {
-  padding-top: 20px;
+.BasketControls-content h2 {
   padding-bottom: 10px;
   text-align: center;
   color: #a1a1a1;;
-  margin: 0;
 }
 

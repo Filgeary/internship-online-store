@@ -29,6 +29,7 @@ body:has(.ModalLayout){
   box-shadow: 2px 5px 10px rgb(0 0 0 / 5%);
   min-width: 600px;
   width: min(100%, 960px);
+  min-height: 390px;
 }
 
 .ModalLayout-head {

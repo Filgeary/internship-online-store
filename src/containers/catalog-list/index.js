@@ -7,12 +7,26 @@ import List from "@src/components/list";
 import Pagination from "@src/components/pagination";
 import Spinner from "@src/components/spinner";
 import dialogsActions from '@src/store-redux/dialogs/actions';
+import addToBasketActions from '@src/store-redux/add-to-basket/actions';
 import { useDispatch, useSelector as useSelectorRedux } from 'react-redux';
 import shallowEqual from "shallowequal";
+import ItemManyProducts from "@src/components/item-many-products";
+import addManyProductsActions from '@src/store-redux/add-many-products/actions';
 
-function CatalogList() {
+function CatalogList(props) {
   const store = useStore();
   const dispatch = useDispatch();
+  const {t} = useTranslate();
+
+  const context = {
+    // Контекст для диалоговых окон
+    dialogContext: useMemo(() => {
+      switch (props.context) {
+        case 'add-more-to-basket': return 'add-to-selected';
+        default: return 'add-to-basket';
+      }
+    }, [props.context]),
+  }
 
   const select = useSelector(state => ({
     list: state.catalog.list,
@@ -23,53 +37,65 @@ function CatalogList() {
   }));
 
   const selectRedux = useSelectorRedux(state => ({
-    dialogsArray: state.dialogs.dialogs,
+    addToBasketWaiting: state.addToBasket.waiting,
+    item: state.addToBasket.item,
+    selectedProducts: state.addManyProducts.selected,
   }), shallowEqual);
 
   const callbacks = {
-    // Открытие диалогового окна для добавления в корзину
-    addToBasketDialog: useCallback(item => (
-      dispatch(dialogsActions.open({
-        name: 'add-product',
-        title: 'Добавить в корзину',
-        _id: item._id,
-        content: { item },
-        result: { pcs: '1' }
-      }))
-    ), [store]),
-    // Добавление в корзину
-    // addToBasket: useCallback(_id => store.actions.basket.addToBasket(_id), [store]),
+    // Открытие диалогового окна выбора количества для добавления в корзину или для списка выделенных товаров
+    addToBasketDialog: useCallback((item, pcs) => {
+      dispatch(dialogsActions.open(context.dialogContext)); // Открываем диалоговое окно
+      dispatch(addToBasketActions.setData(item));           // Отправляем ему данные // TODO: переименовать в сторе в `add-product`
+      dispatch(addToBasketActions.setPcs(pcs));             // Устанавливаем начальное значение количества в открывающемся диалоговом окне
+    }, [store, context.dialogContext]),
+    // Выделение товара в списке или снятие выделения
+    selectProduct: useCallback(item => {
+      dispatch(addManyProductsActions.selectItem(item));
+    }, [store]),
     // Пагинация
-    onPaginate: useCallback(page => store.actions.catalog.setParams({page}), [store]),
+    onPaginate: useCallback(page => store.actions.catalog.setParams({ page }), [store]),
     // генератор ссылки для пагинатора
     makePaginatorLink: useCallback((page) => {
-      return `?${new URLSearchParams({page, limit: select.limit, sort: select.sort, query: select.query})}`;
+      return `?${new URLSearchParams({ page, limit: select.limit, sort: select.sort, query: select.query })}`;
     }, [select.limit, select.sort, select.query])
   }
 
-  // Нужно для отображения лоадера на кликнутой кнопке "Добавить"
-  const clickedItem = useMemo(() => (
-    selectRedux.dialogsArray.find((dialog) => (
-      dialog.name === 'add-product'
-    ))?.content?.item?._id
-  ), [selectRedux.dialogsArray])
-
-  const {t} = useTranslate();
-
   const renders = {
+    // Для главной страницы
     item: useCallback(item => (
       <Item item={item}
         onAdd={callbacks.addToBasketDialog}
-        clickedItem={clickedItem}
+        // нужно для спиннера на кнопке, пока открыто диалоговое окно
+        clickedItem={selectRedux.addToBasketWaiting ? selectRedux.item?._id : ''}
         link={`/articles/${item._id}`}
         labelAdd={t('article.add')}
       />
-    ), [callbacks.addToBasketDialog, selectRedux.dialogsArray, t]),
+    ), [callbacks.addToBasketDialog, selectRedux.addToBasketWaiting, t]),
+    // Для окна выбора нескольких товаров
+    itemManyProducts: useCallback(item => (
+      <ItemManyProducts item={item}
+        onEdit={callbacks.addToBasketDialog}
+        onSelectProduct={callbacks.selectProduct}
+        // нужно для спиннера на кнопке, пока открыто диалоговое окно
+        clickedItem={selectRedux.addToBasketWaiting ? selectRedux.item?._id : ''}
+        labelEdit='Изменить'
+        selectedItems={selectRedux.selectedProducts}
+      />
+    ), [callbacks.addToBasketDialog, selectRedux.addToBasketWaiting, selectRedux.selectedProducts, t]),
   };
+
+  // Контекст для рендеров
+  context.renderItem = useMemo(() => {
+    switch (props.context) {
+      case 'add-more-to-basket' : return renders.itemManyProducts;
+      default: return renders.item;
+    }
+  }, [props.context, renders])
 
   return (
     <Spinner active={select.waiting}>
-      <List list={select.list} renderItem={renders.item}/>
+      <List list={select.list} renderItem={context.renderItem}/>
       <Pagination count={select.count} page={select.page} limit={select.limit}
                   onChange={callbacks.onPaginate} makeLink={callbacks.makePaginatorLink}/>
     </Spinner>

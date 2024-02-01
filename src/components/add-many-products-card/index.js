@@ -1,38 +1,35 @@
 import {memo} from "react";
 import PropTypes from 'prop-types';
 import {cn as bem} from '@bem-react/classname';
-import numberFormat from "@src/utils/number-format";
-import {Link} from "react-router-dom";
 import Button from "@src/components/button";
 import './style.css';
-import Input from "../input";
 
-function testDialog(props) {
-  const cn = bem('testDialog');
+function AddManyProductsCard(props) {
+  const cn = bem('AddManyProductsCard');
 
   return (
     <div className={cn()}>
-      {/*<p>{props.item.title}</p>*/}
 
-      <div className={cn('item')}>
-       Тестовый диалог
+      <div className={cn('content')}>
+        {props.children}
       </div>
 
       <div className={cn('buttons')}>
+        <Button value='Добавить выбранные' onClick={props.onAddAll} />
         <Button value='Отмена' onClick={props.onCancel} />
       </div>
     </div>
   );
 }
 
-testDialog.propTypes = {
+AddManyProductsCard.propTypes = {
   //sum: PropTypes.number,
   //t: PropTypes.func
 };
 
-testDialog.defaultProps = {
+AddManyProductsCard.defaultProps = {
   //sum: 0,
   //t: (text) => text
 }
 
-export default memo(testDialog);
+export default memo(AddManyProductsCard);

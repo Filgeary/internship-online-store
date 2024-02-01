@@ -26,6 +26,10 @@ body button:disabled {
   cursor: auto;
 }
 
+body select {
+  cursor: pointer;
+}
+
 body a {
   cursor: pointer;
   color: #0087E9;

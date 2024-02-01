@@ -9,7 +9,8 @@ class BasketState extends StoreModule {
     return {
       list: [],
       sum: 0,
-      amount: 0
+      amount: 0,
+      lock: false,
     }
   }
 
@@ -18,7 +19,20 @@ class BasketState extends StoreModule {
    * @param _id {String} Код товара
    * @param pcs {Number} Количество которое надо добавить
    */
-  async addToBasket({ _id, pcs = 1 }) {
+  async addToBasket(_id, pcs = 1) {
+    let lock = this.getState().lock;
+    let i = 0;
+    while (lock && i < 1000) {
+      await new Promise(resolve => setTimeout(() => resolve(), 100));
+      lock = this.getState().lock;
+      i++;
+    }
+
+    this.setState({
+      ...this.getState(),
+      lock: true,
+    }, 'Начинаем добавление в корзину');
+
     let sum = 0;
     // Ищем товар в корзине, чтобы увеличить его количество
     let exist = false;
@@ -46,8 +60,9 @@ class BasketState extends StoreModule {
       ...this.getState(),
       list,
       sum,
-      amount: list.length
-    }, 'Добавление в корзину');
+      amount: list.length,
+      lock: false,
+    }, 'Добавление в корзину завершено');
   }
 
   /**

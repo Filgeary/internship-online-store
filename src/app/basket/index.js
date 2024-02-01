@@ -10,6 +10,8 @@ import ModalLayout from "@src/components/modal-layout";
 import BasketTotal from "@src/components/basket-total";
 import modalsActions from '@src/store-redux/modals/actions';
 import dialogsActions from '@src/store-redux/dialogs/actions';
+import BasketControls from '@src/components/basket-controls';
+import addManyProductsActions from '@src/store-redux/add-many-products/actions';
 
 function Basket() {
 
@@ -31,15 +33,10 @@ function Basket() {
       dispatch(modalsActions.close());
     }, [store]),
 
-    // Тестовый диалог
-    // TODO: удалить потом
-    openTestDialog: useCallback(_id => {
-      dispatch(dialogsActions.open({
-        name: 'test-dialog',
-        title: 'Ещё один диалог',
-        _id: '12k1e21k4l+++',
-        content: {},
-      }))
+    // Добавить ещё товаров
+    addMoreToBasket: useCallback(_id => {
+      dispatch(dialogsActions.open('add-more-to-basket')); // открыть диалоговое окно
+      dispatch(addManyProductsActions.open());             // сбросить данные и установить `waiting=true`
     }, [store]),
   }
 
@@ -60,12 +57,13 @@ function Basket() {
   return (
     <ModalLayout title={t('basket.title')} labelClose={t('basket.close')}
       onClose={callbacks.closeModal}
-      // Для открытия тестового диалога.
-      // TODO:удалить потом
-      openTestDialog={callbacks.openTestDialog}
     >
       <List list={select.list} renderItem={renders.itemBasket}/>
-      <BasketTotal sum={select.sum} t={t}/>
+      <BasketTotal sum={select.sum} t={t} />
+      <BasketControls
+        onAddMore={callbacks.addMoreToBasket}
+        sum={select.sum}
+      />
     </ModalLayout>
   );
 }

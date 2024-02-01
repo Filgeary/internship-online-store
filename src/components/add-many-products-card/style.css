@@ -1,55 +1,55 @@
-.AddProduct {
-
+.AddManyProductsCard {
+  padding-bottom: 48px;
 }
 
-.AddProduct-item {
+.AddManyProductsCard-item {
   display: flex;
   justify-content: flex-start;
   margin-bottom: 30px;
 }
 
-.AddProduct > p:first-of-type {
+.AddManyProductsCard > p:first-of-type {
   margin-top: 0;
 }
 
-.AddProduct-buttons {
+.AddManyProductsCard-buttons {
   display: flex;
   justify-content: center;
   gap: 1rem;
 }
 
-.AddProduct-code {
+.AddManyProductsCard-code {
   padding: 20px 10px 20px 20px;
 }
 
-.AddProduct-title {
+.AddManyProductsCard-title {
   width: 100%;
 }
 
-.AddProduct-title a{
+.AddManyProductsCard-title a{
   color: #000;
   text-decoration: none;
 }
 
-.AddProduct-title a:hover{
+.AddManyProductsCard-title a:hover{
   color: #000;
   text-decoration: underline;
 }
 
-.AddProduct-right {
+.AddManyProductsCard-right {
   display: flex;
   justify-content: flex-end;
   align-items: center;
 }
 
-.AddProduct-cell {
+.AddManyProductsCard-cell {
   /* min-width: 95px; */
   text-align: right;
   font-size: 18px;
   white-space: nowrap;
 }
 
-.AddProduct-cellMini {
+.AddManyProductsCard-cellMini {
   min-width: 40px;
   font-weight: bold;
   color: #9a9a9a;
@@ -58,7 +58,7 @@
   white-space: nowrap;
 }
 
-.AddProduct-cellTotal {
+.AddManyProductsCard-cellTotal {
   min-width: 100px;
   text-align: right;
   font-size: 18px;

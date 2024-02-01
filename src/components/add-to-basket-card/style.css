@@ -1,55 +1,56 @@
-.testDialog {
-
+.AddToBasketCard {
+  padding: 40px;
 }
 
-.testDialog-item {
+.AddToBasketCard-item {
   display: flex;
   justify-content: flex-start;
   margin-bottom: 30px;
 }
 
-.testDialog > p:first-of-type {
+.AddToBasketCard > p:first-of-type {
   margin-top: 0;
 }
 
-.testDialog-buttons {
+.AddToBasketCard-buttons {
   display: flex;
   justify-content: center;
   gap: 1rem;
 }
 
-.testDialog-code {
+.AddToBasketCard-code {
   padding: 20px 10px 20px 20px;
 }
 
-.testDialog-title {
+.AddToBasketCard-title {
+  padding-right: 10px;
   width: 100%;
 }
 
-.testDialog-title a{
+.AddToBasketCard-title a{
   color: #000;
   text-decoration: none;
 }
 
-.testDialog-title a:hover{
+.AddToBasketCard-title a:hover{
   color: #000;
   text-decoration: underline;
 }
 
-.testDialog-right {
+.AddToBasketCard-right {
   display: flex;
   justify-content: flex-end;
   align-items: center;
 }
 
-.testDialog-cell {
+.AddToBasketCard-cell {
   /* min-width: 95px; */
   text-align: right;
   font-size: 18px;
   white-space: nowrap;
 }
 
-.testDialog-cellMini {
+.AddToBasketCard-cellMini {
   min-width: 40px;
   font-weight: bold;
   color: #9a9a9a;
@@ -58,7 +59,7 @@
   white-space: nowrap;
 }
 
-.testDialog-cellTotal {
+.AddToBasketCard-cellTotal {
   min-width: 100px;
   text-align: right;
   font-size: 18px;
