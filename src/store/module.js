@@ -31,11 +31,6 @@ class StoreModule {
       [this.name]: newState
     }, description)
   }
-
-  getIsLocal() {
-    return Boolean(this.store.localModules?.includes(this.name))
-  }
-
 }
 
 export default StoreModule;

@@ -51,8 +51,6 @@ function Main() {
         <LocaleSelect/>
       </Head>
       <Navigation/>
-      <button onClick={callbacks.selectItems}>Открыть модалку с выбором товаров</button>
-      <button onClick={callbacks.openPageModal}>Открыть модалку со страницей</button>
       <CatalogFilter/>
       <CatalogList/>
     </PageLayout>

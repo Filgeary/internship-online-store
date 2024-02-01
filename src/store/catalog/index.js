@@ -32,9 +32,7 @@ class CatalogState extends StoreModule {
    * @return {Promise<void>}
    */
   async initParams(newParams = {}) {
-    if (this.getIsLocal()) {
-      await this.setParams({...this.initState().params});
-    } else {
+    if (!this.config.copied) {
       const urlParams = new URLSearchParams(window.location.search);
       let validParams = {};
       if (urlParams.has('page')) validParams.page = Number(urlParams.get('page')) || 1;
@@ -43,8 +41,11 @@ class CatalogState extends StoreModule {
       if (urlParams.has('query')) validParams.query = urlParams.get('query');
       if (urlParams.has('category')) validParams.category = urlParams.get('category');
       await this.setParams({...this.initState().params, ...validParams, ...newParams}, true);
+    } else {
+      await this.setParams({...this.initState().params});
     }
   }
+   
 
   /**
    * Сброс параметров к начальным
@@ -74,7 +75,7 @@ class CatalogState extends StoreModule {
       waiting: true
     }, 'Установлены параметры каталога');
 
-    if (!this.getIsLocal()) {
+    if (!this.config.copied) {
       // Сохранить параметры в адрес страницы
       let urlSearch = new URLSearchParams(exclude(params, this.initState().params)).toString();
       const url = window.location.pathname + (urlSearch ? `?${          urlSearch}`: '') + window.location.hash;

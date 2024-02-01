@@ -1,4 +1,4 @@
-import {memo, useCallback, useState} from 'react';
+import {memo, useCallback, useEffect, useMemo, useState} from 'react';
 import useTranslate from "@src/hooks/use-translate";
 import ModalLayout from "@src/components/modal-layout";
 import PropTypes from "prop-types";
@@ -7,8 +7,7 @@ import CatalogFilter from '@src/containers/catalog-filter';
 import useStore from '@src/hooks/use-store';
 import useInit from '@src/hooks/use-init';
 import CatalogListSelect from '@src/containers/catalog-list-select';
-import withLocalStoreInServices from '@src/hocs/with-local-store-in-services';
-import Navigation from '@src/containers/navigation';
+import useUnmount from '@src/hooks/use-unmount';
 
 function SelectItemsModal(props) {
 
@@ -40,12 +39,16 @@ function SelectItemsModal(props) {
     }, []),
   }
 
+  const catalogSliceName = useMemo(() => store.makeSlice('catalog'), [])
+
   useInit(async () => {
     await Promise.all([
-      store.actions.catalog.initParams(),
+      store.actions[catalogSliceName].initParams(),
       store.actions.categories.load()
     ]);
   }, [], true);
+
+  useUnmount(() => store.deleteSlice(catalogSliceName))
 
   return (
     <ModalLayout title={props.extraData.title || 'Выбрать товар'} 
@@ -56,10 +59,10 @@ function SelectItemsModal(props) {
                  submitDisabled={!selectedItems.length}
                  onSubmit={callbacks.submitModal}
                  background={props.background}>
-        <Navigation/>
-        <CatalogFilter/>
+        <CatalogFilter catalogSliceName={catalogSliceName}/>
         <CatalogListSelect selectedItems={selectedItems} 
-                           toggleSelect={callbacks.toggleSelect}/>
+                           toggleSelect={callbacks.toggleSelect}
+                           catalogSliceName={catalogSliceName}/>
     </ModalLayout>
   );
 }
@@ -81,4 +84,4 @@ SelectItemsModal.defaultProps = {
   }
 };
 
-export default memo(withLocalStoreInServices(SelectItemsModal, ['catalog']));
+export default memo(SelectItemsModal);

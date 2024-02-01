@@ -2,7 +2,6 @@ import {memo, useCallback} from "react";
 import useStore from "@src/hooks/use-store";
 import useSelector from "@src/hooks/use-selector";
 import useTranslate from "@src/hooks/use-translate";
-import Item from "@src/components/item";
 import List from "@src/components/list";
 import Pagination from "@src/components/pagination";
 import Spinner from "@src/components/spinner";
@@ -14,16 +13,16 @@ function CatalogListSelect(props) {
   const store = useStore();
 
   const select = useSelector(state => ({
-    list: state.catalog.list,
-    page: state.catalog.params.page,
-    limit: state.catalog.params.limit,
-    count: state.catalog.count,
-    waiting: state.catalog.waiting,
+    list: state[props.catalogSliceName].list,
+    page: state[props.catalogSliceName].params.page,
+    limit: state[props.catalogSliceName].params.limit,
+    count: state[props.catalogSliceName].count,
+    waiting: state[props.catalogSliceName].waiting,
   }));
 
   const callbacks = {
     // Пагинация
-    onPaginate: useCallback(page => store.actions.catalog.setParams({page}), [store]),
+    onPaginate: useCallback(page => store.actions[props.catalogSliceName].setParams({page}), [store]),
     // генератор ссылки для пагинатора
     makePaginatorLink: useCallback((page) => {
       return `?${new URLSearchParams({page, limit: select.limit, sort: select.sort, query: select.query})}`;
@@ -49,12 +48,14 @@ function CatalogListSelect(props) {
 
 CatalogListSelect.propTypes = {
   selectedItems: PropTypes.array,
-  toggleSelect: PropTypes.func
+  toggleSelect: PropTypes.func,
+  catalogSliceName: PropTypes.string
 }
 
 CatalogListSelect.defaultProps = {
   selectedItems: [],
-  toggleSelect: () => {}
+  toggleSelect: () => {},
+  catalogSliceName: 'catalog'
 }
 
 export default memo(CatalogListSelect);

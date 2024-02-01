@@ -1,3 +1,4 @@
+import codeGenerator from '@src/utils/code-generator.js';
 import * as modules from './exports.js';
 
 /**
@@ -15,7 +16,7 @@ class Store {
     this.config = config;
     this.listeners = []; // Слушатели изменений состояния
     this.state = initState;
-
+    this.generateId = codeGenerator(1)
     this.actions = {};
     for (const name of Object.keys(modules)) {
       this.actions[name] = new modules[name](this, name, this.config?.modules[name] || {});
@@ -66,7 +67,6 @@ class Store {
       );
       console.log(`%c${'prev:'}`, `color: ${'#d77332'}`, this.getState());
       console.log(`%c${'next:'}`, `color: ${'#2fa827'}`, newState);
-      console.log(`%c${'localModules:'}`, `color: ${'#2fa827'}`, this.localModules);
       console.groupEnd();
     }
     this.state = newState;
@@ -78,40 +78,21 @@ class Store {
     for (const listener of this.listeners) listener(this.getState());
   }
 
-  createLocalStore(localModules) {
-    const store = new Store(this.services, this.config);
-    store.state = {};
-    store.localModules = localModules
-  
-    localModules.forEach(moduleName => {
-      store.state[moduleName] = this.actions[moduleName].initState()
-      store.state[moduleName].local = true 
-    });
-    const globalModules = Object.keys(this.actions).filter(k => !localModules.includes(k))
-    // globalModules.forEach(unusedName => {
-    //   store.actions[unusedName].setState = (args) => {
-    //     this.actions[unusedName].setState(args)
-    //     store.broadcast()
-    //   }
-    // });
-
-    globalModules.forEach(moduleName => {
-      store.actions[moduleName] = this.actions[moduleName]
-    });
-
-    const unsubscribe = this.subscribe(() => store.broadcast())
-    store.getState = () => {
-      const own = Object.fromEntries(Object.entries(store.state).filter(m => localModules.includes(m[0])))
-      const parent = Object.fromEntries(Object.entries(this.state).filter(m => globalModules.includes(m[0])))
-      return {
-        ...own, 
-        ...parent
-      }
-    }
-    return {store, unsubscribe}
+  makeSlice(baseSliceName) {
+    const newSliceName = `${baseSliceName}-${this.generateId()}`
+    this.actions[newSliceName] = new modules[baseSliceName](
+      this, 
+      newSliceName, 
+      {...this.config?.modules[baseSliceName],  copied: true} || {}
+    );
+    this.state[newSliceName] = this.actions[newSliceName].initState();
+    return newSliceName
   }
 
+  deleteSlice(sliceName) {
+    delete this.actions[sliceName]
+    delete this.state[sliceName]
+  }
 }
-
 
 export default Store;

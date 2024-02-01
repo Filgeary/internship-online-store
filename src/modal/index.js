@@ -13,7 +13,6 @@ class ModalService {
       basket: 'basket',
       amount: 'amount',
       selectItems: 'selectItems',
-      page: 'page'
     },
     this.generateId = codeGenerator()
     this.stack = [] // {

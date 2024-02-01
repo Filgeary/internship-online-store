@@ -37,19 +37,18 @@ function Article() {
 
   const callbacks = {
     // Добавление в корзину
-    addToBasket: useCallback(async (_id) => {
-      const amount = await modal.open(modal.types.amount)
+    addToBasket: useCallback((_id, itemTitle) => new Promise((res) => modal.open({
+      type: modal.types.amount,
+      resolve: res,
+      extraData: {
+        title: 'Количество товара ' + itemTitle
+      }
+    })).then(amount => {
       if (amount) {
         store.actions.basket.addToBasket(_id, amount)
       }
-    }, [store, modal]),
-
-    openPageModal: useCallback(() => modal.open({
-      type: modal.types.page,
-      extraData: {
-        title: 'Тест модалки со страницей'
-      }
-    }), [])
+    })
+    , [store, modal]),
   }
 
   return (
@@ -58,7 +57,6 @@ function Article() {
       <Head title={select.article.title}>
         <LocaleSelect/>
       </Head>
-      <button onClick={callbacks.openPageModal}>Открыть модалку со страницей</button>
       <Navigation/>
       <Spinner active={select.waiting}>
         <ArticleCard article={select.article} onAdd={callbacks.addToBasket} t={t}/>

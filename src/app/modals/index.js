@@ -4,17 +4,17 @@ import AmountDialog from "../amount-dialog";
 import Basket from "../basket";
 import useModal from "@src/hooks/use-modal";
 import SelectItemsModal from "../select-items-modal";
-import pageModal from "../page-modal";
 
 function Modals() {
   const modal =  useModal()
   const modalStack = useModalsStack()
 
+  console.log(modalStack)
+
   const modals = useMemo(() => ({
     [modal.types.basket]: Basket,
     [modal.types.amount]: AmountDialog,
     [modal.types.selectItems]: SelectItemsModal,
-    [modal.types.page]: pageModal,
   }), [])
 
   return modalStack && modalStack.map((m,i) => {
