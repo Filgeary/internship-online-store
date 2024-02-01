@@ -8,9 +8,9 @@ import ItemBasket from "@src/components/item-basket";
 import List from "@src/components/list";
 import ModalLayout from "@src/components/modal-layout";
 import BasketTotal from "@src/components/basket-total";
-import modalsActions from '@src/store-redux/modals/actions';
+import Button from '@src/components/button';
 
-function Basket() {
+function Basket({close}) {
 
   const store = useStore();
   const dispatch = useDispatch();
@@ -25,10 +25,18 @@ function Basket() {
     // Удаление из корзины
     removeFromBasket: useCallback(_id => store.actions.basket.removeFromBasket(_id), [store]),
     // Закрытие любой модалки
-    closeModal: useCallback(() => {
-      //store.actions.modals.close();
-      dispatch(modalsActions.close());
-    }, [store]),
+    closeModal: useCallback(() => close(), [store]),
+    // открытие каталога в модалке
+    catalogOpen: useCallback(() => {
+      store.actions.modals.open("catalogModal")
+        .then(async result =>  {
+          if(result) {
+            for(const item of result) {
+              await store.actions.basket.addToBasket(item);
+            }
+          }
+        })
+    }, [store])
   }
 
   const {t} = useTranslate();
@@ -50,6 +58,7 @@ function Basket() {
                  onClose={callbacks.closeModal}>
       <List list={select.list} renderItem={renders.itemBasket}/>
       <BasketTotal sum={select.sum} t={t}/>
+      <Button title={t('button.addMore')} onClick={callbacks.catalogOpen}/>
     </ModalLayout>
   );
 }

@@ -21,8 +21,8 @@ function Navigation() {
   const callbacks = {
     // Открытие модалки корзины
     openModalBasket: useCallback(() => {
-      //store.actions.modals.open('basket')
-      dispatch(modalsActions.open('basket'));
+      store.actions.modals.open('basket')
+      //dispatch(modalsActions.open('basket'));
     }, [store]),
 
     // Обработка перехода на главную

@@ -25,5 +25,6 @@
   "auth.password": "Пароль",
   "auth.signIn": "Войти",
   "session.signIn": "Вход",
-  "session.signOut": "Выход"
+  "session.signOut": "Выход",
+  "button.addMore": "Выбрать ещё товар"
 }

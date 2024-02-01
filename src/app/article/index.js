@@ -13,8 +13,6 @@ import TopHead from "@src/containers/top-head";
 import {useDispatch, useSelector} from 'react-redux';
 import shallowequal from "shallowequal";
 import articleActions from '@src/store-redux/article/actions';
-import addingActions from '@src/store-redux/adding/actions';
-import modalActions from '@src/store-redux/modals/actions';
 
 function Article() {
   const store = useStore();
@@ -32,9 +30,6 @@ function Article() {
   const select = useSelector(state => ({
     article: state.article.data,
     waiting: state.article.waiting,
-    articleId: state.adding.id,
-    articleCount: state.adding.count,
-    isAdding: state.adding.isAdd,
   }), shallowequal); // Нужно указать функцию для сравнения свойства объекта, так как хуком вернули объект
 
   const {t} = useTranslate();
@@ -42,17 +37,13 @@ function Article() {
   const callbacks = {
     // Добавление в корзину
     addToBasket: useCallback((_id, _title) => {
-      dispatch(modalActions.open("addToBasket"));
-      dispatch(addingActions.open(_id, _title));
+      store.actions.modals.open("addToBasket").then( result => {
+        if(result) {
+          store.actions.basket.addToBasket(_id, result)
+        }
+      });
     }, [store]),
   }
-
-  useEffect(() => {
-    if(select.isAdding) {
-      store.actions.basket.addToBasket(select.articleId, select.articleCount);
-      dispatch(addingActions.close());
-    }
-  }, [select.isAdding])
 
   return (
     <PageLayout>

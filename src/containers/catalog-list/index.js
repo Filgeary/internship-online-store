@@ -1,4 +1,4 @@
-import {memo, useCallback, useEffect} from "react";
+import {memo, useCallback } from "react";
 import useStore from "@src/hooks/use-store";
 import useSelector from "@src/hooks/use-selector";
 import useTranslate from "@src/hooks/use-translate";
@@ -6,12 +6,10 @@ import Item from "@src/components/item";
 import List from "@src/components/list";
 import Pagination from "@src/components/pagination";
 import Spinner from "@src/components/spinner";
-import { useDispatch, useSelector as useReduxSelector } from "react-redux";
-import modalsActions from '@src/store-redux/modals/actions';
-import addingActions from '@src/store-redux/adding/actions';
-import shallowequal from "shallowequal";
+import { useDispatch } from "react-redux";
+import ItemModalCatalog from "@src/components/item-modal-catalog";
 
-function CatalogList() {
+function CatalogList({isModal, onAdd, selectedArticles}) {
   const store = useStore();
   const dispatch = useDispatch();
 
@@ -23,18 +21,14 @@ function CatalogList() {
     waiting: state.catalog.waiting,
   }));
 
-  const selectRedux = useReduxSelector(state => ({
-    articleId: state.adding.id,
-    articleCount: state.adding.count,
-    isAdding: state.adding.isAdd,
-  }), shallowequal)
-
   const callbacks = {
     // Добавление в корзину
-    //addToBasket: useCallback(_id => store.actions.basket.addToBasket(_id), [store]),
     arcticleCount: useCallback((_id, _title) => {
-      dispatch(modalsActions.open("addToBasket"));
-      dispatch(addingActions.open(_id, _title));
+      store.actions.modals.open("addToBasket", {title: _title, count: 1}).then( result => {
+        if(result) {
+          store.actions.basket.addToBasket(_id, result)
+        }
+      });
     }, [store]),
     // Пагинация
     onPaginate: useCallback(page => store.actions.catalog.setParams({page}), [store]),
@@ -50,18 +44,14 @@ function CatalogList() {
     item: useCallback(item => (
       <Item item={item} onAdd={callbacks.arcticleCount} link={`/articles/${item._id}`} labelAdd={t('article.add')}/>
     ), [callbacks.arcticleCount, t]),
+    modalItem: useCallback(item => (
+      <ItemModalCatalog item={item} onAdd={onAdd} selected={selectedArticles.find(id => item._id === id)}/>
+    ), [t, onAdd])
   };
-
-  useEffect(() => {
-    if(selectRedux.isAdding) {
-      store.actions.basket.addToBasket(selectRedux.articleId, selectRedux.articleCount);
-      dispatch(addingActions.close());
-    }
-  }, [selectRedux.isAdding])
 
   return (
     <Spinner active={select.waiting}>
-      <List list={select.list} renderItem={renders.item}/>
+      <List list={select.list} renderItem={isModal ? renders.modalItem : renders.item}/>
       <Pagination count={select.count} page={select.page} limit={select.limit}
                   onChange={callbacks.onPaginate} makeLink={callbacks.makePaginatorLink}/>
     </Spinner>
