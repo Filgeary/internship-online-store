@@ -1,3 +1,4 @@
+import list from "@src/components/list";
 import StoreModule from "../module";
 
 /**
@@ -65,22 +66,61 @@ class BasketState extends StoreModule {
   }
 
   /**
+   * Добавление в корзину по товару и количеству
+   * @param item {Object} объект товара
+   * @param count {Number} Количество товара
+   */
+  async addToBasketItem(item, count = 1) {
+    let exist = false;
+    let sum = 0;
+
+    const list = this.getState().list.map((itemIn) => {
+      let result = itemIn;
+
+      if (itemIn._id === item._id) {
+        exist = true;
+        result = { ...itemIn, amount: itemIn.amount + count };
+      }
+      sum += result.amount * result.price;
+      return result;
+    });
+
+    if (!exist) {
+      item.amount = count;
+      list.push(item);
+      sum += count * item.price;
+    }
+
+    this.setState({
+      ...this.getState(),
+      list,
+      sum,
+      amount: list.length,
+    });
+  }
+
+  /**
    * Добавление в корзину сразу нескольких элементов
    * @param items {Array} @example {id: 1, count: 5}
    */
   async addMany(items) {
-    this.setState({
-      ...this.getState(),
-      waiting: true,
-    });
+    const params = {
+      'search[ids]': Object.keys(items).join('|')
+    };
+    const urlParams = new URLSearchParams(params);
 
-    for (const itemId in items) {
-      await this.addToBasket(itemId, items[itemId]);
+    let res = null;
+    try {
+      res = await this.services.api.request({ url: `/api/v1/articles?${urlParams}` })
+    } catch (err) {
+      alert(err.message);
+      return;
     }
-    
-    this.setState({
-      ...this.getState(),
-      waiting: false,
+
+    const { items: requestedItems } = res.data.result;
+
+    requestedItems.forEach((item) => {
+      this.addToBasketItem(item, items[item._id]);
     });
   }
 

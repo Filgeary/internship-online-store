@@ -58,7 +58,7 @@ function Basket() {
 
       <BasketFooter>
         <button onClick={callbacks.openCatalogModal}>
-          Добавить ещё товары
+          {t('basket.catalogModalOpen')}
         </button>
       </BasketFooter>
     </Modal>

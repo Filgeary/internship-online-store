@@ -10,25 +10,25 @@ import SideLayout from "@src/components/side-layout";
 import treeToList from "@src/utils/tree-to-list";
 import listToTree from "@src/utils/list-to-tree";
 
-function CatalogFilter({ stateName, watchQueries, ignoreHistory }) {
+function CatalogFilter({ stateName, ignoreHistory }) {
   const store = useStore();
 
   const select = useSelector(state => ({
-    sort: state.catalog.params.sort,
-    query: state.catalog.params.query,
-    category: state.catalog.params.category,
+    sort: state[stateName].params.sort,
+    query: state[stateName].params.query,
+    category: state[stateName].params.category,
     categories: state.categories.list,
   }));
 
   const callbacks = {
     // Сортировка
-    onSort: useCallback(sort => store.actions.catalog.setParams({sort}, false, watchQueries, ignoreHistory), [store]),
+    onSort: useCallback(sort => store.actions[stateName].setParams({sort}, false, ignoreHistory), [store]),
     // Поиск
-    onSearch: useCallback(query => store.actions.catalog.setParams({query, page: 1}, false, watchQueries, ignoreHistory), [store]),
+    onSearch: useCallback(query => store.actions[stateName].setParams({query, page: 1}, false, ignoreHistory), [store]),
     // Сброс
-    onReset: useCallback(() => store.actions.catalog.resetParams(), [store]),
+    onReset: useCallback(() => store.actions[stateName].resetParams(), [store]),
     // Фильтр по категории
-    onCategory: useCallback(category => store.actions.catalog.setParams({category, page: 1}, false, watchQueries, ignoreHistory), [store]),
+    onCategory: useCallback(category => store.actions[stateName].setParams({category, page: 1}, false, ignoreHistory), [store]),
   };
 
   const options = {
@@ -60,13 +60,8 @@ function CatalogFilter({ stateName, watchQueries, ignoreHistory }) {
 }
 
 CatalogFilter.propTypes = {
-  watchQueries: PropTypes.bool,
+  stateName: PropTypes.string,
   ignoreHistory: PropTypes.bool,
-};
-
-CatalogFilter.defaultProps = {
-  watchQueries: false,
-  ignoreHistory: false,
 };
 
 export default memo(CatalogFilter);

@@ -15,6 +15,7 @@
     "many": "товаров",
     "other": "товара"
   },
+  "basket.catalogModalOpen": "Добавить ещё товары",
   "article.add": "Добавить",
   "filter.reset": "Сбросить",
   "auth.title": "Вход",
@@ -29,5 +30,8 @@
   "countModal.cancel": "Отмена",
   "countModal.ok": "Ок",
   "countModal.success": "Товар в количестве [:count:] шт. будет добавлен в корзину.",
-  "catalogModal.title": "Дополнительный выбор"
+  "catalogModal.title": "Дополнительный выбор",
+  "catalogModal.btnSuccess": "Добавить выбранные товары",
+  "catalogModal.appendixItemText": "Будет добавлено: [:count:] шт.",
+  "catalogModal.successText": "Выбранные товары будут добавлены в корзину."
 }

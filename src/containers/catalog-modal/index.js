@@ -56,6 +56,10 @@ function CatalogModal() {
     isBtnDisabled: Object.keys(updatedItems).length === 0 || isSuccess,
   };
 
+  const renders = {
+    appendixText: (count) => t('catalogModal.appendixItemText').replace(/\[:count:\]/gi, count),
+  };
+
   const {t} = useTranslate();
 
   return (
@@ -64,7 +68,7 @@ function CatalogModal() {
       title={t('catalogModal.title')}
     >
       <CatalogFilter
-        watchQueries={options.watchQueries}
+        stateName="separateCatalog"
         ignoreHistory={options.ignoreHistory}
       />
       <CatalogList
@@ -73,21 +77,22 @@ function CatalogModal() {
         isItemsSelectable={true}
         isItemsDeletable={true}
         onDeleteItem={callbacks.delete}
-        watchQueries={options.watchQueries}
         ignoreHistory={options.ignoreHistory}
+        stateName="separateCatalog"
+        appendixOfItem={renders.appendixText}
       />
 
       <Entities>
         {
           isSuccess && (
             <SuccessBlock>
-              Выбранные товары будут добавлены в корзину.
+              {t('catalogModal.successText')}
             </SuccessBlock>
           )
         }
 
         <button disabled={options.isBtnDisabled} onClick={callbacks.setSuccessToAdd}>
-          Добавить выбранные товары
+          {t('catalogModal.btnSuccess')}
         </button>
       </Entities>
     </Modal>

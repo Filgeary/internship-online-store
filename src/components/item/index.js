@@ -33,11 +33,8 @@ function Item(props){
   };
 
   const renders = {
-    link: () => 
-      props.isSelectable ? <span>{props.item.title}</span> : <Link to={props.link}>{props.item.title}</Link>,
+    link: props.isSelectable ? <span>{props.item.title}</span> : <Link to={props.link}>{props.item.title}</Link>,
   };
-
-  console.log(props.item.title, props.count);
 
   return (
     <div
@@ -45,8 +42,8 @@ function Item(props){
       className={cn({ selectable: options.selectable, block: options.block })}
     >
       <div className={cn('title')}>
-        {renders.link()}
-        {options.showAppendix && <span> | Будет добавлено: {props.count} шт.</span>}
+        {renders.link}
+        {options.showAppendix && <span> | {props.appendix(props.count)}</span>}
       </div>
       <div className={cn('actions')}>
         <div className={cn('price')}>{numberFormat(props.item.price)} {props.labelCurr}</div>
@@ -93,6 +90,7 @@ Item.propTypes = {
   isSelectable: PropTypes.bool,
   isDeletable: PropTypes.bool,
   count: PropTypes.number,
+  appendix: PropTypes.func,
 };
 
 Item.defaultProps = {
@@ -105,6 +103,7 @@ Item.defaultProps = {
   disabledAddBtn: false,
   isSelectable: false,
   isDeletable: false,
+  appendix: () => {},
 };
 
 export default memo(Item);

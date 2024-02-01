@@ -13,6 +13,7 @@
     "one": "article",
     "other": "articles"
   },
+  "basket.catalogModalOpen": "Add more products",
   "article.add": "Add",
   "filter.reset": "Reset",
   "auth.title": "Sign In",
@@ -27,5 +28,8 @@
   "countModal.cancel": "Cancel",
   "countModal.ok": "Ok",
   "countModal.success": "Product quantity [:count:] pcs. will be added to cart.",
-  "catalogModal.title": "Additional selection"
+  "catalogModal.title": "Additional selection",
+  "catalogModal.btnSuccess": "Add selected products",
+  "catalogModal.appendixItemText": "Will be added: [:count:] pc.",
+  "catalogModal.successText": "Selected items will be added to cart."
 }

@@ -59,22 +59,11 @@ class CatalogState extends StoreModule {
    * Установка параметров и загрузка списка товаров
    * @param [newParams] {Object} Новые параметры
    * @param [replaceHistory] {Boolean} Заменить адрес (true) или новая запись в истории браузера (false)
-   * @param [setQueries] {Boolean} Нужно ли вести историю состояний (для undo)
    * @param [ignoreHistory] {Boolean} Нужно ли записывать стейт в window.history
    * @returns {Promise<void>}
    */
-  async setParams(newParams = {}, replaceHistory = false, setQueries = false, ignoreHistory = false) {
+  async setParams(newParams = {}, replaceHistory = false, ignoreHistory = false) {
     const params = {...this.getState().params, ...newParams};
-
-    if (setQueries && this.getState().queries.length === 0) {
-      this.setState({
-        ...this.getState(),
-        queries: [
-          ...this.getState().queries,
-          this.getState(),
-        ],
-      });
-    }
 
     // Установка новых параметров и признака загрузки
     this.setState({

@@ -22,3 +22,9 @@ GET http://example.front.ylab.io/api/v1/articles/646b6e1fe1626c0bd8518064
 # Товар по id с подробностями о стране и категории
 
 GET http://example.front.ylab.io/api/v1/articles/646b6e1fe1626c0bd8518064?fields=*,madeIn(title,code),category(title)
+
+###
+# Несколько товаров по id с подробностями
+
+GET http://localhost:8010/api/v1/articles?search[ids]=65817bed5c295a2ff2fcd17f&lang=ru&limit=10&skip=0&fields=*
+ 

@@ -1,4 +1,4 @@
-import { memo, useCallback, useEffect } from "react";
+import { memo, useCallback } from "react";
 
 import PropTypes from 'prop-types';
 
@@ -14,7 +14,7 @@ function CatalogList(props) {
   const store = useStore();
   
   const select = useSelector(state => ({
-    list: state.catalog.list,
+    list: state[props.stateName].list,
     page: state.catalog.params.page,
     limit: state.catalog.params.limit,
     count: state.catalog.count,
@@ -67,6 +67,7 @@ function CatalogList(props) {
           onAdd={() => callbacks.openModalOfCount(item)}
           onClick={() => callbacks.addCountOfItem(item)}
           onDelete={() => props.onDeleteItem(item)}
+          appendix={props.appendixOfItem}
           link={`/articles/${item._id}`}
           labelAdd={t('article.add')}
         />
@@ -95,6 +96,8 @@ CatalogList.propTypes = {
   watchQueries: PropTypes.bool,
   ignoreHistory: PropTypes.bool,
   onDelete: PropTypes.func,
+  stateName: PropTypes.string,
+  appendixOfItem: PropTypes.func,
 };
 
 CatalogList.defaultProps = {
@@ -104,6 +107,7 @@ CatalogList.defaultProps = {
   watchQueries: false,
   ignoreHistory: false,
   onDelete: () => {},
+  appendixOfItem: () => {},
 };
 
 export default memo(CatalogList);

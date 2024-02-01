@@ -17,15 +17,21 @@ function Main() {
   const store = useStore();
 
   useInit(async () => {
-    store.make('catalog 2', 'catalog');
+    store.make('separateCatalog', 'catalog');
 
     await Promise.all([
+      store.actions.separateCatalog.initParams(),
       store.actions.catalog.initParams(),
+      
       store.actions.categories.load()
     ]);
   }, [], true);
 
   const {t} = useTranslate();
+
+  const options = {
+    stateName: 'catalog',
+  };
 
   return (
     <PageLayout>
@@ -34,8 +40,8 @@ function Main() {
         <LocaleSelect/>
       </Head>
       <Navigation/>
-      <CatalogFilter/>
-      <CatalogList/>
+      <CatalogFilter stateName={options.stateName} />
+      <CatalogList stateName={options.stateName} />
     </PageLayout>
   );
 }
