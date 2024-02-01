@@ -44,7 +44,7 @@ function CatalogList(props) {
 
   const callbacks = {
     // Открытие диалогового окна выбора количества для добавления в корзину или для списка выделенных товаров
-    addToBasketDialog: useCallback((item, pcs) => {
+    addToBasketDialog: useCallback((item, pcs = 1) => {
       dispatch(dialogsActions.open(context.dialogContext)); // Открываем диалоговое окно
       dispatch(addToBasketActions.setData(item));           // Отправляем ему данные // TODO: переименовать в сторе в `add-product`
       dispatch(addToBasketActions.setPcs(pcs));             // Устанавливаем начальное значение количества в открывающемся диалоговом окне
