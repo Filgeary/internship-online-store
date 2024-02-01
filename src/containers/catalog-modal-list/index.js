@@ -2,7 +2,7 @@ import {memo, useCallback} from "react";
 import useStore from "@src/hooks/use-store";
 import useSelector from "@src/hooks/use-selector";
 import useTranslate from "@src/hooks/use-translate";
-import Item from "@src/components/item";
+import Item from "@src/components/item-catalog-modal";
 import List from "@src/components/list";
 import Pagination from "@src/components/pagination";
 import Spinner from "@src/components/spinner";
@@ -10,33 +10,29 @@ import { useDispatch } from "react-redux";
 import modalsActions from '@src/store-redux/modals/actions';
 import useWaitModal from "@src/hooks/use-wait-modal";
 
-function CatalogList( ) {
+function CatalogModalList( ) {
   const store = useStore();
-  const dispatch = useDispatch();
 
   const select = useSelector(state => ({
-    list: state.catalog.list,
-    page: state.catalog.params.page,
-    limit: state.catalog.params.limit,
-    count: state.catalog.count,
-    waiting: state.catalog.waiting,
+    list: state.catalogModal.list,
+    page: state.catalogModal.params.page,
+    limit: state.catalogModal.params.limit,
+    count: state.catalogModal.count,
+    waiting: state.catalogModal.waiting,
   }));
 
   const callbacks = {
     // Добавление в корзину
     // addToBasket: useCallback((_id, number) => store.actions.basket.addToBasket(_id, number), [store]),
     // Пагинация
-    onPaginate: useCallback(page => store.actions.catalog.setParams({page}), [store]),
+    onPaginate: useCallback(page => store.actions.catalogModal.setParams({page}), [store]),
     // генератор ссылки для пагинатора
     makePaginatorLink: useCallback((page) => {
       return `?${new URLSearchParams({page, limit: select.limit, sort: select.sort, query: select.query})}`;
     }, [select.limit, select.sort, select.query]),
     // Добавление в корзину c вызовом Модалки для ввода количества
-    addToBasket: useCallback((_id) => {
-      store.actions.modals.open("counterModal")
-        .then((result) => {
-          store.actions.basket.addToBasket(_id, result);
-        });
+    onSelectItem: useCallback((_id) => {
+        store.actions.catalogModal.selectItem(_id);
     }, [store])
   }
 
@@ -44,9 +40,11 @@ function CatalogList( ) {
 
   const renders = {
     item: useCallback(item => (
-      <Item item={item} onAdd={callbacks.addToBasket} link={`/articles/${item._id}`} labelAdd={t('article.add')}/>
-    ), [callbacks.addToBasket, t]),
+      <Item item={item} onSelect={callbacks.onSelectItem}/>
+    ), [callbacks.onSelectItem, t]),
   };
+
+  console.log("render");
 
   return (
     <Spinner active={select.waiting}>
@@ -57,4 +55,4 @@ function CatalogList( ) {
   );
 }
 
-export default memo(CatalogList);
+export default memo(CatalogModalList);

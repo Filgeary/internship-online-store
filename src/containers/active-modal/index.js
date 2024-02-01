@@ -1,22 +1,51 @@
-import {memo} from "react";
-import { useSelector } from "react-redux";
+import { memo, useCallback } from "react";
 import CounterModal from "@src/app/counter-modal";
 import Basket from "@src/app/basket";
+import * as modals from "@src/app/export-modals";
+import useSelector from "@src/hooks/use-selector";
+import useStore from "@src/hooks/use-store";
 
 function ActiveModal() {
+  const store = useStore();
 
-  const activeModal = useSelector(state => state.modals.name);
+  const activeModals = useSelector((state) => state.modals.list);
 
-  switch (activeModal) {
-    case 'basket':
-      return <Basket/>
-    case 'counter-modal':
-      return <CounterModal/>  
-    default:
-      return <></>
-  }
+  // switch (activeModal) {
+  //   case 'basket':
+  //     return <Basket/>
+  //   case 'counter-modal':
+  //     return <CounterModal/>
+  //   default:
+  //     return <></>
+  // }
+
+  const callbacks = {
+    closeModal: useCallback((_id, result) => {
+        store.actions.modals.close(_id, result);
+      },
+      [store]
+    ),
+  };
+
+  return (
+    <>
+      {activeModals.map((activeModal) => {
+        if (activeModal.name in modals) {
+          const RenderModal = modals[activeModal.name];
+          return (
+            <RenderModal
+              key={activeModal.id}
+              closeModal={(result) =>
+                callbacks.closeModal(activeModal.id, result)
+              }
+            />
+          );
+        }
+      })}
+    </>
+  );
 }
 
-ActiveModal.propTypes = {}
+ActiveModal.propTypes = {};
 
 export default memo(ActiveModal);

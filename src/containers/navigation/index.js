@@ -15,14 +15,15 @@ function Navigation() {
   const select = useSelector(state => ({
     amount: state.basket.amount,
     sum: state.basket.sum,
-    lang: state.locale.lang
+    lang: state.locale.lang,
+    modals: state.modals.list
   }));
 
   const callbacks = {
     // Открытие модалки корзины
     openModalBasket: useCallback(() => {
-      //store.actions.modals.open('basket')
-      dispatch(modalsActions.open('basket'));
+      store.actions.modals.open('basket');
+      // dispatch(modalsActions.open('basket'));
     }, [store]),
 
     // Обработка перехода на главную

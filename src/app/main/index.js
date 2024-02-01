@@ -30,7 +30,7 @@ function Main() {
         <LocaleSelect/>
       </Head>
       <Navigation/>
-      <CatalogFilter/>
+      <CatalogFilter stateName={"catalog"}/>
       <CatalogList/>
     </PageLayout>
   );

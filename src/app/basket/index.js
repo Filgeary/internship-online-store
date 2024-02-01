@@ -1,5 +1,5 @@
-import {memo, useCallback} from 'react';
-import {useDispatch, useStore as useStoreRedux} from 'react-redux';
+import { memo, useCallback } from "react";
+import { useDispatch, useStore as useStoreRedux } from "react-redux";
 import useStore from "@src/hooks/use-store";
 import useSelector from "@src/hooks/use-selector";
 import useInit from "@src/hooks/use-init";
@@ -8,50 +8,82 @@ import ItemBasket from "@src/components/item-basket";
 import List from "@src/components/list";
 import ModalLayout from "@src/components/modal-layout";
 import BasketTotal from "@src/components/basket-total";
-import modalsActions from '@src/store-redux/modals/actions';
+import PropTypes from "prop-types";
+import SideLayout from "@src/components/side-layout";
+import Spinner from "@src/components/spinner";
 
-function Basket() {
-
+function Basket({ closeModal }) {
   const store = useStore();
   const dispatch = useDispatch();
 
-  const select = useSelector(state => ({
+  const select = useSelector((state) => ({
     list: state.basket.list,
     amount: state.basket.amount,
-    sum: state.basket.sum
+    sum: state.basket.sum,
+    waiting: state.basket.waiting
   }));
 
   const callbacks = {
     // Удаление из корзины
-    removeFromBasket: useCallback(_id => store.actions.basket.removeFromBasket(_id), [store]),
-    // Закрытие любой модалки
-    closeModal: useCallback(() => {
-      //store.actions.modals.close();
-      dispatch(modalsActions.close());
+    removeFromBasket: useCallback(
+      (_id) => store.actions.basket.removeFromBasket(_id),
+      [store]
+    ),
+    openCatalogModal: useCallback(() => {
+      store.actions.modals.open("catalogModal").then((result) => {
+        if (Array.isArray(result)) {
+          console.log(result);
+          store.actions.basket.addToBasketItemsId(result);
+        }
+      });
     }, [store]),
-  }
+  };
 
-  const {t} = useTranslate();
+  const { t } = useTranslate();
 
   const renders = {
-    itemBasket: useCallback((item) => (
-      <ItemBasket item={item}
-                  link={`/articles/${item._id}`}
-                  onRemove={callbacks.removeFromBasket}
-                  onLink={callbacks.closeModal}
-                  labelUnit={t('basket.unit')}
-                  labelDelete={t('basket.delete')}
-      />
-    ), [callbacks.removeFromBasket, t]),
+    itemBasket: useCallback(
+      (item) => (
+        <ItemBasket
+          item={item}
+          link={`/articles/${item._id}`}
+          onRemove={callbacks.removeFromBasket}
+          onLink={closeModal}
+          labelUnit={t("basket.unit")}
+          labelDelete={t("basket.delete")}
+        />
+      ),
+      [callbacks.removeFromBasket, t]
+    ),
   };
 
   return (
-    <ModalLayout title={t('basket.title')} labelClose={t('basket.close')}
-                 onClose={callbacks.closeModal}>
-      <List list={select.list} renderItem={renders.itemBasket}/>
-      <BasketTotal sum={select.sum} t={t}/>
+    <ModalLayout
+      title={t("basket.title")}
+      labelClose={t("basket.close")}
+      onClose={closeModal}
+      footer={
+        <SideLayout side={"end"}>
+          <button onClick={callbacks.openCatalogModal}>
+            {t("basket.add-more")}
+          </button>
+        </SideLayout>
+      }
+    >
+      <Spinner active={select.waiting}>
+        <List list={select.list} renderItem={renders.itemBasket} />
+        <BasketTotal sum={select.sum} t={t} />
+      </Spinner>
     </ModalLayout>
   );
 }
+
+Basket.propTypes = {
+  closeModal: PropTypes.func,
+};
+
+Basket.defaultProps = {
+  closeModal: (result) => {},
+};
 
 export default memo(Basket);

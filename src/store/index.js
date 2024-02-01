@@ -24,6 +24,7 @@ class Store {
      * categories: CategoriesState,
      * session: SessionState,
      * profile: ProfileState
+     * catalogModal: CatalogModalState
      * }} */
     this.actions = {};
     for (const name of Object.keys(modules)) {
@@ -56,6 +57,7 @@ class Store {
    * categories: Object,
    * session: Object,
    * profile: Object,
+   * catalogModal: Object,
    * }}
    */
   getState() {

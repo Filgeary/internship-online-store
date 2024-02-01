@@ -51,5 +51,14 @@ body:has(.ModalLayout){
 
 .ModalLayout-content {
   min-height: 100px;
-  padding: 70px 0;
+  padding-top: 70px;
+}
+
+.ModalLayout-footer {
+  padding-bottom: 70px;
+}
+
+.ModalLayout-footer_padding {
+  background: #f5f5f5;
+  padding: 20px;
 }

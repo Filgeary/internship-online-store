@@ -39,6 +39,9 @@ function ModalLayout(props) {
         <div className={cn('content')}>
           {props.children}
         </div>
+        <div className={cn('footer', {padding: props.footer !== undefined})}>
+          {props.footer}
+        </div>
       </div>
     </div>
   );
@@ -48,7 +51,8 @@ ModalLayout.propTypes = {
   title: PropTypes.string,
   onClose: PropTypes.func,
   children: PropTypes.node,
-  labelClose: PropTypes.string
+  labelClose: PropTypes.string,
+  footer: PropTypes.node
 };
 
 ModalLayout.defaultProps = {

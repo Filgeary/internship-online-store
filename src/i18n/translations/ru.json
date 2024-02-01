@@ -15,6 +15,7 @@
     "many": "товаров",
     "other": "товара"
   },
+  "basket.add-more": "Выбрать еще товар",
   "article.add": "Добавить",
   "filter.reset": "Сбросить",
   "auth.title": "Вход",
@@ -25,5 +26,9 @@
   "session.signOut": "Выход",
   "counter-modal.title": "Ввод количества товара",
   "modal.close": "Закрыть",
-  "couter-modal.form.title": "Введите количество товара:"
+  "couter-modal.form.title": "Введите количество товара:",
+  "catalog-modal.title": "Каталог товаров",
+  "catalog-modal.selected": "Выделено",
+  "catalog-modal.add": "Добавить выделенные товары"
+
 }

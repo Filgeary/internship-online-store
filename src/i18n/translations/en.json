@@ -13,6 +13,7 @@
     "one": "article",
     "other": "articles"
   },
+  "basket.add-more": "Select more products",
   "article.add": "Add",
   "filter.reset": "Reset",
   "auth.title": "Sign In",
@@ -23,5 +24,8 @@
   "session.signOut": "Sign Out",
   "counter-modal.title": "Entering the quantity of goods",
   "modal.close": "Close",
-  "couter-modal.form.title": "Enter the quantity of the product:"
+  "couter-modal.form.title": "Enter the quantity of the product:",
+  "catalog-modal.title": "Catalog",
+  "catalog-modal.selected": "Selected",
+  "catalog-modal.add": "Add highlighted products"
 }

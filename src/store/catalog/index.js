@@ -50,7 +50,7 @@ class CatalogState extends StoreModule {
     if (urlParams.has('sort')) validParams.sort = urlParams.get('sort');
     if (urlParams.has('query')) validParams.query = urlParams.get('query');
     if (urlParams.has('category')) validParams.category = urlParams.get('category');
-    await this.setParams({...this.initState().params, ...validParams, ...newParams}, true);
+    await this.setParams({...this.initState().params, ...validParams, ...newParams}, true, true);
   }
 
   /**
@@ -71,7 +71,7 @@ class CatalogState extends StoreModule {
    * @param [replaceHistory] {Boolean} Заменить адрес (true) или новая запись в истории браузера (false)
    * @returns {Promise<void>}
    */
-  async setParams(newParams = {}, replaceHistory = false) {
+  async setParams(newParams = {}, saveHistory = true, replaceHistory = false) {
     const params = {...this.getState().params, ...newParams};
 
     // Установка новых параметров и признака загрузки
@@ -82,12 +82,14 @@ class CatalogState extends StoreModule {
     }, 'Установлены параметры каталога');
 
     // Сохранить параметры в адрес страницы
-    let urlSearch = new URLSearchParams(exclude(params, this.initState().params)).toString();
-    const url = window.location.pathname + (urlSearch ? `?${urlSearch}`: '') + window.location.hash;
-    if (replaceHistory) {
-      window.history.replaceState({}, '', url);
-    } else {
-      window.history.pushState({}, '', url);
+    if (saveHistory) {
+      let urlSearch = new URLSearchParams(exclude(params, this.initState().params)).toString();
+      const url = window.location.pathname + (urlSearch ? `?${urlSearch}`: '') + window.location.hash;
+      if (replaceHistory) {
+        window.history.replaceState({}, '', url);
+      } else {
+        window.history.pushState({}, '', url);
+      }
     }
 
     const apiParams = exclude({
