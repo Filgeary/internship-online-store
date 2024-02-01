@@ -11,7 +11,6 @@ import CatalogFilter from '../catalog-filter';
 import SuccessBlock from '@src/components/success-block';
 import Entities from '@src/components/entities';
 
-
 function CatalogModal() {
   const store = useStore();
   const [updatedItems, setUpdatedItems] = useState({});
@@ -62,6 +61,8 @@ function CatalogModal() {
 
   const {t} = useTranslate();
 
+  const closeBasketModal = () => store.actions.modals.closeByName('basket');
+
   return (
     <Modal
       onClose={callbacks.closeModal}
@@ -94,6 +95,8 @@ function CatalogModal() {
         <button disabled={options.isBtnDisabled} onClick={callbacks.setSuccessToAdd}>
           {t('catalogModal.btnSuccess')}
         </button>
+
+        <button onClick={closeBasketModal}>Закрыть модалку корзины</button>
       </Entities>
     </Modal>
   );

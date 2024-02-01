@@ -12,6 +12,9 @@ const config = {
       session: {
         // Названия токена в АПИ
         tokenHeader: 'X-Token'
+      },
+      modals: {
+        onlyUnique: true
       }
     }
   },

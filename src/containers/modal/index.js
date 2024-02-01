@@ -1,12 +1,12 @@
 import PropTypes from 'prop-types';
 
-import React, { useCallback, useRef, memo } from 'react';
+import React, { useCallback, useEffect, useRef, memo } from 'react';
 
 import useStore from '@src/hooks/use-store';
-import modalsActions from '@src/store-redux/modals/actions';
 
 import ModalLayout from '@src/components/modal-layout';
 import useOnClickOutside from '@src/hooks/use-on-click-outside';
+import codeGenerator from '@src/utils/code-generator';
 
 const Modal = ({children, ...props}) => {
   const store = useStore();
