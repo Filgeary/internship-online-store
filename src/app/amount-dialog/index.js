@@ -1,17 +1,17 @@
 import DialogLayout from "@src/components/dialog-layout";
 import NumberInput from "@src/components/number-input";
-import useModal from "@src/hooks/use-modal";
 import { memo, useCallback, useState } from "react";
 import PropTypes from "prop-types";
+import useStore from "@src/hooks/use-store";
 
 function AmountDialog(props) {
 
   const [value, setValue] = useState(1)
-  const modal =  useModal()
+  const store =  useStore()
 
   const callbacks = {
-    cancelBasketDialog: useCallback(() => modal.close(props.id), [modal, props.id]),
-    submitBasketDialog: useCallback(() => modal.close(props.id, value), [modal, value, props.id])
+    cancelBasketDialog: useCallback(() => store.actions.modals.close(props.id), [store, props.id]),
+    submitBasketDialog: useCallback(() => store.actions.modals.close(props.id, value), [store, value, props.id])
   }
 
   return (

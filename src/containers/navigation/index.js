@@ -5,11 +5,9 @@ import useTranslate from "@src/hooks/use-translate";
 import Menu from "@src/components/menu";
 import BasketTool from "@src/components/basket-tool";
 import SideLayout from "@src/components/side-layout";
-import useModal from "@src/hooks/use-modal";
 
 function Navigation() {
   const store = useStore();
-  const modal =  useModal()
 
   const select = useSelector(state => ({
     amount: state.basket.amount,
@@ -20,7 +18,7 @@ function Navigation() {
   const callbacks = {
     // Открытие модалки корзины
     openModalBasket: useCallback(() => {
-      modal.open({type: modal.types.basket})
+      store.actions.modals.open({type: store.actions.modals.types.basket})
     }, [store]),
 
     // Обработка перехода на главную

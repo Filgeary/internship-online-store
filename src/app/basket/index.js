@@ -7,13 +7,11 @@ import List from "@src/components/list";
 import ModalLayout from "@src/components/modal-layout";
 import BasketTotal from "@src/components/basket-total";
 import PropTypes from "prop-types";
-import useModal from '@src/hooks/use-modal';
 import BasketButton from '@src/components/basket-button';
 
 function Basket(props) {
 
   const store = useStore();
-  const modal =  useModal();
   const {t} = useTranslate();
 
   const select = useSelector(state => ({
@@ -27,21 +25,21 @@ function Basket(props) {
     removeFromBasket: useCallback(_id => store.actions.basket.removeFromBasket(_id), [store]),
     // Закрытие любой модалки
     closeModal: useCallback(() => {
-      modal.close(props.id);
+      store.actions.modals.close(props.id);
     }, [store, props.id]),
-    selectMoreItems: useCallback(() => new Promise((res) => modal.open({
-        type: modal.types.selectItems,
+    selectMoreItems: useCallback(() => new Promise(
+      (res) => store.actions.modals.open({
+        type: store.actions.modals.types.selectItems,
         resolve: res,
         extraData: {
           title: 'Добавить товары в корзину',
           labelSubmit: 'Добавить'
-        }
-      })).then(ids => {
+        }})
+      ).then(ids => {
         if (ids?.length) {
           store.actions.basket.addManyToBasket(ids)
         }
-      })
-    )
+      }), [store])
   }
 
   const renders = {

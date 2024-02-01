@@ -1,20 +1,20 @@
-import useModalsStack from "@src/hooks/use-modals-stack";
 import { memo, useMemo } from "react";
 import AmountDialog from "../amount-dialog";
 import Basket from "../basket";
-import useModal from "@src/hooks/use-modal";
 import SelectItemsModal from "../select-items-modal";
+import useStore from "@src/hooks/use-store";
+import useSelector from "@src/hooks/use-selector";
 
 function Modals() {
-  const modal =  useModal()
-  const modalStack = useModalsStack()
+  const modalStack = useSelector(state => state.modals.stack)
+  const store = useStore()
 
   console.log(modalStack)
 
   const modals = useMemo(() => ({
-    [modal.types.basket]: Basket,
-    [modal.types.amount]: AmountDialog,
-    [modal.types.selectItems]: SelectItemsModal,
+    [store.actions.modals.types.basket]: Basket,
+    [store.actions.modals.types.amount]: AmountDialog,
+    [store.actions.modals.types.selectItems]: SelectItemsModal,
   }), [])
 
   return modalStack && modalStack.map((m,i) => {

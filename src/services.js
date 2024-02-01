@@ -1,5 +1,4 @@
 import APIService from "./api";
-import ModalService from "./modal";
 import Store from "./store";
 import createStoreRedux from "./store-redux";
 
@@ -40,16 +39,6 @@ class Services {
     }
     return this._redux;
   }
-
-  /**
-   * Сервис Modal
-   */
-    get modal(){
-      if (!this._modal) {
-        this._modal = new ModalService(this, this.config.modal);
-      }
-      return this._modal;
-    }
 }
 
 export default Services;

@@ -6,11 +6,9 @@ import Item from "@src/components/item";
 import List from "@src/components/list";
 import Pagination from "@src/components/pagination";
 import Spinner from "@src/components/spinner";
-import useModal from "@src/hooks/use-modal";
 
 function CatalogList() {
   const store = useStore();
-  const modal = useModal()
 
   const select = useSelector(state => ({
     list: state.catalog.list,
@@ -22,18 +20,19 @@ function CatalogList() {
 
   const callbacks = {
     // Добавление в корзину
-    addToBasket: useCallback((_id, itemTitle) => new Promise((res) => modal.open({
-      type: modal.types.amount,
-      resolve: res,
-      extraData: {
-        title: 'Количество товара ' + itemTitle
-      }
-    })).then(amount => {
+    addToBasket: useCallback((_id, itemTitle) => new Promise(
+      (res) => store.actions.modals.open({
+        type: store.actions.modals.types.amount,
+        resolve: res,
+        extraData: {
+          title: 'Количество товара ' + itemTitle
+        }
+      })
+    ).then(amount => {
       if (amount) {
         store.actions.basket.addToBasket(_id, amount)
       }
-    })
-    , [store, modal]),
+    }), [store]),
     // Пагинация
     onPaginate: useCallback(page => store.actions.catalog.setParams({page}), [store]),
     // генератор ссылки для пагинатора

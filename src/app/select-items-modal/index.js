@@ -2,7 +2,6 @@ import {memo, useCallback, useEffect, useMemo, useState} from 'react';
 import useTranslate from "@src/hooks/use-translate";
 import ModalLayout from "@src/components/modal-layout";
 import PropTypes from "prop-types";
-import useModal from '@src/hooks/use-modal';
 import CatalogFilter from '@src/containers/catalog-filter';
 import useStore from '@src/hooks/use-store';
 import useInit from '@src/hooks/use-init';
@@ -11,7 +10,6 @@ import useUnmount from '@src/hooks/use-unmount';
 
 function SelectItemsModal(props) {
 
-  const modal =  useModal()
   const store = useStore();
   const {t} = useTranslate();
   const [selectedItems, setSelectedItems] = useState([])
@@ -19,13 +17,13 @@ function SelectItemsModal(props) {
   const callbacks = {
     // Закрытие модалки
     cancelModal: useCallback(() => {
-      modal.close(props.id);
-    }, [modal, props.id]),
+      store.actions.modals.close(props.id);
+    }, [store, props.id]),
 
     // Закрытие модалки с передачей массива id выбранных товаров
     submitModal: useCallback(() => {
-      modal.close(props.id, selectedItems);
-    }, [modal, props.id, selectedItems]),
+      store.actions.modals.close(props.id, selectedItems);
+    }, [store, props.id, selectedItems]),
 
     // Убрать/добавить выделение товара
     toggleSelect: useCallback((itemId) => {

@@ -13,11 +13,9 @@ import TopHead from "@src/containers/top-head";
 import {useDispatch, useSelector} from 'react-redux';
 import shallowequal from "shallowequal";
 import articleActions from '@src/store-redux/article/actions';
-import useModal from '@src/hooks/use-modal';
 
 function Article() {
   const store = useStore();
-  const modal = useModal()
 
   const dispatch = useDispatch();
   // Параметры из пути /articles/:id
@@ -37,18 +35,19 @@ function Article() {
 
   const callbacks = {
     // Добавление в корзину
-    addToBasket: useCallback((_id, itemTitle) => new Promise((res) => modal.open({
-      type: modal.types.amount,
-      resolve: res,
-      extraData: {
-        title: 'Количество товара ' + itemTitle
-      }
-    })).then(amount => {
+    addToBasket: useCallback((_id, itemTitle) => new Promise(
+      (res) => store.actions.modals.open({
+        type: store.actions.modals.types.amount,
+        resolve: res,
+        extraData: {
+          title: 'Количество товара ' + itemTitle
+        }
+      })
+    ).then(amount => {
       if (amount) {
         store.actions.basket.addToBasket(_id, amount)
       }
-    })
-    , [store, modal]),
+    }), [store]),
   }
 
   return (
