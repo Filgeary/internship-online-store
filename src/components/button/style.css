@@ -1,0 +1,10 @@
+.Button{
+  width: 100%;
+  font-size: 16px;
+  padding: 5px;
+  box-shadow: 0px 0px 14px 7px rgba(72, 39, 88, 0.11) inset;
+  border: 0;
+  background-color: white;
+  cursor: pointer;
+}
+

@@ -14,3 +14,7 @@
     display: flex;
     justify-content: space-around;
 }
+
+.Goods-quantity-button {
+    cursor: pointer;
+}

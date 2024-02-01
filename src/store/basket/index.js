@@ -10,7 +10,8 @@ class BasketState extends StoreModule {
       list: [],
       sum: 0,
       amount: 0,
-      quantity: 0
+      quantity: 0,
+      selected: []
     }
   }
 
@@ -75,7 +76,7 @@ class BasketState extends StoreModule {
   }
 
    /**
-   * Добавление результата модального окна
+   * Добавление результата модального окна с количеством товара
    * @param quantity {Number}
    */
    updateQuantityProduct(quantity) {
@@ -83,6 +84,56 @@ class BasketState extends StoreModule {
       ...this.getState(),
       quantity
     });
+  }
+
+  /**
+   * Добавление объекта в selected 
+   * @param {Array}
+   */
+  updateSelected(selectedId) {
+    this.setState({
+      ...this.getState(),
+      selected: [...this.getState().selected, {
+        id: selectedId, 
+        quantity: this.getState().quantity
+      }],
+      quantity: 0
+    });
+  }
+
+   /**
+   * Удаление объекта из selected
+   * @param _id Код товара
+   */
+   removeFromSelected(id) {
+    this.setState({
+      ...this.getState(),
+      selected: this.getState().selected.filter(item => item.id !== id)
+    })
+  }
+
+  /**
+   * Добавление выбранных товаров из модального окна
+   * @param {}
+   */
+  async addingSelectedProducts () {
+    
+    const selected = this.getState().selected
+    
+    if (selected.length === 0) {
+      return;
+    }
+  
+    // Получаем первый объект из массива и удаляем его из массива
+    const firstSelected = selected.shift();
+  
+    // Добавляем товар в корзину
+    await this.addToBasket(firstSelected.id, firstSelected.quantity);
+  
+    // Рекурсивно вызываем эту же функцию для оставшихся объектов
+    await this.addingSelectedProducts(selected);
+  
+    // });
   }
 }
 

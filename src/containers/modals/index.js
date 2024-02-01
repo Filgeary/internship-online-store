@@ -2,15 +2,21 @@ import {memo} from "react";
 import {useSelector as useSelectorRedux} from "react-redux";
 import Basket from "@src/app/modals/basket";
 import GoodsQuantity from "@src/app/modals/goods-quantity";
+import Goods from "@src/app/modals/goods";
 
 function Modals() {
 
-  const activeModal = useSelectorRedux(state => state.modals.name);
+  const namesModal = useSelectorRedux(state => state.modals.name);
 
   return (
     <>
-      {activeModal === 'basket' && <Basket/>}
-      {activeModal === 'quantity' && <GoodsQuantity/>}
+    {namesModal.map((item, index) => (
+      <div key={index}>
+        {item === 'basket' && <Basket/>}
+        {item === 'quantity' && <GoodsQuantity/>}
+        {item === 'goods' && <Goods/>}
+      </div>
+    ))}
     </>
   )
 }

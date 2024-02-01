@@ -1,7 +1,8 @@
-import {memo, useCallback} from 'react';
+import {memo, useCallback, useEffect} from 'react';
 import {useDispatch, useStore as useStoreRedux} from 'react-redux';
 import useStore from "@src/hooks/use-store";
 import useSelector from "@src/hooks/use-selector";
+import {useSelector as useSelectorRedux} from 'react-redux';
 import useInit from "@src/hooks/use-init";
 import useTranslate from "@src/hooks/use-translate";
 import ItemBasket from "@src/components/item-basket";
@@ -9,6 +10,8 @@ import List from "@src/components/list";
 import ModalLayout from "@src/components/modal-layout";
 import BasketTotal from "@src/components/basket-total";
 import modalsActions from '@src/store-redux/modals/actions';
+import Button from '@src/components/button';
+
 
 function Basket() {
 
@@ -18,16 +21,22 @@ function Basket() {
   const select = useSelector(state => ({
     list: state.basket.list,
     amount: state.basket.amount,
-    sum: state.basket.sum
+    sum: state.basket.sum,
+    selected: state.basket.selected
   }));
+
+  const statusCatalogModal = useSelectorRedux(state => state.modals.statusCatalogModal);
 
   const callbacks = {
     // Удаление из корзины
     removeFromBasket: useCallback(_id => store.actions.basket.removeFromBasket(_id), [store]),
     // Закрытие любой модалки
     closeModal: useCallback(() => {
-      //store.actions.modals.close();
-      dispatch(modalsActions.close());
+      dispatch(modalsActions.closeModal('basket'))
+    }, [store]),
+    // Открытие модалки для выбра товаров
+    openModal: useCallback(() => {
+      dispatch(modalsActions.open('goods'))
     }, [store]),
   }
 
@@ -45,11 +54,21 @@ function Basket() {
     ), [callbacks.removeFromBasket, t]),
   };
 
+  useEffect(() => {
+    if(statusCatalogModal) {
+      // Добавление выбранных товаров из модального окна
+       store.actions.basket.addingSelectedProducts()
+    }
+  // Очистка статуса закрытия модалки с выбранными товарами
+  dispatch(modalsActions.changeStatusCatalogModal(null))
+  }, [statusCatalogModal])
+
   return (
     <ModalLayout title={t('basket.title')} labelClose={t('basket.close')}
                  onClose={callbacks.closeModal}>
       <List list={select.list} renderItem={renders.itemBasket}/>
       <BasketTotal sum={select.sum} t={t}/>
+      <Button value='Выбрать ещё товар' onClick={callbacks.openModal}/>
     </ModalLayout>
   );
 }

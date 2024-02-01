@@ -15,11 +15,11 @@ function GoodsQuantity() {
 
   const callbacks = {
     handleCancel: useCallback(() => {
-      dispatch(modalsActions.close())
+      dispatch(modalsActions.closeModal('quantity'))
     }, [store]),
     handleAdd: useCallback(() => {
         store.actions.basket.updateQuantityProduct(Number(quantityGoodsRef.current))
-        dispatch(modalsActions.close())
+         dispatch(modalsActions.closeModal('quantity'))
     }, [store]),
     onChange: useCallback((value) => {
         quantityGoodsRef.current = value
