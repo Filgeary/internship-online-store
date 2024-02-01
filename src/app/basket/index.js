@@ -34,7 +34,7 @@ function Basket() {
           .then((selectedItems) =>
             store.actions.basket.addManyToBasket(selectedItems)
           )
-          .catch((err) => console.error(err));
+          .catch((err) => console.error(err.message));
     }, [store])
   }
 

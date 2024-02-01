@@ -19,6 +19,7 @@ function Navigation() {
     // Открытие модалки корзины
     openModalBasket: useCallback(() => {
       store.actions.modals.open('basket')
+      .catch(err => console.error(err));
     }, [store]),
 
     // Обработка перехода на главную

@@ -20,7 +20,7 @@ function CatalogList() {
       store.actions.modals
         .open("count")
         .then((count) => store.actions.basket.addToBasket(_id, count[0]))
-        .catch((err) => console.error(err));
+        .catch((err) => console.error(err.message));
       }, [store])
   };
 
