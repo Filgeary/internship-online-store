@@ -43,7 +43,10 @@ class APIService {
         headers: {...this.defaultHeaders, ...headers},
         ...options,
       });
-      clearTimeout(timerOfErr);
+      
+      if (timerOfErr) {
+        clearTimeout(timerOfErr);
+      }
 
       return {data: await res.json(), status: res.status, headers: res.headers};
     } catch (err) {

@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-// import { useSelector } from "react-redux";
 import useSelector from "@src/hooks/use-selector";
 
 import PropTypes from 'prop-types';

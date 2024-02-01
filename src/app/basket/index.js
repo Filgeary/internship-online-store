@@ -30,7 +30,6 @@ function Basket() {
       promiseOfModal
         .then((updatedItems) => {
           store.actions.basket.addMany(updatedItems);
-          store.actions.modals.resetDataObj();
         })
         .catch(() => {});
     }, [store]),

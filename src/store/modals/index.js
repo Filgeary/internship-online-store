@@ -28,8 +28,6 @@ class ModalsState extends StoreModule {
       });
     });
 
-    console.log(`Открываю модалку ${name}`);
-
     return promise;
   }
 
@@ -38,10 +36,7 @@ class ModalsState extends StoreModule {
    * @param data 
    */
   close(data){
-    console.log('Щас буду закрывать');
-    console.log(this.getState().events);
     const { resolve: lastEvent, name } = this.getState().events.at(-1);
-    console.log(`Закрываю модалку ${name}`);
     lastEvent(data);
     
     this.setState({
