@@ -10,16 +10,21 @@ import useSelector from "@src/hooks/use-selector";
 import useStore from "@src/hooks/use-store";
 import useTranslate from "@src/hooks/use-translate";
 
-function CatalogList({ isSelectionMode, onSelectItem, selectedItems }) {
+function CatalogList({
+  isSelectionMode,
+  onSelectItem,
+  selectedItems,
+  catalogSliceName = "catalog",
+}) {
   const store = useStore();
   const { t } = useTranslate();
 
   const select = useSelector((state) => ({
-    list: state.catalog.list,
-    page: state.catalog.params.page,
-    limit: state.catalog.params.limit,
-    count: state.catalog.count,
-    waiting: state.catalog.waiting,
+    list: state[catalogSliceName].list,
+    page: state[catalogSliceName].params.page,
+    limit: state[catalogSliceName].params.limit,
+    count: state[catalogSliceName].count,
+    waiting: state[catalogSliceName].waiting,
   }));
 
   const callbacks = {
@@ -32,7 +37,7 @@ function CatalogList({ isSelectionMode, onSelectItem, selectedItems }) {
     ),
     // Пагинация
     onPaginate: useCallback(
-      (page) => store.actions.catalog.setParams({ page }),
+      (page) => store.actions[catalogSliceName].setParams({ page }),
       [store]
     ),
     // генератор ссылки для пагинатора

@@ -1,4 +1,4 @@
-import { memo, useCallback, useState } from "react";
+import { memo, useCallback, useEffect, useState } from "react";
 
 import ModalLayout from "@src/components/modal-layout";
 import SideLayout from "@src/components/side-layout";
@@ -11,6 +11,17 @@ const ModalCatalog = () => {
   const store = useStore();
   const { t } = useTranslate();
   const [selectedItems, setSelectedItems] = useState([]);
+
+  store.createStoreSlice("modalCatalog", "catalog");
+
+  useEffect(() => {
+    const init = async () => await store.actions["modalCatalog"].initParams();
+    init();
+  }, []);
+
+  useEffect(() => {
+    return () => store.deleteStoreSlice("modalCatalog");
+  }, []);
 
   const callbacks = {
     closeModal: useCallback(
@@ -52,8 +63,9 @@ const ModalCatalog = () => {
         </button>
       </SideLayout>
 
-      <CatalogFilter />
+      <CatalogFilter catalogSliceName="modalCatalog" />
       <CatalogList
+        catalogSliceName="modalCatalog"
         isSelectionMode={true}
         onSelectItem={callbacks.handleSelectItem}
         selectedItems={selectedItems}
