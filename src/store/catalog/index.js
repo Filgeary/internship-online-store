@@ -22,7 +22,6 @@ class CatalogState extends StoreModule {
       count: 0,
       selected: [],
       waiting: false,
-      isModal: false,
     };
   }
 
@@ -35,7 +34,8 @@ class CatalogState extends StoreModule {
   async initParams(newParams = {}) {
     const urlParams = new URLSearchParams(window.location.search);
     let validParams = {};
-    if (!this.getState().isModal) {
+    console.log(this.config.ignoreURL);
+    if (!this.config.ignoreURL) {
       if (urlParams.has("page"))
         validParams.page = Number(urlParams.get("page")) || 1;
       if (urlParams.has("limit"))
@@ -81,7 +81,7 @@ class CatalogState extends StoreModule {
       },
       "Установлены параметры каталога"
     );
-    if (!this.getState().isModal) {
+    if (!this.config.ignoreURL) {
       // Сохранить параметры в адрес страницы
       let urlSearch = new URLSearchParams(
         exclude(params, this.initState().params)
@@ -151,10 +151,6 @@ class CatalogState extends StoreModule {
 
   resetSelectedItems() {
     this.setState({...this.getState(), selected: []}, "Сброс выбранных товаров")
-  }
-
-  setIsModal(value) {
-    this.setState({...this.getState(), isModal: value})
   }
 }
 

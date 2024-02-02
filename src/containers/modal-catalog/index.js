@@ -14,22 +14,20 @@ function ModalCatalog() {
   const { t } = useTranslate();
   const modalId = useModalId();
 
-  const selectedItems = useSelector((state) => state.catalogModal.selected);
+  const selectedItems = useSelector((state) => state.copyCatalog.selected);
 
   useInit(() => {
-    store.actions.catalogModal.initParams();
+    store.actions.copyCatalog.initParams();
   }, [])
 
   const callbacks = {
     onClose: () => {
       store.actions.modals.close("catalog", modalId);
-      store.actions.catalogModal.resetSelectedItems();
-      store.actions.catalogModal.setIsModal(false);
+      store.actions.copyCatalog.resetSelectedItems();
     },
     onAddToBasket: () => {
       store.actions.modals.close("catalog", modalId, selectedItems);
-      store.actions.catalogModal.resetSelectedItems();
-      store.actions.catalogModal.setIsModal(false);
+      store.actions.copyCatalog.resetSelectedItems();
     },
   }
 
@@ -40,10 +38,10 @@ function ModalCatalog() {
       title={t("modal.catalog")}
     >
       <SideLayout side="between" padding="medium">
-        <CatalogFilter storeName={"catalogModal"} />
+        <CatalogFilter storeName={"copyCatalog"} />
         <button onClick={callbacks.onAddToBasket}>{t("modal.add")}</button>
       </SideLayout>
-      <CatalogListSelectable storeName={"catalogModal"} />
+      <CatalogListSelectable storeName={"copyCatalog"} />
     </ModalLayout>
   );
 }

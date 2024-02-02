@@ -29,7 +29,6 @@ function Basket() {
       store.actions.modals.close("basket", modalId);
     }, [store]),
     addToBasket: useCallback(async ()=> {
-        store.actions.catalogModal.setIsModal(true);
         store.actions.modals
           .open("catalog")
           .then((selectedItems) =>

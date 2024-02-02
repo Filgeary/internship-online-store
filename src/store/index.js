@@ -39,7 +39,7 @@ class Store {
     this.actions[name] = new modules[base](
       this,
       name,
-      this.config?.modules[base] || {}
+      {...this.config?.modules[base], ...this.config?.modules[name]} || {}
     );
     this.state[name] = this.actions[name].initState();
   }
