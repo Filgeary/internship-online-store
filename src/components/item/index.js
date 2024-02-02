@@ -11,15 +11,6 @@ import numberFormat from "@src/utils/number-format";
 function Item(props){
   const cn = bem('Item');
 
-  const options = {
-    showAppendix: props.isSelectable && props.count > 0,
-    // selectable: props.isSelectable && !props.count,
-    // block: props.count > 0,
-
-    selectable: props.isSelectable,
-    block: false,
-  };
-
   const callbacks = {
     onAdd: (e) => {
       e.stopPropagation();
@@ -32,41 +23,22 @@ function Item(props){
     },
   };
 
-  const renders = {
-    link: props.isSelectable ? <span>{props.item.title}</span> : <Link to={props.link}>{props.item.title}</Link>,
-  };
-
   return (
     <div
       onClick={props.onClick}
-      className={cn({ selectable: options.selectable, block: options.block })}
+      className={cn()}
     >
       <div className={cn('title')}>
-        {renders.link}
-        {options.showAppendix && <span> | {props.appendix(props.count)}</span>}
+        <Link to={props.link}>{props.item.title}</Link>
       </div>
       <div className={cn('actions')}>
-        <div className={cn('price')}>{numberFormat(props.item.price)} {props.labelCurr}</div>
-        {
-          !props.isSelectable && (
-            <button
-              onClick={callbacks.onAdd}
-              disabled={props.disabledAddBtn}
-            >
-              {props.labelAdd}
-            </button>
-          )
-        }
-
-        {
-          props.isDeletable && props.count && (
-            <button
-              onClick={callbacks.onDelete}
-            >
-              {props.labelDelete}
-            </button>
-          )
-        }
+        <div className={cn('price')}>{numberFormat(props.item.price)} {props.labelCurr}</div>        
+          <button
+            onClick={callbacks.onAdd}
+            disabled={props.disabledAddBtn}
+          >
+            {props.labelAdd}
+          </button>
       </div>
     </div>
   );
@@ -81,29 +53,15 @@ Item.propTypes = {
   }).isRequired,
   link: PropTypes.string,
   onAdd: PropTypes.func,
-  onClick: PropTypes.func,
-  onDelete: PropTypes.func,
   labelCurr: PropTypes.string,
   labelAdd: PropTypes.string,
-  labelDelete: PropTypes.string,
-  disabledAddBtn: PropTypes.bool,
-  isSelectable: PropTypes.bool,
-  isDeletable: PropTypes.bool,
-  count: PropTypes.number,
-  appendix: PropTypes.func,
 };
 
 Item.defaultProps = {
   onAdd: () => {},
   onClick: () => {},
-  onDelete: () => {},
   labelCurr: '₽',
   labelAdd: 'Добавить',
-  labelDelete: 'Удалить',
-  disabledAddBtn: false,
-  isSelectable: false,
-  isDeletable: false,
-  appendix: () => {},
 };
 
 export default memo(Item);

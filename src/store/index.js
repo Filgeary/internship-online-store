@@ -38,7 +38,7 @@ class Store {
    * @param base {String}
    */  
   make(name, base) {
-    this.actions[name] = new modules[base](this, name, this.config?.modules[base] || {});
+    this.actions[name] = new modules[base](this, name, { ...this.config?.modules[base], ...this.config?.modules[name] } || {});
     this.state[name] = this.actions[name].initState();
   }
 

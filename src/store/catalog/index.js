@@ -35,11 +35,13 @@ class CatalogState extends StoreModule {
   async initParams(newParams = {}) {
     const urlParams = new URLSearchParams(window.location.search);
     let validParams = {};
-    if (urlParams.has('page')) validParams.page = Number(urlParams.get('page')) || 1;
-    if (urlParams.has('limit')) validParams.limit = Math.min(Number(urlParams.get('limit')) || 10, 50);
-    if (urlParams.has('sort')) validParams.sort = urlParams.get('sort');
-    if (urlParams.has('query')) validParams.query = urlParams.get('query');
-    if (urlParams.has('category')) validParams.category = urlParams.get('category');
+    if (!this.config.ignoreUrlOnInit) {
+      if (urlParams.has('page')) validParams.page = Number(urlParams.get('page')) || 1;
+      if (urlParams.has('limit')) validParams.limit = Math.min(Number(urlParams.get('limit')) || 10, 50);
+      if (urlParams.has('sort')) validParams.sort = urlParams.get('sort');
+      if (urlParams.has('query')) validParams.query = urlParams.get('query');
+      if (urlParams.has('category')) validParams.category = urlParams.get('category');
+    }
     await this.setParams({...this.initState().params, ...validParams, ...newParams}, true);
   }
 
@@ -59,10 +61,9 @@ class CatalogState extends StoreModule {
    * Установка параметров и загрузка списка товаров
    * @param [newParams] {Object} Новые параметры
    * @param [replaceHistory] {Boolean} Заменить адрес (true) или новая запись в истории браузера (false)
-   * @param [ignoreHistory] {Boolean} Нужно ли записывать стейт в window.history
    * @returns {Promise<void>}
    */
-  async setParams(newParams = {}, replaceHistory = false, ignoreHistory = false) {
+  async setParams(newParams = {}, replaceHistory = false) {
     const params = {...this.getState().params, ...newParams};
 
     // Установка новых параметров и признака загрузки
@@ -76,7 +77,7 @@ class CatalogState extends StoreModule {
     let urlSearch = new URLSearchParams(exclude(params, this.initState().params)).toString();
     const url = window.location.pathname + (urlSearch ? `?${urlSearch}`: '') + window.location.hash;
 
-    if (!ignoreHistory) {
+    if (!this.config.ignoreUrl) {
       if (replaceHistory) {
         window.history.replaceState({}, '', url);
       } else {
@@ -113,35 +114,6 @@ class CatalogState extends StoreModule {
     };
 
     this.setState(newState, 'Загружен список товаров из АПИ');
-  }
-
-  /**
-   * Очистить список состояний
-   * @param [clearBy] {Number} Насколько очистить
-   */
-  undoBy(clearBy = 1) {
-    this.setState({
-      ...this.getState(),
-      queries: this.getState().queries.slice(0, clearBy),
-    });
-  }
-
-  /**
-   * Очистить список состояний
-   */
-  clearQueries() {
-    const firstQuery = this.getState().queries[0];
-
-    this.setState({
-      ...this.getState(),
-      queries: [],
-    }, 'Очищен список состояний');
-
-    // this.setParams(firstQuery);
-    this.setState({
-      ...this.getState(),
-      ...firstQuery
-    });
   }
 
   /**

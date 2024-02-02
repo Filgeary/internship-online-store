@@ -1,4 +1,4 @@
-import React, { useCallback, useState, memo } from 'react';
+import React, { useCallback, useState, memo, useEffect } from 'react';
 
 import useStore from '@src/hooks/use-store';
 
@@ -6,15 +6,20 @@ import Modal from '@src/containers/modal';
 
 import useTranslate from '@src/hooks/use-translate';
 
-import CatalogList from '../catalog-list';
 import CatalogFilter from '../catalog-filter';
 import SuccessBlock from '@src/components/success-block';
 import Entities from '@src/components/entities';
+import CatalogListAppend from '../catalog-list-append';
+import Catalog from '../catalog';
 
 function CatalogModal() {
   const store = useStore();
   const [updatedItems, setUpdatedItems] = useState({});
   const [isSuccess, setIsSuccess] = useState(false);
+
+  useEffect(() => {
+    store.actions.separateCatalog.initParams();
+  }, []);
 
   const callbacks = {
     closeModal: useCallback(() => {
@@ -23,8 +28,6 @@ function CatalogModal() {
       } else {
         store.actions.modals.closeByName('catalogModal', null, false);
       }
-
-      store.actions.catalog.clearQueries();
     }, [store, updatedItems, isSuccess]),
 
     delete: (item) => {
@@ -50,8 +53,6 @@ function CatalogModal() {
   };
 
   const options = {
-    watchQueries: true,
-    ignoreHistory: true,
     isBtnDisabled: Object.keys(updatedItems).length === 0 || isSuccess,
   };
 
@@ -68,20 +69,16 @@ function CatalogModal() {
       onClose={callbacks.closeModal}
       title={t('catalogModal.title')}
     >
-      <CatalogFilter
-        stateName="separateCatalog"
-        ignoreHistory={options.ignoreHistory}
-      />
-      <CatalogList
-        countOfItems={updatedItems}
-        onItemClick={callbacks.update}
-        isItemsSelectable={true}
-        isItemsDeletable={true}
-        onDeleteItem={callbacks.delete}
-        ignoreHistory={options.ignoreHistory}
-        stateName="separateCatalog"
-        appendixOfItem={renders.appendixText}
-      />
+      <Catalog stateName="separateCatalog">
+        <CatalogFilter />
+
+        <CatalogListAppend
+          countOfItems={updatedItems}
+          onItemClick={callbacks.update}
+          onItemDelete={callbacks.delete}
+          appendixOfItem={renders.appendixText}
+        />
+      </Catalog>
 
       <Entities>
         {

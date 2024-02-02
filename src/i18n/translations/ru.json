@@ -17,6 +17,7 @@
   },
   "basket.catalogModalOpen": "Добавить ещё товары",
   "article.add": "Добавить",
+  "article.delete": "Удалить",
   "filter.reset": "Сбросить",
   "auth.title": "Вход",
   "auth.login": "Логин",

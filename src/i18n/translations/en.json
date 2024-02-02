@@ -15,6 +15,7 @@
   },
   "basket.catalogModalOpen": "Add more products",
   "article.add": "Add",
+  "article.delete": "Delete",
   "filter.reset": "Reset",
   "auth.title": "Sign In",
   "auth.login": "Login",

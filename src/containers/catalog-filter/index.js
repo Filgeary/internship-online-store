@@ -1,35 +1,18 @@
-import {memo, useCallback, useMemo} from "react";
+import {memo, useMemo} from "react";
 import PropTypes from 'prop-types';
 
 import useTranslate from "@src/hooks/use-translate";
-import useStore from "@src/hooks/use-store";
-import useSelector from "@src/hooks/use-selector";
+
 import Select from "@src/components/select";
 import Input from "@src/components/input";
 import SideLayout from "@src/components/side-layout";
 import treeToList from "@src/utils/tree-to-list";
 import listToTree from "@src/utils/list-to-tree";
 
-function CatalogFilter({ stateName, ignoreHistory }) {
-  const store = useStore();
+import { useCatalog } from "../catalog";
 
-  const select = useSelector(state => ({
-    sort: state[stateName].params.sort,
-    query: state[stateName].params.query,
-    category: state[stateName].params.category,
-    categories: state.categories.list,
-  }));
-
-  const callbacks = {
-    // Сортировка
-    onSort: useCallback(sort => store.actions[stateName].setParams({sort}, false, ignoreHistory), [store]),
-    // Поиск
-    onSearch: useCallback(query => store.actions[stateName].setParams({query, page: 1}, false, ignoreHistory), [store]),
-    // Сброс
-    onReset: useCallback(() => store.actions[stateName].resetParams(), [store]),
-    // Фильтр по категории
-    onCategory: useCallback(category => store.actions[stateName].setParams({category, page: 1}, false, ignoreHistory), [store]),
-  };
+function CatalogFilter() {
+  const { callbacks, select } = useCatalog();
 
   const options = {
     sort: useMemo(() => ([
@@ -58,10 +41,5 @@ function CatalogFilter({ stateName, ignoreHistory }) {
     </SideLayout>
   )
 }
-
-CatalogFilter.propTypes = {
-  stateName: PropTypes.string,
-  ignoreHistory: PropTypes.bool,
-};
 
 export default memo(CatalogFilter);

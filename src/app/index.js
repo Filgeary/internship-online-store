@@ -20,7 +20,15 @@ function App() {
   const contentRef = useRef(null);
 
   useInit(async () => {
-    await store.actions.session.remind();
+    store.make('separateCatalog', 'catalog');
+
+    await Promise.all([
+      // store.actions.separateCatalog.initParams(),
+      store.actions.catalog.initParams(),
+
+      store.actions.categories.load(),
+      store.actions.session.remind(),
+    ]);
   });
 
   return (

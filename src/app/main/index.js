@@ -12,21 +12,9 @@ import CatalogFilter from "@src/containers/catalog-filter";
 import CatalogList from "@src/containers/catalog-list";
 import LocaleSelect from "@src/containers/locale-select";
 import TopHead from "@src/containers/top-head";
+import Catalog from '@src/containers/catalog';
 
 function Main() {
-  const store = useStore();
-
-  useInit(async () => {
-    store.make('separateCatalog', 'catalog');
-
-    await Promise.all([
-      store.actions.separateCatalog.initParams(),
-      store.actions.catalog.initParams(),
-      
-      store.actions.categories.load()
-    ]);
-  }, [], true);
-
   const {t} = useTranslate();
 
   const options = {
@@ -40,8 +28,11 @@ function Main() {
         <LocaleSelect/>
       </Head>
       <Navigation/>
-      <CatalogFilter stateName={options.stateName} />
-      <CatalogList stateName={options.stateName} />
+      
+      <Catalog stateName={options.stateName}>
+        <CatalogFilter />
+        <CatalogList />
+      </Catalog>
     </PageLayout>
   );
 }

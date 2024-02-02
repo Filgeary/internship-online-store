@@ -37,26 +37,6 @@
   gap: 20px
 }
 
-.Item_selectable {
-  cursor: pointer;
-
-  &:hover {
-    background: rgba(0, 0, 0, 0.1);
-  }
-}
-
-.Item_selectable:active {
-  opacity: 0.6;
-}
-
-.Item_block {
-  pointer-events: none;
-
-  &:hover {
-    background: #fff;
-  }
-}
-
 .Item-price {
   padding: 0 0 0 10px;
   white-space: nowrap;

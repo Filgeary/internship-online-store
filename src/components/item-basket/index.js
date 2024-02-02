@@ -1,5 +1,4 @@
 import {memo, useCallback} from 'react';
-import propTypes from 'prop-types';
 import numberFormat from "@src/utils/number-format";
 import {cn as bem} from "@bem-react/classname";
 import PropTypes from "prop-types";
@@ -16,7 +15,6 @@ function ItemBasket(props) {
 
   return (
     <div className={cn()}>
-      {/*<div className={cn('code')}>{props.item._id}</div>*/}
       <div className={cn('title')}>
         {props.link
           ? <Link to={props.link} onClick={props.onLink}>{props.item.title}</Link>
@@ -44,13 +42,13 @@ ItemBasket.propTypes = {
   labelCurr: PropTypes.string,
   labelDelete: PropTypes.string,
   labelUnit: PropTypes.string,
-}
+};
 
 ItemBasket.defaultProps = {
   onRemove: () => {},
   labelCurr: '₽',
   labelUnit: 'шт',
   labelDelete: 'Удалить',
-}
+};
 
 export default memo(ItemBasket);
