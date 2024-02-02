@@ -38,7 +38,6 @@ function CountToAdd() {
 
   return (
     <Modal
-      name="countModal"
       onClose={callbacks.closeModal}
       title={t('countModal.title')}
       labelClose={t('countModal.close')}

@@ -1,10 +1,14 @@
 import StoreModule from "../module";
+import codeGenerator from "@src/utils/code-generator";
+
+const generateCode = codeGenerator(0);
 
 class ModalsState extends StoreModule {
   initState() {
     return {
-      mapOfNames: {}, // Для быстрого поиска
+      mapOfOpened: {}, // Для быстрого поиска
       activeModals: [], // Стек открытых окон.
+      lastOpened: null, // Последняя открытая модалка (ID)
     }
   }
 
@@ -13,16 +17,18 @@ class ModalsState extends StoreModule {
    * @param name {String} 
    */
   open(name){
-    if (this.config.onlyUnique && this.getState().mapOfNames[name]) return;
+    if (this.config.onlyUnique && this.getState().mapOfOpened[name]) return;
+    const id = generateCode();
 
     const promise = new Promise((resolve, reject) => {
       this.setState({
         ...this.getState(),
         activeModals: [
           ...this.getState().activeModals,
-          { name, resolve, reject },
+          { name, id, resolve, reject },
         ],
-        mapOfNames: {...this.getState().mapOfNames, [name]: true},
+        lastOpened: id,
+        mapOfOpened: {...this.getState().mapOfOpened, [name]: true, [id]: true},
       });
     });
 
@@ -34,16 +40,17 @@ class ModalsState extends StoreModule {
    * @param data 
    */
   close(data){
-    const { resolve: lastEvent, name } = this.getState().activeModals.at(-1);
+    const { resolve: lastEvent, name, id } = this.getState().activeModals.at(-1);
     lastEvent(data);
     
     const activeModals = this.getState().activeModals.slice(0, -1);
-    const mapOfNames = {...this.getState().mapOfNames};
-    delete mapOfNames[name];
+    const mapOfOpened = {...this.getState().mapOfOpened};
+    delete mapOfOpened[name];
+    delete mapOfOpened[id];
 
     this.setState({
       activeModals,
-      mapOfNames,
+      mapOfOpened,
     });
   }
 
@@ -52,16 +59,17 @@ class ModalsState extends StoreModule {
    * @param data 
    */
   closeRej(data){
-    const { reject: lastEvent, name } = this.getState().activeModals.at(-1);
+    const { reject: lastEvent, name, id } = this.getState().activeModals.at(-1);
     lastEvent(data);
     
     const activeModals = this.getState().activeModals.slice(0, -1);
-    const mapOfNames = {...this.getState().mapOfNames};
-    delete mapOfNames[name];
+    const mapOfOpened = {...this.getState().mapOfOpened};
+    delete mapOfOpened[name];
+    delete mapOfOpened[id];
 
     this.setState({
       activeModals,
-      mapOfNames,
+      mapOfOpened,
     });
   }
 
@@ -72,24 +80,50 @@ class ModalsState extends StoreModule {
    * @param isSuccess {Boolean} Resolve / Reject при закрытии
    */
   closeByName(name, data, isSuccess = true) {
-    const isModalExist = this.getState().mapOfNames[name];
+    const isModalExist = this.getState().mapOfOpened[name];
     if (!isModalExist) return;
     
-    console.log('@@@@', name);
-    console.log('@@@@', this.getState().activeModals);
-
-    const { resolve, reject } = this.getState().activeModals.find((modal) => modal.name === name);
+    const { resolve, reject, id } = this.getState().activeModals.find((modal) => modal.name === name);
 
     if (isSuccess) resolve(data);
     else reject(data);
 
     const activeModals = this.getState().activeModals.filter((modal) => modal.name !== name);
-    const mapOfNames = {...this.getState().mapOfNames};
-    delete mapOfNames[name]; 
+    const mapOfOpened = {...this.getState().mapOfOpened};
+    delete mapOfOpened[name];
+    delete mapOfOpened[id];
 
     this.setState({
+      ...this.getState(),
       activeModals,
-      mapOfNames,
+      mapOfOpened,
+    });
+  }
+
+  /**
+   * Закрыть модалку по её имени
+   * @param id {String} ID модалки
+   * @param data {*} Данные, которые отловим в методах промиса
+   * @param isSuccess {Boolean} Resolve / Reject при закрытии
+   */
+  closeById(id, data, isSuccess = true) {
+    const isModalExist = this.getState().mapOfOpened[id];
+    if (!isModalExist) return;
+    
+    const { resolve, reject, name } = this.getState().activeModals.find((modal) => modal.id === id);
+
+    if (isSuccess) resolve(data);
+    else reject(data);
+
+    const activeModals = this.getState().activeModals.filter((modal) => modal.id !== id);
+    const mapOfOpened = {...this.getState().mapOfOpened};
+    delete mapOfOpened[name];
+    delete mapOfOpened[id];
+
+    this.setState({
+      ...this.getState(),
+      activeModals,
+      mapOfOpened,
     });
   }
 }

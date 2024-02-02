@@ -1,4 +1,4 @@
-import React, { useCallback, useState, memo, useEffect } from 'react';
+import React, { useCallback, useState, memo } from 'react';
 
 import useStore from '@src/hooks/use-store';
 
@@ -65,7 +65,6 @@ function CatalogModal() {
 
   return (
     <Modal
-      name="catalogModal"
       onClose={callbacks.closeModal}
       title={t('catalogModal.title')}
     >
