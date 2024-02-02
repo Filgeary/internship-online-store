@@ -56,6 +56,7 @@ const ModalCatalog = () => {
       <CatalogList
         isSelectionMode={true}
         onSelectItem={callbacks.handleSelectItem}
+        selectedItems={selectedItems}
       />
     </ModalLayout>
   );

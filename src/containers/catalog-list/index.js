@@ -10,8 +10,9 @@ import useSelector from "@src/hooks/use-selector";
 import useStore from "@src/hooks/use-store";
 import useTranslate from "@src/hooks/use-translate";
 
-function CatalogList({ isSelectionMode, onSelectItem }) {
+function CatalogList({ isSelectionMode, onSelectItem, selectedItems }) {
   const store = useStore();
+  const { t } = useTranslate();
 
   const select = useSelector((state) => ({
     list: state.catalog.list,
@@ -58,8 +59,6 @@ function CatalogList({ isSelectionMode, onSelectItem }) {
     [store]
   );
 
-  const { t } = useTranslate();
-
   const renders = {
     item: useCallback(
       (item) => (
@@ -78,10 +77,11 @@ function CatalogList({ isSelectionMode, onSelectItem }) {
           item={item}
           onAdd={openDialogAmount}
           onSelectItem={onSelectItem}
+          isSelected={selectedItems.includes(item._id)}
           labelAdd={t("article.add")}
         />
       ),
-      [openDialogAmount, t]
+      [openDialogAmount, t, onSelectItem, selectedItems]
     ),
   };
 
@@ -105,6 +105,13 @@ function CatalogList({ isSelectionMode, onSelectItem }) {
 CatalogList.propTypes = {
   isSelectionMode: PropTypes.bool,
   onSelectItem: PropTypes.func,
+  selectedItems: PropTypes.array,
+};
+
+CatalogList.defaultProps = {
+  isSelectionMode: false,
+  onSelectItem: () => {},
+  selectedItems: [],
 };
 
 export default memo(CatalogList);
