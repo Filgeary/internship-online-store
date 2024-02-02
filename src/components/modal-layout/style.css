@@ -10,7 +10,6 @@ body:has(.ModalLayout){
   height: 100%;
   overflow-x: auto;
   overflow-y: hidden;
-  background: rgba(0,0,0,0.7);
   z-index: 9999;
   padding: 10px;
   min-height: 100%;
@@ -22,6 +21,7 @@ body:has(.ModalLayout){
 
   &:last-child {
     overflow-y: auto;
+    background: rgba(0,0,0,0.7);
   }
 }
 

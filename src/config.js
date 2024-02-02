@@ -14,7 +14,7 @@ const config = {
         tokenHeader: 'X-Token'
       },
       modals: {
-        onlyUnique: true
+        onlyUnique: false,
       }
     }
   },

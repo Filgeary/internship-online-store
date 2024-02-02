@@ -13,10 +13,10 @@ function CountToAdd() {
   const {t} = useTranslate();
 
   const callbacks = {
-    onSubmit: (data) => {
+    onSubmit: useCallback((data) => {
       store.actions.basket.setCountToAdd(Number(data.count));
       setIsSuccess(true);
-    },
+    }, [store]),
 
     closeModal: useCallback((willBeAdd = isSuccess) => {
       if (willBeAdd) {
@@ -26,10 +26,10 @@ function CountToAdd() {
       }
     }, [store, isSuccess]),
 
-    cancel() {
+    cancel: useCallback(() => {
       setIsSuccess(false);
       callbacks.closeModal(false);
-    },
+    }, []),
   };
 
   const renders = {
@@ -38,6 +38,7 @@ function CountToAdd() {
 
   return (
     <Modal
+      name="countModal"
       onClose={callbacks.closeModal}
       title={t('countModal.title')}
       labelClose={t('countModal.close')}

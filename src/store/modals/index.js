@@ -75,6 +75,9 @@ class ModalsState extends StoreModule {
     const isModalExist = this.getState().mapOfNames[name];
     if (!isModalExist) return;
     
+    console.log('@@@@', name);
+    console.log('@@@@', this.getState().activeModals);
+
     const { resolve, reject } = this.getState().activeModals.find((modal) => modal.name === name);
 
     if (isSuccess) resolve(data);

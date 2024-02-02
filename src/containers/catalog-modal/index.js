@@ -19,9 +19,9 @@ function CatalogModal() {
   const callbacks = {
     closeModal: useCallback(() => {
       if (isSuccess) {
-        store.actions.modals.close(updatedItems);
+        store.actions.modals.closeByName('catalogModal', updatedItems);
       } else {
-        store.actions.modals.closeRej('Не добавляем');
+        store.actions.modals.closeByName('catalogModal', null, false);
       }
 
       store.actions.catalog.clearQueries();
@@ -65,6 +65,7 @@ function CatalogModal() {
 
   return (
     <Modal
+      name="catalogModal"
       onClose={callbacks.closeModal}
       title={t('catalogModal.title')}
     >

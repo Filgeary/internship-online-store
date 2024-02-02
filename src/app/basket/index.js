@@ -50,7 +50,7 @@ function Basket() {
   };
 
   return (
-    <Modal title={t('basket.title')} labelClose={t('basket.close')}>
+    <Modal name="basket" title={t('basket.title')} labelClose={t('basket.close')}>
       <Spinner active={select.waiting}>
         <List list={select.list} renderItem={renders.itemBasket} />
         <BasketTotal sum={select.sum} t={t} />

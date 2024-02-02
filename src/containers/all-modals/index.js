@@ -19,7 +19,7 @@ function AllModals({ toDisableFocus }) {
   const modalsReducer = (name) => {
     switch (name) {
       case 'basket': return <Basket />
-      case 'countToAdd': return <CountToAdd />
+      case 'countModal': return <CountToAdd />
       case 'catalogModal': return <CatalogModal />
     }
   };

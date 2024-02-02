@@ -1,12 +1,11 @@
 import PropTypes from 'prop-types';
 
-import React, { useCallback, useEffect, useRef, memo } from 'react';
+import React, { useCallback, useRef, memo } from 'react';
 
 import useStore from '@src/hooks/use-store';
 
 import ModalLayout from '@src/components/modal-layout';
 import useOnClickOutside from '@src/hooks/use-on-click-outside';
-import codeGenerator from '@src/utils/code-generator';
 
 const Modal = ({children, ...props}) => {
   const store = useStore();
@@ -15,8 +14,8 @@ const Modal = ({children, ...props}) => {
 
   const callbacks = {
     closeModal: useCallback(() => {
-      store.actions.modals.close();
-    }, [store]),
+      store.actions.modals.closeByName(props.name);
+    }, [store, props.name]),
   };
 
   const closeHandler = props.onClose || callbacks.closeModal;
@@ -39,6 +38,7 @@ Modal.propTypes = {
   children: PropTypes.node,
   labelClose: PropTypes.string,
   onClose: PropTypes.func,
+  name: PropTypes.string,
 };
 
 Modal.defaultProps = {
