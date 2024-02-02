@@ -101,7 +101,7 @@ class ModalsState extends StoreModule {
   }
 
   /**
-   * Закрыть модалку по её имени
+   * Закрыть модалку по её id
    * @param id {String} ID модалки
    * @param data {*} Данные, которые отловим в методах промиса
    * @param isSuccess {Boolean} Resolve / Reject при закрытии
