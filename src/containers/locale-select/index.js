@@ -1,6 +1,4 @@
-import {memo, useCallback, useMemo} from "react";
-import useStore from "@src/hooks/use-store";
-import useSelector from "@src/hooks/use-selector";
+import {memo, useMemo} from "react";
 import useTranslate from "@src/hooks/use-translate";
 import Select from "@src/components/select";
 
@@ -20,4 +18,4 @@ function LocaleSelect() {
   );
 }
 
-export default memo(LocaleSelect);
+export default LocaleSelect;

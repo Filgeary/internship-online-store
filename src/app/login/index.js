@@ -1,4 +1,4 @@
-import {memo, useCallback, useState} from "react";
+import {useCallback, useState} from "react";
 import useTranslate from "@src/hooks/use-translate";
 import Head from "@src/components/head";
 import LocaleSelect from "@src/containers/locale-select";
@@ -82,4 +82,4 @@ function Login() {
   );
 }
 
-export default memo(Login);
+export default Login;

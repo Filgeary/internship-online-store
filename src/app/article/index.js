@@ -1,4 +1,4 @@
-import {memo, useCallback, useMemo} from 'react';
+import {useCallback} from 'react';
 import {useParams} from "react-router-dom";
 import useStore from "@src/hooks/use-store";
 import useTranslate from "@src/hooks/use-translate";
@@ -23,7 +23,7 @@ function Article() {
   const params = useParams();
 
   useInit(() => {
-    //store.actions.article.load(params.id);
+    // store.actions.article.load(params.id);
     dispatch(articleActions.load(params.id));
   }, [params.id]);
 
@@ -33,14 +33,13 @@ function Article() {
   }), shallowequal); // Нужно указать функцию для сравнения свойства объекта, так как хуком вернули объект
 
   const {t} = useTranslate();
-
+  console.log(select.article)
   const callbacks = {
     // Добавление в корзину
     addToBasket: useCallback(async (_id) => {
         store.actions.modals
           .open("count")
-          .then((count) => store.actions.basket.addToBasket(_id, count[0]))
-          .catch((err) => console.error(err.message));
+          .then((count) => store.actions.basket.addToBasket(_id, count[0]));
     }, [store]),
   };
 
@@ -58,4 +57,4 @@ function Article() {
   );
 }
 
-export default memo(Article);
+export default Article;

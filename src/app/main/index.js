@@ -1,4 +1,3 @@
-import {memo} from 'react';
 import useStore from "@src/hooks/use-store";
 import useTranslate from "@src/hooks/use-translate";
 import useInit from "@src/hooks/use-init";
@@ -15,6 +14,7 @@ function Main() {
   const store = useStore();
 
   useInit(async () => {
+    store.makeNewStore("catalogModal", "catalog");
     await Promise.all([
       store.actions.catalog.initParams(),
       store.actions.categories.load()
@@ -30,10 +30,10 @@ function Main() {
         <LocaleSelect/>
       </Head>
       <Navigation/>
-      <CatalogFilter/>
+      <CatalogFilter storeName={"catalog"}/>
       <CatalogList/>
     </PageLayout>
   );
 }
 
-export default memo(Main);
+export default Main;

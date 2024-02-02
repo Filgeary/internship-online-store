@@ -20,11 +20,11 @@ function Modals() {
 
   return (
     <>
-      {activeModals.length && activeModals.map((modal) => {
-        return <Fragment key={modal}>{modals(modal)}</Fragment>;
+      {activeModals.length && activeModals.map(({name, id}) => {
+        return <Fragment key={id}>{modals(name)}</Fragment>;
       })}
     </>
   );
 }
 
-export default memo(Modals);
+export default Modals;

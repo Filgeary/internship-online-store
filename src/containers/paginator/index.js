@@ -1,24 +1,24 @@
-import { useCallback } from "react";
+import { useCallback, memo } from "react";
 import useStore from "@src/hooks/use-store";
 import useSelector from "@src/hooks/use-selector";
 import Pagination from "@src/components/pagination";
 
-export default function Paginator() {
+function Paginator(props) {
     const store = useStore();
 
     const select = useSelector((state) => ({
-      page: state.catalog.params.page,
-      limit: state.catalog.params.limit,
-      count: state.catalog.count,
-      sort: state.catalog.params.sort,
-      query: state.catalog.params.query,
-      category: state.catalog.params.category,
+      page: state[props.storeName].params.page,
+      limit: state[props.storeName].params.limit,
+      count: state[props.storeName].count,
+      sort: state[props.storeName].params.sort,
+      query: state[props.storeName].params.query,
+      category: state[props.storeName].params.category,
     }));
 
     const callbacks = {
       // Пагинация
       onPaginate: useCallback(
-        (page) => store.actions.catalog.setParams({ page }),
+        (page) => store.actions[props.storeName].setParams({ page }),
         [store]
       ),
       // генератор ссылки для пагинатора
@@ -45,5 +45,6 @@ export default function Paginator() {
         makeLink={callbacks.makePaginatorLink}
       />
     );
-
 }
+
+export default memo(Paginator);

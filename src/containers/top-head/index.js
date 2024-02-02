@@ -41,4 +41,4 @@ function TopHead() {
 }
 
 
-export default memo(TopHead);
+export default TopHead;

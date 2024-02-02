@@ -26,5 +26,6 @@
   "count.count": "Enter the quantity of goods you would like to buy",
   "count.cancel": "Cancel",
   "modal.close": "Close",
-  "modal.catalog": "List of products"
+  "modal.catalog": "List of products",
+  "modal.add": "Add selected products"
 }

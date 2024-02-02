@@ -1,4 +1,4 @@
-.ItemModal {
+.SelectableItem {
   display: flex;
   justify-content: space-between;
   transition: background-color 1s;
@@ -6,13 +6,13 @@
   cursor: pointer;
 }
 
-.ItemModal_selected {
+.SelectableItem_selected {
   background: #75aaf1;
   color: #fff;
   transition: .3s;
 }
 
-.ItemModal_selected:hover,
-.ItemModal_selected:active {
+.SelectableItem_selected:hover,
+.SelectableItem_selected:active {
   background: #5193e9;
 }

@@ -1,4 +1,4 @@
-import { useCallback, memo } from "react";
+import { useCallback } from "react";
 import ModalLayout from "@src/components/modal-layout";
 import useStore from "@src/hooks/use-store";
 import useSelector from "@src/hooks/use-selector";
@@ -7,27 +7,39 @@ import CatalogFilter from "../catalog-filter";
 import Paginator from "../paginator";
 import List from "@src/components/list";
 import Spinner from "@src/components/spinner";
-import ItemModal from "@src/components/item-modal";
+import SelectableItem from "@src/components/selectable-item";
+import useInit from "@src/hooks/use-init";
+import SideLayout from "@src/components/side-layout";
+import useModalId from "@src/hooks/use-modalId";
 
 function ModalCatalog() {
   const store = useStore();
   const { t } = useTranslate();
+  const modalId = useModalId();
 
   const select = useSelector((state) => ({
-    list: state.catalog.list,
-    waiting: state.catalog.waiting,
-    selected: state.catalog.selected
+    list: state.catalogModal.list,
+    waiting: state.catalogModal.waiting,
+    selected: state.catalogModal.selected,
   }));
+
+  useInit(() => {
+    store.actions.catalogModal.initParams();
+  }, [])
+
 
   const callbacks = {
     onClose: () => {
-      console.log(select.selected);
-      store.actions.modals.close(select.selected);
-      store.actions.catalog.resetSelectItems();
-      store.actions.catalog.setIsModal(false);
-      store.actions.catalog.initParams();
+      store.actions.modals.close("catalog", modalId);
+      store.actions.catalogModal.resetSelectedItems();
+      store.actions.catalogModal.setIsModal(false);
     },
-    onSelect: useCallback((_id) => store.actions.catalog.selectItem(_id), [store])
+    onAddToBasket: () => {
+      store.actions.modals.close("catalog", modalId, select.selected);
+      store.actions.catalogModal.resetSelectedItems();
+      store.actions.catalogModal.setIsModal(false);
+    },
+    onSelect: useCallback((_id) => store.actions.catalogModal.selectItem(_id), [store])
   }
 
   const renders = {
@@ -37,7 +49,7 @@ function ModalCatalog() {
         if (select.selected.includes(item._id)) {
           selected = true;
         }
-      return <ItemModal item={item} selected={selected} onSelect={callbacks.onSelect} />
+      return <SelectableItem item={item} selected={selected} onSelect={callbacks.onSelect} />
     },
       [callbacks.onSelect, select.selected, t]
     ),
@@ -50,12 +62,15 @@ function ModalCatalog() {
       title={t("modal.catalog")}
     >
       <Spinner active={select.waiting}>
-        <CatalogFilter />
+        <SideLayout side="between" padding="medium">
+          <CatalogFilter storeName={"catalogModal"} />
+          <button onClick={callbacks.onAddToBasket}>{t("modal.add")}</button>
+        </SideLayout>
         <List list={select.list} renderItem={renders.items} />
-        <Paginator />
+        <Paginator storeName={"catalogModal"} />
       </Spinner>
     </ModalLayout>
   );
 }
 
-export default memo(ModalCatalog);
+export default ModalCatalog;

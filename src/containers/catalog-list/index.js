@@ -1,4 +1,4 @@
-import {memo, useCallback} from "react";
+import {useCallback} from "react";
 import useStore from "@src/hooks/use-store";
 import useSelector from "@src/hooks/use-selector";
 import useTranslate from "@src/hooks/use-translate";
@@ -35,9 +35,9 @@ function CatalogList() {
   return (
     <Spinner active={select.waiting}>
       <List list={select.list} renderItem={renders.item}/>
-      <Paginator/>
+      <Paginator storeName={"catalog"}/>
     </Spinner>
   );
 }
 
-export default memo(CatalogList);
+export default CatalogList;

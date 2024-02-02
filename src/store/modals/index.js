@@ -1,37 +1,50 @@
 import StoreModule from "../module";
+import codeGenerator from "@src/utils/code-generator";
 
 class ModalsState extends StoreModule {
 
   initState() {
     return {
       list: [],
-      events: []
+      events: [],
+      lastOpenModalId: 0
     }
   }
 
   open(name){
-    return new Promise((resolve, reject) =>
+    return new Promise((resolve) => {
+      const id = codeGenerator(this.getState().lastOpenModalId)();
       this.setState(
-        { ...this.getState(),
-          list: [...this.getState().list, name],
-          events: [...this.getState().events, {resolve, reject}] },
+        {
+          ...this.getState(),
+          list: [...this.getState().list, { name, id }],
+          events: [...this.getState().events, { name, id, resolve }],
+          lastOpenModalId: id,
+        },
         `Открытие модалки ${name}`
-      )
+      );
+    }
     );
   }
 
-  close(data = []){
+  close(name, id, data = []){
     if (data.length) {
-      const { resolve, reject } = this.getState().events.at(-1);
+      const { resolve } = this.getState().events.find(item => item.name === name && item.id === id);
       resolve(data);
-      reject(new Error("Что-то пошло не так!"));
     }
+
+    const list = this.getState().list.filter(
+      (item) => item.name !== name && item.id !== id
+    );
+    const events = this.getState().events.filter(
+      (item) => item.name !== name && item.id !== id
+    );
 
     this.setState(
       {
         ...this.getState(),
-        list: this.getState().list.slice(0, -1),
-        events: this.getState().events.slice(0, -1),
+        list,
+        events,
       },
       `Закрытие модалки`
     );

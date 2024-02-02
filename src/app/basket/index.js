@@ -1,4 +1,4 @@
-import {memo, useCallback} from 'react';
+import {useCallback} from 'react';
 import useStore from "@src/hooks/use-store";
 import useSelector from "@src/hooks/use-selector";
 import useTranslate from "@src/hooks/use-translate";
@@ -8,9 +8,11 @@ import ModalLayout from "@src/components/modal-layout";
 import BasketTotal from "@src/components/basket-total";
 import Controls from '@src/components/controls';
 import Spinner from '@src/components/spinner';
+import useModalId from '@src/hooks/use-modalId';
 
 function Basket() {
   const store = useStore();
+  const modalId = useModalId();
 
   const select = useSelector(state => ({
     list: state.basket.list,
@@ -24,17 +26,15 @@ function Basket() {
     removeFromBasket: useCallback(_id => store.actions.basket.removeFromBasket(_id), [store]),
     // Закрытие любой модалки
     closeModal: useCallback(() => {
-      store.actions.modals.close();
+      store.actions.modals.close("basket", modalId);
     }, [store]),
     addToBasket: useCallback(async ()=> {
-        store.actions.catalog.setIsModal(true);
-        store.actions.catalog.resetParams();
+        store.actions.catalogModal.setIsModal(true);
         store.actions.modals
           .open("catalog")
           .then((selectedItems) =>
             store.actions.basket.addManyToBasket(selectedItems)
-          )
-          .catch((err) => console.error(err.message));
+          );
     }, [store])
   }
 
@@ -64,4 +64,4 @@ function Basket() {
   );
 }
 
-export default memo(Basket);
+export default Basket;

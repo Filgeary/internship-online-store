@@ -4,8 +4,8 @@ import { cn as bem } from "@bem-react/classname";
 import numberFormat from "@src/utils/number-format";
 import "./style.css";
 
-function ItemModal(props) {
-  const cn = bem("ItemModal");
+function SelectableItem(props) {
+  const cn = bem("SelectableItem");
 
   const onSelect = () => {
     props.onSelect(props.item._id);
@@ -21,7 +21,7 @@ function ItemModal(props) {
   );
 }
 
-ItemModal.propTypes = {
+SelectableItem.propTypes = {
   item: PropTypes.shape({
     _id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     title: PropTypes.string,
@@ -32,10 +32,10 @@ ItemModal.propTypes = {
   selected: PropTypes.bool,
 };
 
-ItemModal.defaultProps = {
+SelectableItem.defaultProps = {
   onSelect: () => {},
   selected: false,
   labelCurr: "₽",
 };
 
-export default memo(ItemModal);
+export default memo(SelectableItem);
