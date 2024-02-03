@@ -1,4 +1,4 @@
-import {memo} from 'react';
+import { memo } from "react";
 import useStore from "@src/hooks/use-store";
 import useTranslate from "@src/hooks/use-translate";
 import useInit from "@src/hooks/use-init";
@@ -11,27 +11,31 @@ import LocaleSelect from "@src/containers/locale-select";
 import TopHead from "@src/containers/top-head";
 
 function Main() {
-
   const store = useStore();
 
-  useInit(async () => {
-    await Promise.all([
-      store.actions.catalog.initParams(),
-      store.actions.categories.load()
-    ]);
-  }, [], true);
+  useInit(
+    async () => {
+      store.make('catalogModal', 'catalog')
+      await Promise.all([
+        store.actions.catalog.initParams(),
+        store.actions.categories.load(),
+      ]);
+    },
+    [],
+    true
+  );
 
-  const {t} = useTranslate();
+  const { t } = useTranslate();
 
   return (
     <PageLayout>
-      <TopHead/>
-      <Head title={t('title')}>
-        <LocaleSelect/>
+      <TopHead />
+      <Head title={t("title")}>
+        <LocaleSelect />
       </Head>
-      <Navigation/>
-      <CatalogFilter/>
-      <CatalogList/>
+      <Navigation />
+      <CatalogFilter />
+      <CatalogList />
     </PageLayout>
   );
 }

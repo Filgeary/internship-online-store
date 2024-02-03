@@ -1,6 +1,7 @@
 {
   "title": "Магазин",
   "catalog":"Каталог",
+  "catalog.modal":"Добавить выбранные товары",
   "menu.main": "Главная",
   "basket.title": "Корзина",
   "basket.open": "Перейти",
@@ -25,6 +26,7 @@
   "auth.signIn": "Войти",
   "session.signIn": "Вход",
   "session.signOut": "Выход",
+  "count.counter":"Количество товара",
   "count.form.title":"Введите количество товара",
   "count.form.ok":"Ок",
   "count.form.cancel":"Отмена"

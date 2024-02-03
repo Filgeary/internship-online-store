@@ -5,7 +5,6 @@ import exclude from "@src/utils/exclude";
  * Состояние каталога - параметры фильтра исписок товара
  */
 class CatalogState extends StoreModule {
-
   /**
    * Начальное состояние
    * @return {Object}
@@ -16,13 +15,14 @@ class CatalogState extends StoreModule {
       params: {
         page: 1,
         limit: 10,
-        sort: 'order',
-        query: '',
-        category: ''
+        sort: "order",
+        query: "",
+        category: "",
       },
       count: 0,
-      waiting: false
-    }
+      selectedItems: [],
+      waiting: false,
+    };
   }
 
   /**
@@ -34,12 +34,20 @@ class CatalogState extends StoreModule {
   async initParams(newParams = {}) {
     const urlParams = new URLSearchParams(window.location.search);
     let validParams = {};
-    if (urlParams.has('page')) validParams.page = Number(urlParams.get('page')) || 1;
-    if (urlParams.has('limit')) validParams.limit = Math.min(Number(urlParams.get('limit')) || 10, 50);
-    if (urlParams.has('sort')) validParams.sort = urlParams.get('sort');
-    if (urlParams.has('query')) validParams.query = urlParams.get('query');
-    if (urlParams.has('category')) validParams.category = urlParams.get('category');
-    await this.setParams({...this.initState().params, ...validParams, ...newParams}, true);
+
+    if (urlParams.has("page"))
+      validParams.page = Number(urlParams.get("page")) || 1;
+    if (urlParams.has("limit"))
+      validParams.limit = Math.min(Number(urlParams.get("limit")) || 10, 50);
+    if (urlParams.has("sort")) validParams.sort = urlParams.get("sort");
+    if (urlParams.has("query")) validParams.query = urlParams.get("query");
+    if (urlParams.has("category"))
+      validParams.category = urlParams.get("category");
+
+    await this.setParams(
+      { ...this.initState().params, ...validParams, ...newParams },
+      true
+    );
   }
 
   /**
@@ -49,7 +57,7 @@ class CatalogState extends StoreModule {
    */
   async resetParams(newParams = {}) {
     // Итоговые параметры из начальных, из URL и из переданных явно
-    const params = {...this.initState().params, ...newParams};
+    const params = { ...this.initState().params, ...newParams };
     // Установка параметров и загрузка данных
     await this.setParams(params);
   }
@@ -61,44 +69,100 @@ class CatalogState extends StoreModule {
    * @returns {Promise<void>}
    */
   async setParams(newParams = {}, replaceHistory = false) {
-    const params = {...this.getState().params, ...newParams};
+    const params = { ...this.getState().params, ...newParams };
 
     // Установка новых параметров и признака загрузки
-    this.setState({
-      ...this.getState(),
-      params,
-      waiting: true
-    }, 'Установлены параметры каталога');
+    this.setState(
+      {
+        ...this.getState(),
+        params,
+        waiting: true,
+      },
+      "Установлены параметры каталога"
+    );
 
     // Сохранить параметры в адрес страницы
-    let urlSearch = new URLSearchParams(exclude(params, this.initState().params)).toString();
-    const url = window.location.pathname + (urlSearch ? `?${urlSearch}`: '') + window.location.hash;
-    if (replaceHistory) {
-      window.history.replaceState({}, '', url);
-    } else {
-      window.history.pushState({}, '', url);
+    if (!this.config.loaded) {
+      let urlSearch = new URLSearchParams(
+        exclude(params, this.initState().params)
+      ).toString();
+      const url =
+        window.location.pathname +
+        (urlSearch ? `?${urlSearch}` : "") +
+        window.location.hash;
+      if (replaceHistory) {
+        window.history.replaceState({}, "", url);
+      } else {
+        window.history.pushState({}, "", url);
+      }
     }
 
-    const apiParams = exclude({
-      limit: params.limit,
-      skip: (params.page - 1) * params.limit,
-      fields: 'items(*),count',
-      sort: params.sort,
-      'search[query]': params.query,
-      'search[category]': params.category
-    }, {
-      skip: 0,
-      'search[query]': '',
-      'search[category]': ''
+    const apiParams = exclude(
+      {
+        limit: params.limit,
+        skip: (params.page - 1) * params.limit,
+        fields: "items(*),count",
+        sort: params.sort,
+        "search[query]": params.query,
+        "search[category]": params.category,
+      },
+      {
+        skip: 0,
+        "search[query]": "",
+        "search[category]": "",
+      }
+    );
+
+    const res = await this.services.api.request({
+      url: `/api/v1/articles?${new URLSearchParams(apiParams)}`,
+    });
+    this.setState(
+      {
+        ...this.getState(),
+        list: res.data.result.items,
+        count: res.data.result.count,
+        waiting: false,
+      },
+      "Загружен список товаров из АПИ"
+    );
+  }
+
+  selectItem(_id) {
+    let exist = false;
+    const list = this.getState().selectedItems.map((item) => {
+      let result = item;
+
+      if (item.id === _id) {
+        exist = true;
+        result.selected = false;
+      }
+
+      return result;
     });
 
-    const res = await this.services.api.request({url: `/api/v1/articles?${new URLSearchParams(apiParams)}`});
-    this.setState({
-      ...this.getState(),
-      list: res.data.result.items,
-      count: res.data.result.count,
-      waiting: false
-    }, 'Загружен список товаров из АПИ');
+    if (!exist) {
+      const item = { id: _id, selected: true };
+      list.push(item);
+    }
+
+    const selectedItems = list.filter((el) => el.selected);
+    this.setState(
+      {
+        ...this.getState(),
+        selectedItems,
+      },
+      "Выделение товара из каталога"
+    );
+  }
+
+  resetSelectItem() {
+    this.setState(
+      {
+        ...this.getState(),
+        selectedItems: [],
+      },
+      "Сброс выделенных товаров"
+    );
   }
 }
 

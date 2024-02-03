@@ -10,7 +10,6 @@ class BasketState extends StoreModule {
       sum: 0,
       amount: 0,
       active: "",
-      articleCount: 0,
     };
   }
 
@@ -43,7 +42,6 @@ class BasketState extends StoreModule {
       // Добавляем к сумме.
       sum += item.price * count;
     }
-  
 
     this.setState(
       {
@@ -52,10 +50,9 @@ class BasketState extends StoreModule {
         sum,
         amount: list.length,
       },
-      "Добавление в корзину"
+      "Добавление в корзину несколько штук одного товара"
     );
   }
-
 
   // мультидобавление в корзину
   async multiAddToBasket(list) {
@@ -65,13 +62,16 @@ class BasketState extends StoreModule {
     });
 
     for (const item of list) {
-      await this.addToBasket(item.id);
+      await this.addToBasket(item._id);
     }
-    
-    this.setState({
-      ...this.getState(),
-      waiting: false,
-    });
+
+    this.setState(
+      {
+        ...this.getState(),
+        waiting: false,
+      },
+      "Добавление в корзину несколько товаров"
+    );
   }
 
   /**
@@ -116,16 +116,6 @@ class BasketState extends StoreModule {
       "Удаление активного itema"
     );
   } */
-
-  addToArticleCount(count) {
-    this.setState(
-      {
-        ...this.getState(),
-        articleCount: parseInt(count),
-      },
-      "Установка количества товара"
-    );
-  }
 }
 
 export default BasketState;

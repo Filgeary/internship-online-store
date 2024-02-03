@@ -1,27 +1,31 @@
-import { memo, useState } from "react";
+import { memo } from "react";
 import PropTypes from "prop-types";
 import { cn as bem } from "@bem-react/classname";
 import numberFormat from "@src/utils/number-format";
 import "./style.css";
 import { Link } from "react-router-dom";
+import useSelector from "@src/hooks/use-selector";
 
 function Item(props) {
   const cn = bem("Item");
-  const [select, setSelect] = useState(false);
+
+  const selected = useSelector(
+    (state) => (props.catalog && state.catalogModal.selectedItems) || []
+  );
   const callbacks = {
     onAdd: (e) => props.onAdd(props.item._id),
     onSelect: (e) => {
       props.onSelect(props.item);
-      setSelect(!select);
     },
   };
+  const select = selected.find((el) => el.id == props.item._id);
 
   return (
     <div
       className={
         !props.catalog
           ? cn()
-          : select
+          : select?.selected
           ? cn() + " " + cn("pointer") + " " + cn("selected")
           : cn() + " " + cn("pointer")
       }

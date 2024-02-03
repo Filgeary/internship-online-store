@@ -33,6 +33,7 @@ const CountForm = (props) => {
         <h3>
           {props.title} (1-99), {props.basketUnit}:
         </h3>
+        <div className={cn("btn")}>
         <input
           name="count"
           type="number"
@@ -45,16 +46,12 @@ const CountForm = (props) => {
           required
           className={cn("input")}
         />
-        <button type="submit" className={cn("btn")}>
+        
+        <button type="submit" >
           {props.ok}
         </button>
-        <button
-          type="button"
-          className={cn("btn")}
-          onClick={callbacks.closeModal}
-        >
-          {props.cancel}
-        </button>
+        
+        </div>
       </div>
     </form>
   );

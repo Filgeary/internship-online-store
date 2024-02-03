@@ -1,4 +1,4 @@
-import { memo, useCallback} from "react";
+import { memo, useCallback } from "react";
 import useStore from "@src/hooks/use-store";
 import useSelector from "@src/hooks/use-selector";
 import useTranslate from "@src/hooks/use-translate";
@@ -15,11 +15,11 @@ function CatalogList(props) {
   const store = useStore();
   const dispatch = useDispatch();
   const select = useSelector((state) => ({
-    list: state.catalog.list,
-    page: state.catalog.params.page,
-    limit: state.catalog.params.limit,
-    count: state.catalog.count,
-    waiting: state.catalog.waiting,
+    list: state[props.storeName].list,
+    page: state[props.storeName].params.page,
+    limit: state[props.storeName].params.limit,
+    count: state[props.storeName].count,
+    waiting: state[props.storeName].waiting,
   }));
 
   const activeModal = useSelectorRedux((state) => state.modals);
@@ -29,11 +29,12 @@ function CatalogList(props) {
     selectItem: (item) => {
       props.onSelect(item);
     },
+
     // Открытие модалки ввода количества товара
-    openModalArticleCount: useCallback(
+    openCountModal: useCallback(
       (_id) => {
         store.actions.basket.addToActive(_id);
-        dispatch(modalsActions.open("articleCount"));
+        dispatch(modalsActions.open("counter"));
       },
       [store]
     ),
@@ -41,10 +42,11 @@ function CatalogList(props) {
     // addToBasket: useCallback(_id => store.actions.basket.addToBasket(_id), [store]),
     // Пагинация
     onPaginate: useCallback(
-      (page) => store.actions.catalog.setParams({ page }),
+      (page) => store.actions[props.storeName].setParams({ page }),
       [store]
     ),
     // генератор ссылки для пагинатора
+
     makePaginatorLink: useCallback(
       (page) => {
         return `?${new URLSearchParams({
@@ -65,7 +67,7 @@ function CatalogList(props) {
       (item) => (
         <Item
           item={item}
-          onAdd={callbacks.openModalArticleCount}
+          onAdd={callbacks.openCountModal}
           link={`/articles/${item._id}`}
           labelAdd={t("article.add")}
           catalog={activeModal.catalog}
@@ -92,10 +94,12 @@ function CatalogList(props) {
 
 CatalogList.propTypes = {
   onSelect: PropTypes.func,
+  storeName: PropTypes.string,
 };
 
 CatalogList.defaultProps = {
   onSelect: () => {},
+  storeName: "catalog",
 };
 
 export default memo(CatalogList);

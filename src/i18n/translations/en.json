@@ -1,6 +1,7 @@
 {
   "title": "Shop",
   "catalog":"Catalog",
+  "catalog.modal":"Add selected articles",
   "menu.main": "Main",
   "basket.title": "Cart",
   "basket.open": "Open",
@@ -23,6 +24,7 @@
   "auth.signIn": "Sign in",
   "session.signIn": "Sign In",
   "session.signOut": "Sign Out",
+  "count.counter":"Quantity of the article",
   "count.form.title":"Enter the quantity of the article",
   "count.form.ok":"Ok",
   "count.form.cancel":"Cancel"
