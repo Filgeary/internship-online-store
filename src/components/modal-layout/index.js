@@ -51,6 +51,7 @@ ModalLayout.propTypes = {
   children: PropTypes.node,
   labelClose: PropTypes.string,
   key: PropTypes.bool,
+  code: PropTypes.string,
 };
 
 ModalLayout.defaultProps = {

@@ -2,9 +2,8 @@ import CountForm from "@src/components/count-form";
 import ModalLayout from "@src/components/modal-layout";
 import useStore from "@src/hooks/use-store";
 import useTranslate from "@src/hooks/use-translate";
-import React, { memo, useCallback, useState } from "react";
-import { useSelector } from "react-redux";
-import shallowequal from "shallowequal";
+import React, { memo, useCallback } from "react";
+import PropTypes from "prop-types";
 
 const CountModal = (props) => {
   const { t } = useTranslate();
@@ -40,6 +39,14 @@ const CountModal = (props) => {
       />
     </ModalLayout>
   );
+};
+
+CountModal.propTypes = {
+  closeModal: PropTypes.func,
+};
+
+CountModal.defaultProps = {
+  closeModal: () => {},
 };
 
 export default memo(CountModal);

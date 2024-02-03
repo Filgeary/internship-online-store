@@ -14,6 +14,7 @@ import useInit from "@src/hooks/use-init";
 function Basket() {
   const store = useStore();
   const dispatch = useDispatch();
+  const { t } = useTranslate();
 
   const select = useSelector((state) => ({
     list: state.basket.list,
@@ -23,12 +24,12 @@ function Basket() {
 
   const activeModal = useSelectorRedux((state) => state.modals);
 
-   useInit(() => {
+  useInit(() => {
     if (Array.isArray(activeModal.data)) {
       store.actions.basket.multiAddToBasket(activeModal.data);
       dispatch(modalsActions.reset());
-    } 
-  }, [activeModal.data]); 
+    }
+  }, [activeModal.data]);
 
   const callbacks = {
     // Удаление из корзины
@@ -46,8 +47,6 @@ function Basket() {
       dispatch(modalsActions.open("catalog"));
     }, [store]),
   };
-
-  const { t } = useTranslate();
 
   const renders = {
     itemBasket: useCallback(
