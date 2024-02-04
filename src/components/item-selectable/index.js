@@ -12,12 +12,12 @@ function ItemSelectable(props){
   const cn = bem('ItemSelectable');
 
   const options = {
-    // selectable: !props.count,
-    // block: props.count > 0,
+    selectable: !props.count,
+    block: props.count > 0,
     
     showAppendix: props.count > 0,
-    selectable: true,
-    block: false,
+    // selectable: true,
+    // block: false,
   };
 
   const callbacks = {

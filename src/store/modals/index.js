@@ -1,3 +1,4 @@
+import listToTree from "@src/utils/list-to-tree";
 import StoreModule from "../module";
 import codeGenerator from "@src/utils/code-generator";
 
@@ -8,7 +9,7 @@ class ModalsState extends StoreModule {
     return {
       mapOfOpened: {}, // Для быстрого поиска
       activeModals: [], // Стек открытых окон.
-      lastOpened: null, // Последняя открытая модалка (ID)
+      lastOpened: null, // Последняя открытая модалка (ID),
     }
   }
 
@@ -66,7 +67,7 @@ class ModalsState extends StoreModule {
     
     const activeModals = this.getState().activeModals.slice(0, -1);
     const mapOfOpened = {...this.getState().mapOfOpened};
-    delete mapOfOpened[name];
+    mapOfOpened[name]--;
     delete mapOfOpened[id];
 
     this.setState({
@@ -120,7 +121,7 @@ class ModalsState extends StoreModule {
 
     const activeModals = this.getState().activeModals.filter((modal) => modal.id !== id);
     const mapOfOpened = {...this.getState().mapOfOpened};
-    delete mapOfOpened[name];
+    mapOfOpened[name]--;
     delete mapOfOpened[id];
 
     this.setState({
