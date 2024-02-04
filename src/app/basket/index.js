@@ -29,6 +29,7 @@ function Basket() {
 
       promiseOfModal
         .then((updatedItems) => {
+          console.log('Items:', updatedItems);
           store.actions.basket.addMany(updatedItems);
         })
         .catch(() => {});

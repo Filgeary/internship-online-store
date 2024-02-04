@@ -1,21 +1,24 @@
-import React, { useCallback, useState, memo, useEffect, useContext } from 'react';
+import React, { useCallback, useState, memo, useEffect } from 'react';
 
 import useStore from '@src/hooks/use-store';
+import useTranslate from '@src/hooks/use-translate';
+import useModalId from '@src/hooks/use-modal-id';
+import useCloseParentFn from '@src/hooks/use-close-parent-fn';
 
 import Modal from '@src/containers/modal';
-
-import useTranslate from '@src/hooks/use-translate';
-
 import CatalogFilter from '../catalog-filter';
 import SuccessBlock from '@src/components/success-block';
 import Entities from '@src/components/entities';
 import CatalogListAppend from '../catalog-list-append';
-import Catalog, { useCatalog } from '../catalog';
+import Catalog from '../catalog';
 
 function CatalogModal() {
   const store = useStore();
   const [updatedItems, setUpdatedItems] = useState({});
   const [isSuccess, setIsSuccess] = useState(false);
+  
+  const modalId = useModalId();
+  const closeParentFn = useCloseParentFn(modalId);
 
   useEffect(() => {
     store.actions.separateCatalog.initParams();
@@ -24,32 +27,34 @@ function CatalogModal() {
   const callbacks = {
     closeModal: useCallback(() => {
       if (isSuccess) {
-        store.actions.modals.closeByName('catalogModal', updatedItems);
+        store.actions.modals.closeById(modalId, updatedItems);
       } else {
-        store.actions.modals.closeByName('catalogModal', null, false);
+        store.actions.modals.closeById(modalId, null, false);
       }
-    }, [store, updatedItems, isSuccess]),
+    }, [store, updatedItems, isSuccess, modalId]),
 
-    delete: (item) => {
+    delete: useCallback((item) => {
       setUpdatedItems((prev) => {
         const newUpdatedItems = {...prev};
         delete newUpdatedItems[item._id];
 
         return newUpdatedItems;
       });
-    },
+    }, [updatedItems]),
 
-    update: (item) => {
+    update: useCallback((item) => {
       setUpdatedItems({
         ...updatedItems,
         [item._id]: updatedItems[item._id] ? updatedItems[item._id] + 1 : 1,
       });
       setIsSuccess(false);
-    },
+    }, [updatedItems]),
 
-    setSuccessToAdd: () => {
+    setSuccessToAdd: useCallback(() => {
       setIsSuccess(true);
-    },
+    }, []),
+
+    closeParent: () => closeParentFn(),
   };
 
   const options = {
@@ -63,6 +68,7 @@ function CatalogModal() {
   const {t} = useTranslate();
 
   const closeBasketModal = () => store.actions.modals.closeByName('basket');
+  const closeBasketModalStart = () => store.actions.modals.closeByName('basket', null, true, false);
   const openAnotherCatalogModal = () => store.actions.modals.open('catalogModal').then((items) => alert(JSON.stringify(items))).catch(() => {}); 
 
   return (
@@ -94,7 +100,9 @@ function CatalogModal() {
           {t('catalogModal.btnSuccess')}
         </button>
 
-        <button onClick={closeBasketModal}>Закрыть модалку корзины</button>
+        <button onClick={callbacks.closeParent}>Закрыть родительскую модалку</button>
+        <button onClick={closeBasketModal}>Закрыть модалку корзины (последнюю)</button>
+        <button onClick={closeBasketModalStart}>Закрыть модалку корзины (первую)</button>
         <button onClick={openAnotherCatalogModal}>Открыть ещё одну модалку каталога</button>
       </Entities>
     </Modal>

@@ -1,22 +1,16 @@
+import React, { useCallback, useRef, memo } from 'react';
 import PropTypes from 'prop-types';
 
-import React, { useCallback, useRef, memo, useEffect, useState, useMemo } from 'react';
-
 import useStore from '@src/hooks/use-store';
+import useOnClickOutside from '@src/hooks/use-on-click-outside';
+import useModalId from '@src/hooks/use-modal-id';
 
 import ModalLayout from '@src/components/modal-layout';
-import useOnClickOutside from '@src/hooks/use-on-click-outside';
-import useSelector from '@src/hooks/use-selector';
 
 const Modal = ({children, ...props}) => {
   const store = useStore();
-  const uid = useSelector((state) => state.modals.lastOpened);
-  const [modalId, setModalId] = useState(null);
 
-  useEffect(() => {
-    setModalId(modalId ?? uid);
-  }, [modalId, uid]);
-
+  const modalId = useModalId();
   const modalRef = useRef(null);
 
   const callbacks = {

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, memo } from "react";
 import useSelector from "@src/hooks/use-selector";
 
 import PropTypes from 'prop-types';
@@ -8,12 +8,13 @@ import CountToAdd from "@src/containers/count-to-add";
 import CatalogModal from "@src/containers/catalog-modal";
 
 function AllModals({ toDisableFocus }) {
-  const activeModals = useSelector((state) => state.modals.activeModals);
+  const activeModals = useSelector((state) => state.modals.mapOfOpened);
+  const modalsIds = Object.keys(activeModals);
 
   useEffect(() => {
     if (!toDisableFocus.current) return;
 
-    toDisableFocus.current.inert = Boolean(activeModals.length);
+    toDisableFocus.current.inert = Boolean(modalsIds.length);
   }, [activeModals]);
 
   const modalsReducer = (name) => {
@@ -26,9 +27,9 @@ function AllModals({ toDisableFocus }) {
 
   return (
     <>
-      {activeModals.map(({ name, id }) => (
+      {modalsIds.map((id) => (
         <React.Fragment key={id}>
-          {modalsReducer(name)}
+          {modalsReducer(activeModals[id].name)}
         </React.Fragment>
       ))}
     </>
@@ -42,4 +43,4 @@ AllModals.propTypes = {
   ]),
 };
 
-export default AllModals;
+export default memo(AllModals);
