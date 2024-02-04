@@ -25,9 +25,7 @@ function Basket() {
     // Удаление из корзины
     removeFromBasket: useCallback(_id => store.actions.basket.removeFromBasket(_id), [store]),
     // Закрытие любой модалки
-    closeModal: useCallback(() => {
-      store.actions.modals.close("basket", modalId);
-    }, [store]),
+    closeModal: useCallback(() => store.actions.modals.close(modalId), [store, modalId]),
     addToBasket: useCallback(async ()=> {
         store.actions.modals
           .open("catalog")

@@ -1,4 +1,3 @@
-import { useCallback } from "react";
 import ModalLayout from "@src/components/modal-layout";
 import useStore from "@src/hooks/use-store";
 import useSelector from "@src/hooks/use-selector";
@@ -8,6 +7,7 @@ import useInit from "@src/hooks/use-init";
 import SideLayout from "@src/components/side-layout";
 import useModalId from "@src/hooks/use-modalId";
 import CatalogListSelectable from "../catalog-list-selectable";
+import { useCallback } from "react";
 
 function ModalCatalog() {
   const store = useStore();
@@ -21,14 +21,14 @@ function ModalCatalog() {
   }, [])
 
   const callbacks = {
-    onClose: () => {
-      store.actions.modals.close("catalog", modalId);
+    onClose: useCallback(() => {
+      store.actions.modals.close(modalId);
       store.actions.copyCatalog.resetSelectedItems();
-    },
-    onAddToBasket: () => {
-      store.actions.modals.close("catalog", modalId, selectedItems);
+    }, [store, modalId]),
+    onAddToBasket: useCallback(() => {
+      store.actions.modals.close(modalId, selectedItems);
       store.actions.copyCatalog.resetSelectedItems();
-    },
+    }, [store, modalId]),
   }
 
   return (

@@ -3,17 +3,18 @@ import useTranslate from "@src/hooks/use-translate";
 import CountItemForm from "@src/components/count-item-form";
 import ModalLayout from "@src/components/modal-layout";
 import useModalId from "@src/hooks/use-modalId";
+import { useCallback } from "react";
 
 function CountItemModal() {
   const store = useStore();
   const modalId = useModalId();
-  
+
   const callbacks = {
     // Закрытие модалки
-    closeModal: () => store.actions.modals.close("count", modalId),
-    onSubmit: (count) => {
-      store.actions.modals.close("count", modalId, [+count]);
-    },
+    closeModal: useCallback(() => store.actions.modals.close(modalId), [store, modalId]),
+    onSubmit: useCallback((count) => {
+      store.actions.modals.close(modalId, +count);
+    }, [store, modalId]),
   };
 
   const { t } = useTranslate();

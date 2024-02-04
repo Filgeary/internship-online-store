@@ -34,7 +34,7 @@ class CatalogState extends StoreModule {
   async initParams(newParams = {}) {
     const urlParams = new URLSearchParams(window.location.search);
     let validParams = {};
-    console.log(this.config.ignoreURL);
+
     if (!this.config.ignoreURL) {
       if (urlParams.has("page"))
         validParams.page = Number(urlParams.get("page")) || 1;

@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import useSelector from "./use-selector";
+import useInit from "./use-init";
 /**
  * Получение id для модалки
  */
@@ -9,7 +10,7 @@ function useModalId() {
 
   const id = useSelector((state) => state.modals.lastOpenModalId);
 
-  useEffect(() => {
+  useInit(() => {
     setModalId(id);
   }, [])
 
