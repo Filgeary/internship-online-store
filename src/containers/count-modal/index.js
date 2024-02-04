@@ -1,5 +1,9 @@
 import { memo, useCallback, useState } from "react";
-import { useDispatch, useStore as useStoreRedux } from "react-redux";
+import {
+  useDispatch,
+  useStore as useStoreRedux,
+  useSelector as useSelectorRedux,
+} from "react-redux";
 import useStore from "@src/hooks/use-store";
 
 import useTranslate from "@src/hooks/use-translate";
@@ -8,22 +12,26 @@ import ModalLayout from "@src/components/modal-layout";
 import modalsActions from "@src/store-redux/modals/actions";
 import CountPicker from "@src/components/count-picker";
 
-function CountModal({ onAdd, onCancel, title }) {
+function CountModal({ title, onTop }) {
   const store = useStore();
   const dispatch = useDispatch();
+
+  const resolve = useSelectorRedux(
+    (state) =>
+      state.modals.activeModals.find((el) => el.name === "count-picker").resolve
+  );
 
   const [count, setCount] = useState(1);
 
   const callbacks = {
     onAdd: () => {
-      dispatch(modalsActions.close());
-      onAdd(count);
+      resolve(count);
     },
     // Закрытие любой модалки
     onCancel: useCallback(() => {
       //store.actions.modals.close();
-      dispatch(modalsActions.close());
-      onCancel();
+      dispatch(modalsActions.close("count-picker"));
+      // onCancel();
     }, [store]),
     // Увеличить количество
     addCount: () => {
@@ -44,6 +52,7 @@ function CountModal({ onAdd, onCancel, title }) {
       title={t("count.title")}
       labelClose={t("count.cancel")}
       onClose={callbacks.onCancel}
+      onTop={onTop}
     >
       <CountPicker callbacks={callbacks} t={t} count={count} title={title} />
     </ModalLayout>

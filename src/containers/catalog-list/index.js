@@ -8,13 +8,10 @@ import List from "@src/components/list";
 import Pagination from "@src/components/pagination";
 import Spinner from "@src/components/spinner";
 import modalsActions from "@src/store-redux/modals/actions";
-import CountModal from "../count-modal";
 
 function CatalogList() {
   const store = useStore();
   const dispatch = useDispatch();
-
-  const activeModal = useSelectorRedux((state) => state.modals);
 
   const select = useSelector((state) => ({
     list: state.catalog.list,
@@ -26,26 +23,21 @@ function CatalogList() {
 
   const promiseRef = useRef();
 
+  useSelectorRedux((state) => {
+    promiseRef.current = state.modals.activeModals.find(
+      (el) => el.name === "count-picker"
+    )?.promise;
+  });
+
   const callbacks = {
     // Добавление в корзину
-    addToBasket: useCallback(
-      async (_id, title) => {
-        const showCountPicker = () => {
-          dispatch(modalsActions.open("count-picker", title));
-
-          return new Promise((resolve, reject) => {
-            promiseRef.current = { resolve, reject };
-          });
-        };
-        try {
-          const count = await showCountPicker();
-          store.actions.basket.addToBasket(_id, count);
-        } catch (e) {
-          console.log(e);
-        }
-      },
-      [store]
-    ),
+    addToBasket: (_id, message) => {
+      dispatch(modalsActions.open("count-picker", message));
+      promiseRef.current?.then((count) => {
+        store.actions.basket.addToBasket(_id, count);
+        dispatch(modalsActions.close("count-picker"));
+      });
+    },
     // Пагинация
     onPaginate: useCallback(
       (page) => store.actions.catalog.setParams({ page }),
@@ -91,13 +83,6 @@ function CatalogList() {
         onChange={callbacks.onPaginate}
         makeLink={callbacks.makePaginatorLink}
       />
-      {activeModal.name === "count-picker" && (
-        <CountModal
-          onAdd={promiseRef.current.resolve}
-          onCancel={promiseRef.current.reject}
-          title={activeModal.title}
-        />
-      )}
     </Spinner>
   );
 }

@@ -5,7 +5,7 @@ import numberFormat from "@src/utils/number-format";
 import "./style.css";
 import { Link } from "react-router-dom";
 
-function Item(props) {
+function ItemSelectable(props) {
   const cn = bem("Item");
 
   const callbacks = {
@@ -13,7 +13,10 @@ function Item(props) {
   };
 
   return (
-    <div className={cn()}>
+    <div
+      className={props.selected ? cn("selected") : cn()}
+      onClick={props.selectItem}
+    >
       <div className={cn("title")}>
         <Link to={props.link}>{props.item.title}</Link>
       </div>
@@ -21,13 +24,13 @@ function Item(props) {
         <div className={cn("price")}>
           {numberFormat(props.item.price)} {props.labelCurr}
         </div>
-        <button onClick={callbacks.onAdd}>{props.labelAdd}</button>
+        {/* <button onClick={callbacks.onAdd}>{props.labelAdd}</button> */}
       </div>
     </div>
   );
 }
 
-Item.propTypes = {
+ItemSelectable.propTypes = {
   item: PropTypes.shape({
     _id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     title: PropTypes.string,
@@ -39,10 +42,10 @@ Item.propTypes = {
   labelAdd: PropTypes.string,
 };
 
-Item.defaultProps = {
+ItemSelectable.defaultProps = {
   onAdd: () => {},
   labelCurr: "₽",
   labelAdd: "Добавить",
 };
 
-export default memo(Item);
+export default memo(ItemSelectable);

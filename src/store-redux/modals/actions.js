@@ -3,15 +3,30 @@ export default {
    * Открытие модалки по названию
    * @param name
    */
-  open: (name, title) => {
-    return { type: "modal/open", payload: { name, title } };
+  open: (name, message = null) => {
+    let resolveFunc;
+    let rejectFunc;
+    const promise = new Promise((resolve) => {
+      resolveFunc = resolve;
+      rejectFunc = resolve;
+    });
+    return {
+      type: "modal/open",
+      payload: {
+        name,
+        message,
+        promise,
+        resolve: resolveFunc,
+        reject: rejectFunc,
+      },
+    };
   },
 
   /**
    * Закрытие модалки
    * @param name
    */
-  close: () => {
-    return { type: "modal/close" };
+  close: (name) => {
+    return { type: "modal/close", payload: { name } };
   },
 };
