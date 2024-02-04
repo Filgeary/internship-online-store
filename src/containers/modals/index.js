@@ -6,7 +6,7 @@ import ModalCatalog from "../modal-catalog";
 
 function Modals() {
   const activeModals = useSelector((state) => state.modals.list);
-
+  console.log(activeModals);
   const modals = (name) => {
     switch (name) {
       case "basket":
@@ -20,8 +20,8 @@ function Modals() {
 
   return (
     <>
-      {activeModals.length && activeModals.map(({name, id}) => {
-        return <Fragment key={id}>{modals(name)}</Fragment>;
+      {!!activeModals.length && activeModals.map(({name, id}) => {
+        return <Fragment key={id}>{modals(name)}</Fragment>
       })}
     </>
   );

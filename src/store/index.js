@@ -33,7 +33,7 @@ class Store {
   }
 
   /**
-   * Создание временного стейта
+   * Создание копии стейта
    */
   make(name, base) {
     this.actions[name] = new modules[base](
