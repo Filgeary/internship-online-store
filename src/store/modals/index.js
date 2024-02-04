@@ -48,7 +48,7 @@ class ModalsState extends StoreModule {
     
     const activeModals = this.getState().activeModals.slice(0, -1);
     const mapOfOpened = {...this.getState().mapOfOpened};
-    delete mapOfOpened[name];
+    mapOfOpened[name]--;
     delete mapOfOpened[id];
 
     this.setState({
