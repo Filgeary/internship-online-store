@@ -29,7 +29,6 @@ function Basket() {
 
       promiseOfModal
         .then((updatedItems) => {
-          console.log('Items:', updatedItems);
           store.actions.basket.addMany(updatedItems);
         })
         .catch(() => {});
@@ -50,7 +49,7 @@ function Basket() {
     ), [callbacks.removeFromBasket, t]),
   };
 
-  const openAnotherBasket = () => store.actions.modals.open('basket');
+  const openAnotherBasket = () => store.actions.modals.open('basket').catch(() => {});
 
   return (
     <Modal title={t('basket.title')} labelClose={t('basket.close')}>
