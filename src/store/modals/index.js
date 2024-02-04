@@ -20,6 +20,8 @@ class ModalsState extends StoreModule {
     if (this.config.onlyUnique && this.getState().mapOfOpened[name]) return;
     const id = generateCode();
 
+    const countOpened = this.getState().mapOfOpened[name] ?? 0;
+
     const promise = new Promise((resolve, reject) => {
       this.setState({
         ...this.getState(),
@@ -28,7 +30,7 @@ class ModalsState extends StoreModule {
           { name, id, resolve, reject },
         ],
         lastOpened: id,
-        mapOfOpened: {...this.getState().mapOfOpened, [name]: true, [id]: true},
+        mapOfOpened: {...this.getState().mapOfOpened, [name]: countOpened + 1, [id]: true},
       });
     });
 
@@ -83,14 +85,15 @@ class ModalsState extends StoreModule {
     const isModalExist = this.getState().mapOfOpened[name];
     if (!isModalExist) return;
     
-    const { resolve, reject, id } = this.getState().activeModals.find((modal) => modal.name === name);
+    const { resolve, reject, id } = this.getState().activeModals.findLast((modal) => modal.name === name);
 
     if (isSuccess) resolve(data);
     else reject(data);
 
-    const activeModals = this.getState().activeModals.filter((modal) => modal.name !== name);
+    const indexLastActive = this.getState().activeModals.findLastIndex((modal) => modal.name === name);
+    const activeModals = this.getState().activeModals.toSpliced(indexLastActive, 1);
     const mapOfOpened = {...this.getState().mapOfOpened};
-    delete mapOfOpened[name];
+    mapOfOpened[name]--;
     delete mapOfOpened[id];
 
     this.setState({

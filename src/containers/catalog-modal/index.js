@@ -1,4 +1,4 @@
-import React, { useCallback, useState, memo, useEffect } from 'react';
+import React, { useCallback, useState, memo, useEffect, useContext } from 'react';
 
 import useStore from '@src/hooks/use-store';
 
@@ -10,7 +10,7 @@ import CatalogFilter from '../catalog-filter';
 import SuccessBlock from '@src/components/success-block';
 import Entities from '@src/components/entities';
 import CatalogListAppend from '../catalog-list-append';
-import Catalog from '../catalog';
+import Catalog, { useCatalog } from '../catalog';
 
 function CatalogModal() {
   const store = useStore();
@@ -63,6 +63,7 @@ function CatalogModal() {
   const {t} = useTranslate();
 
   const closeBasketModal = () => store.actions.modals.closeByName('basket');
+  const openAnotherCatalogModal = () => store.actions.modals.open('catalogModal').then((items) => alert(JSON.stringify(items))).catch(() => {}); 
 
   return (
     <Modal
@@ -94,6 +95,7 @@ function CatalogModal() {
         </button>
 
         <button onClick={closeBasketModal}>Закрыть модалку корзины</button>
+        <button onClick={openAnotherCatalogModal}>Открыть ещё одну модалку каталога</button>
       </Entities>
     </Modal>
   );

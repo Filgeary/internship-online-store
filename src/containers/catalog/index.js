@@ -25,7 +25,6 @@ function Catalog({ children, ...props }) {
     limit: state[props.stateName].params.limit,
     count: state[props.stateName].count,
     waiting: state[props.stateName].waiting,
-
     activeItemBasket: state.basket.active,
 
     sort: state[props.stateName].params.sort,

@@ -1,7 +1,5 @@
 import { memo, useCallback } from "react";
 
-import PropTypes from 'prop-types';
-
 import useTranslate from "@src/hooks/use-translate";
 import Item from "@src/components/item";
 import List from "@src/components/list";

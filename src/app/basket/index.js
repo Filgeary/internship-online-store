@@ -49,6 +49,8 @@ function Basket() {
     ), [callbacks.removeFromBasket, t]),
   };
 
+  const openAnotherBasket = () => store.actions.modals.open('basket');
+
   return (
     <Modal title={t('basket.title')} labelClose={t('basket.close')}>
       <Spinner active={select.waiting}>
@@ -59,6 +61,9 @@ function Basket() {
       <BasketFooter>
         <button onClick={callbacks.openCatalogModal}>
           {t('basket.catalogModalOpen')}
+        </button>
+        <button onClick={openAnotherBasket}>
+          Открыть ещё корзину
         </button>
       </BasketFooter>
     </Modal>

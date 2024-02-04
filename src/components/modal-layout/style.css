@@ -19,7 +19,7 @@ body:has(.ModalLayout){
   justify-content: center;
   align-items: center;
 
-  &:last-child {
+  :nth-last-child(1 of &) {
     overflow-y: auto;
     background: rgba(0,0,0,0.7);
   }
