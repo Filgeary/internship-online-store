@@ -48,6 +48,7 @@ class CatalogState extends StoreModule {
       { ...this.initState().params, ...validParams, ...newParams },
       true
     );
+    console.log(this.config);
   }
 
   /**
@@ -68,6 +69,8 @@ class CatalogState extends StoreModule {
    * @param [replaceHistory] {Boolean} Заменить адрес (true) или новая запись в истории браузера (false)
    * @returns {Promise<void>}
    */
+
+  
   async setParams(newParams = {}, replaceHistory = false) {
     const params = { ...this.getState().params, ...newParams };
 
