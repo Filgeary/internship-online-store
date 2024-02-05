@@ -43,6 +43,14 @@ class Store {
     );
     this.state[name] = this.actions[name].initState();
   }
+
+  /**
+   * Удаление копии стейта
+   */
+  delete(name) {
+    delete this.actions[name];
+    delete this.state[name];
+  }
   /**
    * Подписка слушателя на изменения состояния
    * @param listener {Function}

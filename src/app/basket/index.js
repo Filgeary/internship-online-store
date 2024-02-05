@@ -21,18 +21,23 @@ function Basket() {
     waiting: state.basket.waiting
   }));
 
+  const options = {
+    modalName: "catalogModal",
+    storeName: "copyCatalog",
+    baseStore: "catalog"
+  }
+
   const callbacks = {
     // Удаление из корзины
     removeFromBasket: useCallback(_id => store.actions.basket.removeFromBasket(_id), [store]),
     // Закрытие любой модалки
     closeModal: useCallback(() => store.actions.modals.close(modalId), [store, modalId]),
     addToBasket: useCallback(async ()=> {
-        const storeName = "catalog";
-        store.actions.modals
-          .open(storeName)
-          .then((selectedItems) =>
-            store.actions.basket.addManyToBasket(selectedItems)
-          );
+        store.make(options.storeName, options.baseStore);
+        store.actions.modals.open(options.modalName).then((selectedItems) => {
+          store.actions.basket.addManyToBasket(selectedItems);
+          store.delete(options.storeName);
+        });
     }, [store])
   }
 

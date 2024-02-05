@@ -13,7 +13,7 @@ function Modals() {
         return <Basket />;
       case "count":
         return <CountItemModal />;
-      case "catalog":
+      case "catalogModal":
         return <ModalCatalog />;
     }
   };

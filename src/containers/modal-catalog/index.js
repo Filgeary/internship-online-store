@@ -14,22 +14,23 @@ function ModalCatalog() {
   const { t } = useTranslate();
   const modalId = useModalId();
 
-  const selectedItems = useSelector((state) => state.copyCatalog.selected);
   const storeName = "copyCatalog";
+  const selectedItems = useSelector((state) => state[storeName].selected);
 
   useInit(() => {
-    store.actions.copyCatalog.initParams();
+    store.actions[storeName].initParams();
   }, [])
 
   const callbacks = {
     onClose: useCallback(() => {
       store.actions.modals.close(modalId);
-      store.actions.copyCatalog.resetSelectedItems();
+      store.actions[storeName].resetSelectedItems();
+      store.delete(storeName);
     }, [store, modalId]),
     onAddToBasket: useCallback(() => {
       store.actions.modals.close(modalId, selectedItems);
-      store.actions.copyCatalog.resetSelectedItems();
-    }, [store, modalId]),
+      store.actions[storeName].resetSelectedItems();
+    }, [store, selectedItems, modalId]),
   }
 
   return (
