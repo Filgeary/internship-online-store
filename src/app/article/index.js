@@ -10,11 +10,13 @@ import Spinner from "@src/components/spinner";
 import ArticleCard from "@src/components/article-card";
 import LocaleSelect from "@src/containers/locale-select";
 import TopHead from "@src/containers/top-head";
-import shallowequal from "shallowequal";
 import useSelector from '@src/hooks/use-selector';
+import useServices from '@src/hooks/use-services';
 
 function Article() {
   const store = useStore();
+  const services = useServices()
+  const {t} = useTranslate();
 
   // Параметры из пути /articles/:id
   const params = useParams();
@@ -28,8 +30,6 @@ function Article() {
     waiting: state.article.waiting,
   }));
 
-  const {t} = useTranslate();
-
   const callbacks = {
     // Добавление в корзину
     addToBasket: useCallback((_id, itemTitle) => new Promise(
@@ -37,7 +37,11 @@ function Article() {
         type: store.actions.modals.types.amount,
         resolve: res,
         extraData: {
-          title: 'Количество товара ' + itemTitle
+          getTitle: async () => (
+            t('amount-dialog.items-amount') + ' ' + (
+              await services.api.getItemTitle(_id) || itemTitle
+            )
+          )
         }
       })
     ).then(amount => {

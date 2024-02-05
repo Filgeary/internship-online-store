@@ -32,8 +32,8 @@ function Basket(props) {
         type: store.actions.modals.types.selectItems,
         resolve: res,
         extraData: {
-          title: 'Добавить товары в корзину',
-          labelSubmit: 'Добавить'
+          getTitle: () => t('select-items-modal.add-items-in-basket'),
+          getLabelSubmit: () => t('select-items-modal.add')
         }})
       ).then(ids => {
         if (ids?.length) {
@@ -61,7 +61,9 @@ function Basket(props) {
                  background={props.background}>
       <List list={select.list} renderItem={renders.itemBasket}/>
       <BasketTotal sum={select.sum} t={t}/>
-      <BasketButton onClick={callbacks.selectMoreItems}>Выбрать еще товар</BasketButton>
+      <BasketButton onClick={callbacks.selectMoreItems}>
+        {t('basket.select-more-items')}
+      </BasketButton>
     </ModalLayout>
   );
 }

@@ -8,9 +8,7 @@ import useSelector from "@src/hooks/use-selector";
 function Modals() {
   const modalStack = useSelector(state => state.modals.stack)
   const store = useStore()
-
-  console.log(modalStack)
-
+  
   const modals = useMemo(() => ({
     [store.actions.modals.types.basket]: Basket,
     [store.actions.modals.types.amount]: AmountDialog,

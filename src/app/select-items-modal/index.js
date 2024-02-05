@@ -1,4 +1,4 @@
-import {memo, useCallback, useEffect, useMemo, useState} from 'react';
+import {memo, useCallback, useMemo, useState} from 'react';
 import useTranslate from "@src/hooks/use-translate";
 import ModalLayout from "@src/components/modal-layout";
 import PropTypes from "prop-types";
@@ -37,27 +37,29 @@ function SelectItemsModal(props) {
     }, []),
   }
 
-  const catalogSliceName = useMemo(() => store.makeSlice('catalog'), [])
+  const catalogSliceName = useMemo(() => store.makeSlice('catalog', {
+    urlEditing: false
+  }), [])
 
   useInit(async () => {
     await Promise.all([
-      store.actions[catalogSliceName].initParams(),
+      store.actions[catalogSliceName].setParams(),
       store.actions.categories.load()
-    ]);
+    ])
   }, [], true);
 
   useUnmount(() => store.deleteSlice(catalogSliceName))
 
   return (
-    <ModalLayout title={props.extraData.title || 'Выбрать товар'} 
+    <ModalLayout title={props.extraData?.getTitle() || t('select-items-modal.choose-items')} 
                  labelClose={t('basket.close')}
                  onClose={callbacks.cancelModal}
                  appendSubmit
-                 labelSubmit={props.extraData.labelSubmit || 'Ок'}
+                 labelSubmit={props.extraData?.getLabelSubmit() || t('"select-items-modal.ok"')}
                  submitDisabled={!selectedItems.length}
                  onSubmit={callbacks.submitModal}
                  background={props.background}>
-        <CatalogFilter catalogSliceName={catalogSliceName}/>
+        <CatalogFilter/>
         <CatalogListSelect selectedItems={selectedItems} 
                            toggleSelect={callbacks.toggleSelect}
                            catalogSliceName={catalogSliceName}/>
@@ -69,17 +71,13 @@ SelectItemsModal.propTypes = {
   background: PropTypes.bool,
   id: PropTypes.number,
   extraData: PropTypes.shape({
-    title: PropTypes.string,
-    labelSubmit: PropTypes.string
+    getTitle: PropTypes.func,
+    getLabelSubmit: PropTypes.func
   })
 };
 
 SelectItemsModal.defaultProps = {
   background: false,
-  extraData: {
-    title: 'Выбрать товар',
-    labelSubmit: 'Ок'
-  }
 };
 
 export default memo(SelectItemsModal);

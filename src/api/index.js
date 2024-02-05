@@ -42,6 +42,15 @@ class APIService {
       delete this.defaultHeaders[name];
     }
   }
+
+  async getItemTitle(_id) {
+    try {
+      const res = await this.request({url: `/api/v1/articles/${_id}`})
+      return res.data.result.title
+    } catch (error) {
+      return undefined
+    }
+  }
 }
 
 export default APIService;

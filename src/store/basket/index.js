@@ -5,6 +5,11 @@ import StoreModule from "../module";
  */
 class BasketState extends StoreModule {
 
+  constructor(...params) {
+    super(...params)
+    this.subscriptions = [this.services.i18n.subscribe(() => this.translateItems())]
+  }
+
   initState() {
     return {
       list: [],
@@ -109,6 +114,18 @@ class BasketState extends StoreModule {
       sum,
       amount: list.length
     }, 'Удаление из корзины');
+  }
+
+  async translateItems(){
+    const state = this.getState()
+    const ids = state.list.map(item => item._id)
+    const promises = ids.map(id => this.services.api.request({url: `/api/v1/articles/${id}`}))
+    const titles = (await Promise.all(promises)).map(res => res.data.result.title)
+    const list = state.list.map((item,i) =>( {...item, title: titles[i]}))
+    this.setState({
+      ...state,
+      list
+    }, 'Перевод товаров в корзиине')
   }
 }
 

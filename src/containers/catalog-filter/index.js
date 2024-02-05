@@ -12,6 +12,7 @@ import PropTypes from "prop-types";
 function CatalogFilter(props) {
 
   const store = useStore();
+  const {t} = useTranslate();
 
   const select = useSelector(state => ({
     sort: state[props.catalogSliceName].params.sort,
@@ -33,26 +34,24 @@ function CatalogFilter(props) {
 
   const options = {
     sort: useMemo(() => ([
-      {value: 'order', title: 'По порядку'},
-      {value: 'title.ru', title: 'По именованию'},
-      {value: '-price', title: 'Сначала дорогие'},
-      {value: 'edition', title: 'Древние'},
-    ]), []),
+      {value: 'order', title: t('catalog-filter.in-order')},
+      {value: 'title.ru', title: t('catalog-filter.by-naming')},
+      {value: '-price', title: t('catalog-filter.expensive')},
+      {value: 'edition', title: t('catalog-filter.ancient')},
+    ]), [t]),
     categories: useMemo(() => ([
-      {value: '', title: 'Все'},
+      {value: '', title: t('catalog-filter.all')},
       ...treeToList(listToTree(select.categories), (item, level) => (
         {value: item._id, title: '- '.repeat(level) + item.title}
       ))
-    ]), [select.categories]),
+    ]), [select.categories, t]),
   };
-
-  const {t} = useTranslate();
 
   return (
     <SideLayout padding='medium'>
       <Select options={options.categories} value={select.category} onChange={callbacks.onCategory}/>
       <Select options={options.sort} value={select.sort} onChange={callbacks.onSort}/>
-      <Input value={select.query} onChange={callbacks.onSearch} placeholder={'Поиск'}
+      <Input value={select.query} onChange={callbacks.onSearch} placeholder={t('catalog-filter.search')}
              delay={1000}/>
       <button onClick={callbacks.onReset}>{t('filter.reset')}</button>
     </SideLayout>

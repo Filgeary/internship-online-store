@@ -6,6 +6,15 @@ import exclude from "@src/utils/exclude";
  */
 class CatalogState extends StoreModule {
 
+  constructor(...params) {
+    super(...params)
+    if (typeof params[2].urlEditing === 'undefined') {
+      this.config.urlEditing = true 
+    }
+    console.log(this.config.urlEditing)
+    this.subscriptions = [this.services.i18n.subscribe(() => this.setParams())]
+  }
+
   /**
    * Начальное состояние
    * @return {Object}
@@ -32,7 +41,7 @@ class CatalogState extends StoreModule {
    * @return {Promise<void>}
    */
   async initParams(newParams = {}) {
-    if (!this.config.copied) {
+    if (this.config.urlEditing) {
       const urlParams = new URLSearchParams(window.location.search);
       let validParams = {};
       if (urlParams.has('page')) validParams.page = Number(urlParams.get('page')) || 1;
@@ -75,7 +84,7 @@ class CatalogState extends StoreModule {
       waiting: true
     }, 'Установлены параметры каталога');
 
-    if (!this.config.copied) {
+    if (this.config.urlEditing) {
       // Сохранить параметры в адрес страницы
       let urlSearch = new URLSearchParams(exclude(params, this.initState().params)).toString();
       const url = window.location.pathname + (urlSearch ? `?${          urlSearch}`: '') + window.location.hash;

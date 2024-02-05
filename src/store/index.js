@@ -78,18 +78,26 @@ class Store {
     for (const listener of this.listeners) listener(this.getState());
   }
 
-  makeSlice(baseSliceName) {
+  makeSlice(baseSliceName, options) {
     const newSliceName = `${baseSliceName}-${this.generateId()}`
     this.actions[newSliceName] = new modules[baseSliceName](
       this, 
       newSliceName, 
-      {...this.config?.modules[baseSliceName],  copied: true} || {}
+      {
+        ...this.config?.modules[baseSliceName],  
+        urlEditing: options.urlEditing || false
+      } || {}
     );
     this.state[newSliceName] = this.actions[newSliceName].initState();
     return newSliceName
   }
 
   deleteSlice(sliceName) {
+    if (this.actions[sliceName].subscriptions.length) {
+      this.actions[sliceName].subscriptions.forEach(unsubscribe => {
+        unsubscribe()
+      });
+    }
     delete this.actions[sliceName]
     delete this.state[sliceName]
   }

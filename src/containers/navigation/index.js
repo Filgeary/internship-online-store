@@ -12,7 +12,7 @@ function Navigation() {
   const select = useSelector(state => ({
     amount: state.basket.amount,
     sum: state.basket.sum,
-    lang: state.locale.lang
+    // lang: state.locale.lang
   }));
 
   const callbacks = {

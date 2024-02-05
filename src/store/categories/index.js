@@ -6,6 +6,11 @@ import StoreModule from "../module";
  */
 class CategoriesState extends StoreModule {
 
+  constructor(...params) {
+    super(...params)
+    this.subscriptions = [this.services.i18n.subscribe(() => this.load())]
+  }
+
   /**
    * Начальное состояние
    * @return {Object}

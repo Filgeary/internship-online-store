@@ -11,6 +11,7 @@ import ItemSelect from "@src/components/item-select";
 
 function CatalogListSelect(props) {
   const store = useStore();
+  const {t} = useTranslate()
 
   const select = useSelector(state => ({
     list: state[props.catalogSliceName].list,
@@ -28,8 +29,6 @@ function CatalogListSelect(props) {
       return `?${new URLSearchParams({page, limit: select.limit, sort: select.sort, query: select.query})}`;
     }, [select.limit, select.sort, select.query])
   }
-
-  const {t} = useTranslate();
 
   const renders = {
     item: useCallback(item => (

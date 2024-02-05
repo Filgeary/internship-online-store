@@ -5,6 +5,11 @@ import StoreModule from "../module";
  */
 class ArticleState extends StoreModule {
 
+  constructor(...params) {
+    super(...params)
+    this.subscriptions = []
+  }
+
   initState() {
     return {
       data: {},
@@ -18,6 +23,7 @@ class ArticleState extends StoreModule {
    * @return {Promise<void>}
    */
   async load(id) {
+    this.subscriptions.forEach(unsubscribe => unsubscribe())
     // Сброс текущего товара и установка признака ожидания загрузки
     this.setState({
       data: {},
@@ -43,6 +49,8 @@ class ArticleState extends StoreModule {
         waiting: false
       });
     }
+
+    this.subscriptions = [this.services.i18n.subscribe(() => this.load(id))]
   }
 }
 

@@ -6,9 +6,12 @@ import Item from "@src/components/item";
 import List from "@src/components/list";
 import Pagination from "@src/components/pagination";
 import Spinner from "@src/components/spinner";
+import useServices from "@src/hooks/use-services";
 
 function CatalogList() {
   const store = useStore();
+  const services = useServices()
+  const {t} = useTranslate()
 
   const select = useSelector(state => ({
     list: state.catalog.list,
@@ -21,13 +24,19 @@ function CatalogList() {
   const callbacks = {
     // Добавление в корзину
     addToBasket: useCallback((_id, itemTitle) => new Promise(
-      (res) => store.actions.modals.open({
-        type: store.actions.modals.types.amount,
-        resolve: res,
-        extraData: {
-          title: 'Количество товара ' + itemTitle
-        }
-      })
+       (res) => {
+        store.actions.modals.open({
+          type: store.actions.modals.types.amount,
+          resolve: res,
+          extraData: {
+            getTitle: async () => (
+              t('amount-dialog.items-amount') + ' ' + (
+                await services.api.getItemTitle(_id) || itemTitle
+              )
+            )
+          }
+        })
+      }
     ).then(amount => {
       if (amount) {
         store.actions.basket.addToBasket(_id, amount)
@@ -40,8 +49,6 @@ function CatalogList() {
       return `?${new URLSearchParams({page, limit: select.limit, sort: select.sort, query: select.query})}`;
     }, [select.limit, select.sort, select.query])
   }
-
-  const {t} = useTranslate();
 
   const renders = {
     item: useCallback(item => (

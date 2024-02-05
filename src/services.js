@@ -1,4 +1,5 @@
 import APIService from "./api";
+import I18nService from "./i18n";
 import Store from "./store";
 
 class Services {
@@ -28,6 +29,18 @@ class Services {
     }
     return this._store;
   }
+
+  
+    /**
+   * Сервис i18n
+   * @returns {I18nService}
+   */
+    get i18n() {
+      if (!this._i18n) {
+        this._i18n = new I18nService(this, this.config.i18n);
+      }
+      return this._i18n
+    }
 }
 
 export default Services;

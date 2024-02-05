@@ -16,7 +16,16 @@ const config = {
     }
   },
   api: {
-    baseUrl: ''
+    baseUrl: '',
+    langHeader: 'X-Lang'
+  },
+  i18n: {
+    // Поддерживаемые языки
+    avaliableLangs: [
+      {value: 'ru', title: 'Русский'},
+      {value: 'en', title: 'English'},
+    ],
+    defaultLang: 'ru',
   }
 }
 
