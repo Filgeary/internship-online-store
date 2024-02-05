@@ -3,16 +3,14 @@ import { memo, useState } from "react";
 import Input from "@src/components/input";
 import ModalLayout from "@src/components/modal-layout";
 import SideLayout from "@src/components/side-layout";
-import useStore from "@src/hooks/use-store";
 import useTranslate from "@src/hooks/use-translate";
 
-const DialogAmount = () => {
-  const store = useStore();
+const DialogAmount = ({ onClose }) => {
   const { t } = useTranslate();
   const [value, setValue] = useState("");
 
   const handleCloseModal = (amount) => {
-    store.actions.modals.close("dialogAmount", +amount);
+    onClose(+amount);
   };
 
   return (

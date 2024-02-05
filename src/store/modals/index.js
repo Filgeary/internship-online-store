@@ -1,6 +1,13 @@
+import codeGenerator from "@src/utils/code-generator";
 import StoreModule from "../module";
 
 class ModalsState extends StoreModule {
+  codeGenerator = codeGenerator();
+
+  generateID() {
+    return this.codeGenerator();
+  }
+
   initState() {
     return {
       data: [],
@@ -8,19 +15,19 @@ class ModalsState extends StoreModule {
   }
 
   open(name, cb) {
+    const id = this.generateID();
+
     this.setState(
       {
         ...this.getState(),
-        data: [...this.getState().data, { name, cb }],
+        data: [...this.getState().data, { name, cb, id }],
       },
-      `Открытие модалки ${name}`
+      `Открытие модалки ${name} с ID ${id}`
     );
   }
 
-  close(name, data) {
-    const modalsData = this.getState().data;
-    const lastIndex = modalsData.findLastIndex((el) => el.name === name);
-    const cb = modalsData[lastIndex]?.cb;
+  close(modalID, data) {
+    const { name, cb } = this.getState().data.find(({ id }) => id === modalID);
 
     if (cb) {
       if (data) cb(data);
@@ -30,9 +37,9 @@ class ModalsState extends StoreModule {
     this.setState(
       {
         ...this.getState(),
-        data: modalsData.toSpliced(lastIndex, 1),
+        data: this.getState().data.filter(({ id }) => id !== modalID),
       },
-      `Закрытие модалки ${name}`
+      `Закрытие модалки ${name} с ID ${modalID}`
     );
   }
 }

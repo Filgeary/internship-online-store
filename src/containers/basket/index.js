@@ -9,7 +9,7 @@ import useSelector from "@src/hooks/use-selector";
 import useStore from "@src/hooks/use-store";
 import useTranslate from "@src/hooks/use-translate";
 
-function Basket() {
+function Basket({ onClose }) {
   const store = useStore();
   const { t } = useTranslate();
 
@@ -25,8 +25,8 @@ function Basket() {
       [store]
     ),
     closeModal: useCallback(() => {
-      store.actions.modals.close("basket");
-    }, [store]),
+      onClose();
+    }, [onClose]),
     addToBasket: useCallback(
       async (productIDs) => {
         if (!productIDs.length) return;

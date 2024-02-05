@@ -7,7 +7,7 @@ import useTranslate from "@src/hooks/use-translate";
 import CatalogFilter from "../catalog-filter";
 import CatalogList from "../catalog-list";
 
-const ModalCatalog = () => {
+const ModalCatalog = ({ onClose }) => {
   const store = useStore();
   const { t } = useTranslate();
   const [selectedItems, setSelectedItems] = useState([]);
@@ -18,12 +18,7 @@ const ModalCatalog = () => {
   }, []);
 
   const callbacks = {
-    closeModal: useCallback(
-      (data) => {
-        store.actions.modals.close("modalCatalog", data);
-      },
-      [store]
-    ),
+    closeModal: useCallback(data => onClose(data), [onClose]),
     handleSelectItem: useCallback(
       (id, isAdding) => {
         if (isAdding) {
