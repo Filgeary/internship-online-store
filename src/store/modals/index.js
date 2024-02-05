@@ -6,6 +6,8 @@ class ModalsState extends StoreModule {
   initState() {
     return {
       modalsList: [],
+      // Здесь будет лежать уникальный id
+      unId: codeGenerator()
     }
   }
 
@@ -33,11 +35,13 @@ class ModalsState extends StoreModule {
    *  */
   open(name, data = {}) {
     // Код для каждого элемента
+    const _id = this.getState().unId()
+    // Промис с возвратом значения
     return new Promise((resolve) => {
-      // Обновляем state модальных окон
+      // Обновляем state модальных окон, добавляя новое
       this.setState({
-        // Я решил что для множества модальных окон будет логично хранить все в обьектах, каждому модальному окну свой обьект в котором будет функция завершения промиса
-        modalsList: [...this.getState().modalsList, {name, data, resolve}]
+        ...this.getState(),
+        modalsList: [...this.getState().modalsList, {name, data, resolve, _id}]
       }, `Открытие модалки с именем: ${name} и уровнем ${this.getState().modalsList + 1}`)
     })
       .then((result) => {
@@ -45,11 +49,21 @@ class ModalsState extends StoreModule {
       })
   }
 
-  close(result) {
-    const modalsList = this.getState().modalsList;
-    modalsList[modalsList.length - 1].resolve(result)
+  /**
+   * Закрытие модального окна по id с передачей результата
+   * @param result {any}
+   * @param _id {Number}
+   *
+   * */
+  close(result, _id) {
+    // Поиск модального окна по id вызов у него функции resolve с параметрами и удаление этого модального окна
+    const newModalsList = this.getState().modalsList.filter(modal => {
+      if(modal._id === _id) modal.resolve(result)
+      return modal._id !== _id
+    })
     this.setState({
-      modalsList: this.getState().modalsList.slice(0, -1),
+      ...this.getState(),
+      modalsList: newModalsList
     }, `Закрытие модалки уровня ${this.getState().modalsList.length}`);
   }
 }

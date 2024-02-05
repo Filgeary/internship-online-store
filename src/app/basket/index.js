@@ -11,7 +11,7 @@ import BasketTotal from "@src/components/basket-total";
 import modalsActions from '@src/store-redux/modals/actions';
 import Controls from "@src/components/controls";
 
-function Basket() {
+function Basket({onClose}) {
 
   const store = useStore();
   const dispatch = useDispatch();
@@ -27,11 +27,11 @@ function Basket() {
     removeFromBasket: useCallback(_id => store.actions.basket.removeFromBasket(_id), [store]),
     // Закрытие любой модалки
     closeModal: useCallback((value) => {
-      store.actions.modals.close(value);
+      onClose(value)
     }, [store]),
     openModalList: useCallback(async () => {
       const result = await store.actions.modals.open('modalList')
-      await store.actions.basket.addListArticle(result)
+      if(Object.keys(result).length > 0) await store.actions.basket.addListArticle(result)
     }, [store])
   }
 

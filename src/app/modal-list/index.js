@@ -7,81 +7,55 @@ import useStore from "@src/hooks/use-store";
 import useSelector from "@src/hooks/use-selector";
 import useInit from "@src/hooks/use-init";
 import Spinner from "@src/components/spinner";
+import Controls from "@src/components/controls";
+import CatalogListSelected from "@src/containers/catalog-list-selected";
 
 /**
  * Пометка, данный компонент является "умным"
  * */
-function ModalList() {
+function ModalList({onClose}) {
 
   const {t} = useTranslate();
 
   const store = useStore();
 
-  // Инициализирую только параметры по умолчанию из стора
-  const [localState, setLocalState] = useState({
-    ...store.actions.catalog.initState(),
-    categories: [],
-    selectList: {},
-  })
-
-  // Идентификатор загрузки будет дожидаться загрузки общих данных модалки
+  // Состояние загрузки
   const [waiting, setWaiting] = useState(false)
+  // Лист выбранных товаров
+  const [selectedList, setSelectedList] = useState({})
 
   const callbacks = {
     // Закрытие модалки
     closeModal: useCallback(() => {
-      store.actions.modals.close(localState.selectList);
-    }, [localState.selectList]),
-    // Установка параметров "частично"
-    setNewState: useCallback((state) => {
-      setLocalState(prevState => ({
-        ...prevState,
-        ...state
-      }))
-    }, [localState]),
-    // Установка новых параметров
-    setParams: useCallback(async (newParams = {}) => {
-      const paramsUpdate = {
-        ...localState.params,
-        ...newParams
-      }
-      const catalog = await store.actions.catalog.getNewValue(paramsUpdate)
-
-      callbacks.setNewState({
-        params: paramsUpdate,
-        list: catalog.items,
-        count: catalog.count
-      })
-    }, [localState]),
-    // Сброс всех параметров
-    resetParams: useCallback(() => callbacks.setParams(store.actions.catalog.initState().params), []),
+      onClose({});
+    }, [selectedList]),
+    handleSubmit: useCallback(() => {
+      onClose(selectedList)
+    }, [selectedList])
   }
 
   useInit(async () => {
-    // Здесь отдельно идет загрузка данных для модалки, чтобы никак не связывать ее со стэйтом
     setWaiting(true)
-    // Получение новых параметров и данных и установка их в стэйт
-    const catalog = await store.actions.catalog.getNewValue(localState.params)
-    const categories = await store.actions.categories.getCategories()
-
-    callbacks.setNewState({
-      categories: categories.items,
-      list: catalog.items,
-      count: catalog.count
-    })
-    // Загрузка завершена
+    // Загружаем список в любом случае, но конкретно в созданную стора
+    await Promise.all([
+      store.actions['modal-catalog'].setParams(),
+      store.actions.categories.load()
+    ])
     setWaiting(false)
-  }, []);
+  }, [])
 
   return (
-    <ModalLayout title={t('modalList.title')} onClose={callbacks.closeModal}>
-      <Spinner active={waiting}>
-        <CatalogFilter state={localState} params={localState}
-                       setParams={callbacks.setParams} resetParams={callbacks.resetParams}/>
-        <CatalogList setNewState={callbacks.setNewState} isModal={true}
-                     state={localState} setParams={callbacks.setParams}/>
-      </Spinner>
-    </ModalLayout>
+      <ModalLayout title={t('modalList.title')} onClose={callbacks.closeModal}>
+        <Spinner active={waiting}>
+
+          <CatalogFilter stateName={'modal-catalog'}/>
+          <CatalogListSelected stateName={'modal-catalog'} selectedList={selectedList}
+                               onUpdateSelectedList={setSelectedList}/>
+          <Controls title={'Ok'} onAdd={() => callbacks.handleSubmit()}/>
+
+        </Spinner>
+
+      </ModalLayout>
   );
 }
 

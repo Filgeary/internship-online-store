@@ -9,16 +9,20 @@ import InputNumber from "@src/components/input-number";
 function ItemSelect(props) {
   const cn = bem('ItemSelect');
 
+  // Создаю внутреннее состояние, которое будет отвечать за то выделен ли каждый элемент, так же при выделении будет появляться инпут для ввода количества
   const [select, setSelect] = useState(!!props.select)
+  // Количество каждого элемента, которое будет регулироваться инпутом
   const [quantity, setQuantity] = useState(props.select || 1)
 
   const callbacks = {
+    // Функция навешивания селекта
     onSelect: useCallback((e) => {
       setSelect(prevState => !prevState)
     }, [select]),
   }
 
   useEffect(() => {
+    // Каждый раз при изменении количества или при выделении (или отмене выделения) результат будет передаваться в компонент листа, непосредственно там будет создаваться список выделенных товаров, компонент отвечает только за передачу выбранных товаров "выше"
     props.onSelect(props.item._id, quantity, select)
   }, [quantity, select]);
 
@@ -33,11 +37,6 @@ function ItemSelect(props) {
   );
 }
 
-ItemSelect.defaultProps = {
-  onSelect: () => {},
-  labelCurr: '₽',
-}
-
 ItemSelect.propTypes = {
   item: PropTypes.shape({
     _id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
@@ -46,6 +45,13 @@ ItemSelect.propTypes = {
   }).isRequired,
   onSelect: PropTypes.func,
   labelCurr: PropTypes.string,
+  select: PropTypes.number
 };
+
+ItemSelect.defaultProps = {
+  onSelect: () => {
+  },
+  labelCurr: '₽',
+}
 
 export default memo(ItemSelect);

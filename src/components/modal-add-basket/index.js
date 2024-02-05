@@ -52,7 +52,6 @@ ModalAddBasket.propTypes = {
   max: PropTypes.number,
   min: PropTypes.number,
   name: PropTypes.string,
-  handleSubmit: PropTypes.func,
 };
 
 ModalAddBasket.defaultProps = {
@@ -61,7 +60,6 @@ ModalAddBasket.defaultProps = {
   min: 1,
   max: 999,
   onClose: () => {},
-  handleSubmit: () => {},
 }
 
 export default memo(ModalAddBasket);

@@ -33,6 +33,20 @@ class Store {
   }
 
   /**
+   * Создание дубликата определенного state
+   * @param name {String} - Имя, которое необходимо присвоить дубликату
+   * @param base {String} - Имя state с которого будет происходить копирование
+   * */
+  make(name, base) {
+    if(this.actions[name] && this.state[name]) {
+      console.log("Дубликат с таким именем уже существует")
+    } else {
+      this.actions[name] = new modules[base](this, name, this.config?.modules[base] || {}, true);
+      this.state[name] = this.actions[name].initState()
+    }
+  }
+
+  /**
    * Подписка слушателя на изменения состояния
    * @param listener {Function}
    * @returns {Function} Функция отписки
