@@ -14,20 +14,20 @@ const initialState = {
 // Обработчик действий
 function reducer(state = initialState, action) {
   switch (action.type) {
-    case 'addToBasket/setData':
+    case 'addProduct/setData':
       return {
         ...initialState,
         item: action.payload.item,
         sum: action.payload.item.price * 1,
         waiting: true,
       };
-    case 'addToBasket/setPcs':
+    case 'addProduct/setPcs':
       return {
         ...state,
         pcs: String(action.payload.pcs),
         sum: state.item.price * Number(action.payload.pcs),
       };
-    case 'addToBasket/setResult':
+    case 'addProduct/setResult':
       return {
         ...state,
         result: action.payload.result,

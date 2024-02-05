@@ -13,7 +13,7 @@ import dialogsActions from '@src/store-redux/dialogs/actions';
 import BasketControls from '@src/components/basket-controls';
 import addManyProductsActions from '@src/store-redux/add-many-products/actions';
 
-function Basket() {
+function Basket(props) {
 
   const store = useStore();
   const dispatch = useDispatch();
@@ -35,9 +35,15 @@ function Basket() {
 
     // Добавить ещё товаров
     addMoreToBasket: useCallback(_id => {
-      dispatch(dialogsActions.open('add-more-to-basket')); // открыть диалоговое окно
-      dispatch(addManyProductsActions.open());             // сбросить данные и установить `waiting=true`
-    }, [store]),
+      // Открываем диалоговое окно и передаём ему колбэк на случай успеха
+      dispatch(dialogsActions.open(props.context, result => {
+        // Обработка в случае успеха (добавим в корзину)
+        result.forEach(({ item, pcs }) => {
+          store.actions.basket.addToBasket(item._id, pcs)
+        })
+      }));
+      dispatch(addManyProductsActions.open()); // сбросить данные и установить `waiting=true`
+    }, [props.context, store]),
   }
 
   const {t} = useTranslate();

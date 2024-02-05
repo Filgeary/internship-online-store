@@ -4,11 +4,11 @@ import {cn as bem} from '@bem-react/classname';
 import numberFormat from "@src/utils/number-format";
 import {Link} from "react-router-dom";
 import Button from "@src/components/button";
+import InputNumber from "../input-number";
 import './style.css';
-import Input from "../input";
 
-function AddToBasketCard(props) {
-  const cn = bem('AddToBasketCard');
+function AddProductCard(props) {
+  const cn = bem('AddProductCard');
 
   return (
     <div className={cn()}>
@@ -16,23 +16,18 @@ function AddToBasketCard(props) {
 
       <div className={cn('item')}>
         <div className={cn('title')}>
-          <Link to={`/articles/${props.item._id}`} onClick={props.onCancel}>{props.item.title}</Link>
+          <Link to={`/articles/${props.item._id}`} onClick={props.onCloseAll}>{props.item.title}</Link>
         </div>
         <div className={cn('right')}>
           <div className={cn('cell')}>{numberFormat(props.item.price)} ₽</div>
           <div className={cn('cellMini')}>x</div>
-          <div className={cn('cell')}>
-            <Input
-              value={String(props.value)}
-              onChange={props.updateValue}
-              placeholder={'шт'}
-              theme={'nano'}
-              validation={'onlyNumber'}
-              defaultValue={'1'}
-              autoFocus={true}
-            /> шт
-          </div>
-          {/* <div className={cn('cell')}>{numberFormat(props.item.amount || 0)} шт</div> */}
+          <InputNumber
+            placeholder={'шт'}
+            minValue={1}
+            maxValue={9999}
+            value={props.value}
+            updateValue={props.updateValue}
+          />
           <div className={cn('cellMini')}>=</div>
           <div className={cn('cellTotal')}><b>{numberFormat(props.pcsSumm)} ₽</b></div>
         </div>
@@ -46,14 +41,14 @@ function AddToBasketCard(props) {
   );
 }
 
-AddToBasketCard.propTypes = {
+AddProductCard.propTypes = {
   //sum: PropTypes.number,
   //t: PropTypes.func
 };
 
-AddToBasketCard.defaultProps = {
+AddProductCard.defaultProps = {
   //sum: 0,
   //t: (text) => text
 }
 
-export default memo(AddToBasketCard);
+export default memo(AddProductCard);

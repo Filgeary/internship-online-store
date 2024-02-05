@@ -4,6 +4,7 @@ import Basket from "@src/app/basket";
 import AddProduct from "@src/app/add-product";
 import shallowequal from "shallowequal";
 import AddManyProducts from "@src/app/add-many-propducts";
+import StateFork from "@src/components/state-fork";
 
 function Windows() {
   const select = useSelectorRedux(state => ({
@@ -18,7 +19,8 @@ function Windows() {
 
   return (
     <>
-      {select.activeModal === 'basket' && <Basket />}
+      {/* Контекст нужен для открываемого диалогового окна */}
+      {select.activeModal === 'basket' && <Basket context={'add-more-to-basket'} />}
 
       {dialogs && select.dialogsArray.map((dialog, index) => {
         const is = checkWindowsName(dialog);
@@ -26,7 +28,12 @@ function Windows() {
           <React.Fragment key={dialog._id}>
             { is('add-to-basket') && <AddProduct context={'add-to-basket'} indent={index} /> }
             { is('add-to-selected') && <AddProduct context={'add-to-selected'} indent={index} /> }
-            { is('add-more-to-basket') && <AddManyProducts context={'add-more-to-basket'} theme='big' indent={index} /> }
+            {/* StateFork отображает компоненты только после того, как форк среза стора для них успешно создан */}
+            {is('add-more-to-basket') && (
+              <StateFork name={'add-more-to-basket'} parent='catalog'>
+                <AddManyProducts context={'add-more-to-basket'} theme='big' indent={index} />
+              </StateFork>
+            )}
           </React.Fragment>
         )
       })}

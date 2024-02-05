@@ -7,7 +7,7 @@ import Button from "../button";
 
 function BasketControls(props) {
   const cn = bem('BasketControls');
-  const btnText = props.sum ? 'Выбрать ещё товар' : 'Выбрать товар';
+  const btnText = props.sum ? 'Выбрать ещё товары' : 'Выбрать товар';
   return (
     <div className={cn()}>
       { /* TODO: Для теста, удалить потом */}

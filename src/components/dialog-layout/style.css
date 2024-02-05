@@ -36,6 +36,11 @@ body:has(.DialogLayout){
   width: min(100%, 880px);
 }
 
+.DialogLayout-content_theme_big {
+  min-height: 844px;
+  height: 1px;
+}
+
 .DialogLayout-head {
   height: 60px;
   background: #f5f5f5;

@@ -11,6 +11,14 @@
   text-wrap: nowrap;
 }
 
+.Button_size_nano {
+  min-width: 28px;
+}
+
+.Button_height_input {
+  min-height: 26px;
+}
+
 .Button:disabled {
   cursor: auto;
 }

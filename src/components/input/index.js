@@ -21,23 +21,35 @@ function Input(props) {
   const onChange = (event) => {
     let newValue = event.target.value;
     if (props.validation === 'onlyNumber') {
+      // Оставить только цифры
       const onlyNumber = newValue.replace(/[^\d]/g, '');
       // `String(Number(..))` делает: '00012' -> '12'
       newValue = onlyNumber ? String(Number(onlyNumber)) : '';
-      if (props.defaultValue) {
-        if (newValue === '0') newValue = props.defaultValue;
+      const emptyString = newValue === '';
+      if (!emptyString) {
+        const greaterThanMin = newValue >= props.minValue;
+        const lessThanMax = newValue <= props.maxValue
+        const isValueInInterval = greaterThanMin && lessThanMax;
+        // Не попадает в интервал `minValue .. maxValue`
+        if (!isValueInInterval) newValue = value;
+        // Меньше minValue
+        if (props.minDefaultValue && !greaterThanMin) newValue = props.minDefaultValue
+        // Больше maxValue
+        if(props.maxDefaultValue && !lessThanMax) newValue = props.maxDefaultValue
       }
     }
 
+    // Значение действительно новое (предотвращаем лишний рендер)
     if (newValue !== value) {
       setValue(newValue);
       onChangeDebounce(newValue);
     }
-
   };
 
   // Обновление стейта, если передан новый value
   useLayoutEffect(() => setValue(props.value), [props.value]);
+
+  const width = String(value).length > 2 ? String(value).length : props.minWidth;
 
   const cn = bem('Input');
   return (
@@ -48,6 +60,7 @@ function Input(props) {
       placeholder={props.placeholder}
       onChange={onChange}
       autoFocus={props.autoFocus}
+      style={props.stretch && {width: `${width}ch`}}
     />
   )
 }

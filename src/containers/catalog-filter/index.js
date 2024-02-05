@@ -7,27 +7,34 @@ import Input from "@src/components/input";
 import SideLayout from "@src/components/side-layout";
 import treeToList from "@src/utils/tree-to-list";
 import listToTree from "@src/utils/list-to-tree";
+import Button from "@src/components/button";
 
-function CatalogFilter() {
+function CatalogFilter(props) {
 
   const store = useStore();
 
+  const context = {
+    // Форк или оригинал
+    name: props.context ?? 'catalog',
+  }
+
   const select = useSelector(state => ({
-    sort: state.catalog.params.sort,
-    query: state.catalog.params.query,
-    category: state.catalog.params.category,
+    sort: state[context.name].params.sort,
+    query: state[context.name].params.query,
+    category: state[context.name].params.category,
+    isInitParams: state[context.name].isInitParams,
     categories: state.categories.list,
   }));
 
   const callbacks = {
     // Сортировка
-    onSort: useCallback(sort => store.actions.catalog.setParams({sort}), [store]),
+    onSort: useCallback(sort => store.actions[context.name].setParams({sort}), [store]),
     // Поиск
-    onSearch: useCallback(query => store.actions.catalog.setParams({query, page: 1}), [store]),
+    onSearch: useCallback(query => store.actions[context.name].setParams({query, page: 1}), [store]),
     // Сброс
-    onReset: useCallback(() => store.actions.catalog.resetParams(), [store]),
+    onReset: useCallback(() => store.actions[context.name].resetParams(), [store]),
     // Фильтр по категории
-    onCategory: useCallback(category => store.actions.catalog.setParams({category, page: 1}), [store]),
+    onCategory: useCallback(category => store.actions[context.name].setParams({category, page: 1}), [store]),
   };
 
   const options = {
@@ -52,8 +59,8 @@ function CatalogFilter() {
       <Select options={options.categories} value={select.category} onChange={callbacks.onCategory}/>
       <Select options={options.sort} value={select.sort} onChange={callbacks.onSort}/>
       <Input value={select.query} onChange={callbacks.onSearch} placeholder={'Поиск'}
-             delay={1000}/>
-      <button onClick={callbacks.onReset}>{t('filter.reset')}</button>
+             delay={500}/>
+      <Button onClick={callbacks.onReset} value={t('filter.reset')} disabled={select.isInitParams} />
     </SideLayout>
   )
 }

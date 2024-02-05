@@ -1,56 +1,58 @@
-.AddToBasketCard {
+.AddProductCard {
   padding: 40px;
 }
 
-.AddToBasketCard-item {
+.AddProductCard-item {
   display: flex;
   justify-content: flex-start;
   margin-bottom: 30px;
 }
 
-.AddToBasketCard > p:first-of-type {
+.AddProductCard > p:first-of-type {
   margin-top: 0;
 }
 
-.AddToBasketCard-buttons {
+.AddProductCard-buttons {
   display: flex;
   justify-content: center;
   gap: 1rem;
 }
 
-.AddToBasketCard-code {
+.AddProductCard-code {
   padding: 20px 10px 20px 20px;
 }
 
-.AddToBasketCard-title {
+.AddProductCard-title {
+  display: flex;
+  align-items: center;
   padding-right: 10px;
   width: 100%;
 }
 
-.AddToBasketCard-title a{
+.AddProductCard-title a{
   color: #000;
   text-decoration: none;
 }
 
-.AddToBasketCard-title a:hover{
+.AddProductCard-title a:hover{
   color: #000;
   text-decoration: underline;
 }
 
-.AddToBasketCard-right {
+.AddProductCard-right {
   display: flex;
   justify-content: flex-end;
   align-items: center;
 }
 
-.AddToBasketCard-cell {
+.AddProductCard-cell {
   /* min-width: 95px; */
   text-align: right;
   font-size: 18px;
   white-space: nowrap;
 }
 
-.AddToBasketCard-cellMini {
+.AddProductCard-cellMini {
   min-width: 40px;
   font-weight: bold;
   color: #9a9a9a;
@@ -59,7 +61,7 @@
   white-space: nowrap;
 }
 
-.AddToBasketCard-cellTotal {
+.AddProductCard-cellTotal {
   min-width: 100px;
   text-align: right;
   font-size: 18px;

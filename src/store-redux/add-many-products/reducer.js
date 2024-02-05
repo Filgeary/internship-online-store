@@ -33,7 +33,7 @@ function reducer(state = initialState, action) {
           // Добавить в выделенные
           selected: [...state.selected, {
             item: action.payload.item,
-            pcs: action.payload.pcs,
+            pcs: '1',
             sum: action.payload.item.price * 1,
           }]
         }
@@ -59,6 +59,8 @@ function reducer(state = initialState, action) {
       return {
         ...state,
         result: action.payload.result,
+        // Удалим итемы, у которых количество `0 штук`, то есть пустая строка в инпуте была
+        selected: state.selected.filter(({ pcs }) => pcs > 0),
         waiting: false,
       };
     default:

@@ -3,56 +3,48 @@ import { useDispatch, useSelector as useSelectorRedux } from 'react-redux';
 import DialogLayout from "@src/components/dialog-layout";
 import useStore from "@src/hooks/use-store";
 import dialogsActions from '@src/store-redux/dialogs/actions';
-import addToBasketActions from '@src/store-redux/add-to-basket/actions';
+import addProductActions from '@src/store-redux/add-product/actions';
 import shallowequal from "shallowequal";
-import AddToBasketCard from "@src/components/add-to-basket-card";
-import addManyProductsActions from '@src/store-redux/add-many-products/actions';
+import AddProductCard from "@src/components/add-product-card";
+import modalsActions from '@src/store-redux/modals/actions';
 
 function AddProduct(props) {
   const store = useStore();
   const dispatch = useDispatch();
 
   const select = useSelectorRedux(state => ({
-    item: state.addToBasket.item,
-    pcs: state.addToBasket.pcs,
-    sum: state.addToBasket.sum,
-    result: state.addToBasket.result,
-    waiting: state.addToBasket.waiting,
+    item: state.addProduct.item,
+    pcs: state.addProduct.pcs,
+    sum: state.addProduct.sum,
+    result: state.addProduct.result,
+    waiting: state.addProduct.waiting,
+    dialogsArray: state.dialogs.dialogs,
   }), shallowequal);
 
   const callbacks = {
     // Нажатие "Ок" в диалоговом окне
-    onOk: () => dispatch(addToBasketActions.setResult(true)),
-
+    onOk: useCallback(() => dispatch(addProductActions.setResult(true)), [store]),
     // Нажатие "Отмена" в диалоговом окне
-    onCancel: () => dispatch(addToBasketActions.setResult(false)),
-
+    onCancel: useCallback(() => dispatch(addProductActions.setResult(false)), [store]),
+    // При переходе по ссылке товара в диалоговом окне на другую страницу,
+    // закроем все диалоговые окна и модалку
+    onCloseAll: useCallback(() => {
+      dispatch(dialogsActions.closeAll()) // все диалоговые окна
+      dispatch(modalsActions.close());    // модалка
+    }, [store]),
     // Пользователь вводит цифры `12 шт` в поле
-    onChange: useCallback((pcs) => dispatch(addToBasketActions.setPcs(pcs)), [store]),
-
-    // Добавление в корзину
-    addToBasket: useCallback((_id, pcs) => store.actions.basket.addToBasket(_id, pcs), [store]),
-
-    // Изменение количества итемов в список на добавление в корзину
-    setPcs: useCallback((_id, pcs) => dispatch(addManyProductsActions.setPcs(_id, pcs)), [store]),
+    onChange: useCallback((pcs) => dispatch(addProductActions.setPcs(pcs)), [store]),
   }
 
   const context = useMemo(() => ({
     title: (() => {
       switch (props.context) {
         case 'add-to-basket'  : return 'Добавить в корзину';
-        case 'add-to-selected': return 'Выберите количество';
+        case 'add-to-selected': return 'Дополнительные опции товара';
         default: return '';
       }
     })(),
-    okProcessing: (() => {
-      switch (props.context) {
-        case 'add-to-basket': return () => callbacks.addToBasket(select.item._id, Number(select.pcs));
-        case 'add-to-selected': return () => callbacks.setPcs(select.item._id, Number(select.pcs));
-        default: return () => {};
-      }
-    })(),
-  }), [props.context, select.pcs])
+  }), [props.context])
 
   useEffect(() => {
     if (!select.waiting) {
@@ -60,15 +52,24 @@ function AddProduct(props) {
       dispatch(dialogsActions.close());
 
       // Если нажата кнопка "Ок" обработаем результат
-      if (select.result) context.okProcessing();
+      if (select.result) select.dialogsArray.find(({ name }) => name === props.context)
+        .ok({ _id: select.item._id, pcs: Number(select.pcs) });
     }
+
+    // Если диалоговое окно было закрыто не кнопками, а кем-то ещё, например
+    // при закрытии всех окон при переходе на другую страницу,
+    // то сделаем вид, что была нажата кнопка "Отмена".
+    // Это важно, например, для кнопки в каталоге, которая отображает спиннер, пока
+    // диалоговое окно открыто.
+    return () => callbacks.onCancel()
   }, [select.waiting])
 
   return (
     <DialogLayout title={context.title} onClose={callbacks.onCancel} indent={props.indent}>
-      <AddToBasketCard
+      <AddProductCard
         onOk={callbacks.onOk}
         onCancel={callbacks.onCancel}
+        onCloseAll={callbacks.onCloseAll}
         item={select.item}
         value={select.pcs}
         updateValue={callbacks.onChange}

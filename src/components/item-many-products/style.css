@@ -11,17 +11,24 @@
   background: #e6ffe6;
 }
 
+.ItemManyProducts_error {
+  background: #fff5ee;
+}
 
 .ItemManyProducts-code {
   padding: 20px 10px 20px 20px;
 }
 
 .ItemManyProducts-title {
-  width: 100%;
+  display: flex;
+  align-items: center;
+  /* width: 100%; */
   padding: 20px 10px;
+  text-wrap: nowrap;
 }
 
 .ItemManyProducts-title a{
+  width: 20%;
   color: #000;
   text-decoration: none;
 }
@@ -32,25 +39,53 @@
 }
 
 .ItemManyProducts-right {
-  padding: 20px 20px 20px 10px;
   display: flex;
   justify-content: flex-end;
   align-items: center;
+  width: 100%;
+  padding: 20px 20px 20px 10px;
+  gap: 15px;
+}
+
+.ItemManyProducts-right_selected {
+  padding: 8px 20px 8px 10px;
 }
 
 .ItemManyProducts-cell {
-  min-width: 95px;
+  width: 20%;
   text-align: right;
+  /* padding-right: 25px; */
   font-size: 18px;
   white-space: nowrap;
 }
 
 .ItemManyProducts-cellBig {
-  position: absolute;
-  left: 380px;
-  /* left: 220px; */
+  display: flex;
+  justify-content: center;
+  /* width: 50%; */
+  /* min-width: 95px; */
+  /* position: absolute; */
+  /* left: 320px; */
   font-size: 18px;
   white-space: nowrap;
 }
+
+.ItemManyProducts-cellMini {
+  /* min-width: 40px; */
+  font-weight: bold;
+  color: #9a9a9a;
+  text-align: center;
+  font-size: 16px;
+  white-space: nowrap;
+}
+
+.ItemManyProducts-cellTotal {
+  min-width: 100px;
+  text-align: right;
+  font-size: 18px;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
 
 

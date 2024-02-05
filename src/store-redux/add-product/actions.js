@@ -4,7 +4,7 @@ export default {
    * @param item {Object}
    */
   setData: (item) => {
-    return { type: 'addToBasket/setData', payload: { item } }
+    return { type: 'addProduct/setData', payload: { item } }
   },
 
   /**
@@ -12,7 +12,7 @@ export default {
    * @param pcs {String}
    */
   setPcs: (pcs) => {
-    return { type: 'addToBasket/setPcs', payload: { pcs } }
+    return { type: 'addProduct/setPcs', payload: { pcs } }
   },
 
   /**
@@ -20,6 +20,6 @@ export default {
    * @param result {Boolean}
    */
   setResult: (result) => {
-    return { type: 'addToBasket/setResult', payload: { result } }
+    return { type: 'addProduct/setResult', payload: { result } }
   },
 }

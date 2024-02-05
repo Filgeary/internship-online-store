@@ -41,7 +41,7 @@ function DialogLayout(props) {
           <h1 className={cn('title')}>{props.title}</h1>
           {/*<button className={cn('close')} onClick={props.onClose}>{props.labelClose}</button>*/}
         </div>
-        <div className={cn('content')}>
+        <div className={cn('content', { theme: props.theme })}>
           {props.children}
         </div>
       </div>

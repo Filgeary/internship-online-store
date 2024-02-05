@@ -25,6 +25,7 @@ function reducer(state = initialState, action) {
       const newDialog = {
         name: action.payload.name,
         _id: action.payload._id,
+        ok: action.payload.ok,
       }
       return {
         ...state,
@@ -32,11 +33,19 @@ function reducer(state = initialState, action) {
         dialogs: [...state.dialogs, newDialog],
       };
     case 'dialog/close':
+      let result = [...state.dialogs];
       // Удаляем верхнее диалоговое окно
-      const updatedDialogsArray = state.dialogs.slice(0, -1);
+      if (!action.payload) result = state.dialogs.slice(0, -1)
+      // Удаляем все переданные окна // TODO: не оптимальное решение, много обходов лишних, подумать
+      else for (const idToRemove of action.payload)
+        result = result.filter(({ _id }) => _id !== idToRemove);
       return {
         ...state,
-        dialogs: updatedDialogsArray,
+        dialogs: result,
+      };
+    case 'dialog/closeAll':
+      return {
+        ...initialState,
       };
     default:
       return state;
