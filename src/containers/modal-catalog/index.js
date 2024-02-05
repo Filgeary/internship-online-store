@@ -12,15 +12,9 @@ const ModalCatalog = () => {
   const { t } = useTranslate();
   const [selectedItems, setSelectedItems] = useState([]);
 
-  store.createStoreSlice("modalCatalog", "catalog");
-
   useEffect(() => {
     const init = async () => await store.actions["modalCatalog"].initParams();
     init();
-  }, []);
-
-  useEffect(() => {
-    return () => store.deleteStoreSlice("modalCatalog");
   }, []);
 
   const callbacks = {

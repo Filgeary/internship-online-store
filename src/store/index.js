@@ -35,7 +35,7 @@ class Store {
     }
   }
 
-  createStoreSlice(name, baseName) {
+  createSlice(name, baseName) {
     this.actions[name] = new modules[baseName](
       this,
       name,
@@ -44,9 +44,13 @@ class Store {
     this.state[name] = this.actions[baseName].initState();
   }
 
-  deleteStoreSlice(name) {
+  deleteSlice(name) {
     delete this.actions[name];
     delete this.state[name];
+  }
+
+  hasSlice(name) {
+    return Boolean(this.state[name]);
   }
 
   /**
