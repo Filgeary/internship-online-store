@@ -37,10 +37,8 @@ function Basket(props) {
     addMoreToBasket: useCallback(_id => {
       // Открываем диалоговое окно и передаём ему колбэк на случай успеха
       dispatch(dialogsActions.open(props.context, result => {
-        // Обработка в случае успеха (добавим в корзину)
-        result.forEach(({ item, pcs }) => {
-          store.actions.basket.addToBasket(item._id, pcs)
-        })
+        // Обработка в случае успеха (добавим в корзину, корзина умеет принимать массив)
+        store.actions.basket.addToBasket(result)
       }));
       dispatch(addManyProductsActions.open()); // сбросить данные и установить `waiting=true`
     }, [props.context, store]),

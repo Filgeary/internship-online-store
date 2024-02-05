@@ -50,7 +50,7 @@ function CatalogList(props) {
       // Открываем диалоговое окно и передаём ему колбэк на случай успеха
       dispatch(dialogsActions.open(context.dialogContext, result => {
         // Обработка в случае успеха (добавим в корзину)
-        store.actions.basket.addToBasket(result._id, result.pcs);
+        store.actions.basket.addToBasket(result);
       }));
       dispatch(addProductActions.setData(item)); // Отправляем данные для диалогового окна
       dispatch(addProductActions.setPcs(pcs));   // Устанавливаем начальное значение количества

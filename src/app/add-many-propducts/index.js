@@ -10,6 +10,7 @@ import useStore from "@src/hooks/use-store";
 import addManyProductsActions from '@src/store-redux/add-many-products/actions';
 import shallowequal from "shallowequal";
 import useInit from "@src/hooks/use-init";
+import useDialog from "@src/hooks/use-dialog";
 
 function AddManyProducts(props) {
   const store = useStore();
@@ -45,24 +46,13 @@ function AddManyProducts(props) {
     })(),
   }), [props.context])
 
-  useEffect(() => {
-    if (!select.waiting) {
-      // Закроем окно, если результат получен
-      dispatch(dialogsActions.close());
-
-      // Если нажата кнопка "Ок" обработаем результат
-      if (select.result) select.dialogsArray.find(({ name }) => name === props.context)
-        .ok(select.selected);
-    }
-
-    // Если диалоговое окно было закрыто не кнопками, а кем-то ещё, например
-    // при закрытии всех окон при переходе на другую страницу,
-    // то сделаем вид, что была нажата кнопка "Отмена".
-    // Это важно, например, для кнопки в каталоге, которая отображает спиннер, пока
-    // диалоговое окно открыто.
-    return () => callbacks.onCancel()
-  }, [select.waiting])
-
+  useDialog({
+    dialogName: props.context,
+    waitingResult: select.waiting,
+    OkOrCancell: select.result,
+    result: select.selected,
+    onCancel: callbacks.onCancel,
+  })
 
   // Хотя бы один итем с ненулевым (пустая строка в поле шт) количеством штук
   const isSome = useMemo(() => Boolean(select.selected.find(({ pcs }) => pcs > 0)), [select.selected]);

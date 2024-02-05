@@ -18,13 +18,13 @@ function reducer(state = initialState, action) {
         waiting: true
       };
     case 'addManyProducts/selectItem':
-      const isSelected = Boolean(state.selected.find(({ item }) => item._id === action.payload.item._id));
+      const isSelected = Boolean(state.selected.find(({ _id }) => _id === action.payload.item._id));
       if (isSelected) {
         return {
           ...state,
           waiting: true,
           // Снять выделение
-          selected: state.selected.filter(({ item }) => item._id !== action.payload.item._id)
+          selected: state.selected.filter(({ _id }) => _id !== action.payload.item._id)
         }
       } else {
         return {
@@ -32,6 +32,8 @@ function reducer(state = initialState, action) {
           waiting: true,
           // Добавить в выделенные
           selected: [...state.selected, {
+            _id: action.payload.item._id, // для упрощения массового добавления в корзину
+                                          // не придётся конвертировать массив объектов
             item: action.payload.item,
             pcs: '1',
             sum: action.payload.item.price * 1,
@@ -42,11 +44,11 @@ function reducer(state = initialState, action) {
       return {
         ...state,
         waiting: true,
-        selected: state.selected.filter(({ item }) => item._id !== action.payload._id)
+        selected: state.selected.filter(({ _id }) => _id !== action.payload._id)
       };
     case 'addManyProducts/setPcs':
-      const element = { ...state.selected.find(({ item }) => item._id === action.payload._id) };
-      const array = state.selected.filter(({ item }) => item._id !== action.payload._id);
+      const element = { ...state.selected.find(({ _id }) => _id === action.payload._id) };
+      const array = state.selected.filter(({ _id }) => _id !== action.payload._id);
       element.pcs = action.payload.pcs;
       element.sum = element.item.price * Number(action.payload.pcs)
       array.push(element);

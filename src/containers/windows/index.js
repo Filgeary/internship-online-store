@@ -4,7 +4,7 @@ import Basket from "@src/app/basket";
 import AddProduct from "@src/app/add-product";
 import shallowequal from "shallowequal";
 import AddManyProducts from "@src/app/add-many-propducts";
-import StateFork from "@src/components/state-fork";
+import StateFork from "@src/app/state-fork";
 
 function Windows() {
   const select = useSelectorRedux(state => ({

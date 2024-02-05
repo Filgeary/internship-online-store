@@ -7,6 +7,7 @@ import addProductActions from '@src/store-redux/add-product/actions';
 import shallowequal from "shallowequal";
 import AddProductCard from "@src/components/add-product-card";
 import modalsActions from '@src/store-redux/modals/actions';
+import useDialog from "@src/hooks/use-dialog";
 
 function AddProduct(props) {
   const store = useStore();
@@ -46,23 +47,13 @@ function AddProduct(props) {
     })(),
   }), [props.context])
 
-  useEffect(() => {
-    if (!select.waiting) {
-      // Закроем окно, если результат получен
-      dispatch(dialogsActions.close());
-
-      // Если нажата кнопка "Ок" обработаем результат
-      if (select.result) select.dialogsArray.find(({ name }) => name === props.context)
-        .ok({ _id: select.item._id, pcs: Number(select.pcs) });
-    }
-
-    // Если диалоговое окно было закрыто не кнопками, а кем-то ещё, например
-    // при закрытии всех окон при переходе на другую страницу,
-    // то сделаем вид, что была нажата кнопка "Отмена".
-    // Это важно, например, для кнопки в каталоге, которая отображает спиннер, пока
-    // диалоговое окно открыто.
-    return () => callbacks.onCancel()
-  }, [select.waiting])
+  useDialog({
+    dialogName: props.context,
+    waitingResult: select.waiting,
+    OkOrCancell: select.result,
+    result: { _id: select.item._id, pcs: Number(select.pcs) },
+    onCancel: callbacks.onCancel,
+  })
 
   return (
     <DialogLayout title={context.title} onClose={callbacks.onCancel} indent={props.indent}>
