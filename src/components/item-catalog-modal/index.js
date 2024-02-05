@@ -14,7 +14,7 @@ function ItemCatalogModal(props){
   }
 
   return (
-    <div className={cn({selected: props.item.selected})} onClick={callbacks.onSelect}>
+    <div className={cn({selected: props.isSelected})} onClick={callbacks.onSelect}>
       {/*<div className={cn('code')}>{props.item._id}</div>*/}
       <div className={cn('title')}>
         <Link to={props.link}>{props.item.title}</Link>
@@ -35,7 +35,8 @@ ItemCatalogModal.propTypes = {
   link: PropTypes.string,
   onSelect: PropTypes.func,
   labelCurr: PropTypes.string,
-  labelAdd: PropTypes.string
+  labelAdd: PropTypes.string,
+  isSelected: PropTypes.bool
 };
 
 ItemCatalogModal.defaultProps = {

@@ -32,6 +32,16 @@ class Store {
       this.state[name] = this.actions[name].initState();
     }
   }
+  
+  make(name, base, configName) {
+    this.actions[name] = new modules[base](this, name, this.config?.modules[configName] || {});
+    this.state[name] = this.actions[name].initState();
+  }
+
+  remove(name) {
+    delete this.actions[name];
+    delete this.state[name];
+  }
 
   /**
    * Подписка слушателя на изменения состояния

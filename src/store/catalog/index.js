@@ -43,13 +43,15 @@ class CatalogState extends StoreModule {
    * @return {Promise<void>}
    */
   async initParams(newParams = {}) {
-    const urlParams = new URLSearchParams(window.location.search);
     let validParams = {};
-    if (urlParams.has('page')) validParams.page = Number(urlParams.get('page')) || 1;
-    if (urlParams.has('limit')) validParams.limit = Math.min(Number(urlParams.get('limit')) || 10, 50);
-    if (urlParams.has('sort')) validParams.sort = urlParams.get('sort');
-    if (urlParams.has('query')) validParams.query = urlParams.get('query');
-    if (urlParams.has('category')) validParams.category = urlParams.get('category');
+    if (this.config.readParams !== false) {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.has('page')) validParams.page = Number(urlParams.get('page')) || 1;
+      if (urlParams.has('limit')) validParams.limit = Math.min(Number(urlParams.get('limit')) || 10, 50);
+      if (urlParams.has('sort')) validParams.sort = urlParams.get('sort');
+      if (urlParams.has('query')) validParams.query = urlParams.get('query');
+      if (urlParams.has('category')) validParams.category = urlParams.get('category');
+    }
     await this.setParams({...this.initState().params, ...validParams, ...newParams}, true, true);
   }
 
@@ -71,7 +73,7 @@ class CatalogState extends StoreModule {
    * @param [replaceHistory] {Boolean} Заменить адрес (true) или новая запись в истории браузера (false)
    * @returns {Promise<void>}
    */
-  async setParams(newParams = {}, saveHistory = true, replaceHistory = false) {
+  async setParams(newParams = {}, replaceHistory = false) {
     const params = {...this.getState().params, ...newParams};
 
     // Установка новых параметров и признака загрузки
@@ -82,7 +84,7 @@ class CatalogState extends StoreModule {
     }, 'Установлены параметры каталога');
 
     // Сохранить параметры в адрес страницы
-    if (saveHistory) {
+    if (this.config.saveParams !== false) {
       let urlSearch = new URLSearchParams(exclude(params, this.initState().params)).toString();
       const url = window.location.pathname + (urlSearch ? `?${urlSearch}`: '') + window.location.hash;
       if (replaceHistory) {
