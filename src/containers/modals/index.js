@@ -6,15 +6,15 @@ import Goods from "@src/app/modals/goods";
 
 function Modals() {
 
-  const namesModal = useSelectorRedux(state => state.modals.name);
+  const namesModal = useSelectorRedux(state => state.modals.modals);
 
   return (
     <>
     {namesModal.map((item, index) => (
       <div key={index}>
-        {item === 'basket' && <Basket/>}
-        {item === 'quantity' && <GoodsQuantity/>}
-        {item === 'goods' && <Goods/>}
+        {item.name === 'basket' && <Basket/>}
+        {item.name === 'quantity' && <GoodsQuantity/>}
+        {item.name === 'goods' && <Goods/>}
       </div>
     ))}
     </>

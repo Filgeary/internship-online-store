@@ -20,7 +20,7 @@ const CatalogFilterContent = ({ sort, query, category, onSort, onSearch, onReset
   };
 
  function withCatalogFilter(WrappedComponent, params) {
-    const { stateSelector, actionSetParams, actionResetParams } = params;
+    const { stateSelector, actionSetParams, actionResetParams, hideParams } = params;
 
   return function CatalogFilterHOC() {
     const store = useStore();
@@ -28,10 +28,10 @@ const CatalogFilterContent = ({ sort, query, category, onSort, onSearch, onReset
     const select = useSelector(stateSelector);
 
     const callbacks = {
-      onSort: useCallback(sort => store.actions[actionSetParams].setParams({ sort }), [store, actionSetParams]),
-      onSearch: useCallback(query => store.actions[actionSetParams].setParams({ query, page: 1 }), [store, actionSetParams]),
+      onSort: useCallback(sort => store.actions[actionSetParams].setParams({ sort }, false, hideParams), [store, actionSetParams]),
+      onSearch: useCallback(query => store.actions[actionSetParams].setParams({ query, page: 1 }, false, hideParams), [store, actionSetParams]),
       onReset: useCallback(() => store.actions[actionResetParams].resetParams(), [store, actionResetParams]),
-      onCategory: useCallback(category => store.actions[actionSetParams].setParams({ category, page: 1 }), [store, actionSetParams]),
+      onCategory: useCallback(category => store.actions[actionSetParams].setParams({ category, page: 1 }, false, hideParams), [store, actionSetParams]),
     }
 
     const options = useMemo(() => ({
@@ -66,6 +66,7 @@ const CatalogFilter = withCatalogFilter(CatalogFilterContent, {
   }),
   actionSetParams: 'catalog',
   actionResetParams: 'catalog',
+  hideParams: false
 });
 
 const CatalogFilterForModal = withCatalogFilter(CatalogFilterContent, {
@@ -77,6 +78,7 @@ const CatalogFilterForModal = withCatalogFilter(CatalogFilterContent, {
   }),
   actionSetParams: 'catalog_modal',
   actionResetParams: 'catalog_modal',
+  hideParams: true
 });
 
  export { CatalogFilter, CatalogFilterForModal };

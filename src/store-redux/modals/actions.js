@@ -2,9 +2,10 @@ export default {
   /**
    * Открытие модалки по названию
    * @param name
+   *  @param id
    */
-  open: (name) => {
-    return {type: 'modal/open', payload: {name}};
+  open: ({name, id}) => {
+    return {type: 'modal/open', payload: {name, id}};
   },
 
   // /**
@@ -27,10 +28,12 @@ export default {
    * Закрытие модалки
    * @param name  
    */
-  closeModal: (name) => (dispatch, getState, services) => {
-    const newNames = getState().modals.name.filter((item) => item !== name)
-    dispatch({type: 'modal/close', payload: {names: newNames}})
-    if(getState().modals.name.length < 1) getState().modals.activeModal = false
+  closeModal: (id) => (dispatch, getState, services) => {
+    const newModals = getState().modals.modals.filter((item) => item.id !== id)
+    console.log('getState().modals.modals', getState().modals.modals)
+    console.log('newModals', newModals)
+    dispatch({type: 'modal/close', payload: {modals: newModals}})
+    if(getState().modals.modals.length < 1) getState().modals.activeModal = false
   },
 
   /**

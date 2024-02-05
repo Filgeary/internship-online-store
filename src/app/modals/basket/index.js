@@ -10,7 +10,10 @@ import List from "@src/components/list";
 import ModalLayout from "@src/components/modal-layout";
 import BasketTotal from "@src/components/basket-total";
 import modalsActions from '@src/store-redux/modals/actions';
-import Button from '@src/components/button';
+import Button from '@src/components/button'
+import codeGenerator from "@src/utils/code-generator"
+import generateUniqueId from "@src/utils/unicque_id"
+import closeId from '@src/utils/closeId';
 
 
 function Basket() {
@@ -26,17 +29,27 @@ function Basket() {
   }));
 
   const statusCatalogModal = useSelectorRedux(state => state.modals.statusCatalogModal);
+  const stateModal = useSelectorRedux(state => state.modals.modals)
+
+  const id = generateUniqueId()
+
+  // function closeId(modals, name) {
+  //   const modal = modals.filter((item) => item.name === name)
+  //   return modal.id
+  // }
 
   const callbacks = {
     // Удаление из корзины
     removeFromBasket: useCallback(_id => store.actions.basket.removeFromBasket(_id), [store]),
-    // Закрытие любой модалки
+    // Закрытие модалки
     closeModal: useCallback(() => {
-      dispatch(modalsActions.closeModal('basket'))
+      // dispatch(modalsActions.closeModal('basket', id))
+      dispatch(modalsActions.closeModal(closeId(stateModal, 'basket')))
     }, [store]),
     // Открытие модалки для выбра товаров
     openModal: useCallback(() => {
-      dispatch(modalsActions.open('goods'))
+      // dispatch(modalsActions.open('goods', id))
+      dispatch(modalsActions.open({name: 'goods', id: id}))
     }, [store]),
   }
 
@@ -53,9 +66,10 @@ function Basket() {
       />
     ), [callbacks.removeFromBasket, t]),
   };
-
+  console.log('statusCatalogModal', statusCatalogModal)
   useEffect(() => {
     if(statusCatalogModal) {
+      console.log('сработал useEffect и statusCatalogModal ===', statusCatalogModal)
       // Добавление выбранных товаров из модального окна
        store.actions.basket.addingSelectedProducts()
     }

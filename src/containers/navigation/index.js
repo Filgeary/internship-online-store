@@ -7,6 +7,8 @@ import BasketTool from "@src/components/basket-tool";
 import SideLayout from "@src/components/side-layout";
 import {useDispatch} from 'react-redux';
 import modalsActions from '@src/store-redux/modals/actions';
+import codeGenerator from "@src/utils/code-generator";
+import generateUniqueId from "@src/utils/unicque_id"
 
 function Navigation() {
   const store = useStore();
@@ -18,11 +20,15 @@ function Navigation() {
     lang: state.locale.lang
   }));
 
+  const id = generateUniqueId()
+  console.log('generateUniqueId', generateUniqueId())
+
   const callbacks = {
     // Открытие модалки корзины
     openModalBasket: useCallback(() => {
       //store.actions.modals.open('basket')
-      dispatch(modalsActions.open('basket'))
+      // dispatch(modalsActions.open('basket'))
+      dispatch(modalsActions.open({name: 'basket', id: id}))
       dispatch(modalsActions.changeActiveModal(true))
     }, [store]),
 

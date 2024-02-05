@@ -1,4 +1,4 @@
-import CatalogState from "../catalog"; 
+import CatalogState from "../catalog" 
 
 /**
  * Состояние каталога модалки

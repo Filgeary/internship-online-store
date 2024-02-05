@@ -6,7 +6,7 @@ import Select from "@src/components/select";
 import Input from "@src/components/input";
 import SideLayout from "@src/components/side-layout";
 import treeToList from "@src/utils/tree-to-list";
-import listToTree from "@src/utils/list-to-tree";
+import listToTree from "@src/utils/list-to-tree"
 
 function CatalogFilter() {
 
@@ -21,13 +21,13 @@ function CatalogFilter() {
 
   const callbacks = {
     // Сортировка
-    onSort: useCallback(sort => store.actions.catalog.setParams({sort}), [store]),
+    onSort: useCallback(sort => store.actions.catalog.setParams({sort}, false, true), [store]),
     // Поиск
-    onSearch: useCallback(query => store.actions.catalog.setParams({query, page: 1}), [store]),
+    onSearch: useCallback(query => store.actions.catalog.setParams({query, page: 1}, false, true), [store]),
     // Сброс
     onReset: useCallback(() => store.actions.catalog.resetParams(), [store]),
     // Фильтр по категории
-    onCategory: useCallback(category => store.actions.catalog.setParams({category, page: 1}), [store]),
+    onCategory: useCallback(category => store.actions.catalog.setParams({category, page: 1}, false, true), [store]),
   };
 
   const options = {

@@ -10,15 +10,18 @@ import { CatalogFilter } from '@src/containers/hoc/with-catalog-filter';
 import CatalogList from "@src/containers/catalog-list";
 import LocaleSelect from "@src/containers/locale-select";
 import TopHead from "@src/containers/top-head";
+import generateUniqueId from "@src/utils/unicque_id"
+import codeGenerator from '@src/utils/code-generator';
 
 function Main() {
 
   const store = useStore();
 
   useInit(async () => {
+    store.make('catalog2', 'catalog')
     await Promise.all([
       store.actions.catalog.initParams(),
-      store.actions.categories.load()
+      store.actions.categories.load(),
     ]);
   }, [], true);
 
@@ -32,7 +35,7 @@ function Main() {
       </Head>
       <Navigation/>
       <CatalogFilter/>
-      <CatalogList/>
+      <CatalogList stateName='catalog'/>
     </PageLayout>
   );
 }

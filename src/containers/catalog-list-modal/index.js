@@ -1,4 +1,4 @@
-import {memo, useCallback, useEffect, useState, useRef} from "react";
+import {memo, useCallback, useEffect, useState, useRef, useMemo} from "react";
 import useStore from "@src/hooks/use-store";
 import useSelector from "@src/hooks/use-selector";
 import useTranslate from "@src/hooks/use-translate";
@@ -13,7 +13,7 @@ function CatalogListModal() {
   const store = useStore();
   const dispatch = useDispatch();
   const selectRef = useRef();
-  const [chosenProductId, setChosenProductId] = useState(null)
+  // const [chosenProductId, setChosenProductId] = useState(null)
 
   const select = useSelector(state => ({
     list: state.catalog_modal.list,
@@ -27,22 +27,27 @@ function CatalogListModal() {
   
   const callbacks = {
     // Открытие модалки
-    openModal: useCallback((id) => {
-      dispatch(modalsActions.open('quantity'))
-      setChosenProductId(id)
-    }, [store]),
-    // Отмена выделения продукта
-    cancellation: useCallback((id) => {
-        const status = selectRef.current.some(item => item.id === id)
+    // openModal: useCallback((id) => {
+    //   dispatch(modalsActions.open('quantity'))
+    //   setChosenProductId(id)
+    // }, [store]),
+    // Выделения продукта
+    changeSelected: useCallback((id) => {
 
-        if(status) {
-          store.actions.basket.removeFromSelected(id)
-          store.actions.catalog_modal.selectItem(id)
-        }
+      const status = selectRef.current.some(item => item.id === id)
+
+      if(status) {
+        store.actions.basket.removeFromSelected(id)
+        store.actions.catalog_modal.selectItem(id)
+      } else {
+        store.actions.basket.updateQuantityProduct(1)
+        store.actions.basket.updateSelected(id)
+        store.actions.catalog_modal.selectItem(id)
+      }
       
     }, [select.selected]),
     // Пагинация
-    onPaginate: useCallback(page => store.actions.catalog_modal.setParams({page}), [store]),
+    onPaginate: useCallback(page => store.actions.catalog_modal.setParams({page}, false, false, selectRef.current), [store]),
     // генератор ссылки для пагинатора
     makePaginatorLink: useCallback((page) => {
       return `?${new URLSearchParams({page, limit: select.limit, sort: select.sort, query: select.query})}`;
@@ -51,32 +56,24 @@ function CatalogListModal() {
 
   const {t} = useTranslate();
 
-  const renders = {
-    item: useCallback(item => (
-      <Item 
-        item={item} 
-        onOpenModal={callbacks.openModal} 
-        link={`/articles/${item._id}`} 
-        labelAdd={t('article.add')}
-        deselect={callbacks.cancellation}
-        hideLink={false}
-        />
-    ), [callbacks.openModal, t]),
-  };
-
-  useEffect(() => {
-
-    if(select.quantity && chosenProductId) {
-        // Добавление товар в выбранные
-        store.actions.basket.updateSelected(chosenProductId)
-        // Товар отмечен синим фоном
-         store.actions.catalog_modal.selectItem(chosenProductId)
-    }
-  }, [select.quantity])
-
   useEffect(() => {
     selectRef.current = select.selected;
   }, [select.selected])
+
+  const renders = {
+    item: useCallback(item => {
+      return (
+      <Item 
+        disabled='disabled'
+        item={item} 
+        // onOpenModal={callbacks.openModal} 
+        link={`/articles/${item._id}`} 
+        labelAdd={t('article.add')}
+        handleClickButton={callbacks.changeSelected}
+        hideLink={false}
+        />
+    )}, [callbacks.openModal, t, callbacks.cancellation]),
+  };
 
   return (
     <Spinner active={select.waiting}>

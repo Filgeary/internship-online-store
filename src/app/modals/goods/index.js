@@ -5,19 +5,24 @@ import useStore from "@src/hooks/use-store";
 import useTranslate from "@src/hooks/use-translate";
 import ModalLayout from "@src/components/modal-layout";
 import modalsActions from '@src/store-redux/modals/actions';
-import CatalogListModal from '@src/containers/catalog-list-modal';
-//import CatalogFilterForModal from '@src/containers/catalog-filter-for-modal';
-import { CatalogFilterForModal } from '@src/containers/hoc/with-catalog-filter';
+import CatalogList from '@src/containers/catalog-list';
+import { CatalogFilterForModal } from '@src/containers/hoc/with-catalog-filter'
+import {useSelector as useSelectorRedux} from 'react-redux';
+import closeId from '@src/utils/closeId';
 
 function Goods() {
 
-  const store = useStore();
-  const dispatch = useDispatch();
+  const store = useStore()
+  const dispatch = useDispatch()
+
+  const stateModal = useSelectorRedux(state => state.modals.modals)
+  const nameModal = useSelectorRedux(state => state.modals.name)
 
   const callbacks = {
     closeModal: useCallback(() => {
       // Закрытие модалки
-      dispatch(modalsActions.closeModal('goods'));
+      // dispatch(modalsActions.closeModal('goods'));
+      dispatch(modalsActions.closeModal(closeId(stateModal, 'goods')));
       // Установлен статус "модалка закрыта" для дальнейшего добавления выбранных товаров
       dispatch(modalsActions.changeStatusCatalogModal(true));
       }, [store]),
@@ -34,9 +39,8 @@ function Goods() {
       title='' 
       labelClose={t('basket.close')}
       onClose={callbacks.closeModal}>
-        {/* <CatalogFilterForModal/> */}
         <CatalogFilterForModal/>
-        <CatalogListModal/>
+        <CatalogList stateName='catalog_modal'/>
     </ModalLayout>
   );
 }

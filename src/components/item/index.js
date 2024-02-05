@@ -14,14 +14,14 @@ function Item(props){
       event.stopPropagation()
       props.onOpenModal(props.item._id)
     },
-    onDeselect: (event) => {
+    handleClick: (event) => {
       event.stopPropagation()
-      props.deselect(props.item._id)
+      props.handleClickButton(props.item._id)
     }
   }
-
+  
   return (
-    <div className={cn({ selected: props.item.selectedGoods })} onClick={(event) => callbacks.onDeselect(event)}>
+    <div className={cn({ selected: props.item.selectedGoods })} onClick={(event) => callbacks.handleClick(event)}>
       {/*<div className={cn('code')}>{props.item._id}</div>*/}
       <div className={cn('title')}>
         {props.hideLink ? (
@@ -32,7 +32,7 @@ function Item(props){
       </div>
       <div className={cn('actions')}>
         <div className={cn('price')}>{numberFormat(props.item.price)} {props.labelCurr}</div>
-        <button onClick={(event) => callbacks.onOpenModal(event)}>{props.labelAdd}</button>
+        <button onClick={(event) => callbacks.onOpenModal(event)} disabled={props.disabled}>{props.labelAdd}</button>
       </div>
     </div>
   );
@@ -49,11 +49,12 @@ Item.propTypes = {
   deselect: PropTypes.func,
   labelCurr: PropTypes.string,
   labelAdd: PropTypes.string,
-  hideLink: PropTypes.bool
+  hideLink: PropTypes.bool,
+  handleClickButton: PropTypes.func
 };
 
 Item.defaultProps = {
-  deselect: () => {}, 
+  handleClickButton: () => {}, 
   onOpenModal: () => {},
   labelCurr: '₽',
   labelAdd: 'Добавить',

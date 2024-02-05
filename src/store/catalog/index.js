@@ -60,8 +60,9 @@ class CatalogState extends StoreModule {
    * @param [replaceHistory] {Boolean} Заменить адрес (true) или новая запись в истории браузера (false)
    * @returns {Promise<void>}
    */
-  async setParams(newParams = {}, replaceHistory = false) {
+  async setParams(newParams = {}, replaceHistory = false, hide = false, selected = []) {
     const params = {...this.getState().params, ...newParams};
+    console.log('сработал setParams и selected ===', selected)
 
     // Установка новых параметров и признака загрузки
     this.setState({
@@ -73,10 +74,13 @@ class CatalogState extends StoreModule {
     // Сохранить параметры в адрес страницы
     let urlSearch = new URLSearchParams(exclude(params, this.initState().params)).toString();
     const url = window.location.pathname + (urlSearch ? `?${urlSearch}`: '') + window.location.hash;
+
+    if(!hide) {
     if (replaceHistory) {
       window.history.replaceState({}, '', url);
-    } else {
+     } else {
       window.history.pushState({}, '', url);
+     }
     }
 
     const apiParams = exclude({
@@ -93,6 +97,17 @@ class CatalogState extends StoreModule {
     });
 
     const res = await this.services.api.request({url: `/api/v1/articles?${new URLSearchParams(apiParams)}`});
+
+    if(selected.length > 0) {
+      res.data.result.items.map((product) => {
+        const filteredProduct = selected.some((item) => product._id === item.id)
+
+        if(filteredProduct) {
+         return product.selectedGoods = true
+        } else { return product}
+      })
+    } 
+
     this.setState({
       ...this.getState(),
       list: res.data.result.items,
