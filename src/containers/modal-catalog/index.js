@@ -15,6 +15,7 @@ function ModalCatalog() {
   const modalId = useModalId();
 
   const selectedItems = useSelector((state) => state.copyCatalog.selected);
+  const storeName = "copyCatalog";
 
   useInit(() => {
     store.actions.copyCatalog.initParams();
@@ -38,10 +39,10 @@ function ModalCatalog() {
       title={t("modal.catalog")}
     >
       <SideLayout side="between" padding="medium">
-        <CatalogFilter storeName={"copyCatalog"} />
+        <CatalogFilter storeName={storeName} />
         <button onClick={callbacks.onAddToBasket}>{t("modal.add")}</button>
       </SideLayout>
-      <CatalogListSelectable storeName={"copyCatalog"} />
+      <CatalogListSelectable storeName={storeName} />
     </ModalLayout>
   );
 }

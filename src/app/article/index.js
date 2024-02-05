@@ -37,8 +37,9 @@ function Article() {
   const callbacks = {
     // Добавление в корзину
     addToBasket: useCallback(async (_id) => {
+        const storeName = "count";
         store.actions.modals
-          .open("count")
+          .open(storeName)
           .then((count) => store.actions.basket.addToBasket(_id, count[0]));
     }, [store]),
   };

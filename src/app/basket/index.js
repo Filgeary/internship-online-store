@@ -27,8 +27,9 @@ function Basket() {
     // Закрытие любой модалки
     closeModal: useCallback(() => store.actions.modals.close(modalId), [store, modalId]),
     addToBasket: useCallback(async ()=> {
+        const storeName = "catalog";
         store.actions.modals
-          .open("catalog")
+          .open(storeName)
           .then((selectedItems) =>
             store.actions.basket.addManyToBasket(selectedItems)
           );

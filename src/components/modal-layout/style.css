@@ -20,7 +20,6 @@ body:has(.ModalLayout){
 }
 
 .ModalLayout:last-child {
-  overflow-y: auto;
   background: rgba(0,0,0,0.7);
 }
 
