@@ -100,10 +100,14 @@ class BasketState extends StoreModule {
     });
 
     if (itemsIdToAdd.length > 0) {
-      for (const itemId of itemsIdToAdd){
-        const res = await this.services.api.request({url: `/api/v1/articles/${itemId}`});
-        const item = res.data.result;
-
+      console.log(itemsIdToAdd);
+      const apiParams = {
+        'search[ids]': itemsIdToAdd.join(" | "),
+      }
+      const res = await this.services.api.request({url: `/api/v1/articles?${new URLSearchParams(apiParams)}`});
+      const items = res.data.result.items;
+      
+      for(const item of items) {
         list.push({...item, amount: 1}); // list уже новый, в него можно пушить.
         // Добавляем к сумме.
         sum += item.price;
