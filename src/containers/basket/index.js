@@ -1,14 +1,17 @@
+import { memo, useCallback } from "react";
+
 import BasketTotal from "@src/components/basket-total";
 import ItemBasket from "@src/components/item-basket";
 import List from "@src/components/list";
 import ModalLayout from "@src/components/modal-layout";
+import SideLayout from "@src/components/side-layout";
 import useSelector from "@src/hooks/use-selector";
 import useStore from "@src/hooks/use-store";
 import useTranslate from "@src/hooks/use-translate";
-import { memo, useCallback } from "react";
 
-function Basket() {
+function Basket({ onClose }) {
   const store = useStore();
+  const { t } = useTranslate();
 
   const select = useSelector((state) => ({
     list: state.basket.list,
@@ -22,11 +25,22 @@ function Basket() {
       [store]
     ),
     closeModal: useCallback(() => {
-      store.actions.modals.close("basket");
+      onClose();
+    }, [onClose]),
+    addToBasket: useCallback(
+      async (productIDs) => {
+        if (!productIDs.length) return;
+
+        for (const id of productIDs) {
+          await store.actions.basket.addToBasket(id, 1);
+        }
+      },
+      [store]
+    ),
+    openModalCatalog: useCallback(() => {
+      store.actions.modals.open("modalCatalog", callbacks.addToBasket);
     }, [store]),
   };
-
-  const { t } = useTranslate();
 
   const renders = {
     itemBasket: useCallback(
@@ -52,6 +66,12 @@ function Basket() {
     >
       <List list={select.list} renderItem={renders.itemBasket} />
       <BasketTotal sum={select.sum} t={t} />
+
+      <SideLayout side="center">
+        <button onClick={callbacks.openModalCatalog}>
+          {t("basket.selectMoreProducts")}
+        </button>
+      </SideLayout>
     </ModalLayout>
   );
 }

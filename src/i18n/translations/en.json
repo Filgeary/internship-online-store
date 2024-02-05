@@ -13,6 +13,7 @@
     "one": "article",
     "other": "articles"
   },
+  "basket.selectMoreProducts": "Select more products",
   "article.add": "Add",
   "filter.reset": "Reset",
   "auth.title": "Sign In",
@@ -24,5 +25,9 @@
   "dialogAmount.title": "Amount",
   "dialog.close": "Close",
   "dialog.confirm": "Confirm",
-  "dialog.cancel": "Cancel"
+  "dialog.cancel": "Cancel",
+  "modalCatalog.title": "Products List",
+  "modalCatalog.addProducts": "Add Products",
+  "modalCatalog.selectedProducts": "Selected Products",
+  "modal.close": "Close"
 }
