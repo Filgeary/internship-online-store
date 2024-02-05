@@ -50,6 +50,7 @@
   "amount-dialog.amount": "Amount",
   "amount-dialog.items-amount": "Amount of item",
   "amount-dialog.ok": "Ok",
+  "amount-dialog.loading": "Loading...",
   "select-items-modal.choose-items": "Choose items",
   "select-items-modal.ok": "Ok",
   "select-items-modal.add-items-in-basket": "Add items to basket",

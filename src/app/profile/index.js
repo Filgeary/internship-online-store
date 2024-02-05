@@ -8,7 +8,6 @@ import PageLayout from "@src/components/page-layout";
 import Head from "@src/components/head";
 import Navigation from "@src/containers/navigation";
 import Spinner from "@src/components/spinner";
-import ArticleCard from "@src/components/article-card";
 import LocaleSelect from "@src/containers/locale-select";
 import TopHead from "@src/containers/top-head";
 import ProfileCard from "@src/components/profile-card";

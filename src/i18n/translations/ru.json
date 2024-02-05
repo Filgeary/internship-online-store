@@ -52,6 +52,7 @@
   "amount-dialog.amount": "Количество",
   "amount-dialog.items-amount": "Количество товара",
   "amount-dialog.ok": "Ок",
+  "amount-dialog.loading": "Загрузка...",
   "select-items-modal.choose-items": "Выбрать товары",
   "select-items-modal.ok": "Ок",
   "select-items-modal.add-items-in-basket": "Добавить товары в корзину",

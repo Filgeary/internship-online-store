@@ -7,10 +7,10 @@ import useTranslate from "@src/hooks/use-translate";
 
 function AmountDialog(props) {
 
-  const [title, setTitle] = useState('Загрузка...')
+  const {t, lang} = useTranslate()
+  const [title, setTitle] = useState(() => t('amount-dialog.loading'))
   const [value, setValue] = useState(1)
   const store =  useStore()
-  const {t, lang} = useTranslate()
 
   const callbacks = {
     cancelBasketDialog: useCallback(() => store.actions.modals.close(props.id), [store, props.id]),
