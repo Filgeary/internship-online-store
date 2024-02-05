@@ -45,22 +45,24 @@ class CatalogState extends StoreModule {
   /**
    * Сброс параметров к начальным
    * @param [newParams] {Object} Новые параметры
+   * @param [changeUrl] {Boolean} Менять параметры адресной строки браузера (true) или нет (false)
    * @return {Promise<void>}
    */
-  async resetParams(newParams = {}) {
+  async resetParams(newParams = {}, changeUrl = true) {
     // Итоговые параметры из начальных, из URL и из переданных явно
     const params = {...this.initState().params, ...newParams};
     // Установка параметров и загрузка данных
-    await this.setParams(params);
+    await this.setParams(params, false, changeUrl);
   }
 
   /**
    * Установка параметров и загрузка списка товаров
    * @param [newParams] {Object} Новые параметры
    * @param [replaceHistory] {Boolean} Заменить адрес (true) или новая запись в истории браузера (false)
+   * @param [changeUrl] {Boolean} Заменить url адресной строки (true) или не менять адрес окна в браузере (false)
    * @returns {Promise<void>}
    */
-  async setParams(newParams = {}, replaceHistory = false) {
+  async setParams(newParams = {}, replaceHistory = false, changeUrl = true) {
     const params = {...this.getState().params, ...newParams};
 
     // Установка новых параметров и признака загрузки
@@ -70,13 +72,15 @@ class CatalogState extends StoreModule {
       waiting: true
     }, 'Установлены параметры каталога');
 
-    // Сохранить параметры в адрес страницы
-    let urlSearch = new URLSearchParams(exclude(params, this.initState().params)).toString();
-    const url = window.location.pathname + (urlSearch ? `?${urlSearch}`: '') + window.location.hash;
-    if (replaceHistory) {
-      window.history.replaceState({}, '', url);
-    } else {
-      window.history.pushState({}, '', url);
+    if(changeUrl) {
+      // Сохранить параметры в адрес страницы
+      let urlSearch = new URLSearchParams(exclude(params, this.initState().params)).toString();
+      const url = window.location.pathname + (urlSearch ? `?${urlSearch}`: '') + window.location.hash;
+      if (replaceHistory) {
+        window.history.replaceState({}, '', url);
+      } else {
+        window.history.pushState({}, '', url);
+      }
     }
 
     const apiParams = exclude({

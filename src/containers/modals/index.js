@@ -14,7 +14,7 @@ function Modals() {
     modals: state.modals.modals
   }));
 
-  useInit(() => {
+  useInit(async () => {
     let arr = [];
     for(let key in select.modals) {
       switch(select.modals[key].name) {
@@ -28,7 +28,13 @@ function Modals() {
                               close={ (data) => store.actions.modals.close(key, data)} />);
           break;
         case "catalogModal":
-          arr.push(<CatalogModal key={key} close={ (data) => store.actions.modals.close(key, data)} />);
+          store.createModule(key, 'catalog');
+          arr.push(<CatalogModal key={key}
+                                 storeSlice={key}
+                                 close={ (data) => {
+                                  store.actions.modals.close(key, data);
+                                  store.deleteModule(key);
+                                } } />);
           break;
         default:
           break;

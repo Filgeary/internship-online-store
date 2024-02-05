@@ -8,26 +8,29 @@ import SideLayout from "@src/components/side-layout";
 import treeToList from "@src/utils/tree-to-list";
 import listToTree from "@src/utils/list-to-tree";
 
-function CatalogFilter() {
+function CatalogFilter({
+  isModal = false,
+  storeSlice = 'catalog'
+}) {
 
   const store = useStore();
 
   const select = useSelector(state => ({
-    sort: state.catalog.params.sort,
-    query: state.catalog.params.query,
-    category: state.catalog.params.category,
+    sort: state[storeSlice].params.sort,
+    query: state[storeSlice].params.query,
+    category: state[storeSlice].params.category,
     categories: state.categories.list,
   }));
 
   const callbacks = {
     // Сортировка
-    onSort: useCallback(sort => store.actions.catalog.setParams({sort}), [store]),
+    onSort: useCallback(sort => store.actions[storeSlice].setParams({sort}, false, !isModal), [store]),
     // Поиск
-    onSearch: useCallback(query => store.actions.catalog.setParams({query, page: 1}), [store]),
+    onSearch: useCallback(query => store.actions[storeSlice].setParams({query, page: 1}, false, !isModal), [store]),
     // Сброс
-    onReset: useCallback(() => store.actions.catalog.resetParams(), [store]),
+    onReset: useCallback(() => store.actions[storeSlice].resetParams({}, !isModal), [store]),
     // Фильтр по категории
-    onCategory: useCallback(category => store.actions.catalog.setParams({category, page: 1}), [store]),
+    onCategory: useCallback(category => store.actions[storeSlice].setParams({category, page: 1}, false, !isModal), [store]),
   };
 
   const options = {

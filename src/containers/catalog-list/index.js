@@ -6,32 +6,38 @@ import Item from "@src/components/item";
 import List from "@src/components/list";
 import Pagination from "@src/components/pagination";
 import Spinner from "@src/components/spinner";
-import { useDispatch } from "react-redux";
 import ItemModalCatalog from "@src/components/item-modal-catalog";
 
-function CatalogList({isModal, onAdd, selectedArticles}) {
+function CatalogList({
+    storeSlice = 'catalog',
+    isModal = false,
+    onAdd,
+    selectedArticles,
+  }) {
   const store = useStore();
-  const dispatch = useDispatch();
 
   const select = useSelector(state => ({
-    list: state.catalog.list,
-    page: state.catalog.params.page,
-    limit: state.catalog.params.limit,
-    count: state.catalog.count,
-    waiting: state.catalog.waiting,
+    list: state[storeSlice].list,
+    page: state[storeSlice].params.page,
+    limit: state[storeSlice].params.limit,
+    sort: state[storeSlice].params.sort,
+    query: state[storeSlice].params.query,
+    count: state[storeSlice].count,
+    waiting: state[storeSlice].waiting,
   }));
 
   const callbacks = {
     // Добавление в корзину
     arcticleCount: useCallback((_id, _title) => {
-      store.actions.modals.open("addToBasket", {title: _title, count: 1}).then( result => {
-        if(result) {
-          store.actions.basket.addToBasket(_id, result)
-        }
-      });
+      store.actions.modals.open("addToBasket", {title: _title, count: 1})
+        .then( result => {
+          if(result) {
+            store.actions.basket.addToBasket(_id, result)
+          }
+        });
     }, [store]),
     // Пагинация
-    onPaginate: useCallback(page => store.actions.catalog.setParams({page}), [store]),
+    onPaginate: useCallback(page => store.actions[storeSlice].setParams({page}, false, !isModal), [store]),
     // генератор ссылки для пагинатора
     makePaginatorLink: useCallback((page) => {
       return `?${new URLSearchParams({page, limit: select.limit, sort: select.sort, query: select.query})}`;
@@ -45,7 +51,7 @@ function CatalogList({isModal, onAdd, selectedArticles}) {
       <Item item={item} onAdd={callbacks.arcticleCount} link={`/articles/${item._id}`} labelAdd={t('article.add')}/>
     ), [callbacks.arcticleCount, t]),
     modalItem: useCallback(item => (
-      <ItemModalCatalog item={item} onAdd={onAdd} selected={selectedArticles.find(id => item._id === id)}/>
+      <ItemModalCatalog item={item} onAdd={onAdd} selected={!!selectedArticles.find(id => item._id === id)}/>
     ), [t, onAdd])
   };
 

@@ -32,6 +32,18 @@ class Store {
     }
   }
 
+  createModule(name, base) {
+    this.actions[name] = new modules[base](this, name, this.config?.modules[base] || {} );
+    this.state[name] = this.actions[name].initState();
+
+    //this.setState({...this.getState()}, "Создание нового модуля");
+  }
+
+  deleteModule(name) {
+    delete this.actions[name];
+    delete this.state[name];
+  }
+
   /**
    * Подписка слушателя на изменения состояния
    * @param listener {Function}

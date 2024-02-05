@@ -11,7 +11,7 @@ function BasketAdd({close, title, count}) {
 
   const callbacks = {
     closeAdding: useCallback(() => close(), [store]),
-    setArticleCount: useCallback((count) => close(count), [store]),
+    setArticleCount: useCallback((value) => close(value), [store]),
   }
 
   return (
