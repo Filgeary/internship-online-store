@@ -1,13 +1,13 @@
-import CountModal from "@src/containers/count-modal";
-import Basket from "../basket";
 import { useSelector as useSelectorRedux } from "react-redux";
 import { createElement } from "react";
-import CatalogListModal from "@src/containers/catalog-list-modal";
+import catalogListModal from "./catalog-list-modal";
+import countModal from "./count-modal";
+import basket from "./basket";
 
 const modalsList = {
-  basket: Basket,
-  "count-picker": CountModal,
-  "catalog-list-modal": CatalogListModal,
+  basket: basket,
+  "count-picker": countModal,
+  "catalog-list-modal": catalogListModal,
 };
 
 function Modals() {
@@ -16,6 +16,7 @@ function Modals() {
   return activeModals.map((modal, i, arr) => {
     return createElement(modalsList[modal.name], {
       onTop: i === arr.length - 1,
+      id: modal.id,
     });
   });
 }

@@ -8,6 +8,7 @@ import List from "@src/components/list";
 import Pagination from "@src/components/pagination";
 import Spinner from "@src/components/spinner";
 import modalsActions from "@src/store-redux/modals/actions";
+import codeGenerator from "@src/utils/code-generator";
 
 function CatalogList() {
   const store = useStore();
@@ -32,15 +33,16 @@ function CatalogList() {
   const callbacks = {
     // Добавление в корзину
     addToBasket: (_id, message) => {
-      dispatch(modalsActions.open("count-picker", message));
+      const id = codeGenerator();
+      dispatch(modalsActions.open("count-picker", id, message));
       promiseRef.current?.then((count) => {
         store.actions.basket.addToBasket(_id, count);
-        dispatch(modalsActions.close("count-picker"));
+        dispatch(modalsActions.close(id));
       });
     },
     // Пагинация
     onPaginate: useCallback(
-      (page) => store.actions.catalog.setParams({ page }),
+      (page) => store.actions.catalog.setParams({ page }, false, true),
       [store]
     ),
     // генератор ссылки для пагинатора

@@ -3,7 +3,7 @@ export default {
    * Открытие модалки по названию
    * @param name
    */
-  open: (name, message = null) => {
+  open: (name, id, message = null) => {
     let resolveFunc;
     let rejectFunc;
     const promise = new Promise((resolve) => {
@@ -14,6 +14,7 @@ export default {
       type: "modal/open",
       payload: {
         name,
+        id,
         message,
         promise,
         resolve: resolveFunc,
@@ -26,7 +27,7 @@ export default {
    * Закрытие модалки
    * @param name
    */
-  close: (name) => {
-    return { type: "modal/close", payload: { name } };
+  close: (id) => {
+    return { type: "modal/close", payload: { id } };
   },
 };

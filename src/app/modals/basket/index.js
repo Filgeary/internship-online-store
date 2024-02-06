@@ -14,7 +14,7 @@ import ModalLayout from "@src/components/modal-layout";
 import BasketTotal from "@src/components/basket-total";
 import modalsActions from "@src/store-redux/modals/actions";
 
-function Basket({ onTop }) {
+function Basket({ onTop, id }) {
   const store = useStore();
   const dispatch = useDispatch();
 
@@ -28,7 +28,7 @@ function Basket({ onTop }) {
 
   useSelectorRedux((state) => {
     promiseRef.current = state.modals.activeModals.find(
-      (el) => el.name === "catalog-list-modal"
+      (el) => el.id === id
     )?.promise;
   });
 
@@ -43,7 +43,7 @@ function Basket({ onTop }) {
         // items.forEach((item) => {
         //   store.actions.basket.addToBasket(item, 1);
         // });
-        dispatch(modalsActions.close("catalog-list-modal"));
+        dispatch(modalsActions.close(id));
       });
     }, [store]),
     // Удаление из корзины
@@ -54,7 +54,7 @@ function Basket({ onTop }) {
     // Закрытие любой модалки
     closeModal: useCallback(() => {
       //store.actions.modals.close();
-      dispatch(modalsActions.close("basket"));
+      dispatch(modalsActions.close(id));
     }, [store]),
   };
 

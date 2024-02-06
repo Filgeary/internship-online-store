@@ -9,34 +9,46 @@ import Pagination from "@src/components/pagination";
 import Spinner from "@src/components/spinner";
 import modalsActions from "@src/store-redux/modals/actions";
 import ModalLayout from "@src/components/modal-layout";
-import CatalogFilter from "../catalog-filter";
-import ItemSelectable from "@src/components/item-selectable";
 
-function CatalogListModal({ onTop }) {
+import ItemSelectable from "@src/components/item-selectable";
+import useInit from "@src/hooks/use-init";
+import CatalogFilter from "@src/containers/catalog-filter";
+
+function CatalogListModal({ onTop, id }) {
   const store = useStore();
   const dispatch = useDispatch();
 
   const [selectedItems, setSelectedItems] = useState([]);
 
+  useInit(
+    async () => {
+      await Promise.all([
+        store.actions.catalog2.initParams(
+          store.actions.catalog2.initState().params
+        ),
+      ]);
+    },
+    [],
+    true
+  );
+
   const resolve = useSelectorRedux(
-    (state) =>
-      state.modals.activeModals.find((el) => el.name === "catalog-list-modal")
-        .resolve
+    (state) => state.modals.activeModals.find((el) => el.id === id).resolve
   );
 
   const select = useSelector((state) => ({
-    list: state.catalog.list,
-    page: state.catalog.params.page,
-    limit: state.catalog.params.limit,
-    count: state.catalog.count,
-    waiting: state.catalog.waiting,
+    list: state.catalog2.list,
+    page: state.catalog2.params.page,
+    limit: state.catalog2.params.limit,
+    count: state.catalog2.count,
+    waiting: state.catalog2.waiting,
   }));
 
   const promiseRef = useRef();
 
   useSelectorRedux((state) => {
     promiseRef.current = state.modals.activeModals.find(
-      (el) => el.name === "catalog-list-modal"
+      (el) => el.id === id
     )?.promise;
   });
 
@@ -50,11 +62,11 @@ function CatalogListModal({ onTop }) {
     },
     closeModal: useCallback(() => {
       //store.actions.modals.close();
-      dispatch(modalsActions.close("catalog-list-modal"));
+      dispatch(modalsActions.close(id));
     }, [store]),
     // Пагинация
     onPaginate: useCallback(
-      (page) => store.actions.catalog.setParams({ page }),
+      (page) => store.actions.catalog2.setParams({ page }),
       [store]
     ),
     // генератор ссылки для пагинатора
@@ -96,7 +108,7 @@ function CatalogListModal({ onTop }) {
       onTop={onTop}
     >
       <Spinner active={select.waiting}>
-        <CatalogFilter />
+        <CatalogFilter catalog="catalog2" />
         <List list={select.list} renderItem={renders.item} />
         <Pagination
           count={select.count}

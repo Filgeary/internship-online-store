@@ -15,7 +15,6 @@ function reducer(state = initialState, action) {
     //     title: action.payload.title || null,
     //   };
     case "modal/open":
-      console.log(state.activeModals);
       return {
         activeModals: [...state.activeModals, action.payload],
       };
@@ -27,7 +26,7 @@ function reducer(state = initialState, action) {
       // ]);
       return {
         activeModals: [
-          ...state.activeModals.filter((el) => el.name !== action.payload.name),
+          ...state.activeModals.filter((el) => el.id !== action.payload.id),
         ],
       };
     default:

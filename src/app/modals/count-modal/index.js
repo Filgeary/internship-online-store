@@ -12,13 +12,12 @@ import ModalLayout from "@src/components/modal-layout";
 import modalsActions from "@src/store-redux/modals/actions";
 import CountPicker from "@src/components/count-picker";
 
-function CountModal({ title, onTop }) {
+function CountModal({ title, onTop, id }) {
   const store = useStore();
   const dispatch = useDispatch();
 
   const resolve = useSelectorRedux(
-    (state) =>
-      state.modals.activeModals.find((el) => el.name === "count-picker").resolve
+    (state) => state.modals.activeModals.find((el) => el.id === id).resolve
   );
 
   const [count, setCount] = useState(1);
@@ -30,7 +29,7 @@ function CountModal({ title, onTop }) {
     // Закрытие любой модалки
     onCancel: useCallback(() => {
       //store.actions.modals.close();
-      dispatch(modalsActions.close("count-picker"));
+      dispatch(modalsActions.close(id));
       // onCancel();
     }, [store]),
     // Увеличить количество
