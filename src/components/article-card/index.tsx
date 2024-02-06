@@ -2,12 +2,13 @@ import {memo} from "react";
 import {cn as bem} from '@bem-react/classname';
 import numberFormat from "@src/utils/number-format";
 import './style.css';
-import { TArticle } from "@src/types/article";
+
+import { TUserTranslateFn } from "@src/i18n/types";
 
 type ArticleCardProps = {
   article: TArticle,
   onAdd: (id: string) => void,
-  t: (text: string) => string,
+  t: TUserTranslateFn,
 };
 
 function ArticleCard({article, onAdd, t}: ArticleCardProps) {

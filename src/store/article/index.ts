@@ -1,11 +1,16 @@
 import StoreModule from "../module";
 
+type TArticleState = {
+  data: TArticle | {},
+  waiting: boolean;
+}
+
 /**
  * Детальная ифнормация о товаре для страницы товара
  */
 class ArticleState extends StoreModule {
 
-  initState() {
+  initState(): TArticleState {
     return {
       data: {},
       waiting: false // признак ожидания загрузки

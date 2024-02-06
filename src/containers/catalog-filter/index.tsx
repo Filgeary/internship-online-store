@@ -9,7 +9,6 @@ import treeToList from "@src/utils/tree-to-list";
 import listToTree from "@src/utils/list-to-tree";
 
 import { useCatalog } from "../catalog";
-import { TItem } from "@src/types/item";
 
 function CatalogFilter() {
   const { callbacks, select } = useCatalog();

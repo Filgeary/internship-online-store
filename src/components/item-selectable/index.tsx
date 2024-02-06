@@ -5,7 +5,6 @@ import React, {memo} from "react";
 import {cn as bem} from '@bem-react/classname';
 
 import numberFormat from "@src/utils/number-format";
-import { TItem } from '@src/types/item';
 
 type ItemSelectableProps = {
   item: TItem;

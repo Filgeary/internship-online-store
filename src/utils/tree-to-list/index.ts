@@ -1,5 +1,3 @@
-import { TTree } from "@src/types/tree";
-
 /**
  * Преобразование списка в иерархию.
  * @param tree {Array} Иерархия - список узлов со свойством children.

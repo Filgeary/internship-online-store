@@ -1,5 +1,3 @@
-import { TItem } from "@src/types/item";
-
 type TArticleState = {
   data: TItem | {};
   waiting: boolean;

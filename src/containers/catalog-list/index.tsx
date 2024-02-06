@@ -7,7 +7,6 @@ import Pagination from "@src/components/pagination";
 import Spinner from "@src/components/spinner";
 
 import { useCatalog } from "../catalog";
-import { TItem } from "@src/types/item";
 
 function CatalogList() {
   const { select, callbacks } = useCatalog();

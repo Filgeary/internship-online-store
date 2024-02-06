@@ -3,7 +3,6 @@ import numberFormat from "@src/utils/number-format";
 import {cn as bem} from "@bem-react/classname";
 import {Link} from "react-router-dom";
 import './style.css';
-import { TItem } from '@src/types/item';
 
 type ItemBasketProps = {
   item: TItem;

@@ -1,5 +1,4 @@
 import StoreModule from "../module";
-import { TItem } from "@src/types/item";
 
 /**
  * Покупательская корзина

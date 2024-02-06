@@ -7,7 +7,6 @@ import PropTypes from "prop-types";
 import {cn as bem} from '@bem-react/classname';
 
 import numberFormat from "@src/utils/number-format";
-import { TItem } from '@src/types/item';
 
 type ItemProps = {
   item: TItem,

@@ -2,10 +2,11 @@ import {memo} from "react";
 import {cn as bem} from '@bem-react/classname';
 import numberFormat from "@src/utils/number-format";
 import './style.css';
+import { TUserTranslateFn } from "@src/i18n/types";
 
 type BasketTotalProps = {
   sum?: number;
-  t: (text: string) => string;
+  t: TUserTranslateFn;
 };
 
 const defaultProps: BasketTotalProps = {

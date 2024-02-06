@@ -7,7 +7,6 @@ import Spinner from "@src/components/spinner";
 import ItemSelectable from "@src/components/item-selectable";
 
 import { useCatalog } from "../catalog";
-import { TItem } from "@src/types/item";
 
 type CatalogListAppendProps = {
   onItemClick?: (item: TItem) => void;

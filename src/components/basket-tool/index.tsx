@@ -3,9 +3,11 @@ import {cn as bem} from '@bem-react/classname';
 import numberFormat from "@src/utils/number-format";
 import './style.css';
 
+import { TUserTranslateFn } from "@src/i18n/types";
+
 type BasketToolProps = {
   onOpen: () => void;
-  t?: (text: string, amount?: number) => string;
+  t?: TUserTranslateFn;
   sum?: number;
   amount?: number;
 };

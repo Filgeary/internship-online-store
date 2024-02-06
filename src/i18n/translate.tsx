@@ -1,4 +1,6 @@
-import * as translations from './translations';
+import { translations } from './translations';
+
+import { TTranslateFn, TAllLangsPick } from './types';
 
 /**
  * Перевод фразу по словарю
@@ -7,17 +9,17 @@ import * as translations from './translations';
  * @param [plural] {Number} Число для плюрализации
  * @returns {String} Переведенный текст
  */
-export default function translate(lang: string, text: string, plural: number): string {
-  let result = translations[lang] && (text in translations[lang])
-    ? translations[lang][text]
-    : text;
+const translate: TTranslateFn = (lang: TLangs, text: TAllLangsPick, plural: number): string => {
+  let result = translations?.[lang]?.[text] ?? text;
 
-  if (typeof plural !== 'undefined'){
+  if (typeof plural !== 'undefined' && typeof result === 'object'){
     const key = new Intl.PluralRules(lang).select(plural);
     if (key in result) {
       result = result[key];
     }
   }
 
-  return result;
+  return typeof result === 'object' ? text : result;
 }
+
+export default translate;

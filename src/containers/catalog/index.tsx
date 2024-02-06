@@ -2,7 +2,6 @@ import React, { memo, createContext, useContext, useCallback } from 'react'
 
 import useStore from '@src/hooks/use-store';
 import useSelector from '@src/hooks/use-selector';
-import { TItem } from '@src/types/item';
 
 const CatalogContext = createContext(null);
 

@@ -1,3 +1,6 @@
+export {};
+
+declare global {
 export interface TArticle {
   _id: string;
   _key: string;
@@ -32,3 +35,4 @@ export type TCategory = {
 };
 
 export type TProto = {};
+}

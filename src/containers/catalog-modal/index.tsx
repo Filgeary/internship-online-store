@@ -11,7 +11,6 @@ import SuccessBlock from '@src/components/success-block';
 import Entities from '@src/components/entities';
 import CatalogListAppend from '../catalog-list-append';
 import Catalog from '../catalog';
-import { TItem } from '@src/types/item';
 
 function CatalogModal() {
   const store = useStore();

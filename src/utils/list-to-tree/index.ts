@@ -1,5 +1,3 @@
-import { TChildren, TTree } from "@src/types/tree";
-
 /**
  * Преобразование списка в иерархию
  * @param list {Array} Список объектов с отношением на родителя

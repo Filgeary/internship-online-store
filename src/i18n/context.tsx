@@ -1,10 +1,19 @@
 import {createContext, useMemo, useState} from "react";
 import translate from "./translate";
 
+import { TUserTranslateFn } from "./types";
+
 /**
  * @type {React.Context<{}>}
  */
-export const I18nContext = createContext({});
+
+export type TI18nContextState = {
+  lang: TLangs;
+  setLang: (value: TLangs) => void;
+  t: TUserTranslateFn;
+};
+
+export const I18nContext = createContext<TI18nContextState>({} as TI18nContextState);
 
 type I18nProviderProps = {
   children?: React.ReactNode;
@@ -17,9 +26,9 @@ type I18nProviderProps = {
  */
 export function I18nProvider({children}: I18nProviderProps) {
 
-  const [lang, setLang] = useState('ru');
+  const [lang, setLang] = useState<TLangs>('ru');
 
-  const i18n = useMemo(() => ({
+  const i18n = useMemo<TI18nContextState>(() => ({
     // Код локали
     lang,
     // Функция для смены локали
