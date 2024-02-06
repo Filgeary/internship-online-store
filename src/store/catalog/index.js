@@ -48,7 +48,6 @@ class CatalogState extends StoreModule {
       { ...this.initState().params, ...validParams, ...newParams },
       true
     );
-    console.log(this.config);
   }
 
   /**
@@ -70,7 +69,6 @@ class CatalogState extends StoreModule {
    * @returns {Promise<void>}
    */
 
-  
   async setParams(newParams = {}, replaceHistory = false) {
     const params = { ...this.getState().params, ...newParams };
 
@@ -85,7 +83,7 @@ class CatalogState extends StoreModule {
     );
 
     // Сохранить параметры в адрес страницы
-    if (!this.config.loaded) {
+    if (this.name !== "catalogModal") {
       let urlSearch = new URLSearchParams(
         exclude(params, this.initState().params)
       ).toString();

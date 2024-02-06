@@ -13,9 +13,6 @@ const config = {
         // Названия токена в АПИ
         tokenHeader: "X-Token",
       },
-      catalogModal: {
-        loaded: true,
-      },
     },
   },
   api: {
