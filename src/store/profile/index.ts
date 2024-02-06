@@ -1,11 +1,16 @@
 import StoreModule from "../module";
 
+type TProfileState = {
+  data: TProfile | {};
+  waiting: boolean;
+};
+
 /**
  * Детальная информация о пользователе
  */
 class ProfileState extends StoreModule {
 
-  initState() {
+  initState(): TProfileState {
     return {
       data: {},
       waiting: false // признак ожидания загрузки
@@ -23,7 +28,7 @@ class ProfileState extends StoreModule {
       waiting: true
     });
 
-    const {data} = await this.services.api.request({url: `/api/v1/users/self`});
+    const {data} = await this.services.api.request<TProfile>({url: `/api/v1/users/self`});
 
     // Профиль загружен успешно
     this.setState({

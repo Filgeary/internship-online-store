@@ -2,17 +2,30 @@ import { TConfig } from "@src/config";
 import StoreModule from "../module";
 import exclude from "@src/utils/exclude";
 
+type TCatalogState = {
+  list: TArticle[];
+  params: {
+    page: number;
+    limit: number;
+    sort: string;
+    query: string;
+    category: string;
+  };
+  count: number;
+  waiting: boolean;
+};
+
 /**
  * Состояние каталога - параметры фильтра исписок товара
  */
 class CatalogState extends StoreModule {
-  config: TConfig['store']['modules']['separateCatalog'];
+  config: TConfig['store']['modules']['catalog'];
 
   /**
    * Начальное состояние
    * @return {Object}
    */
-  initState() {
+  initState(): TCatalogState {
     return {
       list: [],
       params: {
@@ -24,7 +37,6 @@ class CatalogState extends StoreModule {
       },
       count: 0,
       waiting: false,
-      queries: [],
     }
   }
 
@@ -102,7 +114,8 @@ class CatalogState extends StoreModule {
 
     let res = null;
     try {
-      res = await this.services.api.request({url: `/api/v1/articles?${new URLSearchParams(apiParams)}`, timeout: 5000});
+      res = await this.services.api.request<{ items: TArticle[] }>({url: `/api/v1/articles?${new URLSearchParams(apiParams)}`, timeout: 5000});
+      // this.services.api.
     } catch (err) {
       alert(err.message);
       return;

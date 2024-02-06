@@ -2,6 +2,14 @@ import { TConfig } from "@src/config";
 import StoreModule from "../module";
 import simplifyErrors from "@src/utils/simplify-errors";
 
+type TSessionState = {
+  user: TSession | {};
+  token: string | null;
+  errors: string[] | null;
+  waiting: boolean;
+  exists: boolean;
+};
+
 /**
  * Сессия
  */
@@ -12,7 +20,7 @@ class SessionState extends StoreModule {
    * Начальное состояние
    * @return {Object}
    */
-  initState() {
+  initState(): TSessionState {
     return {
       user: {},
       token: null,
@@ -31,10 +39,10 @@ class SessionState extends StoreModule {
   async signIn(data, onSuccess) {
     this.setState(this.initState(), 'Авторизация');
     try {
-      const res = await this.services.api.request({
+      const res = await this.services.api.request<{ token: string; user: TProfile }>({
         url: '/api/v1/users/sign',
         method: 'POST',
-        body: JSON.stringify(data)
+        body: JSON.stringify(data),
       });
 
       if (!res.data.error) {
@@ -48,6 +56,8 @@ class SessionState extends StoreModule {
 
         // Запоминаем токен, чтобы потом автоматически аутентифицировать юзера
         window.localStorage.setItem('token', res.data.result.token);
+        
+        console.log(res.data.result);
 
         // Устанавливаем токен в АПИ
         this.services.api.setHeader(this.config.tokenHeader, res.data.result.token);
@@ -96,7 +106,7 @@ class SessionState extends StoreModule {
       // Устанавливаем токен в АПИ
       this.services.api.setHeader(this.config.tokenHeader, token);
       // Проверяем токен выбором своего профиля
-      const res = await this.services.api.request({url: '/api/v1/users/self'});
+      const res = await this.services.api.request<TProfile>({url: '/api/v1/users/self'});
 
       if (res.data.error) {
         // Удаляем плохой токен

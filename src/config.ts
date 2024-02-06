@@ -17,10 +17,14 @@ const config = {
         // Должны ли быть только уникальные модалки
         onlyUnique: false,
       },
-      separateCatalog: {
+      catalog: {
         // Не добавлять в URL при инициализации
         ignoreUrlOnInit: false,
         // Не писать в URL при добавлении
+        ignoreUrl: false,
+      },
+      separateCatalog: {
+        ignoreUrlOnInit: false,
         ignoreUrl: true,
       }
     }

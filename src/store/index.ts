@@ -1,15 +1,19 @@
 import * as modules from './exports';
+
+import { TModules } from './types';
 import { TConfig } from '@src/config';
+
+type TActions = keyof TModules;
+type TListeners = Array<(args: any | any[]) => void>;
 
 /**
  * Хранилище состояния приложения
  */
 class Store {
-
-  services: any;
+  services: TModules;
   config: TConfig['store'];
-  listeners: any;
-  state: any;
+  listeners: TListeners;
+  state: object;
   actions: any;
 
   /**

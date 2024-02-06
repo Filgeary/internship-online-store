@@ -2,10 +2,23 @@ import { TConfig } from "@src/config";
 import StoreModule from "../module";
 import generateHash from '@src/utils/generate-hash';
 
-class ModalsState extends StoreModule {
+type TModalsState = {
+  mapOfOpened: {
+    name: string;
+    resolve: (...value: any[]) => void;
+    reject: (...value: any[]) => void;
+  } | {};
+  lastOpened: string | null;
+};
+
+interface IModals {
+  open: (name: string) => void;
+}
+
+class ModalsState extends StoreModule implements IModals {
   config: TConfig['store']['modules']['modals']
 
-  initState() {
+  initState(): TModalsState {
     return {
       mapOfOpened: {}, // Для быстрого поиска
       lastOpened: null, // Последняя открытая модалка (ID),

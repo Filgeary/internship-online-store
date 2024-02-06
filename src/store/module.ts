@@ -1,15 +1,18 @@
 import { TConfig } from "@src/config";
 
+import Services from "@src/services";
+import Store from ".";
+
 /**
  * Базовый класс для модулей хранилища
  * Для группировки действий над внешним состоянием
  */
 class StoreModule {
 
-  store: any;
-  name: string;
-  config: TConfig | {};
-  services: any;
+  readonly name: string;
+  readonly config: TConfig | {};
+  store: Store;
+  services: Services;
 
   /**
    * @param store {Store}

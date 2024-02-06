@@ -1,8 +1,12 @@
 import StoreModule from "../module";
 
+type TLocaleState = {
+  lang: TLangs;
+};
+
 class LocaleState extends StoreModule {
 
-  initState() {
+  initState(): TLocaleState {
     return {
       lang: 'ru'
     };

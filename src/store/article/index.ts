@@ -30,7 +30,7 @@ class ArticleState extends StoreModule {
     });
 
     try {
-      const res = await this.services.api.request({
+      const res = await this.services.api.request<TArticle>({
         url: `/api/v1/articles/${id}?fields=*,madeIn(title,code),category(title)`
       });
 

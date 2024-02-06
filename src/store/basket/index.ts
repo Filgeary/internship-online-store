@@ -1,11 +1,19 @@
 import StoreModule from "../module";
 
+type TBasketState = {
+  list: TArticle[];
+  sum: number;
+  amount: number;
+  active: string | null;
+  waiting: boolean; 
+};
+
 /**
  * Покупательская корзина
  */
 class BasketState extends StoreModule {
 
-  initState() {
+  initState(): TBasketState {
     return {
       list: [],
       sum: 0,
@@ -38,7 +46,7 @@ class BasketState extends StoreModule {
       // Поиск товара в каталоге, чтобы его добавить в корзину.
       let res = null;
       try {
-        res = await this.services.api.request({url: `/api/v1/articles/${_id}`, timeout: 5000});
+        res = await this.services.api.request<TArticle>({url: `/api/v1/articles/${_id}`, timeout: 5000});
       } catch (err) {
         alert(err.message);
         this.setState({

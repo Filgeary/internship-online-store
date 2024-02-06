@@ -7,8 +7,8 @@ import { TConfig } from "./config";
 class Services {
 
   config: TConfig;
-  _api: any;
-  _store: any;
+  _api: APIService;
+  _store: Store;
   _redux: any;
 
   constructor(config) {

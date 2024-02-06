@@ -1,5 +1,9 @@
 import StoreModule from "../module";
 
+type TCategoriesState = {
+  list: string[];
+  waiting: boolean;
+};
 
 /**
  * Список категорий
@@ -10,7 +14,7 @@ class CategoriesState extends StoreModule {
    * Начальное состояние
    * @return {Object}
    */
-  initState() {
+  initState(): TCategoriesState {
     return {
       list: [],
       waiting: false
@@ -23,7 +27,7 @@ class CategoriesState extends StoreModule {
   async load() {
     this.setState({...this.getState(), waiting: true}, 'Ожидание загрузки категорий');
 
-    const res = await this.services.api.request({
+    const res = await this.services.api.request<{ items: string[] }>({
       url: `/api/v1/categories?fields=_id,title,parent(_id)&limit=*`
     });
 

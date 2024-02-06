@@ -1,9 +1,23 @@
 import { TConfig } from "@src/config";
+import Services from "@src/services";
+
+type TRequest = {
+  url: string;
+  method?: string;
+  headers?: Record<string, string>;
+  timeout?: number;
+} & Partial<any>; // Для rest-параметра options
+
+type TResponse<T> = {
+  data: {result: T, error: { data: { issues: Array<{ message: string }> } }};
+  status: number;
+  headers: Record<string, string>;
+}
 
 class APIService {
-  services: any;
+  services: Services;
   config: TConfig['api'];
-  defaultHeaders: any;
+  defaultHeaders: Record<string, string>;
 
   /**
    * @param services {Services} Менеджер сервисов
@@ -26,7 +40,7 @@ class APIService {
    * @param options
    * @returns {Promise<{}>}
    */
-  async request<T>({url, method = 'GET', headers = {}, timeout = null, ...options}): Promise<{ data: T[], status: number, headers: Record<string, string> }> {
+  async request<T>({url, method = 'GET', headers = {}, timeout = null, ...options}: TRequest): Promise<TResponse<T>> {
     if (!url.match(/^(http|\/\/)/)) url = this.config.baseUrl + url;
 
     let timerOfErr = null;

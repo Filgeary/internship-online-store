@@ -1,3 +1,5 @@
+import Services from "@src/services";
+
 export default {
   /**
    * Загрузка товара
@@ -5,12 +7,12 @@ export default {
    * @return {Function}
    */
   load: (id) => {
-    return async (dispatch, getState, services) => {
+    return async (dispatch, getState, services: Services) => {
       // Сброс текущего товара и установка признака ожидания загрузки
       dispatch({type: 'article/load-start'});
 
       try {
-        const res = await services.api.request({
+        const res = await services.api.request<TArticle>({
           url: `/api/v1/articles/${id}?fields=*,madeIn(title,code),category(title)`
         });
         // Товар загружен успешно
