@@ -1,22 +1,24 @@
 {
-    "compilerOptions": {
-      "target": "ES5", //Указывает, какую версию JavaScript должен генерировать компилятор
-      "module": "ESNext", //Использует синтаксис модулей ECMAScript Next (наиболее современный синтаксис модулей)
-      "moduleResolution": "node", //Компилятор будет использовать Node.js-подобный алгоритм разрешения модулей.
-      "lib": [
-        // Список библиотек, которые будут доступны во время компиляции ("DOM" для доступа к браузерным API и "ESNext" для современных возможностей JavaScript)
-        "DOM",
-        "ESNext"
-      ],
-      "jsx": "react-jsx", // Указывает, как компилировать JSX-код
-      "noEmit": true, // Запрещает компилятору создавать выходные JavaScript-файлы.
-      "isolatedModules": true, // Включает режим изолированных модулей, что усиливает проверки типов между модулями
-      "esModuleInterop": true, // Позволяет использовать импорты и экспорты совместимые с ES6/ES2015.
-      "strict": false, //  Включает строгий режим TypeScript
-      "skipLibCheck": true, // Определяет, нужно ли выполнять проверку типов для файлов .d.ts (объявления типов) библиотек. Установка в true может ускорить процесс компиляции.
-      "forceConsistentCasingInFileNames": true, // При установке в true требует согласованности регистра символов в именах файлов
-      "resolveJsonModule": true // Позволяет импортировать JSON-файлы как модули.
-    },
-    "include": ["src/**/*"] // Определяет, какие файлы должны быть включены в процесс компиляции
-  }
-  
+  "compilerOptions": {
+    "target": "es6",
+    "lib": [
+      "dom",
+      "dom.iterable"
+      // "esnext"
+    ],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": false,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    // "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx"
+  },
+  "include": ["src"]
+}
