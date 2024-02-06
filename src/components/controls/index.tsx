@@ -1,14 +1,19 @@
-import { memo } from "react";
+import React, { memo, FC } from "react";
 import PropTypes from "prop-types";
 import "./style.css";
 
-function Controls({ onAdd, title  }) {
+interface IControls {
+  onAdd: () => void;
+  title: string;
+}
+
+const Controls: FC<IControls> = ({ onAdd, title }: IControls) => {
   return (
     <div className="Controls">
       <button onClick={() => onAdd()}>{title}</button>
     </div>
   );
-}
+};
 
 Controls.propTypes = {
   onAdd: PropTypes.func,
