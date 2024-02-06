@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "target": "es6",                       /* Уровень версии JavaScript для компиляции вашего кода */
+    "lib": ["dom", "dom.iterable", "esnext"],   /* Библиотеки для работы с TypeScript */
+    "allowJs": true,                      /* Разрешить компиляцию JavaScript файлов */
+    "skipLibCheck": true,                 /* Пропустить проверку типов для файлов .d.ts */
+    "esModuleInterop": true,               /* Разрешить импорт модулей CommonJS как обычные ES6 модули */
+    "allowSyntheticDefaultImports": true, /* Разрешить импорт модулей с помощью default export из модулей, где нет default export */
+    "strict": true,                       /* Включает все строгие проверки */
+    "forceConsistentCasingInFileNames": true, /* Гарантия согласованности регистра в именах файлов */
+    "module": "esnext",                   /* Тип модуля */
+    "moduleResolution": "node",           /* Разрешение пути модуля */
+    "jsx": "react",                       /* Включить поддержку JSX */
+    "declaration": true,                  /* Генерация .d.ts файлов */
+    "sourceMap": true,                    /* Генерация source maps */
+    "rootDir": "./src",                   /* Корневая директория вашего проекта */
+    "outDir": "./dist"                    /* Директория, в которую будут скомпилированы .js и .d.ts файлы */
+  },
+  "include": ["src"]                      /* Пути, которые должны включаться в компиляцию */
+}
