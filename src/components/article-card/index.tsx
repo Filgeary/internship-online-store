@@ -1,10 +1,27 @@
 import {memo} from "react";
-import PropTypes from 'prop-types';
 import {cn as bem} from '@bem-react/classname';
 import numberFormat from "@src/utils/number-format";
 import './style.css';
 
-function ArticleCard({article, onAdd, t}) {
+interface IArticleCardProps {
+  article: {
+    _id: string,
+    description: string,
+    madeIn: {
+      title: string,
+      code: string
+    } | null,
+    category: {
+      title: string
+    } | null,
+    edition: string | number,
+    price: number
+  }
+  onAdd: (id: string) => void
+  t: (text: string) => string
+}
+
+const ArticleCard: React.FC<IArticleCardProps> = ({article, onAdd, t}) => {
   const cn = bem('ArticleCard');
   return (
     <div className={cn()}>
@@ -28,24 +45,6 @@ function ArticleCard({article, onAdd, t}) {
       <button onClick={() => onAdd(article._id)}>{t('article.add')}</button>
     </div>
   );
-}
-
-ArticleCard.propTypes = {
-  article: PropTypes.shape({
-    _id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    description: PropTypes.string,
-    madeIn: PropTypes.object,
-    category: PropTypes.object,
-    edition: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    price: PropTypes.number
-  }).isRequired,
-  onAdd: PropTypes.func,
-  t: PropTypes.func
-};
-
-ArticleCard.defaultProps = {
-  onAdd: () => {},
-  t: (text) => text
 }
 
 export default memo(ArticleCard);

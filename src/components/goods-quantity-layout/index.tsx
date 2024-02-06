@@ -1,9 +1,14 @@
-import {memo} from "react";
-import PropTypes from "prop-types";
+import {memo, ReactNode, FC} from "react";
 import {cn as bem} from '@bem-react/classname';
 import './style.css';
 
-function GoodsQuantityLayout({children, handleCancelClick, handleAddClick}){
+interface IGoodsQuantityLayoutProps {
+  children: ReactNode;
+  handleCancelClick: () => void;
+  handleAddClick: () => void;
+}
+
+const GoodsQuantityLayout: FC<IGoodsQuantityLayoutProps> = ({ children, handleCancelClick, handleAddClick }) => {
   const cn = bem('Goods-quantity');
   return (
     <div className={cn()}>
@@ -20,16 +25,5 @@ function GoodsQuantityLayout({children, handleCancelClick, handleAddClick}){
     </div>
   )
 }
-
-GoodsQuantityLayout.propTypes = {
-  children: PropTypes.node,
-  handleCancelClick: PropTypes.func,
-  handleAddClick: PropTypes.func
-};
-
-GoodsQuantityLayout.defaultProps = {
-    handleCancelClick: () => {},
-    handleAddClick: () => {},
-  }
 
 export default memo(GoodsQuantityLayout);

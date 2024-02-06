@@ -1,10 +1,13 @@
-import {memo} from "react";
-import PropTypes from 'prop-types';
+import { memo, FC } from 'react';
 import {cn as bem} from '@bem-react/classname';
 import numberFormat from "@src/utils/number-format";
 import './style.css';
 
-function BasketTotal({sum, t}) {
+interface IBasketTotalProps {
+  sum?: number
+  t: (text: string, number?: number) => string
+}
+const BasketTotal: FC<IBasketTotalProps> = ({ sum = 0, t }) => {
   const cn = bem('BasketTotal');
   return (
     <div className={cn()}>
@@ -13,16 +16,6 @@ function BasketTotal({sum, t}) {
       <span className={cn('cell')}></span>
     </div>
   );
-}
-
-BasketTotal.propTypes = {
-  sum: PropTypes.number,
-  t: PropTypes.func
-};
-
-BasketTotal.defaultProps = {
-  sum: 0,
-  t: (text) => text
 }
 
 export default memo(BasketTotal);

@@ -7,7 +7,6 @@ import List from "@src/components/list";
 import Pagination from "@src/components/pagination";
 import Spinner from "@src/components/spinner";
 import modalsActions from '@src/store-redux/modals/actions';
-import codeGenerator from "@src/utils/code-generator"
 import generateUniqueId from "@src/utils/unicque_id"
 import { useDispatch } from "react-redux";
 
@@ -27,7 +26,6 @@ function CatalogList({stateName}) {
     selected: state.basket.selected
   }));
 
-  const generatedId = codeGenerator()
   const idModal = generateUniqueId()
 
   const callbacks = {
@@ -85,7 +83,7 @@ function CatalogList({stateName}) {
         labelAdd={t('article.add')}
         disabled={stateName === 'catalog_modal' ? 'disabled' : ''}
         handleClickButton={stateName === 'catalog_modal' ? callbacks.changeSelected : () => {}}
-        hideLink={stateName === 'catalog_modal' && false}
+        hideLink={stateName === 'catalog_modal' ? false : true}
         />
     ), [callbacks.openModal, t, callbacks.changeSelected]),
   };
