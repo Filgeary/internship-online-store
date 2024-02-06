@@ -1,9 +1,14 @@
-import * as modules from './exports.js';
+// import { Config } from '@src/config.js';
+import * as modules from './exports.ts';
+// import Services from '@src/services.js';
 
 /**
  * Хранилище состояния приложения
  */
 class Store {
+  // services: Services;
+  // config: {} | Config;
+  // state: object;
 
   /**
    * @param services {Services}
