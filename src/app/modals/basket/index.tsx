@@ -13,8 +13,9 @@ import List from "@src/components/list";
 import ModalLayout from "@src/components/modal-layout";
 import BasketTotal from "@src/components/basket-total";
 import modalsActions from "@src/store-redux/modals/actions";
+import { ModalProps } from "../types";
 
-function Basket({ onTop, id }) {
+function Basket({ onTop, id }: ModalProps) {
   const store = useStore();
   const dispatch = useDispatch();
 

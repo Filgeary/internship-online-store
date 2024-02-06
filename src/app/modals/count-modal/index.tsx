@@ -11,13 +11,15 @@ import useTranslate from "@src/hooks/use-translate";
 import ModalLayout from "@src/components/modal-layout";
 import modalsActions from "@src/store-redux/modals/actions";
 import CountPicker from "@src/components/count-picker";
+import { ModalProps } from "../types";
 
-function CountModal({ title, onTop, id }) {
+function CountModal({ title, onTop, id }: ModalProps) {
   const store = useStore();
   const dispatch = useDispatch();
 
   const resolve = useSelectorRedux(
-    (state) => state.modals.activeModals.find((el) => el.id === id).resolve
+    (state: any) =>
+      state.modals.activeModals.find((el: any) => el.id === id).resolve
   );
 
   const [count, setCount] = useState(1);
@@ -44,6 +46,7 @@ function CountModal({ title, onTop, id }) {
     },
   };
 
+  //@ts-ignore
   const { t } = useTranslate();
 
   return (
@@ -53,6 +56,7 @@ function CountModal({ title, onTop, id }) {
       onClose={callbacks.onCancel}
       onTop={onTop}
     >
+      {/* @ts-ignore  */}
       <CountPicker callbacks={callbacks} t={t} count={count} title={title} />
     </ModalLayout>
   );

@@ -13,8 +13,9 @@ import ModalLayout from "@src/components/modal-layout";
 import ItemSelectable from "@src/components/item-selectable";
 import useInit from "@src/hooks/use-init";
 import CatalogFilter from "@src/containers/catalog-filter";
+import { ModalProps } from "../types";
 
-function CatalogListModal({ onTop, id }) {
+function CatalogListModal({ onTop, id }: ModalProps) {
   const store = useStore();
   const dispatch = useDispatch();
 
