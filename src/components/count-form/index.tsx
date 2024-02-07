@@ -1,17 +1,16 @@
 import { memo, useCallback, useState } from "react";
 import { cn as bem } from "@bem-react/classname";
-
 import "./style.css";
 
-interface ICountFormProps {
-  onSubmit: (number: number) => {};
+type ICountFormProps = {
+  onSubmit: (number: number) => void;
   closeModal: () => void;
   basketUnit: string;
   title: string;
   ok: string;
   cancel: string;
-}
-const CountForm: React.FC<ICountFormProps> = (props) => {
+};
+function CountForm(props: ICountFormProps) {
   const cn = bem("CountForm");
   const [count, setCount] = useState(0);
 
@@ -58,6 +57,15 @@ const CountForm: React.FC<ICountFormProps> = (props) => {
       </div>
     </form>
   );
-};
+}
+
+/* CountForm.defaultProps = {
+  onSubmit: () => {},
+  closeModal: () => {},
+  basketUnit: "шт",
+  title: "Введите количество товара",
+  ok: "Ок",
+  cancel: "Отмена",
+}; */
 
 export default memo(CountForm);

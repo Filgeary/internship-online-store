@@ -1,10 +1,17 @@
-import {memo} from 'react';
-import PropTypes from "prop-types";
-import {cn as bem} from '@bem-react/classname'
-import './style.css';
+import { memo } from "react";
+import { cn as bem } from "@bem-react/classname";
+import "./style.css";
 
-function Pagination(props) {
+type IPaginationProps = {
+  page: number;
+  limit: number;
+  count: number;
+  indent: number;
+  onChange: (pageNumber: number | null) => void;
+  makeLink: (pageNumber: number) => string;
+};
 
+function Pagination(props: IPaginationProps) {
   // Количество страниц
   const length = Math.ceil(props.count / Math.max(props.limit, 1));
 
@@ -27,47 +34,46 @@ function Pagination(props) {
   // Последняя страница
   if (right < length) items.push(length);
 
-  const onClickHandler = (number) => (e) => {
-    if (props.onChange) {
-      e.preventDefault();
-      props.onChange(number);
-    }
-  }
+  const onClickHandler =
+    (number: number | null) => (e: { preventDefault: () => void }) => {
+      if (props.onChange) {
+        e.preventDefault();
+        props.onChange(number);
+      }
+    };
 
-  const cn = bem('Pagination');
+  const cn = bem("Pagination");
   return (
     <ul className={cn()}>
       {items.map((number, index) => (
-        <li key={index}
-            className={cn('item', {active: number === props.page, split: !number})}
-            onClick={onClickHandler(number)}>
-          {number
-            ? (props.makeLink
-                ? <a href={props.makeLink(number)}>{number}</a>
-                : number
+        <li
+          key={index}
+          className={cn("item", {
+            active: number === props.page,
+            split: !number,
+          })}
+          onClick={onClickHandler(number)}
+        >
+          {number ? (
+            props.makeLink ? (
+              <a href={props.makeLink(number)}>{number}</a>
+            ) : (
+              number
             )
-            : '...'
-          }
+          ) : (
+            "..."
+          )}
         </li>
       ))}
     </ul>
-  )
+  );
 }
 
-Pagination.propTypes = {
-  page: PropTypes.number,
-  limit: PropTypes.number,
-  count: PropTypes.number,
-  indent: PropTypes.number,
-  onChange: PropTypes.func,
-  makeLink: PropTypes.func,
-}
-
-Pagination.defaultProps = {
+/* Pagination.defaultProps = {
   page: 1,
   limit: 10,
   count: 1000,
   indent: 1,
-}
+}; */
 
 export default memo(Pagination);

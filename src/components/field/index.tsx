@@ -2,12 +2,12 @@ import { memo } from "react";
 import { cn as bem } from "@bem-react/classname";
 import "./style.css";
 
-interface IFieldProps {
+type IFieldProps = {
   label: React.ReactNode;
   error: React.ReactNode;
   children: React.ReactNode;
-}
-const Field: React.FC<IFieldProps> = ({ label, error, children }) => {
+};
+function Field({ label, error, children }: IFieldProps) {
   const cn = bem("Field");
   return (
     <div className={cn()}>
@@ -16,6 +16,8 @@ const Field: React.FC<IFieldProps> = ({ label, error, children }) => {
       <div className={cn("error")}>{error}</div>
     </div>
   );
-};
+}
+
+/* Field.defaultProps = {}; */
 
 export default memo(Field);

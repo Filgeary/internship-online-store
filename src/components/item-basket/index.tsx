@@ -4,7 +4,7 @@ import { cn as bem } from "@bem-react/classname";
 import { Link } from "react-router-dom";
 import "./style.css";
 
-interface IItemBasketProps {
+type IItemBasketProps = {
   item: {
     _id: string | number;
     title: string;
@@ -17,9 +17,9 @@ interface IItemBasketProps {
   labelCurr: string;
   labelDelete: string;
   labelUnit: string;
-}
+};
 
-const ItemBasket: React.FC<IItemBasketProps> = (props) => {
+function ItemBasket(props: IItemBasketProps) {
   const cn = bem("ItemBasket");
 
   const callbacks = {
@@ -50,6 +50,13 @@ const ItemBasket: React.FC<IItemBasketProps> = (props) => {
       </div>
     </div>
   );
-};
+}
+
+/* ItemBasket.defaultProps = {
+  onRemove: () => {},
+  labelCurr: "₽",
+  labelUnit: "шт",
+  labelDelete: "Удалить",
+}; */
 
 export default memo(ItemBasket);

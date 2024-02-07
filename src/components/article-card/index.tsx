@@ -3,7 +3,7 @@ import { cn as bem } from "@bem-react/classname";
 import numberFormat from "@src/utils/number-format";
 import "./style.css";
 
-interface IArticleCardProps {
+type IArticleCardProps = {
   article: {
     _id: string;
     description: string;
@@ -14,9 +14,9 @@ interface IArticleCardProps {
   };
   onAdd: (id: string) => void;
   t: (text: string) => string;
-}
+};
 
-const ArticleCard: React.FC<IArticleCardProps> = ({ article, onAdd, t }) => {
+function ArticleCard({ article, onAdd, t }: IArticleCardProps) {
   const cn = bem("ArticleCard");
 
   return (
@@ -43,6 +43,13 @@ const ArticleCard: React.FC<IArticleCardProps> = ({ article, onAdd, t }) => {
       <button onClick={() => onAdd(article._id)}>{t("article.add")}</button>
     </div>
   );
-};
+}
+
+
+/* ArticleCard.defaultProps = {
+  onAdd: () => {},
+  t: (text: any) => text
+} */
+
 
 export default memo(ArticleCard);

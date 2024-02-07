@@ -5,7 +5,7 @@ import "./style.css";
 import { Link } from "react-router-dom";
 import useSelector from "@src/hooks/use-selector";
 
-interface IItemProps {
+type IItemProps = {
   item: {
     _id: string | number;
     title: string;
@@ -21,9 +21,9 @@ interface IItemProps {
     title: string;
     price: number;
   }) => void;
-}
+};
 
-const Item: React.FC<IItemProps> = (props) => {
+function Item(props: IItemProps) {
   const cn = bem("Item");
 
   const selected = useSelector(
@@ -68,6 +68,13 @@ const Item: React.FC<IItemProps> = (props) => {
       </div>
     </div>
   );
-};
+}
+
+/* Item.defaultProps = {
+  onAdd: () => {},
+  labelCurr: "₽",
+  labelAdd: "Добавить",
+  onSelect: () => {},
+}; */
 
 export default memo(Item);

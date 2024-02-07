@@ -10,15 +10,15 @@ import debounce from "lodash.debounce";
 
 import "./style.css";
 
-interface IInputProps {
+type IInputProps = {
   value: string;
-  name: string;
-  type: string;
+  name?: string;
+  type?: string;
   placeholder: string;
   onChange: (value: string, name?: string) => void;
-  theme: string;
-}
-const Input: React.FC<IInputProps> = (props) => {
+  theme?: string;
+};
+function Input(props: IInputProps) {
   // Внутренний стейт для быстрого отображения ввода
   const [value, setValue] = useState(props.value);
 
@@ -46,6 +46,12 @@ const Input: React.FC<IInputProps> = (props) => {
       onChange={onChange}
     />
   );
-};
+}
+
+/* Input.defaultProps = {
+  onChange: () => {},
+  type: "text",
+  theme: "",
+}; */
 
 export default memo(Input);

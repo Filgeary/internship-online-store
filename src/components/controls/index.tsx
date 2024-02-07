@@ -1,17 +1,22 @@
 import { memo } from "react";
 import "./style.css";
 
-interface IControlsProps {
+type IControlsProps = {
   onAdd: () => void;
   title: string;
-}
+};
 
-const Controls: React.FC<IControlsProps> = ({ onAdd, title }) => {
+function Controls({ onAdd, title }: IControlsProps) {
   return (
     <div className="Controls">
       <button onClick={() => onAdd()}>{title}</button>
     </div>
   );
-};
+}
 
+/* Controls.defaultProps = {
+  onAdd: () => {},
+  title: "Добавить",
+};
+ */
 export default memo(Controls);

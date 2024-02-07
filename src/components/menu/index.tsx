@@ -3,7 +3,7 @@ import { cn as bem } from "@bem-react/classname";
 import { Link } from "react-router-dom";
 import "./style.css";
 
-interface IMenuProps {
+type IMenuProps = {
   items: [
     {
       key: number;
@@ -12,8 +12,8 @@ interface IMenuProps {
     }
   ];
   onNavigate: (item: { key: number; link: string; title: string }) => void;
-}
-const Menu: React.FC<IMenuProps> = ({ items, onNavigate }) => {
+};
+function Menu({ items, onNavigate }: IMenuProps) {
   const cn = bem("Menu");
   return (
     <ul className={cn()}>
@@ -26,6 +26,11 @@ const Menu: React.FC<IMenuProps> = ({ items, onNavigate }) => {
       ))}
     </ul>
   );
-};
+}
+
+/* Menu.defaultProps = {
+  items: [],
+  onNavigate: () => {},
+}; */
 
 export default memo(Menu);

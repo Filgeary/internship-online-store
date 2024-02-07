@@ -1,11 +1,12 @@
 import { memo } from "react";
 import "./style.css";
 
-interface IListProps {
+type IListProps = {
   list: [{ _id: string | number }];
   renderItem: (item: { _id: string | number }) => React.ReactNode;
-}
-const List: React.FC<IListProps> = ({ list, renderItem }) => {
+};
+
+function List({ list, renderItem }: IListProps) {
   return (
     <div className="List">
       {list.map((item) => (
@@ -15,6 +16,10 @@ const List: React.FC<IListProps> = ({ list, renderItem }) => {
       ))}
     </div>
   );
-};
+}
+
+/* List.defaultProps = {
+  renderItem: (item: any) => {},
+} */
 
 export default memo(List);

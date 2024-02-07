@@ -1,10 +1,11 @@
 import { memo } from "react";
 import "./style.css";
-interface IHeadProps {
+
+type IHeadProps = {
   title: React.ReactNode;
   children: React.ReactNode;
-}
-const Head: React.FC<IHeadProps> = ({ title, children }) => {
+};
+function Head({ title, children }: IHeadProps) {
   return (
     <div className="Head">
       <div className="Head-place">
@@ -13,6 +14,6 @@ const Head: React.FC<IHeadProps> = ({ title, children }) => {
       <div className="Head-place">{children}</div>
     </div>
   );
-};
+}
 
 export default memo(Head);

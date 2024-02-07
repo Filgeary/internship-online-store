@@ -1,14 +1,23 @@
 import { memo, useEffect, useRef } from "react";
-import PropTypes from "prop-types";
 import { cn as bem } from "@bem-react/classname";
 import "./style.css";
 
-function ModalLayout(props) {
+type IModalLayoutProps = {
+  title: string;
+  onClose: () => void;
+  children: React.ReactNode;
+  labelClose: string;
+  key: boolean;
+  code: boolean;
+};
+
+function ModalLayout(props: IModalLayoutProps) {
   const cn = bem("ModalLayout");
 
   // Корректировка центра, если модалка больше окна браузера.
-  const layout = useRef();
-  const frame = useRef();
+  const layout = useRef<HTMLDivElement>(null!);
+  const frame = useRef<HTMLDivElement>(null!);
+
   useEffect(() => {
     const resizeObserver = new ResizeObserver(() => {
       // Центрирование frame или его прижатие к краю, если размеры больше чем у layout
@@ -45,19 +54,10 @@ function ModalLayout(props) {
   );
 }
 
-ModalLayout.propTypes = {
-  title: PropTypes.string,
-  onClose: PropTypes.func,
-  children: PropTypes.node,
-  labelClose: PropTypes.string,
-  key: PropTypes.bool,
-  code: PropTypes.bool,
-};
-
-ModalLayout.defaultProps = {
+/* ModalLayout.defaultProps = {
   title: "Модалка",
   labelClose: "Закрыть",
   onClose: () => {},
-};
+}; */
 
 export default memo(ModalLayout);
