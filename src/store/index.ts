@@ -4,7 +4,7 @@ import modules, { IGlobalActions, IGlobalState } from './exports';
 import { TConfig } from '@src/config';
 
 type TActions = IGlobalActions;
-type TListeners = Array<(args: any | any[]) => void>;
+type TListeners = Array<(...args: any[]) => void>;
 
 /**
  * Хранилище состояния приложения
@@ -38,7 +38,11 @@ class Store {
      * }} */
     this.actions = {} as TActions;
     for (const name in modules) {
-      const instanceState = new modules[name](this, name, this.config?.modules[name] || {});
+      const instanceState = new modules[name](
+        this,
+        name,
+        this.config?.modules[name] || {}
+      );
       this.actions[name] = instanceState;
       this.state[name] = this.actions[name].initState();
     }
@@ -48,9 +52,13 @@ class Store {
    * Создать копию, на основе существующего состояния
    * @param name {String}
    * @param base {String}
-   */  
+   */
   make(name: string, base: string) {
-    this.actions[name] = new modules[base](this, name, { ...this.config?.modules[base], ...this.config?.modules[name] } || {});
+    this.actions[name] = new modules[base](
+      this,
+      name,
+      { ...this.config?.modules[base], ...this.config?.modules[name] } || {}
+    );
     this.state[name] = this.actions[name].initState();
   }
 
@@ -63,8 +71,8 @@ class Store {
     this.listeners.push(listener);
     // Возвращается функция для удаления добавленного слушателя
     return () => {
-      this.listeners = this.listeners.filter(item => item !== listener);
-    }
+      this.listeners = this.listeners.filter((item) => item !== listener);
+    };
   }
 
   /**
@@ -93,7 +101,7 @@ class Store {
       console.group(
         `%c${'store.setState'} %c${description}`,
         `color: ${'#777'}; font-weight: normal`,
-        `color: ${'#333'}; font-weight: bold`,
+        `color: ${'#333'}; font-weight: bold`
       );
       console.log(`%c${'prev:'}`, `color: ${'#d77332'}`, this.state);
       console.log(`%c${'next:'}`, `color: ${'#2fa827'}`, newState);

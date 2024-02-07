@@ -1,14 +1,13 @@
-import StoreModule from "../module";
+import StoreModule from '../module';
 
 type TLocaleState = {
   lang: TLangs;
 };
 
 class LocaleState extends StoreModule {
-
   initState(): TLocaleState {
     return {
-      lang: 'ru'
+      lang: 'ru',
     };
   }
 
@@ -17,7 +16,7 @@ class LocaleState extends StoreModule {
    * @param lang
    */
   setLang(lang) {
-    this.setState({lang}, 'Установлена локаль');
+    this.setState({ lang }, 'Установлена локаль');
   }
 }
 

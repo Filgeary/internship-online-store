@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import useSelector from "./use-selector";
+import { useEffect, useState } from 'react';
+import useSelector from './use-selector';
 
 /**
  * Хук для получения идентификатора модального окна

@@ -10,11 +10,7 @@ type BasketFooterProps = {
 function BasketFooter({ children }: BasketFooterProps) {
   const cn = bem('BasketFooter');
 
-  return (
-    <div className={cn()}>
-      {children}
-    </div>
-  )
+  return <div className={cn()}>{children}</div>;
 }
 
 export default BasketFooter;

@@ -21,7 +21,7 @@ const defaultProps: ModalProps = {
 
 Modal.defaultProps = defaultProps;
 
-function Modal({children, ...props}: ModalProps) {
+function Modal({ children, ...props }: ModalProps) {
   const store = useStore();
 
   const modalId = useModalId();
@@ -38,13 +38,9 @@ function Modal({children, ...props}: ModalProps) {
   useOnClickOutside(modalRef, closeHandler);
 
   return (
-    <ModalLayout
-      {...props}
-      ref={modalRef}
-      onClose={closeHandler}
-    >
+    <ModalLayout {...props} ref={modalRef} onClose={closeHandler}>
       {children}
-    </ModalLayout>    
+    </ModalLayout>
   );
 }
 

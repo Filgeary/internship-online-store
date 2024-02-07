@@ -1,5 +1,5 @@
-import { TConfig } from "@src/config";
-import Services from "@src/services";
+import { TConfig } from '@src/config';
+import Services from '@src/services';
 
 type TRequest = {
   url: string;
@@ -9,10 +9,10 @@ type TRequest = {
 } & Partial<any>; // Для rest-параметра options
 
 type TResponse<T> = {
-  data: {result: T, error: { data: { issues: Array<{ message: string }> } }};
+  data: { result: T; error: { data: { issues: Array<{ message: string }> } } };
   status: number;
   headers: Record<string, string>;
-}
+};
 
 class APIService {
   services: Services;
@@ -40,7 +40,13 @@ class APIService {
    * @param options
    * @returns {Promise<{}>}
    */
-  async request<T>({url, method = 'GET', headers = {}, timeout = null, ...options}: TRequest): Promise<TResponse<T>> {
+  async request<T>({
+    url,
+    method = 'GET',
+    headers = {},
+    timeout = null,
+    ...options
+  }: TRequest): Promise<TResponse<T>> {
     if (!url.match(/^(http|\/\/)/)) url = this.config.baseUrl + url;
 
     let timerOfErr = null;
@@ -58,15 +64,19 @@ class APIService {
     try {
       res = await fetch(url, {
         method,
-        headers: {...this.defaultHeaders, ...headers},
+        headers: { ...this.defaultHeaders, ...headers },
         ...options,
       });
-      
+
       if (timerOfErr) {
         clearTimeout(timerOfErr);
       }
 
-      return {data: await res.json(), status: res.status, headers: res.headers};
+      return {
+        data: await res.json(),
+        status: res.status,
+        headers: res.headers,
+      };
     } catch (err) {
       throw new Error('Ошибка на сервере, попробуйте позже...');
     }

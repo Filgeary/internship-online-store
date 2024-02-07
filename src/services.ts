@@ -1,11 +1,10 @@
-import APIService from "./api";
-import Store from "./store";
-import createStoreRedux from "./store-redux";
+import APIService from './api';
+import Store from './store';
+import createStoreRedux from './store-redux';
 
-import { TConfig } from "./config";
+import { TConfig } from './config';
 
 class Services {
-
   config: TConfig;
   _api: APIService;
   _store: Store;
@@ -40,7 +39,7 @@ class Services {
   /**
    * Redux store
    */
-  get redux(){
+  get redux() {
     if (!this._redux) {
       this._redux = createStoreRedux(this, this.config.redux);
     }

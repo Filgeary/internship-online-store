@@ -1,6 +1,9 @@
 import React, { useEffect } from 'react';
 
-function useOnClickOutside(ref: React.RefObject<any>, ...handlers: (() => void)[]) {
+function useOnClickOutside(
+  ref: React.RefObject<any>,
+  ...handlers: (() => void)[]
+) {
   useEffect(() => {
     const runHandlers = () => handlers.forEach((handler) => handler());
 
@@ -22,7 +25,7 @@ function useOnClickOutside(ref: React.RefObject<any>, ...handlers: (() => void)[
     ref.current.addEventListener('touchstart', listener);
 
     // document.addEventListener('keydown', keyListener);
-    
+
     return () => {
       ref.current?.removeEventListener('click', listener);
       ref.current?.removeEventListener('touchstart', listener);

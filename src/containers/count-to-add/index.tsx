@@ -10,21 +10,27 @@ function CountToAdd() {
   const store = useStore();
 
   const [isSuccess, setIsSuccess] = useState(false);
-  const {t} = useTranslate();
+  const { t } = useTranslate();
 
   const callbacks = {
-    onSubmit: useCallback((data: { count: any }) => {
-      store.actions.basket.setCountToAdd(Number(data.count));
-      setIsSuccess(true);
-    }, [store]),
+    onSubmit: useCallback(
+      (data: { count: any }) => {
+        store.actions.basket.setCountToAdd(Number(data.count));
+        setIsSuccess(true);
+      },
+      [store]
+    ),
 
-    closeModal: useCallback((willBeAdd = isSuccess) => {
-      if (willBeAdd) {
-        store.actions.modals.close();
-      } else {
-        store.actions.modals.closeRej();
-      }
-    }, [store, isSuccess]),
+    closeModal: useCallback(
+      (willBeAdd = isSuccess) => {
+        if (willBeAdd) {
+          store.actions.modals.close();
+        } else {
+          store.actions.modals.closeRej();
+        }
+      },
+      [store, isSuccess]
+    ),
 
     cancel: useCallback(() => {
       setIsSuccess(false);
@@ -33,7 +39,8 @@ function CountToAdd() {
   };
 
   const renders = {
-    successText: (count: any) => t('countModal.success').replace(/\[:count:\]/gi, count), 
+    successText: (count: any) =>
+      t('countModal.success').replace(/\[:count:\]/gi, count),
   };
 
   return (

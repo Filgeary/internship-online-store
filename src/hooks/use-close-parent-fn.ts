@@ -1,9 +1,9 @@
-import useStore from "./use-store";
-import useSelector from "./use-selector";
+import useStore from './use-store';
+import useSelector from './use-selector';
 
 /**
  * Хук для выборки функции закрытия родительского модального окна
- * @param id {string} 
+ * @param id {string}
  * @returns {Function}
  */
 function useCloseParentFn(id: string): () => void {
@@ -13,7 +13,8 @@ function useCloseParentFn(id: string): () => void {
 
   for (let i = 1; i < modalsIds.length; i++) {
     if (modalsIds[i] === id) {
-      return () => store.actions.modals.closeById(modalsIds[i-1], null, false);
+      return () =>
+        store.actions.modals.closeById(modalsIds[i - 1], null, false);
     }
   }
 

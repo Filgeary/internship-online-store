@@ -1,13 +1,15 @@
-import { TConfig } from "@src/config";
-import StoreModule from "../module";
+import { TConfig } from '@src/config';
+import StoreModule from '../module';
 import generateHash from '@src/utils/generate-hash';
 
 type TModalsState = {
-  mapOfOpened: {
-    name: string;
-    resolve: (...value: any[]) => void;
-    reject: (...value: any[]) => void;
-  } | {};
+  mapOfOpened:
+    | {
+        name: string;
+        resolve: (...value: any[]) => void;
+        reject: (...value: any[]) => void;
+      }
+    | {};
   lastOpened: string | null;
 };
 
@@ -16,18 +18,18 @@ interface IModals {
 }
 
 class ModalsState extends StoreModule implements IModals {
-  config: TConfig['store']['modules']['modals']
+  config: TConfig['store']['modules']['modals'];
 
   initState(): TModalsState {
     return {
       mapOfOpened: {}, // Для быстрого поиска
       lastOpened: null, // Последняя открытая модалка (ID),
-    }
+    };
   }
 
   /**
    * Открыть модалку
-   * @param name {String} 
+   * @param name {String}
    */
   open: (name: string) => Promise<unknown> = (name: string) => {
     if (this.config.onlyUnique && this.getState().mapOfOpened[name]) return;
@@ -42,26 +44,26 @@ class ModalsState extends StoreModule implements IModals {
             name,
             resolve,
             reject,
-          }
+          },
         },
         lastOpened: id,
-      })
+      });
     });
 
     return promise;
-  }
+  };
 
   /**
    * Закрыть модалку (успех)
-   * @param data 
+   * @param data
    */
-  close(data?: any){
+  close(data?: any) {
     const lastModalId = Object.keys(this.getState().mapOfOpened).at(-1);
     const { resolve: lastEvent } = this.getState().mapOfOpened[lastModalId];
 
     lastEvent(data);
-    
-    const mapOfOpened = {...this.getState().mapOfOpened};
+
+    const mapOfOpened = { ...this.getState().mapOfOpened };
     delete mapOfOpened[lastModalId];
 
     this.setState({
@@ -72,15 +74,15 @@ class ModalsState extends StoreModule implements IModals {
 
   /**
    * Закрыть модалку (ошибка)
-   * @param data 
+   * @param data
    */
-  closeRej(data?: any){
+  closeRej(data?: any) {
     const lastModalId = Object.keys(this.getState().mapOfOpened).at(-1);
     const { reject: lastEvent } = this.getState().mapOfOpened[lastModalId];
 
     lastEvent(data);
-    
-    const mapOfOpened = {...this.getState().mapOfOpened};
+
+    const mapOfOpened = { ...this.getState().mapOfOpened };
     delete mapOfOpened[lastModalId];
 
     this.setState({
@@ -97,7 +99,7 @@ class ModalsState extends StoreModule implements IModals {
    * @param fromEnd {Boolean} Начинать поиск с конца
    */
   closeByName(name: string, data: any, isSuccess = true, fromEnd = true) {
-    const newMapOfOpened = {...this.getState().mapOfOpened};
+    const newMapOfOpened = { ...this.getState().mapOfOpened };
     const arrOfIds = Object.keys(this.getState().mapOfOpened);
 
     if (fromEnd) arrOfIds.reverse();
@@ -108,7 +110,7 @@ class ModalsState extends StoreModule implements IModals {
 
         if (isSuccess) resolve(data);
         else reject(data);
-    
+
         delete newMapOfOpened[modalId];
         break;
       }
@@ -130,7 +132,7 @@ class ModalsState extends StoreModule implements IModals {
     const isModalExist = this.getState().mapOfOpened[id];
     if (!isModalExist) return;
 
-    const newMapOfOpened = {...this.getState().mapOfOpened};
+    const newMapOfOpened = { ...this.getState().mapOfOpened };
     const { resolve, reject } = newMapOfOpened[id];
     delete newMapOfOpened[id];
 

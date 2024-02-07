@@ -7,7 +7,11 @@
  * @param [locale] {String} Локаль (код языка)
  * @returns {String}
  */
-function plural(value: number, variants: Record<string, string> = {}, locale: string = 'ru-RU'): string {
+function plural(
+  value: number,
+  variants: Record<string, string> = {},
+  locale: string = 'ru-RU'
+): string {
   // Получаем фурму кодовой строкой: 'zero', 'one', 'two', 'few', 'many', 'other'
   // В русском языке 3 формы: 'one', 'few', 'many', и 'other' для дробных
   // В английском 2 формы: 'one', 'other'

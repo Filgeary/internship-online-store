@@ -1,11 +1,11 @@
-import {memo, useCallback} from 'react';
-import useStore from "@src/hooks/use-store";
-import useSelector from "@src/hooks/use-selector";
-import useTranslate from "@src/hooks/use-translate";
-import ItemBasket from "@src/components/item-basket";
-import List from "@src/components/list";
-import Modal from "@src/containers/modal";
-import BasketTotal from "@src/components/basket-total";
+import { memo, useCallback } from 'react';
+import useStore from '@src/hooks/use-store';
+import useSelector from '@src/hooks/use-selector';
+import useTranslate from '@src/hooks/use-translate';
+import ItemBasket from '@src/components/item-basket';
+import List from '@src/components/list';
+import Modal from '@src/containers/modal';
+import BasketTotal from '@src/components/basket-total';
 import BasketFooter from '@src/components/basket-footer';
 import Spinner from '@src/components/spinner';
 
@@ -22,7 +22,10 @@ function Basket() {
 
   const callbacks = {
     // Удаление из корзины
-    removeFromBasket: useCallback((_id: string) => store.actions.basket.removeFromBasket(_id), [store]),
+    removeFromBasket: useCallback(
+      (_id: string) => store.actions.basket.removeFromBasket(_id),
+      [store]
+    ),
     // Открыть модалку каталога
     openCatalogModal: useCallback(() => {
       const promiseOfModal = store.actions.modals.open('catalogModal');
@@ -35,17 +38,21 @@ function Basket() {
     }, [store]),
   };
 
-  const {t} = useTranslate();
+  const { t } = useTranslate();
 
   const renders = {
-    itemBasket: useCallback((item: any) => (
-      <ItemBasket item={item}
-                  link={`/articles/${item._id}`}
-                  onRemove={callbacks.removeFromBasket}
-                  labelUnit={t('basket.unit')}
-                  labelDelete={t('basket.delete')}
-      />
-    ), [callbacks.removeFromBasket, t]),
+    itemBasket: useCallback(
+      (item: any) => (
+        <ItemBasket
+          item={item}
+          link={`/articles/${item._id}`}
+          onRemove={callbacks.removeFromBasket}
+          labelUnit={t('basket.unit')}
+          labelDelete={t('basket.delete')}
+        />
+      ),
+      [callbacks.removeFromBasket, t]
+    ),
   };
 
   // const openAnotherBasket = () => store.actions.modals.open('basket').catch(() => {});

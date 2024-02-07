@@ -1,12 +1,12 @@
-import { memo, useCallback } from "react";
+import { memo, useCallback } from 'react';
 
-import useTranslate from "@src/hooks/use-translate";
-import List from "@src/components/list";
-import Pagination from "@src/components/pagination";
-import Spinner from "@src/components/spinner";
-import ItemSelectable from "@src/components/item-selectable";
+import useTranslate from '@src/hooks/use-translate';
+import List from '@src/components/list';
+import Pagination from '@src/components/pagination';
+import Spinner from '@src/components/spinner';
+import ItemSelectable from '@src/components/item-selectable';
 
-import { useCatalog } from "../catalog";
+import { useCatalog } from '../catalog';
 
 type CatalogListAppendProps = {
   onItemClick?: (item: TItem) => void;
@@ -26,17 +26,21 @@ CatalogListAppend.defaultProps = defaultProps;
 function CatalogListAppend(props: CatalogListAppendProps) {
   const { select, callbacks } = useCatalog();
 
-  const {t} = useTranslate();
+  const { t } = useTranslate();
 
   const handlers = {
     // Добавить к количеству товара в корзине
-    addCountOfItem: useCallback((item: TItem) => {
-      props.onItemClick(item);
-    }, [props.onItemClick]),
+    addCountOfItem: useCallback(
+      (item: TItem) => {
+        props.onItemClick(item);
+      },
+      [props.onItemClick]
+    ),
   };
 
   const renders = {
-    item: useCallback((item: TItem) => (
+    item: useCallback(
+      (item: TItem) => (
         <ItemSelectable
           item={item}
           count={props.countOfItems[item._id]}
@@ -46,12 +50,20 @@ function CatalogListAppend(props: CatalogListAppendProps) {
           link={`/articles/${item._id}`}
           labelDelete={t('article.delete')}
         />
-      ), [props.countOfItems, props.countOfItems, props.onItemDelete, props.appendixOfItem, handlers.addCountOfItem]),
+      ),
+      [
+        props.countOfItems,
+        props.countOfItems,
+        props.onItemDelete,
+        props.appendixOfItem,
+        handlers.addCountOfItem,
+      ]
+    ),
   };
 
   return (
     <Spinner active={select.waiting}>
-      <List list={select.list} renderItem={renders.item}/>
+      <List list={select.list} renderItem={renders.item} />
       <Pagination
         count={select.count}
         page={select.page}

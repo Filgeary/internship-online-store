@@ -11,7 +11,7 @@ const config = {
     modules: {
       session: {
         // Названия токена в АПИ
-        tokenHeader: 'X-Token'
+        tokenHeader: 'X-Token',
       },
       modals: {
         // Должны ли быть только уникальные модалки
@@ -26,15 +26,13 @@ const config = {
       separateCatalog: {
         ignoreUrlOnInit: false,
         ignoreUrl: true,
-      }
-    }
+      },
+    },
   },
   api: {
-    baseUrl: ''
+    baseUrl: '',
   },
-  redux: {
-    
-  },
+  redux: {},
 };
 
 export type TConfig = typeof config;

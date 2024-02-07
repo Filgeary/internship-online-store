@@ -1,5 +1,5 @@
-import React, {memo} from 'react';
-import {cn as bem} from '@bem-react/classname'
+import React, { memo } from 'react';
+import { cn as bem } from '@bem-react/classname';
 import './style.css';
 
 type PaginationProps = {
@@ -21,7 +21,6 @@ const defaultProps: PaginationProps = {
 Pagination.defaultProps = defaultProps;
 
 function Pagination(props: PaginationProps) {
-
   // Количество страниц
   const length = Math.ceil(props.count / Math.max(props.limit, 1));
 
@@ -44,31 +43,40 @@ function Pagination(props: PaginationProps) {
   // Последняя страница
   if (right < length) items.push(length);
 
-  const onClickHandler = (number: number): React.MouseEventHandler<HTMLLIElement> => (e: React.MouseEvent<HTMLLIElement>) => {
-    if (props.onChange) {
-      e.preventDefault();
-      props.onChange(number);
-    }
-  }
+  const onClickHandler =
+    (number: number): React.MouseEventHandler<HTMLLIElement> =>
+    (e: React.MouseEvent<HTMLLIElement>) => {
+      if (props.onChange) {
+        e.preventDefault();
+        props.onChange(number);
+      }
+    };
 
   const cn = bem('Pagination');
   return (
     <ul className={cn()}>
       {items.map((number, index) => (
-        <li key={index}
-            className={cn('item', {active: number === props.page, split: !number})}
-            onClick={onClickHandler(number)}>
-          {number
-            ? (props.makeLink
-                ? <a href={props.makeLink(number)}>{number}</a>
-                : number
+        <li
+          key={index}
+          className={cn('item', {
+            active: number === props.page,
+            split: !number,
+          })}
+          onClick={onClickHandler(number)}
+        >
+          {number ? (
+            props.makeLink ? (
+              <a href={props.makeLink(number)}>{number}</a>
+            ) : (
+              number
             )
-            : '...'
-          }
+          ) : (
+            '...'
+          )}
         </li>
       ))}
     </ul>
-  )
+  );
 }
 
 export default memo(Pagination);

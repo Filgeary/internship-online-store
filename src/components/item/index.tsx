@@ -1,22 +1,22 @@
 import './style.css';
 
-import React, {memo} from "react";
-import {Link} from "react-router-dom";
-import PropTypes from "prop-types";
+import React, { memo } from 'react';
+import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
-import {cn as bem} from '@bem-react/classname';
+import { cn as bem } from '@bem-react/classname';
 
-import numberFormat from "@src/utils/number-format";
+import numberFormat from '@src/utils/number-format';
 
 type ItemProps = {
-  item: TItem,
+  item: TItem;
   link?: string;
   onAdd?: () => void;
   labelCurr?: string;
   labelAdd?: string;
 };
 
-const defaultProps: Omit<ItemProps, "item"> = {
+const defaultProps: Omit<ItemProps, 'item'> = {
   onAdd: () => {},
   labelCurr: '₽',
   labelAdd: 'Добавить',
@@ -24,7 +24,7 @@ const defaultProps: Omit<ItemProps, "item"> = {
 
 Item.defaultProps = defaultProps;
 
-function Item(props: ItemProps){
+function Item(props: ItemProps) {
   const cn = bem('Item');
 
   const callbacks = {
@@ -35,19 +35,15 @@ function Item(props: ItemProps){
   };
 
   return (
-    <div
-      className={cn()}
-    >
+    <div className={cn()}>
       <div className={cn('title')}>
         <Link to={props.link}>{props.item.title}</Link>
       </div>
       <div className={cn('actions')}>
-        <div className={cn('price')}>{numberFormat(props.item.price)} {props.labelCurr}</div>        
-          <button
-            onClick={callbacks.onAdd}
-          >
-            {props.labelAdd}
-          </button>
+        <div className={cn('price')}>
+          {numberFormat(props.item.price)} {props.labelCurr}
+        </div>
+        <button onClick={callbacks.onAdd}>{props.labelAdd}</button>
       </div>
     </div>
   );

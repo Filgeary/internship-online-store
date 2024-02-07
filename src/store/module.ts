@@ -1,14 +1,13 @@
-import { TConfig } from "@src/config";
+import { TConfig } from '@src/config';
 
-import Services from "@src/services";
-import Store from ".";
+import Services from '@src/services';
+import Store from '.';
 
 /**
  * Базовый класс для модулей хранилища
  * Для группировки действий над внешним состоянием
  */
 class StoreModule {
-
   readonly name: string;
   readonly config: TConfig | {};
   store: Store;
@@ -28,7 +27,7 @@ class StoreModule {
   }
 
   initState() {
-    return {}
+    return {};
   }
 
   getState() {
@@ -36,12 +35,14 @@ class StoreModule {
   }
 
   setState(newState, description = 'setState') {
-    this.store.setState({
-      ...this.store.getState(),
-      [this.name]: newState
-    }, description)
+    this.store.setState(
+      {
+        ...this.store.getState(),
+        [this.name]: newState,
+      },
+      description
+    );
   }
-
 }
 
 export default StoreModule;

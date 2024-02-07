@@ -9,12 +9,13 @@
 function treeToList<T>(
   tree: TTree,
   callback: (item: any, level: number) => T,
-  level:number = 0,
+  level: number = 0,
   result: T[] | any = []
 ) {
   for (const item of tree) {
     result.push(callback ? callback(item, level) : item);
-    if (item.children?.length) treeToList(item.children, callback, level + 1, result);
+    if (item.children?.length)
+      treeToList(item.children, callback, level + 1, result);
   }
   return result;
 }

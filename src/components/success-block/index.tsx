@@ -9,11 +9,7 @@ type SuccessBlockProps = {
 function SuccessBlock({ children }: SuccessBlockProps) {
   const cn = bem('SuccessBlock');
 
-  return (
-    <div className={cn()}>
-      {children}
-    </div>
-  );
+  return <div className={cn()}>{children}</div>;
 }
 
 export default SuccessBlock;

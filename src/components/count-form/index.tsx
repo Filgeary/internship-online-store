@@ -35,7 +35,9 @@ function CountForm(props: CountFormProps) {
   const cn = bem('CountForm');
 
   const inputRef = useRef(null);
-  const [count, setCount] = useState<number | string>(props.min === 0 ? props.min + 1 : props.min);
+  const [count, setCount] = useState<number | string>(
+    props.min === 0 ? props.min + 1 : props.min
+  );
   const isSubmitDisabled = count == 0 || props.isSuccess;
 
   const callbacks = {
@@ -48,7 +50,8 @@ function CountForm(props: CountFormProps) {
   const options = {
     minVal: props.min,
     maxVal: props.max,
-    placeholder: props.max !== Infinity ? `${props.min}-${props.max}` : `${props.min}-...`,
+    placeholder:
+      props.max !== Infinity ? `${props.min}-${props.max}` : `${props.min}-...`,
   };
 
   const handlers = {
@@ -73,14 +76,20 @@ function CountForm(props: CountFormProps) {
       const [minusCode, plusCode] = [189, 187];
       const [arrowDown, arrowUp] = [40, 38];
 
-      const notBeAffectedCodes = [tabCode, backSpaceCode, arrowDown, arrowUp, enterCode];
+      const notBeAffectedCodes = [
+        tabCode,
+        backSpaceCode,
+        arrowDown,
+        arrowUp,
+        enterCode,
+      ];
       const affectedReject = [minusCode, plusCode];
 
       const higherWillBeOnlyNums = 48;
 
       if (
-        (e.keyCode < higherWillBeOnlyNums && !notBeAffectedCodes.includes(e.keyCode))
-        ||
+        (e.keyCode < higherWillBeOnlyNums &&
+          !notBeAffectedCodes.includes(e.keyCode)) ||
         affectedReject.includes(e.keyCode)
       ) {
         e.preventDefault();
@@ -97,21 +106,17 @@ function CountForm(props: CountFormProps) {
   return (
     <form onSubmit={callbacks.submit} className={cn()}>
       <div className={cn('row')}>
-        {
-          props.isSuccess && (
-            <SuccessBlock>
-              {props.successText(count)}
-            </SuccessBlock>
-          )
-        }
+        {props.isSuccess && (
+          <SuccessBlock>{props.successText(count)}</SuccessBlock>
+        )}
 
         <div className={cn('field')}>
-          <label htmlFor="count">{props.labelOfInput}:</label>
+          <label htmlFor='count'>{props.labelOfInput}:</label>
           <input
             className={cn('input')}
-            type="number"
-            name="count"
-            id="count"
+            type='number'
+            name='count'
+            id='count'
             min={options.minVal}
             max={options.maxVal}
             onKeyDown={handlers.keyDown}
@@ -124,10 +129,18 @@ function CountForm(props: CountFormProps) {
         </div>
 
         <div className={cn('footer')}>
-          <button className={cn('button')} type="button" onClick={props.onCancel}>
+          <button
+            className={cn('button')}
+            type='button'
+            onClick={props.onCancel}
+          >
             {props.labelOfCancel}
           </button>
-          <button disabled={isSubmitDisabled} className={cn('button')} type="submit">
+          <button
+            disabled={isSubmitDisabled}
+            className={cn('button')}
+            type='submit'
+          >
             {props.labelOfOk}
           </button>
         </div>
@@ -135,6 +148,5 @@ function CountForm(props: CountFormProps) {
     </form>
   );
 }
-
 
 export default memo(CountForm);

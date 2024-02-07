@@ -1,4 +1,4 @@
-import {memo} from "react";
+import { memo } from 'react';
 import './style.css';
 
 type ControlsProps = {
@@ -11,12 +11,12 @@ const defaultProps: ControlsProps = {
 
 Controls.defaultProps = defaultProps;
 
-function Controls({onAdd}: ControlsProps){
+function Controls({ onAdd }: ControlsProps) {
   return (
     <div className='Controls'>
       <button onClick={() => onAdd()}>Добавить</button>
     </div>
-  )
+  );
 }
 
 export default memo(Controls);

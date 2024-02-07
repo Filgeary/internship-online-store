@@ -4,11 +4,13 @@
  * @param [key] {String} Свойство с первичным ключом
  * @returns {Array} Корневые узлы
  */
-export default function listToTree(list: TChildren, key: string = '_id'): TTree {
+export default function listToTree(
+  list: TChildren,
+  key: string = '_id'
+): TTree {
   const trees = {};
   const roots = {};
   for (const item of list) {
-
     // Добавление элемента в индекс узлов и создание свойства children
     if (!trees[item[key]]) {
       trees[item[key]] = item;

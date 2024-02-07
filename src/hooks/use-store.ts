@@ -1,6 +1,6 @@
-import useServices from "./use-services";
+import useServices from './use-services';
 
-import Store from "@src/store";
+import Store from '@src/store';
 
 /**
  * Хук для доступа к объекту хранилища

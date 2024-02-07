@@ -1,8 +1,8 @@
-import {useLayoutEffect, useMemo, useState} from "react";
+import { useLayoutEffect, useMemo, useState } from 'react';
 import shallowequal from 'shallowequal';
-import useStore from "./use-store";
+import useStore from './use-store';
 
-import { IGlobalState } from "@src/store/exports";
+import { IGlobalState } from '@src/store/exports';
 
 type TSelectorFunc = (state: IGlobalState) => any;
 
@@ -20,7 +20,9 @@ export default function useSelector(selectorFunc: TSelectorFunc): any {
     // Подписка. Возврат функции для отписки
     return store.subscribe(() => {
       const newState = selectorFunc(store.getState());
-      setState((prevState: any) => shallowequal(prevState, newState) ? prevState : newState);
+      setState((prevState: any) =>
+        shallowequal(prevState, newState) ? prevState : newState
+      );
     });
   }, []); // Нет зависимостей - исполнится один раз
 

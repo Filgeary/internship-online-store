@@ -16,7 +16,7 @@ function CatalogModal() {
   const store = useStore();
   const [updatedItems, setUpdatedItems] = useState<Record<string, number>>({});
   const [isSuccess, setIsSuccess] = useState(false);
-  
+
   const modalId = useModalId();
   const closeParentFn = useCloseParentFn(modalId);
 
@@ -33,14 +33,17 @@ function CatalogModal() {
       }
     }, [store, updatedItems, isSuccess, modalId]),
 
-    delete: useCallback((item: TItem) => {
-      setUpdatedItems((prev) => {
-        const newUpdatedItems = {...prev};
-        delete newUpdatedItems[item._id];
+    delete: useCallback(
+      (item: TItem) => {
+        setUpdatedItems((prev) => {
+          const newUpdatedItems = { ...prev };
+          delete newUpdatedItems[item._id];
 
-        return newUpdatedItems;
-      });
-    }, [updatedItems]),
+          return newUpdatedItems;
+        });
+      },
+      [updatedItems]
+    ),
 
     update: (item: TItem) => {
       setUpdatedItems({
@@ -62,21 +65,19 @@ function CatalogModal() {
   };
 
   const renders = {
-    appendixText: (count: any) => t('catalogModal.appendixItemText').replace(/\[:count:\]/gi, count),
+    appendixText: (count: any) =>
+      t('catalogModal.appendixItemText').replace(/\[:count:\]/gi, count),
   };
 
-  const {t} = useTranslate();
+  const { t } = useTranslate();
 
   // const closeBasketModal = () => store.actions.modals.closeByName('basket');
   // const closeBasketModalStart = () => store.actions.modals.closeByName('basket', null, true, false);
-  // const openAnotherCatalogModal = () => store.actions.modals.open('catalogModal').then((items) => alert(JSON.stringify(items))).catch(() => {}); 
+  // const openAnotherCatalogModal = () => store.actions.modals.open('catalogModal').then((items) => alert(JSON.stringify(items))).catch(() => {});
 
   return (
-    <Modal
-      onClose={callbacks.closeModal}
-      title={t('catalogModal.title')}
-    >
-      <Catalog stateName="separateCatalog">
+    <Modal onClose={callbacks.closeModal} title={t('catalogModal.title')}>
+      <Catalog stateName='separateCatalog'>
         <CatalogFilter />
 
         <CatalogListAppend
@@ -88,15 +89,14 @@ function CatalogModal() {
       </Catalog>
 
       <Entities>
-        {
-          isSuccess && (
-            <SuccessBlock>
-              {t('catalogModal.successText')}
-            </SuccessBlock>
-          )
-        }
+        {isSuccess && (
+          <SuccessBlock>{t('catalogModal.successText')}</SuccessBlock>
+        )}
 
-        <button disabled={options.isBtnDisabled} onClick={callbacks.setSuccessToAdd}>
+        <button
+          disabled={options.isBtnDisabled}
+          onClick={callbacks.setSuccessToAdd}
+        >
           {t('catalogModal.btnSuccess')}
         </button>
 

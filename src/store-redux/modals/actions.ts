@@ -4,7 +4,7 @@ export default {
    * @param name
    */
   open: (name) => {
-    return {type: 'modal/open', payload: {name}};
+    return { type: 'modal/open', payload: { name } };
   },
 
   /**
@@ -12,13 +12,13 @@ export default {
    * @param dataObj
    */
   close: (dataObj) => {
-    return {type: 'modal/close', payload: dataObj};
+    return { type: 'modal/close', payload: dataObj };
   },
 
   /**
    * Сброс dataObj модалки
    */
   resetDataObj: () => {
-    return {type: 'modal/resetDataObj'};
-  }
-}
+    return { type: 'modal/resetDataObj' };
+  },
+};

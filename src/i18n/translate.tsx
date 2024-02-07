@@ -9,10 +9,14 @@ import { TTranslateFn, TAllLangsPick } from './types';
  * @param [plural] {Number} Число для плюрализации
  * @returns {String} Переведенный текст
  */
-const translate: TTranslateFn = (lang: TLangs, text: TAllLangsPick, plural: number): string => {
+const translate: TTranslateFn = (
+  lang: TLangs,
+  text: TAllLangsPick,
+  plural: number
+): string => {
   let result = translations?.[lang]?.[text] ?? text;
 
-  if (typeof plural !== 'undefined' && typeof result === 'object'){
+  if (typeof plural !== 'undefined' && typeof result === 'object') {
     const key = new Intl.PluralRules(lang).select(plural);
     if (key in result) {
       result = result[key];
@@ -20,6 +24,6 @@ const translate: TTranslateFn = (lang: TLangs, text: TAllLangsPick, plural: numb
   }
 
   return typeof result === 'object' ? text : result;
-}
+};
 
 export default translate;

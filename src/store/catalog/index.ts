@@ -1,6 +1,6 @@
-import { TConfig } from "@src/config";
-import StoreModule from "../module";
-import exclude from "@src/utils/exclude";
+import { TConfig } from '@src/config';
+import StoreModule from '../module';
+import exclude from '@src/utils/exclude';
 
 type TCatalogState = {
   list: TArticle[];
@@ -33,11 +33,11 @@ class CatalogState extends StoreModule {
         limit: 10,
         sort: 'order',
         query: '',
-        category: ''
+        category: '',
       },
       count: 0,
       waiting: false,
-    }
+    };
   }
 
   /**
@@ -50,13 +50,19 @@ class CatalogState extends StoreModule {
     const urlParams = new URLSearchParams(window.location.search);
     const validParams: Record<string, any> = {};
     if (!this.config.ignoreUrlOnInit) {
-      if (urlParams.has('page')) validParams.page = Number(urlParams.get('page')) || 1;
-      if (urlParams.has('limit')) validParams.limit = Math.min(Number(urlParams.get('limit')) || 10, 50);
+      if (urlParams.has('page'))
+        validParams.page = Number(urlParams.get('page')) || 1;
+      if (urlParams.has('limit'))
+        validParams.limit = Math.min(Number(urlParams.get('limit')) || 10, 50);
       if (urlParams.has('sort')) validParams.sort = urlParams.get('sort');
       if (urlParams.has('query')) validParams.query = urlParams.get('query');
-      if (urlParams.has('category')) validParams.category = urlParams.get('category');
+      if (urlParams.has('category'))
+        validParams.category = urlParams.get('category');
     }
-    await this.setParams({...this.initState().params, ...validParams, ...newParams}, true);
+    await this.setParams(
+      { ...this.initState().params, ...validParams, ...newParams },
+      true
+    );
   }
 
   /**
@@ -66,7 +72,7 @@ class CatalogState extends StoreModule {
    */
   async resetParams(newParams = {}) {
     // Итоговые параметры из начальных, из URL и из переданных явно
-    const params = {...this.initState().params, ...newParams};
+    const params = { ...this.initState().params, ...newParams };
     // Установка параметров и загрузка данных
     await this.setParams(params);
   }
@@ -78,18 +84,26 @@ class CatalogState extends StoreModule {
    * @returns {Promise<void>}
    */
   async setParams(newParams = {}, replaceHistory = false) {
-    const params = {...this.getState().params, ...newParams};
+    const params = { ...this.getState().params, ...newParams };
 
     // Установка новых параметров и признака загрузки
-    this.setState({
-      ...this.getState(),
-      params,
-      waiting: true
-    }, 'Установлены параметры каталога');
+    this.setState(
+      {
+        ...this.getState(),
+        params,
+        waiting: true,
+      },
+      'Установлены параметры каталога'
+    );
 
     // Сохранить параметры в адрес страницы
-    const urlSearch = new URLSearchParams(exclude(params, this.initState().params)).toString();
-    const url = window.location.pathname + (urlSearch ? `?${urlSearch}`: '') + window.location.hash;
+    const urlSearch = new URLSearchParams(
+      exclude(params, this.initState().params)
+    ).toString();
+    const url =
+      window.location.pathname +
+      (urlSearch ? `?${urlSearch}` : '') +
+      window.location.hash;
 
     if (!this.config.ignoreUrl) {
       if (replaceHistory) {
@@ -99,22 +113,28 @@ class CatalogState extends StoreModule {
       }
     }
 
-    const apiParams = exclude({
-      limit: params.limit,
-      skip: (params.page - 1) * params.limit,
-      fields: 'items(*),count',
-      sort: params.sort,
-      'search[query]': params.query,
-      'search[category]': params.category
-    }, {
-      skip: 0,
-      'search[query]': '',
-      'search[category]': ''
-    });
+    const apiParams = exclude(
+      {
+        limit: params.limit,
+        skip: (params.page - 1) * params.limit,
+        fields: 'items(*),count',
+        sort: params.sort,
+        'search[query]': params.query,
+        'search[category]': params.category,
+      },
+      {
+        skip: 0,
+        'search[query]': '',
+        'search[category]': '',
+      }
+    );
 
     let res = null;
     try {
-      res = await this.services.api.request<{ items: TArticle[] }>({url: `/api/v1/articles?${new URLSearchParams(apiParams)}`, timeout: 5000});
+      res = await this.services.api.request<{ items: TArticle[] }>({
+        url: `/api/v1/articles?${new URLSearchParams(apiParams)}`,
+        timeout: 5000,
+      });
       // this.services.api.
     } catch (err) {
       alert(err.message);
@@ -125,7 +145,7 @@ class CatalogState extends StoreModule {
       ...this.getState(),
       list: res.data.result.items,
       count: res.data.result.count,
-      waiting: false
+      waiting: false,
     };
 
     this.setState(newState, 'Загружен список товаров из АПИ');
@@ -140,7 +160,7 @@ class CatalogState extends StoreModule {
       if (elem._id === item._id) {
         return { ...elem, count: elem.count ? elem.count + 1 : 1 };
       }
-      
+
       return elem;
     });
 

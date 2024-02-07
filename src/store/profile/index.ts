@@ -1,4 +1,4 @@
-import StoreModule from "../module";
+import StoreModule from '../module';
 
 type TProfileState = {
   data: TProfile | {};
@@ -9,12 +9,11 @@ type TProfileState = {
  * Детальная информация о пользователе
  */
 class ProfileState extends StoreModule {
-
   initState(): TProfileState {
     return {
       data: {},
-      waiting: false // признак ожидания загрузки
-    }
+      waiting: false, // признак ожидания загрузки
+    };
   }
 
   /**
@@ -25,16 +24,21 @@ class ProfileState extends StoreModule {
     // Сброс текущего профиля и установка признака ожидания загрузки
     this.setState({
       data: {},
-      waiting: true
+      waiting: true,
     });
 
-    const {data} = await this.services.api.request<TProfile>({url: `/api/v1/users/self`});
+    const { data } = await this.services.api.request<TProfile>({
+      url: `/api/v1/users/self`,
+    });
 
     // Профиль загружен успешно
-    this.setState({
-      data: data.result,
-      waiting: false
-    }, 'Загружен профиль из АПИ');
+    this.setState(
+      {
+        data: data.result,
+        waiting: false,
+      },
+      'Загружен профиль из АПИ'
+    );
   }
 }
 

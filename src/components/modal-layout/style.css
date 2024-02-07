@@ -1,4 +1,4 @@
-body:has(.ModalLayout){
+body:has(.ModalLayout) {
   overflow: hidden;
 }
 
@@ -21,7 +21,7 @@ body:has(.ModalLayout){
 
   :nth-last-child(1 of &) {
     overflow-y: auto;
-    background: rgba(0,0,0,0.7);
+    background: rgba(0, 0, 0, 0.7);
   }
 }
 
@@ -45,11 +45,11 @@ body:has(.ModalLayout){
   padding: 0 30px 0 20px;
 }
 
-.ModalLayout-close{
+.ModalLayout-close {
   align-self: center;
 }
 
-.ModalLayout-title{
+.ModalLayout-title {
   margin: 0;
   padding: 20px 0 10px;
 }

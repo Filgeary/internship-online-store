@@ -1,6 +1,6 @@
-import {useContext} from "react";
-import {ServicesContext} from "../context";
-import Services from "@src/services";
+import { useContext } from 'react';
+import { ServicesContext } from '../context';
+import Services from '@src/services';
 
 /**
  * Хук для доступа к сервисам

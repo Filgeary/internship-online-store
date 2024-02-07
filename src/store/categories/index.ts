@@ -1,4 +1,4 @@
-import StoreModule from "../module";
+import StoreModule from '../module';
 
 type TCategoriesState = {
   list: string[];
@@ -9,7 +9,6 @@ type TCategoriesState = {
  * Список категорий
  */
 class CategoriesState extends StoreModule {
-
   /**
    * Начальное состояние
    * @return {Object}
@@ -17,7 +16,7 @@ class CategoriesState extends StoreModule {
   initState(): TCategoriesState {
     return {
       list: [],
-      waiting: false
+      waiting: false,
     };
   }
 
@@ -25,20 +24,25 @@ class CategoriesState extends StoreModule {
    * Загрузка списка товаров
    */
   async load() {
-    this.setState({...this.getState(), waiting: true}, 'Ожидание загрузки категорий');
+    this.setState(
+      { ...this.getState(), waiting: true },
+      'Ожидание загрузки категорий'
+    );
 
     const res = await this.services.api.request<{ items: string[] }>({
-      url: `/api/v1/categories?fields=_id,title,parent(_id)&limit=*`
+      url: `/api/v1/categories?fields=_id,title,parent(_id)&limit=*`,
     });
 
     // Товар загружен успешно
-    this.setState({
-      ...this.getState(),
-      list: res.data.result.items,
-      waiting: false
-    }, 'Категории загружены');
+    this.setState(
+      {
+        ...this.getState(),
+        list: res.data.result.items,
+        waiting: false,
+      },
+      'Категории загружены'
+    );
   }
-
 }
 
 export default CategoriesState;

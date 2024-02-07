@@ -1,9 +1,9 @@
-import {memo} from "react";
-import {cn as bem} from '@bem-react/classname';
-import numberFormat from "@src/utils/number-format";
+import { memo } from 'react';
+import { cn as bem } from '@bem-react/classname';
+import numberFormat from '@src/utils/number-format';
 import './style.css';
 
-import { TUserTranslateFn } from "@src/i18n/types";
+import { TUserTranslateFn } from '@src/i18n/types';
 
 type BasketToolProps = {
   onOpen: () => void;
@@ -21,7 +21,7 @@ const defaultProps: BasketToolProps = {
 
 BasketTool.defaultProps = defaultProps;
 
-function BasketTool({sum, amount, onOpen, t}: BasketToolProps) {
+function BasketTool({ sum, amount, onOpen, t }: BasketToolProps) {
   const cn = bem('BasketTool');
   return (
     <div className={cn()}>
@@ -29,8 +29,7 @@ function BasketTool({sum, amount, onOpen, t}: BasketToolProps) {
       <span className={cn('total')}>
         {amount
           ? `${amount} ${t('basket.articles', amount)} / ${numberFormat(sum)} ₽`
-          : t('basket.empty')
-        }
+          : t('basket.empty')}
       </span>
       <button onClick={onOpen}>{t('basket.open')}</button>
     </div>

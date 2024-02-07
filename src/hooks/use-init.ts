@@ -6,7 +6,11 @@ import { useEffect } from 'react';
  * @param depends {Array} Значения при смене которых callback снова исполнится.
  * @param options {{backForward}}
  */
-export default function useInit(initFunc: TInitFunction, depends: unknown[] = [], backForward = false) {
+export default function useInit(
+  initFunc: TInitFunction,
+  depends: unknown[] = [],
+  backForward = false
+) {
   useEffect(() => {
     initFunc(false);
     // Если в истории браузера меняются только search-параметры, то react-router не оповестит
