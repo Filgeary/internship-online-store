@@ -1,5 +1,5 @@
-import {memo, ReactNode, FC} from "react";
-import './style.css';
+import {memo, ReactNode, FC} from "react"
+import './style.css'
 
 interface IHeadProps {
   title: ReactNode
@@ -17,4 +17,4 @@ const Head: FC<IHeadProps> = ({ title, children }) => {
   )
 }
 
-export default memo(Head);
+export default memo(Head)

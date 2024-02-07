@@ -1,7 +1,7 @@
-import {memo} from "react";
-import {cn as bem} from '@bem-react/classname';
-import numberFormat from "@src/utils/number-format";
-import './style.css';
+import {memo} from "react"
+import {cn as bem} from '@bem-react/classname'
+import numberFormat from "@src/utils/number-format"
+import './style.css'
 
 interface IArticleCardProps {
   article: {
@@ -22,7 +22,7 @@ interface IArticleCardProps {
 }
 
 const ArticleCard: React.FC<IArticleCardProps> = ({article, onAdd, t}) => {
-  const cn = bem('ArticleCard');
+  const cn = bem('ArticleCard')
   return (
     <div className={cn()}>
       <div className={cn('description')}>{article.description}</div>
@@ -44,7 +44,7 @@ const ArticleCard: React.FC<IArticleCardProps> = ({article, onAdd, t}) => {
       </div>
       <button onClick={() => onAdd(article._id)}>{t('article.add')}</button>
     </div>
-  );
+  )
 }
 
-export default memo(ArticleCard);
+export default memo(ArticleCard)

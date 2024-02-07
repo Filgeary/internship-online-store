@@ -1,15 +1,15 @@
-import {memo, ReactNode, FC} from "react";
-import {cn as bem} from '@bem-react/classname';
-import './style.css';
+import {memo, ReactNode, FC} from "react"
+import {cn as bem} from '@bem-react/classname'
+import './style.css'
 
 interface IGoodsQuantityLayoutProps {
-  children: ReactNode;
-  handleCancelClick: () => void;
-  handleAddClick: () => void;
+  children: ReactNode
+  handleCancelClick: () => void
+  handleAddClick: () => void
 }
 
 const GoodsQuantityLayout: FC<IGoodsQuantityLayoutProps> = ({ children, handleCancelClick, handleAddClick }) => {
-  const cn = bem('Goods-quantity');
+  const cn = bem('Goods-quantity')
   return (
     <div className={cn()}>
       <div className={cn('wrap-input')}>
@@ -26,4 +26,4 @@ const GoodsQuantityLayout: FC<IGoodsQuantityLayoutProps> = ({ children, handleCa
   )
 }
 
-export default memo(GoodsQuantityLayout);
+export default memo(GoodsQuantityLayout)

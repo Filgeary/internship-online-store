@@ -1,7 +1,7 @@
-import {memo} from "react";
-import {cn as bem} from '@bem-react/classname';
-import numberFormat from "@src/utils/number-format";
-import './style.css';
+import {memo} from "react"
+import {cn as bem} from '@bem-react/classname'
+import numberFormat from "@src/utils/number-format"
+import './style.css'
 
 interface IBasketToolProps {
   sum?: number
@@ -26,4 +26,4 @@ const BasketTool: React.FC<IBasketToolProps> = ({sum = 0, amount = 0, onOpen, t}
   );
 }
 
-export default memo(BasketTool);
+export default memo(BasketTool)

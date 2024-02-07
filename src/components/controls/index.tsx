@@ -1,5 +1,5 @@
-import {memo, FC} from "react";
-import './style.css';
+import {memo, FC} from "react"
+import './style.css'
 
 interface IControlsProps {
   onAdd: () => void
@@ -12,4 +12,4 @@ const Controls: FC<IControlsProps> = ({ onAdd }) => {
   )
 }
 
-export default memo(Controls);
+export default memo(Controls)

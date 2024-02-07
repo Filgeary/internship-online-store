@@ -1,6 +1,6 @@
-import {memo, ReactNode, FC} from "react";
-import {cn as bem} from '@bem-react/classname';
-import './style.css';
+import {memo, ReactNode, FC} from "react"
+import {cn as bem} from '@bem-react/classname'
+import './style.css'
 
 interface IFieldProps {
   label: ReactNode
@@ -9,7 +9,7 @@ interface IFieldProps {
 }
 
 const Field: FC<IFieldProps> = ({ label, error, children }) =>{
-  const cn = bem('Field');
+  const cn = bem('Field')
   return (
     <div className={cn()}>
       <label className={cn('label')}>{label}</label>
@@ -23,4 +23,4 @@ const Field: FC<IFieldProps> = ({ label, error, children }) =>{
   )
 }
 
-export default memo(Field);
+export default memo(Field)

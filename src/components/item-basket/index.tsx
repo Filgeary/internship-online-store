@@ -1,22 +1,22 @@
-import {memo, FC} from 'react';
-import numberFormat from "@src/utils/number-format";
-import {cn as bem} from "@bem-react/classname";
-import {Link} from "react-router-dom";
-import './style.css';
+import {memo, FC} from 'react'
+import numberFormat from "@src/utils/number-format"
+import {cn as bem} from "@bem-react/classname"
+import {Link} from "react-router-dom"
+import './style.css'
 
 interface IItemBasketProps {
   item: {
-    _id: string | number;
-    title: string;
-    price: number;
-    amount?: number;
-  };
-  link: string;
-  onLink: () => void;
-  onRemove: (id: string | number) => void;
-  labelCurr: string;
-  labelDelete: string;
-  labelUnit: string;
+    _id: string | number
+    title: string
+    price: number
+    amount?: number
+  }
+  link: string
+  onLink: () => void
+  onRemove: (id: string | number) => void
+  labelCurr: string
+  labelDelete: string
+  labelUnit: string
 }
 
 const ItemBasket: FC<IItemBasketProps> = ({
@@ -29,11 +29,11 @@ const ItemBasket: FC<IItemBasketProps> = ({
   labelUnit = 'шт',
 }) => {
 
-  const cn = bem('ItemBasket');
+  const cn = bem('ItemBasket')
 
   const callbacks = {
     onRemove: () => onRemove(item._id)
-  };
+  }
 
   return (
     <div className={cn()}>
@@ -52,4 +52,4 @@ const ItemBasket: FC<IItemBasketProps> = ({
   )
 }
 
-export default memo(ItemBasket);
+export default memo(ItemBasket)

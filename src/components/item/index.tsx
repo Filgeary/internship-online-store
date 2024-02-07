@@ -1,8 +1,8 @@
-import {memo, FC} from "react";
-import {cn as bem} from '@bem-react/classname';
-import numberFormat from "@src/utils/number-format";
-import './style.css';
-import {Link} from "react-router-dom";
+import {memo, FC} from "react"
+import {cn as bem} from '@bem-react/classname'
+import numberFormat from "@src/utils/number-format"
+import './style.css'
+import {Link} from "react-router-dom"
 
 interface IItemProps {
   item: {
@@ -31,7 +31,7 @@ const Item: FC<IItemProps> = ({
   disabled = false,
 }) => {
 
-  const cn = bem('Item');
+  const cn = bem('Item')
 
   const callbacks = {
     onOpenModal: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -62,4 +62,4 @@ const Item: FC<IItemProps> = ({
   );
 }
 
-export default memo(Item);
+export default memo(Item)
