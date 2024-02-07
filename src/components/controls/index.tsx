@@ -1,12 +1,12 @@
-import { memo, FC } from "react";
+import { memo } from "react";
 import "./style.css";
 
-interface IControls {
+interface IControlsProps {
   onAdd: () => void;
   title: string;
 }
 
-const Controls: FC<IControls> = ({ onAdd, title }: IControls) => {
+const Controls: React.FC<IControlsProps> = ({ onAdd, title }) => {
   return (
     <div className="Controls">
       <button onClick={() => onAdd()}>{title}</button>

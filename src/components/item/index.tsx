@@ -1,24 +1,44 @@
 import { memo } from "react";
-import PropTypes from "prop-types";
 import { cn as bem } from "@bem-react/classname";
 import numberFormat from "@src/utils/number-format";
 import "./style.css";
 import { Link } from "react-router-dom";
 import useSelector from "@src/hooks/use-selector";
 
-function Item(props) {
+interface IItemProps {
+  item: {
+    _id: string | number;
+    title: string;
+    price: number;
+  };
+  link: string;
+  onAdd: (id: string | number) => void;
+  labelCurr: string;
+  labelAdd: string;
+  catalog: boolean;
+  onSelect: (item: {
+    _id: string | number;
+    title: string;
+    price: number;
+  }) => void;
+}
+
+const Item: React.FC<IItemProps> = (props) => {
   const cn = bem("Item");
 
   const selected = useSelector(
-    (state) => (props.catalog && state.catalogModal.selectedItems) || []
+    (state: { catalogModal: { selectedItems: any } }) =>
+      (props.catalog && state.catalogModal.selectedItems) || []
   );
   const callbacks = {
-    onAdd: (e) => props.onAdd(props.item._id),
-    onSelect: (e) => {
+    onAdd: () => props.onAdd(props.item._id),
+    onSelect: () => {
       props.onSelect(props.item);
     },
   };
-  const select = selected.find((el) => el.id == props.item._id);
+  const select = selected.find(
+    (el: { id: string | number }) => el.id == props.item._id
+  );
 
   return (
     <div
@@ -48,27 +68,6 @@ function Item(props) {
       </div>
     </div>
   );
-}
-
-Item.propTypes = {
-  item: PropTypes.shape({
-    _id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    title: PropTypes.string,
-    price: PropTypes.number,
-  }).isRequired,
-  link: PropTypes.string,
-  onAdd: PropTypes.func,
-  labelCurr: PropTypes.string,
-  labelAdd: PropTypes.string,
-  catalog: PropTypes.bool,
-  onSelect: PropTypes.func,
-};
-
-Item.defaultProps = {
-  onAdd: () => {},
-  labelCurr: "₽",
-  labelAdd: "Добавить",
-  onSelect: () => {},
 };
 
 export default memo(Item);

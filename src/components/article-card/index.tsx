@@ -1,9 +1,9 @@
-import { memo, FC } from "react";
+import { memo } from "react";
 import { cn as bem } from "@bem-react/classname";
-import numberFormat from "../../utils/number-format";
+import numberFormat from "@src/utils/number-format";
 import "./style.css";
 
-interface IArticleCard {
+interface IArticleCardProps {
   article: {
     _id: string;
     description: string;
@@ -16,7 +16,7 @@ interface IArticleCard {
   t: (text: string) => string;
 }
 
-const ArticleCard: FC<IArticleCard> = ({ article, onAdd, t }) => {
+const ArticleCard: React.FC<IArticleCardProps> = ({ article, onAdd, t }) => {
   const cn = bem("ArticleCard");
 
   return (
