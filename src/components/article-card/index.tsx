@@ -1,11 +1,20 @@
-import {memo} from "react";
-import PropTypes from 'prop-types';
-import {cn as bem} from '@bem-react/classname';
+import { cn as bem } from '@bem-react/classname';
+import { memo } from "react";
+
+import type { IArticle } from "@src/types/IArticle";
 import numberFormat from "@src/utils/number-format";
+
 import './style.css';
 
-function ArticleCard({article, onAdd, t}) {
+type Props = {
+  article: IArticle
+  onAdd: (id: string) => void
+  t: Function
+}
+
+function ArticleCard({ article, onAdd, t }: Props) {
   const cn = bem('ArticleCard');
+
   return (
     <div className={cn()}>
       <div className={cn('description')}>{article.description}</div>
@@ -21,31 +30,13 @@ function ArticleCard({article, onAdd, t}) {
         <div className={cn('label')}>Год выпуска:</div>
         <div className={cn('value')}>{article.edition}</div>
       </div>
-      <div className={cn('prop', {size: 'big'})}>
+      <div className={cn('prop', { size: 'big' })}>
         <div className={cn('label')}>Цена:</div>
         <div className={cn('value')}>{numberFormat(article.price)} ₽</div>
       </div>
       <button onClick={() => onAdd(article._id)}>{t('article.add')}</button>
     </div>
   );
-}
-
-ArticleCard.propTypes = {
-  article: PropTypes.shape({
-    _id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    description: PropTypes.string,
-    madeIn: PropTypes.object,
-    category: PropTypes.object,
-    edition: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    price: PropTypes.number
-  }).isRequired,
-  onAdd: PropTypes.func,
-  t: PropTypes.func
-};
-
-ArticleCard.defaultProps = {
-  onAdd: () => {},
-  t: (text) => text
 }
 
 export default memo(ArticleCard);
