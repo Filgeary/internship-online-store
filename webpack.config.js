@@ -6,7 +6,7 @@ const path = require("path");
 
 let config = {
   context: path.join(__dirname, '/src'), // Директория с исходным кодом приложения
-  entry: 'index.js', // Главный файл приложения
+  entry: 'index.tsx', // Главный файл приложения
   output: {
     path: path.join(__dirname, 'dist'), // Куда делать оброку
     filename: '[name].js', // Шаблон для названия файлов
@@ -14,7 +14,7 @@ let config = {
   },
   mode: process.env.NODE_ENV,
   resolve: {
-    extensions: ['.js', '.jsx'], // расширения по умолчанию если не указаны в import
+    extensions: ['.js', '.jsx', '.ts', '.tsx'], // расширения по умолчанию если не указаны в import
     modules: ['./', 'node_modules'], // Где искать файлы подключаемых модулей (пакетов)
     alias: {
       '@src': path.resolve(__dirname, './src'),
@@ -22,18 +22,18 @@ let config = {
   },
   module: {
     rules: [
-      // Транспиляция JS/JSX
+      // Transform JS/JSX
       {
-        test: /\.jsx?$/,
+        test: /\.(js|ts)x?$/,
         exclude: /node_modules/,
-        use: [{loader: 'babel-loader'}],
+        use: [{ loader: 'babel-loader' }],
       },
       // Правила обработки подключаемых файлов
       {
         test: /\.css$/,
         use: [
-          {loader: MiniCssExtractPlugin.loader, options: {}},
-          {loader: 'css-loader', options: {url: true, import: true}},
+          { loader: MiniCssExtractPlugin.loader, options: {} },
+          { loader: 'css-loader', options: { url: true, import: true } },
         ]
       },
       {
