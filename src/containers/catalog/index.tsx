@@ -23,7 +23,7 @@ type CatalogProps = {
 function Catalog({ children, ...props }: CatalogProps) {
   const store = useStore();
 
-  const select = useSelector((state: any) => ({
+  const select = useSelector((state) => ({
     list: state[props.stateName].list,
     page: state[props.stateName].params.page,
     limit: state[props.stateName].params.limit,

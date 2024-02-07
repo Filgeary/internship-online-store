@@ -1,4 +1,4 @@
-import React, {ForwardRefRenderFunction, useEffect, useRef} from "react";
+import React, {useEffect, useRef} from "react";
 import {cn as bem} from '@bem-react/classname';
 import './style.css';
 
@@ -15,9 +15,7 @@ const defaultProps: ModalLayoutProps = {
   onClose: () => {},
 };
 
-ModalLayout.defaultProps = defaultProps;
-
-function ModalLayout(props: ModalLayoutProps, outerRef: { current: any }) {
+const ModalLayout = React.forwardRef((props: ModalLayoutProps, outerRef: { current: any }) => {
   const cn = bem('ModalLayout');
 
   // Корректировка центра, если модалка больше окна браузера.
@@ -61,6 +59,8 @@ function ModalLayout(props: ModalLayoutProps, outerRef: { current: any }) {
       </div>
     </div>
   );
-}
+});
 
-export default React.forwardRef(ModalLayout as ForwardRefRenderFunction<unknown, ModalLayoutProps>);
+ModalLayout.defaultProps = defaultProps;
+
+export default ModalLayout;

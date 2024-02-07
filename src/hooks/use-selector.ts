@@ -2,16 +2,16 @@ import {useLayoutEffect, useMemo, useState} from "react";
 import shallowequal from 'shallowequal';
 import useStore from "./use-store";
 
-import { services } from "..";
+import { IGlobalState } from "@src/store/exports";
 
-type TSelectorFunc = (state: ReturnType<typeof services.store.getState>) => any;
+type TSelectorFunc = (state: IGlobalState) => any;
 
 /**
  * Хук для выборки данных из store и отслеживания их изменения
  * @param selectorFunc {Function}
  * @return {*}
  */
-export default function useSelector(selectorFunc: TSelectorFunc) {
+export default function useSelector(selectorFunc: TSelectorFunc): any {
   const store = useStore();
 
   const [state, setState] = useState(() => selectorFunc(store.getState()));

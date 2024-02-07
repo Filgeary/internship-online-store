@@ -29,7 +29,7 @@ class ModalsState extends StoreModule implements IModals {
    * Открыть модалку
    * @param name {String} 
    */
-  open(name: string){
+  open: (name: string) => Promise<unknown> = (name: string) => {
     if (this.config.onlyUnique && this.getState().mapOfOpened[name]) return;
     const id = generateHash();
 
@@ -55,7 +55,7 @@ class ModalsState extends StoreModule implements IModals {
    * Закрыть модалку (успех)
    * @param data 
    */
-  close(data: any){
+  close(data?: any){
     const lastModalId = Object.keys(this.getState().mapOfOpened).at(-1);
     const { resolve: lastEvent } = this.getState().mapOfOpened[lastModalId];
 
@@ -74,7 +74,7 @@ class ModalsState extends StoreModule implements IModals {
    * Закрыть модалку (ошибка)
    * @param data 
    */
-  closeRej(data: any){
+  closeRej(data?: any){
     const lastModalId = Object.keys(this.getState().mapOfOpened).at(-1);
     const { reject: lastEvent } = this.getState().mapOfOpened[lastModalId];
 
@@ -126,7 +126,7 @@ class ModalsState extends StoreModule implements IModals {
    * @param data {*} Данные, которые отловим в методах промиса
    * @param isSuccess {Boolean} Resolve / Reject при закрытии
    */
-  closeById(id: string | number, data: any, isSuccess = true) {
+  closeById(id: string | number, data?: any, isSuccess = true) {
     const isModalExist = this.getState().mapOfOpened[id];
     if (!isModalExist) return;
 

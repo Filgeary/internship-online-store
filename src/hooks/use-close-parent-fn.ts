@@ -8,7 +8,7 @@ import useSelector from "./use-selector";
  */
 function useCloseParentFn(id: string): () => void {
   const store = useStore();
-  const activeModals = useSelector((state: any) => state.modals.mapOfOpened);
+  const activeModals = useSelector((state) => state.modals.mapOfOpened);
   const modalsIds = Reflect.ownKeys(activeModals) as string[];
 
   for (let i = 1; i < modalsIds.length; i++) {

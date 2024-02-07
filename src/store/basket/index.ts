@@ -167,7 +167,7 @@ class BasketState extends StoreModule {
    * Добавление активного элемента
    * @param item
    */
-  setActive(item: string | number) {
+  setActive(item: TItem) {
     this.setState({
       ...this.getState(),
       active: item,

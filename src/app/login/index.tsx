@@ -24,7 +24,7 @@ function Login() {
     store.actions.session.resetErrors();
   })
 
-  const select = useSelector((state: any) => ({
+  const select = useSelector((state) => ({
     waiting: state.session.waiting,
     errors: state.session.errors
   }));

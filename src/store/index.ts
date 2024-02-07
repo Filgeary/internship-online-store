@@ -1,20 +1,20 @@
-import * as modules from './exports';
+import Services from '@src/services';
+import modules, { IGlobalActions, IGlobalState } from './exports';
 
-import { TModules } from './types';
 import { TConfig } from '@src/config';
 
-type TActions = keyof TModules;
+type TActions = IGlobalActions;
 type TListeners = Array<(args: any | any[]) => void>;
 
 /**
  * Хранилище состояния приложения
  */
 class Store {
-  services: TModules;
+  services: Services;
   config: TConfig['store'];
   listeners: TListeners;
-  state: object;
-  actions: any;
+  state: IGlobalState;
+  actions: TActions;
 
   /**
    * @param services {Services}
@@ -25,7 +25,7 @@ class Store {
     this.services = services;
     this.config = config as TConfig['store'];
     this.listeners = []; // Слушатели изменений состояния
-    this.state = initState;
+    this.state = initState as IGlobalState;
     /** @type {{
      * basket: BasketState,
      * catalog: CatalogState,
@@ -36,9 +36,10 @@ class Store {
      * session: SessionState,
      * profile: ProfileState
      * }} */
-    this.actions = {};
-    for (const name of Object.keys(modules)) {
-      this.actions[name] = new modules[name](this, name, this.config?.modules[name] || {});
+    this.actions = {} as TActions;
+    for (const name in modules) {
+      const instanceState = new modules[name](this, name, this.config?.modules[name] || {});
+      this.actions[name] = instanceState;
       this.state[name] = this.actions[name].initState();
     }
   }
@@ -79,7 +80,7 @@ class Store {
    * profile: Object,
    * }}
    */
-  getState() {
+  getState(): IGlobalState {
     return this.state;
   }
 
@@ -103,5 +104,8 @@ class Store {
     for (const listener of this.listeners) listener(this.state);
   }
 }
+
+// const store = new Store();
+// type TRootState = ReturnType<typeof store.getState>
 
 export default Store;

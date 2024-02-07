@@ -6,7 +6,7 @@ import useSelector from "./use-selector";
  * @returns {String}
  */
 function useModalId(): string {
-  const uid = useSelector((state: any) => state.modals.lastOpened);
+  const uid = useSelector((state) => state.modals.lastOpened);
   const [modalId, setModalId] = useState(null);
 
   useEffect(() => {

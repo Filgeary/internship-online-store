@@ -10,7 +10,7 @@ type AllModalsProps = {
 };
 
 function AllModals({ toDisableFocus }: AllModalsProps) {
-  const activeModals = useSelector((state: any) => state.modals.mapOfOpened);
+  const activeModals = useSelector((state) => state.modals.mapOfOpened);
   const modalsIds = Object.keys(activeModals);
 
   useEffect(() => {
