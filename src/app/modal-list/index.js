@@ -38,7 +38,7 @@ function ModalList({onClose}) {
     setWaiting(true)
     // Загружаем список в любом случае, но конкретно в созданную стора
     await Promise.all([
-      store.actions['modal-catalog'].setParams(),
+      store.actions['modal-catalog'].setParams({}, false, false),
       store.actions.categories.load()
     ])
     setWaiting(false)

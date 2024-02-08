@@ -13,7 +13,6 @@ import TopHead from "@src/containers/top-head";
 import {useDispatch, useSelector} from 'react-redux';
 import shallowequal from "shallowequal";
 import articleActions from '@src/store-redux/article/actions';
-import modalsActions from "@src/store-redux/modals/actions";
 
 function Article() {
   const store = useStore();

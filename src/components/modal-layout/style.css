@@ -9,7 +9,7 @@ body:has(.ModalLayout){
   width: 100%;
   height: 100%;
   overflow-x: auto;
-  z-index: 9999;
+  z-index: 999;
   padding: 10px;
   min-height: 100%;
   box-sizing: border-box;

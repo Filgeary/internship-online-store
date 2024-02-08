@@ -22,17 +22,11 @@ let config = {
   },
   module: {
     rules: [
-      // Транспиляция JS/JSX
+      // Транспиляция JS/JSX и TS/TSX
       {
-        test: /\.jsx?$/,
+        test: /\.(j|t)sx?$/,
         exclude: /node_modules/,
         use: [{loader: 'babel-loader'}],
-      },
-      // Транспиляция TS/TSX
-      {
-        test: /\.tsx?$/,
-        exclude: /node_modules/,
-        use: [{loader: 'ts-loader'}],
       },
       // Правила обработки подключаемых файлов
       {

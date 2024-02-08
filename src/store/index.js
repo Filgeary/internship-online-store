@@ -36,13 +36,14 @@ class Store {
    * Создание дубликата определенного state
    * @param name {String} - Имя, которое необходимо присвоить дубликату
    * @param base {String} - Имя state с которого будет происходить копирование
+   * @param initParams {Array} - Имя state с которого будет происходить копирование
    * */
-  make(name, base) {
+  make(name, base, initParams = []) {
     if(this.actions[name] && this.state[name]) {
       console.log("Дубликат с таким именем уже существует")
     } else {
-      this.actions[name] = new modules[base](this, name, this.config?.modules[base] || {}, true);
-      this.state[name] = this.actions[name].initState()
+      this.actions[name] = new modules[base](this, name, this.config?.modules[base] || {});
+      this.state[name] = this.actions[name].initState(...initParams)
     }
   }
 

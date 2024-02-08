@@ -1,6 +1,7 @@
 /**
  * Форматирование разрядов числа
  * @param value {Number}
+ * @param locale {string}
  * @param options {Object}
  * @returns {String}
  */

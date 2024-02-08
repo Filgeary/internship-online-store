@@ -8,15 +8,13 @@ class StoreModule {
    * @param store {Store}
    * @param name {String}
    * @param [config] {Object}
-   * @param copy {Boolean}
    */
-  constructor(store, name, config = {}, copy = false) {
+  constructor(store, name, config = {}) {
     this.store = store;
     this.name = name;
     this.config = config;
     /** @type {Services} */
     this.services = store.services;
-    this.copy = copy;
   }
 
   initState() {
