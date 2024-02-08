@@ -2,13 +2,14 @@ import {useCallback} from 'react';
 import useStore from "@src/hooks/use-store";
 import useSelector from "@src/hooks/use-selector";
 import useTranslate from "@src/hooks/use-translate";
-import ItemBasket, { ItemType } from "@src/components/item-basket";
+import ItemBasket from "@src/components/item-basket";
 import List from "@src/components/list";
 import ModalLayout from "@src/components/modal-layout";
 import BasketTotal from "@src/components/basket-total";
 import Controls from '@src/components/controls';
 import Spinner from '@src/components/spinner';
 import useModalId from '@src/hooks/use-modalId';
+import type { ItemType } from '@src/components/item-basket/type';
 
 function Basket() {
   const store = useStore();
@@ -63,13 +64,20 @@ function Basket() {
   };
 
   return (
-    <ModalLayout title={t('basket.title')} labelClose={t('basket.close')}
-                 onClose={callbacks.closeModal} isClose={true}>
+    <ModalLayout
+      title={t("basket.title")}
+      labelClose={t("basket.close")}
+      onClose={callbacks.closeModal}
+      isClose={true}
+    >
       <Spinner active={select.waiting}>
-        <List list={select.list} renderItem={renders.itemBasket}/>
-        <BasketTotal sum={select.sum} t={t}/>
+        <List list={select.list} renderItem={renders.itemBasket} />
+        <BasketTotal sum={select.sum} labelTotal={t("basket.total")} />
       </Spinner>
-      <Controls labelChoice={t('basket.choice')} onAdd={callbacks.addToBasket}/>
+      <Controls
+        labelChoice={t("basket.choice")}
+        onAdd={callbacks.addToBasket}
+      />
     </ModalLayout>
   );
 }

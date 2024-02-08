@@ -1,10 +1,6 @@
 import {memo} from "react";
+import type { HeadProps } from "./type";
 import './style.css';
-
-interface HeadProps {
-  title: string;
-  children: JSX.Element
-}
 
 function Head({title, children}: HeadProps){
   return (

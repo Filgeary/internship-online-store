@@ -1,17 +1,12 @@
 import StoreModule from "../module";
-
-interface InitialState {
-  data: {
-    _id: string
-  }
-}
+import type { ResponseData, InitialStateArticle } from "./type";
 
 /**
  * Детальная ифнормация о товаре для страницы товара
  */
 class ArticleState extends StoreModule {
 
-  initState() {
+  initState(): InitialStateArticle {
     return {
       data: {},
       waiting: false // признак ожидания загрузки
@@ -31,15 +26,18 @@ class ArticleState extends StoreModule {
     });
 
     try {
-      const res = await this.services.api.request({
+      const res = await this.services.api.request<ResponseData>({
         url: `/api/v1/articles/${id}?fields=*,madeIn(title,code),category(title)`
       });
-      console.log(res)
-      // Товар загружен успешно
-      this.setState({
-        data: res.data.result,
-        waiting: false
-      }, 'Загружен товар из АПИ');
+
+      if(res.status === 200) {
+        // Товар загружен успешно
+        this.setState({
+          data: res.data.result,
+          waiting: false
+        }, 'Загружен товар из АПИ');
+      }
+
     } catch (e) {
       // Ошибка при загрузке
       // @todo В стейт можно положить информацию об ошибке

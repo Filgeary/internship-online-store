@@ -27,12 +27,14 @@ class CategoriesState extends StoreModule {
       url: `/api/v1/categories?fields=_id,title,parent(_id)&limit=*`
     });
 
-    // Товар загружен успешно
-    this.setState({
-      ...this.getState(),
-      list: res.data.result.items,
-      waiting: false
-    }, 'Категории загружены');
+    if(res.status === 200) {
+      // Товар загружен успешно
+      this.setState({
+        ...this.getState(),
+        list: res.data.result.items,
+        waiting: false
+      }, 'Категории загружены');
+    }
   }
 
 }

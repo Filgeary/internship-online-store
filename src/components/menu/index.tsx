@@ -1,19 +1,8 @@
 import {memo} from "react";
-import PropTypes from 'prop-types';
 import {cn as bem} from "@bem-react/classname";
 import {Link} from "react-router-dom";
+import type { MenuProps } from "./type";
 import './style.css';
-
-interface Item {
-  key: number,
-  link: string,
-  title: string,
-}
-
-interface MenuProps {
-  items: Item[],
-  onNavigate: (item: Item) => void
-}
 
 function Menu({items, onNavigate}: MenuProps) {
   const cn = bem('Menu');

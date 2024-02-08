@@ -1,17 +1,9 @@
 import {memo} from "react";
 import {cn as bem} from '@bem-react/classname';
 import numberFormat from "@src/utils/number-format";
-import './style.css';
 import {Link} from "react-router-dom";
-import { ItemType } from "../item-basket";
-
-interface ItemProps {
-  item: ItemType,
-  link: string,
-  onAdd: (_id: string) => void,
-  labelCurr: string,
-  labelAdd: string
-}
+import type { ItemProps } from "./type";
+import './style.css';
 
 function Item(props: ItemProps){
 

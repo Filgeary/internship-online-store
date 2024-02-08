@@ -1,11 +1,6 @@
 import { memo} from "react";
+import type { ListProps } from "./type";
 import './style.css';
-import { ItemType } from "../item-basket";
-
-interface ListProps {
-  list: ItemType[];
-  renderItem: (item: ItemType) => JSX.Element;
-}
 
 function List({list, renderItem}: ListProps){
   return (

@@ -1,5 +1,6 @@
 import StoreModule from "../module";
 import exclude from "@src/utils/exclude";
+import type { InitialStateCatalog, Params, ResponseCatalog } from "./type";
 
 /**
  * Состояние каталога - параметры фильтра исписок товара
@@ -9,7 +10,7 @@ class CatalogState extends StoreModule {
    * Начальное состояние
    * @return {Object}
    */
-  initState() {
+  initState(): InitialStateCatalog {
     return {
       list: [],
       params: {
@@ -31,19 +32,21 @@ class CatalogState extends StoreModule {
    * @param [newParams] {Object} Новые параметры
    * @return {Promise<void>}
    */
-  async initParams(newParams = {}) {
+  async initParams(newParams: Partial<Params> = {}): Promise<void> {
     const urlParams = new URLSearchParams(window.location.search);
-    let validParams = {};
-
+    let validParams: Partial<Params> = {};
+    
     if (!this.config.ignoreURL) {
       if (urlParams.has("page"))
         validParams.page = Number(urlParams.get("page")) || 1;
       if (urlParams.has("limit"))
         validParams.limit = Math.min(Number(urlParams.get("limit")) || 10, 50);
-      if (urlParams.has("sort")) validParams.sort = urlParams.get("sort");
-      if (urlParams.has("query")) validParams.query = urlParams.get("query");
+      if (urlParams.has("sort"))
+        validParams.sort = urlParams.get("sort") || undefined;
+      if (urlParams.has("query"))
+        validParams.query = urlParams.get("query") || undefined;
       if (urlParams.has("category"))
-        validParams.category = urlParams.get("category");
+        validParams.category = urlParams.get("category") || undefined;
     }
     await this.setParams(
       { ...this.initState().params, ...validParams, ...newParams },
@@ -56,7 +59,7 @@ class CatalogState extends StoreModule {
    * @param [newParams] {Object} Новые параметры
    * @return {Promise<void>}
    */
-  async resetParams(newParams = {}) {
+  async resetParams(newParams: Partial<Params> = {}): Promise<void> {
     // Итоговые параметры из начальных, из URL и из переданных явно
     const params = { ...this.initState().params, ...newParams };
     // Установка параметров и загрузка данных
@@ -69,7 +72,7 @@ class CatalogState extends StoreModule {
    * @param [replaceHistory] {Boolean} Заменить адрес (true) или новая запись в истории браузера (false)
    * @returns {Promise<void>}
    */
-  async setParams(newParams = {}, replaceHistory = false) {
+  async setParams(newParams: Partial<Params> = {}, replaceHistory: boolean = false): Promise<void> {
     const params = { ...this.getState().params, ...newParams };
 
     // Установка новых параметров и признака загрузки
@@ -113,44 +116,56 @@ class CatalogState extends StoreModule {
       }
     );
 
-    const res = await this.services.api.request({
+    const res = await this.services.api.request<ResponseCatalog>({
       url: `/api/v1/articles?${new URLSearchParams(apiParams)}`,
     });
-    this.setState(
-      {
-        ...this.getState(),
-        list: res.data.result.items,
-        count: res.data.result.count,
-        waiting: false,
-      },
-      "Загружен список товаров из АПИ"
-    );
+
+    if (res.status === 200) {
+      this.setState(
+        {
+          ...this.getState(),
+          list: res.data.result.items,
+          count: res.data.result.count,
+          waiting: false,
+        },
+        "Загружен список товаров из АПИ"
+      );
+    }
   }
 
   /**
    * Выделение записи по id
    * @param _id
    */
-  selectItem(_id) {
+  selectItem(_id: string) {
     const exist = this.getState().selected.includes(_id);
     if (!exist) {
-      this.setState({
-        ...this.getState(),
-        selected: [...this.getState().selected, _id],
-      }, "Выделение товара");
+      this.setState(
+        {
+          ...this.getState(),
+          selected: [...this.getState().selected, _id],
+        },
+        "Выделение товара"
+      );
     } else {
-      const selectedItems = this.getState().selected.filter((item) => item !==_id);
+      const selectedItems = this.getState().selected.filter(
+        (item) => item !== _id
+      );
       this.setState(
         {
           ...this.getState(),
           selected: selectedItems,
         },
         "Выделение с товара снято"
-      )};
+      );
+    }
   }
 
   resetSelectedItems() {
-    this.setState({...this.getState(), selected: []}, "Сброс выбранных товаров")
+    this.setState(
+      { ...this.getState(), selected: [] },
+      "Сброс выбранных товаров"
+    );
   }
 }
 

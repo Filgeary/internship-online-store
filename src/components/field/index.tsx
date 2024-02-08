@@ -1,12 +1,7 @@
 import {memo} from "react";
 import {cn as bem} from '@bem-react/classname';
+import type { FieldProps } from "./type";
 import './style.css';
-
-interface FieldProps {
-  label?: string;
-  error?: string;
-  children?: JSX.Element
-}
 
 function Field({label, error, children}: FieldProps) {
   const cn = bem('Field');

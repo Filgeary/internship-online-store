@@ -1,13 +1,7 @@
 import { useState, memo, ChangeEvent, FormEvent } from "react";
 import { cn as bem } from "@bem-react/classname";
+import type { CountItemFormProps } from "./type";
 import 'style.css';
-
-interface CountItemFormProps {
-  labelCount: string;
-  labelCancel: string;
-  onSubmit: (count: string) => void;
-  onCancel: () => void;
-}
 
 function CountItemForm(props: CountItemFormProps) {
   const cn = bem("CountItemForm");

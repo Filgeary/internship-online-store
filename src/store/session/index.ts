@@ -1,5 +1,6 @@
 import StoreModule from "../module";
 import simplifyErrors from "@src/utils/simplify-errors";
+import { Credentials, InitialStateSession, ResponseDataSession, ResponseDataSessionRemind } from "./type";
 
 /**
  * Сессия
@@ -9,7 +10,7 @@ class SessionState extends StoreModule {
    * Начальное состояние
    * @return {Object}
    */
-  initState() {
+  initState(): InitialStateSession {
     return {
       user: {},
       token: null,
@@ -25,29 +26,30 @@ class SessionState extends StoreModule {
    * @param onSuccess
    * @returns {Promise<void>}
    */
-  async signIn(data, onSuccess) {
+  async signIn(data: Credentials, onSuccess): Promise<void> {
     this.setState(this.initState(), 'Авторизация');
     try {
-      const res = await this.services.api.request({
-        url: '/api/v1/users/sign',
-        method: 'POST',
-        body: JSON.stringify(data)
-      });
+      const res =
+        await this.services.api.request<ResponseDataSession>({
+          url: "/api/v1/users/sign",
+          method: "POST",
+          body: JSON.stringify(data),
+        });
 
       if (!res.data.error) {
         this.setState({
           ...this.getState(),
-          token: res.data.result.token,
-          user: res.data.result.user,
+          token: res.data.result!.token,
+          user: res.data.result!.user,
           exists: true,
           waiting: false
         }, 'Успешная авторизация');
 
         // Запоминаем токен, чтобы потом автоматически аутентифицировать юзера
-        window.localStorage.setItem('token', res.data.result.token);
+        window.localStorage.setItem('token', res.data.result!.token);
 
         // Устанавливаем токен в АПИ
-        this.services.api.setHeader(this.config.tokenHeader, res.data.result.token);
+        this.services.api.setHeader(this.config.tokenHeader, res.data.result!.token);
 
         if (onSuccess) onSuccess();
       } else {
@@ -67,7 +69,7 @@ class SessionState extends StoreModule {
    * Отмена авторизации (выход)
    * @returns {Promise<void>}
    */
-  async signOut() {
+  async signOut(): Promise<void> {
     try {
       await this.services.api.request({
         url: '/api/v1/users/sign',
@@ -87,13 +89,13 @@ class SessionState extends StoreModule {
    * По токену восстановление сессии
    * @return {Promise<void>}
    */
-  async remind() {
+  async remind(): Promise<void> {
     const token = localStorage.getItem('token');
     if (token) {
       // Устанавливаем токен в АПИ
       this.services.api.setHeader(this.config.tokenHeader, token);
       // Проверяем токен выбором своего профиля
-      const res = await this.services.api.request({url: '/api/v1/users/self'});
+      const res = await this.services.api.request<ResponseDataSessionRemind>({ url: "/api/v1/users/self" });
 
       if (res.data.error) {
         // Удаляем плохой токен

@@ -1,11 +1,7 @@
-import {ReactNode, memo, useEffect} from "react";
+import {memo, useEffect} from "react";
 import useSelector from "@src/hooks/use-selector";
 import {useLocation, useNavigate} from "react-router-dom";
-
-interface ProtectedProps {
-  children: ReactNode,
-  redirect: string
-}
+import { ProtectedProps } from "./type";
 
 function Protected({children, redirect}: ProtectedProps) {
 

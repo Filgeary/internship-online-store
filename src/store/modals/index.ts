@@ -1,41 +1,36 @@
 import StoreModule from "../module";
 import codeGenerator from "@src/utils/code-generator";
+import type { InitialStateModals, NameModal } from "./type";
 
 class ModalsState extends StoreModule {
-
-  initState() {
+  initState(): InitialStateModals {
     return {
       list: [],
-      events: new Map(),
-      lastOpenModalId: 0
-    }
+      lastOpenModalId: 0,
+    };
   }
 
-  open(name){
+  open(name: NameModal) {
     return new Promise((resolve) => {
       const id = codeGenerator(this.getState().lastOpenModalId)();
-      this.getState().events.set(id, resolve);
       this.setState(
         {
           ...this.getState(),
-          list: [...this.getState().list, { name, id }],
+          list: [...this.getState().list, { name, id, resolve }],
           lastOpenModalId: id,
         },
         `Открытие модалки ${name}`
-        );
-      });
+      );
+    });
   }
 
-  close(id, data){
+  close(id: number, data?: string[] | string) {
     if (data) {
-      const resolve = this.getState().events.get(id);
+      const { resolve } = this.getState().list.find(item => item.id === id);
       resolve(data);
     }
 
-    this.getState().events.delete(id);
-    const list = this.getState().list.filter(
-      (item) => item.id !== id
-    );
+    const list = this.getState().list.filter((item) => item.id !== id);
 
     this.setState(
       {

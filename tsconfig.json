@@ -9,8 +9,11 @@
     "strict": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
+    "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "noEmit": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitAny": true,
     "baseUrl": "./",
     "paths": {
       "@src/*": ["src/*"]

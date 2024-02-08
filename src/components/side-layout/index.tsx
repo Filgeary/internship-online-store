@@ -1,13 +1,8 @@
 import React, {ReactNode, memo} from "react";
 import PropTypes from "prop-types";
 import {cn as bem} from '@bem-react/classname';
+import type { SideLayoutProps } from "./type";
 import './style.css';
-
-interface SideLayoutProps {
-  children: ReactNode,
-  side?: 'start' | 'end' |'between',
-  padding?: 'small' | 'medium',
-}
 
 function SideLayout({children, side, padding}: SideLayoutProps) {
   const cn = bem('SideLayout');

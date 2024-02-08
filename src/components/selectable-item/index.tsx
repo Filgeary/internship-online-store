@@ -1,15 +1,8 @@
 import { memo } from "react";
 import { cn as bem } from "@bem-react/classname";
 import numberFormat from "@src/utils/number-format";
+import type { SelectableItemProps } from "./type";
 import "./style.css";
-import { ItemType } from "../item-basket";
-
-interface SelectableItemProps {
-  item: ItemType;
-  onSelect: (_id: string) => void;
-  labelCurr: string;
-  selected: boolean
-}
 
 function SelectableItem(props: SelectableItemProps) {
   const cn = bem("SelectableItem");

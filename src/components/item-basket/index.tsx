@@ -1,27 +1,9 @@
-import {memo, useCallback} from 'react';
-import propTypes from 'prop-types';
+import {memo} from 'react';
 import numberFormat from "@src/utils/number-format";
 import {cn as bem} from "@bem-react/classname";
-import PropTypes from "prop-types";
 import {Link} from "react-router-dom";
+import type { ItemBasketProps } from './type';
 import './style.css';
-
-export interface ItemType {
-  _id: string;
-  title: string;
-  price: number;
-  amount?: number;
-}
-
-interface ItemBasketProps {
-  item: ItemType,
-  link: string,
-  onLink: () => void,
-  onRemove: (_id: string) => void,
-  labelCurr: string,
-  labelDelete: string,
-  labelUnit: string,
-}
 
 function ItemBasket(props: ItemBasketProps) {
 
@@ -45,21 +27,6 @@ function ItemBasket(props: ItemBasketProps) {
       </div>
     </div>
   )
-}
-
-ItemBasket.propTypes = {
-  item: PropTypes.shape({
-    _id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    title: PropTypes.string,
-    price: PropTypes.number,
-    amount: PropTypes.number
-  }).isRequired,
-  link: PropTypes.string,
-  onLink: PropTypes.func,
-  onRemove: PropTypes.func,
-  labelCurr: PropTypes.string,
-  labelDelete: PropTypes.string,
-  labelUnit: PropTypes.string,
 }
 
 export default memo(ItemBasket);

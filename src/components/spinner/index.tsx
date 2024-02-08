@@ -1,10 +1,6 @@
-import {ReactNode, memo} from "react";
+import { memo} from "react";
+import { SpinnerProps } from "./type";
 import './style.css';
-
-interface SpinnerProps {
-  active: boolean;
-  children: ReactNode
-}
 
 function Spinner({active, children}: SpinnerProps) {
   if (active) {

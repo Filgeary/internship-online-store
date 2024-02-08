@@ -1,16 +1,7 @@
 import {memo} from "react";
 import {cn as bem} from '@bem-react/classname';
+import type { Profile } from "./type";
 import './style.css';
-
-interface Profile {
-  data: {
-    profile: {
-      name: string;
-      phone: string;
-    },
-    email: string;
-  }
-}
 
 function ProfileCard({data}: Profile) {
   const cn = bem('ProfileCard');

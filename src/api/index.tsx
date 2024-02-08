@@ -1,18 +1,17 @@
-import { Config } from "@src/config";
+import type { Config } from "@src/config";
 import Services from "@src/services";
+import type { RequestArgs, ResponseApi } from "./type";
 
 class APIService {
   services: Services;
-  config: Config["api"];
-  defaultHeaders: { [key: string]: string };
+  config: Partial<Config["api"]>;
+  defaultHeaders: Record<string, string>;
 
   /**
    * @param services {Services} Менеджер сервисов
    * @param config {Object}
    */
-  constructor(services: Services, config: Config["api"] = {
-    baseUrl: ""
-  }) {
+  constructor(services: Services, config: Partial<Config["api"]> = {}) {
     this.services = services;
     this.config = config;
     this.defaultHeaders = {
@@ -28,12 +27,12 @@ class APIService {
    * @param options
    * @returns {Promise<{}>}
    */
-  async request({
-    url='',
+  async request<T>({
+    url,
     method = "GET",
     headers = {},
     ...options
-  }): Promise<{}> {
+  }: RequestArgs): Promise<ResponseApi<T>> {
     if (!url.match(/^(http|\/\/)/)) url = this.config.baseUrl + url;
     const res = await fetch(url, {
       method,

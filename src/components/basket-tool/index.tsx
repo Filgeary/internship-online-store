@@ -2,13 +2,7 @@ import {memo} from "react";
 import {cn as bem} from '@bem-react/classname';
 import numberFormat from "@src/utils/number-format";
 import './style.css';
-
-interface BasketToolProps {
-  sum: number;
-  amount: number;
-  onOpen: () => void;
-  t: (text: string, number?: number) => string;
-}
+import type { BasketToolProps } from "./type";
 
 function BasketTool({sum, amount, onOpen, t}: BasketToolProps) {
   const cn = bem('BasketTool');

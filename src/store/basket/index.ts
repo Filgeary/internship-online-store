@@ -1,10 +1,12 @@
+import { ResponseData } from "../article/type";
 import StoreModule from "../module";
+import type { InitialStateBasket } from "./type";
 
 /**
  * Покупательская корзина
  */
 class BasketState extends StoreModule {
-  initState() {
+  initState(): InitialStateBasket {
     return {
       list: [],
       sum: 0,
@@ -33,14 +35,17 @@ class BasketState extends StoreModule {
 
     if (!exist) {
       // Поиск товара в каталоге, чтобы его добавить в корзину.
-      const res = await this.services.api.request({
+      const res = await this.services.api.request<ResponseData>({
         url: `/api/v1/articles/${_id}`,
       });
-      const item = res.data.result;
 
-      list.push({ ...item, amount: count }); // list уже новый, в него можно пушить.
-      // Добавляем к сумме.
-      sum += item.price * count;
+      if(res.status === 200) {
+        const item = res.data.result;
+
+        list.push({ ...item, amount: count }); // list уже новый, в него можно пушить.
+        // Добавляем к сумме.
+        sum += item.price * count;
+      }
     }
 
     this.setState(

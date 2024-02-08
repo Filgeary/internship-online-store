@@ -1,10 +1,6 @@
 import {memo} from "react";
+import type { ControlsProps } from "./type";
 import './style.css';
-
-interface ControlsProps {
-  onAdd: () => Promise<void>;
-  labelChoice: string;
-}
 
 function Controls({onAdd, labelChoice}: ControlsProps){
   return (

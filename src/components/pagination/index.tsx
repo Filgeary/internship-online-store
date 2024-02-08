@@ -1,15 +1,7 @@
 import {memo, MouseEvent} from 'react';
 import {cn as bem} from '@bem-react/classname'
+import type { PaginationProps } from './type';
 import './style.css';
-
-interface PaginationProps {
-  page: number,
-  limit: number,
-  count: number,
-  indent: number,
-  onChange: (number: number) => void,
-  makeLink: (number: number) => string,
-}
 
 function Pagination(props: PaginationProps) {
 

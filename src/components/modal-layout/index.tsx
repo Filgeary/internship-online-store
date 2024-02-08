@@ -1,14 +1,7 @@
-import {ReactNode, memo, useEffect, useRef} from "react";
+import {memo, useEffect, useRef} from "react";
 import {cn as bem} from '@bem-react/classname';
+import type { ModalLayoutProps } from "./type";
 import './style.css';
-
-interface ModalLayoutProps {
-  title: string;
-  onClose?: () => void;
-  children: ReactNode;
-  labelClose?: string;
-  isClose: boolean;
-}
 
 function ModalLayout(props: ModalLayoutProps) {
 

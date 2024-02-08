@@ -2,28 +2,9 @@ import {memo} from "react";
 import {cn as bem} from '@bem-react/classname';
 import numberFormat from "@src/utils/number-format";
 import './style.css';
+import type { ArticleProps } from "./type";
 
-export interface Article {
-  _id: string;
-  description: string;
-  madeIn: {
-    title: string;
-    code: string;
-  },
-  category: {
-    title: string;
-  },
-  edition: string | number;
-  price: number;
-}
-
-interface ArticleProps {
-  article: Article;
-  onAdd: (_id: string) => Promise<void>;
-  t: (text: string, number?: number) => string
-}
-
-function ArticleCard({article, onAdd, t}: ArticleProps) {
+function ArticleCard({article, onAdd, labelAdd}: ArticleProps) {
   const cn = bem('ArticleCard');
   return (
     <div className={cn()}>
@@ -44,7 +25,7 @@ function ArticleCard({article, onAdd, t}: ArticleProps) {
         <div className={cn('label')}>Цена:</div>
         <div className={cn('value')}>{numberFormat(article.price)} ₽</div>
       </div>
-      <button onClick={() => onAdd(article._id)}>{t('article.add')}</button>
+      <button onClick={() => onAdd(article._id)}>{labelAdd}</button>
     </div>
   );
 }

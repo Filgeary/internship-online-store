@@ -1,10 +1,10 @@
 import {PropsWithChildren, createContext, useMemo, useState} from "react";
-import translate from "./translate";
+import translate, { Text } from "./translate";
 
 export interface Translate {
   lang: string;
   setLang: React.Dispatch<React.SetStateAction<string>>;
-  t: (text: string, number?: number) => string;
+  t: (text: Text, number?: number) => string;
 }
 
 /**
@@ -27,7 +27,7 @@ export function I18nProvider({ children }: PropsWithChildren<{}>): JSX.Element {
       // Функция для смены локали
       setLang,
       // Функция для локализации текстов с замыканием на код языка
-      t: (text: string, number?: number) => translate(lang, text, number),
+      t: (text: Text, number?: number) => translate(lang, text, number),
     }),
     [lang]
   );

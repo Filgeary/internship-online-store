@@ -5,9 +5,9 @@ import Paginator from "../paginator";
 import List from "@src/components/list";
 import Spinner from "@src/components/spinner";
 import SelectableItem from "@src/components/selectable-item";
-import { ItemType } from "@src/components/item-basket";
+import { ItemType } from "@src/components/item-basket/type";
 
-function CatalogListSelectable(props: { storeName: string }) {
+function CatalogListSelectable(props: { storeName: "copyCatalog" }) {
   const store = useStore();
 
   const select = useSelector((state: any) => ({

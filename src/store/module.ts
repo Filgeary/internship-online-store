@@ -1,23 +1,22 @@
 import { Config } from "@src/config";
-import Store from ".";
-// import Services from "@src/services";
-// type Name = "basket" | "catalog" | "copyCatalog" | "article" | "categories" | "locale" | "session" | "profile"
+import Store, { keyModules } from ".";
+import Services from "@src/services";
 /**
  * Базовый класс для модулей хранилища
  * Для группировки действий над внешним состоянием
  */
 class StoreModule {
-  // store: Store;
-  // name: string;
-  // config: {} | Config;
-  // services: Services;
+  store: Store;
+  name: keyModules;
+  config: Partial<Config>;
+  services: Services;
 
   /**
    * @param store {Store}
    * @param name {String}
    * @param [config] {Object}
    */
-  constructor(store, name, config = {}) {
+  constructor(store: Store, name: keyModules, config: Partial<Config> = {}) {
     this.store = store;
     this.name = name;
     this.config = config;
@@ -26,19 +25,21 @@ class StoreModule {
   }
 
   initState() {
-    return {}
+    return {};
   }
 
   getState() {
-    console.log(Store)
     return this.store.getState()[this.name];
   }
 
-  setState(newState, description = 'setState') {
-    this.store.setState({
-      ...this.store.getState(),
-      [this.name]: newState
-    }, description)
+  setState(newState: any, description = "setState") {
+    this.store.setState(
+      {
+        ...this.store.getState(),
+        [this.name]: newState,
+      },
+      description
+    );
   }
 }
 

@@ -6,7 +6,7 @@ import Item from "@src/components/item";
 import List from "@src/components/list";
 import Spinner from "@src/components/spinner";
 import Paginator from "../paginator";
-import { ItemType } from "@src/components/item-basket";
+import { ItemType } from "@src/components/item-basket/type";
 
 function CatalogList() {
   const store = useStore();

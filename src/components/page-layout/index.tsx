@@ -1,12 +1,7 @@
-import {ReactNode, memo} from "react";
+import {memo} from "react";
 import {cn as bem} from '@bem-react/classname';
+import type { PageLayoutProps } from "./type";
 import './style.css';
-
-interface PageLayoutProps {
-  head?: JSX.Element;
-  footer?: JSX.Element;
-  children: ReactNode
-}
 
 function PageLayout({head, footer, children}: PageLayoutProps) {
 

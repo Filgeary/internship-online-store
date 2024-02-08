@@ -1,4 +1,6 @@
-import * as translations from './translations';
+import translations from './translations';
+
+export type Text = keyof typeof translations["ru"];
 
 /**
  * Перевод фразу по словарю
@@ -7,17 +9,23 @@ import * as translations from './translations';
  * @param [plural] {Number} Число для плюрализации
  * @returns {String} Переведенный текст
  */
-export default function translate(lang: string, text: string, plural?: number): string {
-  let result = translations[lang] && (text in translations[lang])
-    ? translations[lang][text]
-    : text;
+export default function translate(
+  lang: string,
+  text: Text,
+  plural?: number
+): string {
 
-    if (typeof plural !== 'undefined'){
-      const key = new Intl.PluralRules(lang).select(plural);
-      if (key in result) {
-      result = result[key];
+  let result = (lang === "en" || lang === "ru") &&
+    translations[lang] && text in translations[lang]
+      ? translations[lang][text]
+      : text;
+
+  if (typeof plural !== "undefined" && typeof result === "object") {
+    const key = new Intl.PluralRules(lang).select(plural);
+
+    if (key in result) {
+      result = result[key as keyof typeof result];
     }
   }
-
-  return result;
+  return result as string;
 }

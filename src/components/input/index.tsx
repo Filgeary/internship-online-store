@@ -1,17 +1,8 @@
 import {ChangeEvent, memo, useCallback, useLayoutEffect, useState} from 'react';
 import {cn as bem} from '@bem-react/classname';
 import debounce from 'lodash.debounce';
-
+import type { InputProps } from './type';
 import './style.css';
-
-interface InputProps {
-  value: string;
-  name: string;
-  type?: string;
-  placeholder?: string;
-  onChange: (value: string, name: string) => void;
-  theme?: string;
-}
 
 function Input(props: InputProps) {
 

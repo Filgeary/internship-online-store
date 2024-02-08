@@ -1,21 +1,6 @@
 const isProduction = process.env.NODE_ENV === 'production';
 
-export interface Config {
-  store: {
-    log: boolean;
-    modules: {
-      session: {
-        tokenHeader: string;
-      };
-      copyCatalog: {
-        ignoreURL: boolean;
-      };
-    };
-  };
-  api: {
-    baseUrl: string;
-  };
-}
+export type Config = typeof config;
 /**
  * Настройки сервисов
  */

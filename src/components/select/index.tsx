@@ -1,17 +1,8 @@
 import {ChangeEvent, memo} from "react";
+import type { SelectProps } from "./type";
 import './style.css';
 
-interface SelectProps {
-  options: {
-    value: string | number,
-    title: string
-  }[],
-  value: string,
-  onChange: (value: string) => void
-}
-
 function Select(props: SelectProps) {
-
   const onSelect = (e: ChangeEvent<HTMLSelectElement>) => {
     props.onChange(e.target.value);
   };
