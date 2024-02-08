@@ -1,5 +1,12 @@
+import { TArticle } from "../article/types";
 import StoreModule from "../module";
 
+export type TBasketState = {
+  list: TArticle[];
+  sum: number;
+  amount: number;
+  active: string | number;
+};
 /**
  * Покупательская корзина
  */
@@ -17,7 +24,7 @@ class BasketState extends StoreModule {
    * Добавление товара в корзину
    * @param _id {String} Код товара
    */
-  async addToBasket(_id, count = 1) {
+  async addToBasket(_id: string, count = 1) {
     let sum = 0;
     // Ищем товар в корзине, чтобы увеличить его количество
     let exist = false;
@@ -78,7 +85,7 @@ class BasketState extends StoreModule {
    * Удаление товара из корзины
    * @param _id Код товара
    */
-  removeFromBasket(_id) {
+  removeFromBasket(_id: string | number) {
     let sum = 0;
     const list = this.getState().list.filter((item) => {
       if (item._id === _id) return false;
@@ -97,7 +104,7 @@ class BasketState extends StoreModule {
     );
   }
 
-  addToActive(_id) {
+  addToActive(_id: string | number) {
     this.setState(
       {
         ...this.getState(),

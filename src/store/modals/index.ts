@@ -1,21 +1,22 @@
-/* import StoreModule from "../module";
+import StoreModule from "../module";
 
+export type TModals = {
+  name: string | null;
+};
 class ModalsState extends StoreModule {
-
-  initState() {
+  initState(): TModals {
     return {
-      name: null
-    }
+      name: null,
+    };
   }
 
-  open(name){
-    this.setState({name}, `Открытие модалки ${name}`);
+  open(name) {
+    this.setState({ name }, `Открытие модалки ${name}`);
   }
 
-  close(){
-    this.setState({name: null}, `Закрытие модалки`);
+  close() {
+    this.setState({ name: null }, `Закрытие модалки`);
   }
 }
 
 export default ModalsState;
- */

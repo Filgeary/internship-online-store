@@ -1,5 +1,6 @@
 import StoreModule from "../module";
 import exclude from "@src/utils/exclude";
+import { TCatalogState, TItem, TParams } from "./types";
 
 /**
  * Состояние каталога - параметры фильтра исписок товара
@@ -9,7 +10,7 @@ class CatalogState extends StoreModule {
    * Начальное состояние
    * @return {Object}
    */
-  initState() {
+  initState(): TCatalogState {
     return {
       list: [],
       params: {
@@ -31,9 +32,9 @@ class CatalogState extends StoreModule {
    * @param [newParams] {Object} Новые параметры
    * @return {Promise<void>}
    */
-  async initParams(newParams = {}) {
+  async initParams(newParams): Promise<void> {
     const urlParams = new URLSearchParams(window.location.search);
-    let validParams = {};
+    let validParams = {} as TParams;
 
     if (urlParams.has("page"))
       validParams.page = Number(urlParams.get("page")) || 1;
@@ -55,7 +56,7 @@ class CatalogState extends StoreModule {
    * @param [newParams] {Object} Новые параметры
    * @return {Promise<void>}
    */
-  async resetParams(newParams = {}) {
+  async resetParams(newParams: object = {}): Promise<void> {
     // Итоговые параметры из начальных, из URL и из переданных явно
     const params = { ...this.initState().params, ...newParams };
     // Установка параметров и загрузка данных
@@ -69,7 +70,10 @@ class CatalogState extends StoreModule {
    * @returns {Promise<void>}
    */
 
-  async setParams(newParams = {}, replaceHistory = false) {
+  async setParams(
+    newParams: object = {},
+    replaceHistory: boolean = false
+  ): Promise<void> {
     const params = { ...this.getState().params, ...newParams };
 
     // Установка новых параметров и признака загрузки
@@ -128,9 +132,9 @@ class CatalogState extends StoreModule {
     );
   }
 
-  selectItem(_id) {
+  selectItem(_id: string) {
     let exist = false;
-    const list = this.getState().selectedItems.map((item) => {
+    const list = this.getState().selectedItems.map((item: TItem) => {
       let result = item;
 
       if (item.id === _id) {
@@ -146,7 +150,7 @@ class CatalogState extends StoreModule {
       list.push(item);
     }
 
-    const selectedItems = list.filter((el) => el.selected);
+    const selectedItems = list.filter((el: TItem) => el.selected);
     this.setState(
       {
         ...this.getState(),

@@ -23,7 +23,6 @@ function Article() {
   const params = useParams();
 
   useInit(() => {
-    //store.actions.article.load(params.id);
     dispatch(articleActions.load(params.id));
   }, [params.id]);
 
