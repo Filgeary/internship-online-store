@@ -10,37 +10,43 @@ import BasketTotal from "@src/components/basket-total";
 import modalsActions from "@src/store-redux/modals/actions";
 import { useSelector as useSelectorRedux } from "react-redux";
 import useInit from "@src/hooks/use-init";
+import { TArticleState } from "@src/store/article/types";
+import { TReducer } from "@src/store-redux/modals/reducer";
 
 function Basket() {
   const store = useStore();
   const dispatch = useDispatch();
   const { t } = useTranslate();
 
-  const select = useSelector((state) => ({
-    list: state.basket.list,
-    amount: state.basket.amount,
-    sum: state.basket.sum,
-  }));
+  const select = useSelector(
+    (state: { basket: { list: any; amount: any; sum: any } }) => ({
+      list: state.basket.list,
+      amount: state.basket.amount,
+      sum: state.basket.sum,
+    })
+  );
 
-  const activeModal = useSelectorRedux((state) => state.modals);
+  const activeModal = useSelectorRedux(
+    (state: { article: TArticleState; modals: TReducer }) => state.modals
+  );
 
-  useInit(() => {
+    useInit(() => {
     if (Array.isArray(activeModal.data)) {
       store.actions.basket.multiAddToBasket(activeModal.data);
       dispatch(modalsActions.reset());
     }
-  }, [activeModal.data]);
+  }, [activeModal.data]); 
 
   const callbacks = {
     // Удаление из корзины
     removeFromBasket: useCallback(
-      (_id) => store.actions.basket.removeFromBasket(_id),
+      (_id: any) => store.actions.basket.removeFromBasket(_id),
       [store]
     ),
     // Закрытие модалки корзины
     closeModal: useCallback(() => {
       //store.actions.modals.close();
-      dispatch(modalsActions.close("basket"));
+      dispatch(modalsActions.close("basket", null));
     }, [store]),
     // Открытие модалки добавления еще товаров
     openModal: useCallback(() => {
@@ -50,7 +56,7 @@ function Basket() {
 
   const renders = {
     itemBasket: useCallback(
-      (item) => (
+      (item: any) => (
         <ItemBasket
           item={item}
           link={`/articles/${item._id}`}

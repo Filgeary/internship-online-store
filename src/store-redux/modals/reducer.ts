@@ -1,12 +1,20 @@
 // Начальное состояние
-const initialState = {
+export type TReducer = {
+  list: string[];
+  catalog: boolean;
+  data: any;
+};
+const initialState: TReducer = {
   list: [],
   catalog: false,
   data: null,
 };
 
 // Обработчик действий
-function reducer(state = initialState, action: { type: any; payload: { name: string; data: any; }; }) {
+function reducer(
+  state = initialState,
+  action: { type: any; payload: { name: string; data: any } }
+) {
   switch (action.type) {
     case "modal/open":
       return {
@@ -22,8 +30,8 @@ function reducer(state = initialState, action: { type: any; payload: { name: str
         catalog: action.payload.name === "catalog" && false,
         data: action.payload.data,
       };
-      case "modal/reset":
-        return {...state, data: null};
+    case "modal/reset":
+      return { ...state, data: null };
     default:
       return state;
   }

@@ -12,7 +12,7 @@ export default {
    * @param name
    * @param data
    */
-  close: (name: string, data=null) => {
+  close: (name: string, data: any) => {
     return { type: "modal/close", payload: { name, data } };
   },
 

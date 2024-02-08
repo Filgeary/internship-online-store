@@ -17,7 +17,7 @@ import articleActions from "@src/store-redux/article/actions";
 function Article() {
   const store = useStore();
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<any>();
   // Параметры из пути /articles/:id
 
   const params = useParams();
@@ -27,7 +27,7 @@ function Article() {
   }, [params.id]);
 
   const select = useSelectorRedux(
-    (state) => ({
+    (state:any) => ({
       article: state.article.data,
       waiting: state.article.waiting,
     }),
@@ -39,7 +39,7 @@ function Article() {
   const callbacks = {
     // Добавление в корзину
     addToBasket: useCallback(
-      (_id) => store.actions.basket.addToBasket(_id),
+      (_id:string) => store.actions.basket.addToBasket(_id),
       [store]
     ),
   };

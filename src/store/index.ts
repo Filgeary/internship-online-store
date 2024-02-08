@@ -3,28 +3,39 @@ import * as modules from "./exports.ts";
 import { TConfig } from "@src/config.ts";
 
 type TListeners = Array<(...args: any[]) => void>;
-
+type TActions = {
+  basket: any;
+  catalog: any;
+  locale: any;
+  categories: any;
+  session: any;
+  profile: any;
+};
 
 /**
  * Хранилище состояния приложения
  */
 class Store {
   services: Services;
-  config: TConfig['store'];
+  config: TConfig["store"];
   listeners: TListeners;
-  state: {};
-  actions: {};
+  state: TActions;
+  actions: TActions;
 
   /**
    * @param services {Services}
    * @param config {Object}
    * @param initState {Object}
    */
-  constructor(services: Services, config: { log: boolean; modules: { session: { tokenHeader: string; }; }; }, initState: object = {}) {
+  constructor(
+    services: Services,
+    config: { log: boolean; modules: { session: { tokenHeader: string } } },
+    initState: object = {}
+  ) {
     this.services = services;
     this.config = config;
     this.listeners = []; // Слушатели изменений состояния
-    this.state = initState;
+    this.state = initState as TActions;
     /** @type {{
      * basket: BasketState,
      * catalog: CatalogState,
@@ -35,7 +46,7 @@ class Store {
      * session: SessionState,
      * profile: ProfileState
      * }} */
-    this.actions = {};
+    this.actions = {} as TActions;
     for (const name of Object.keys(modules)) {
       this.actions[name] = new modules[name](
         this,
@@ -63,7 +74,10 @@ class Store {
    * @param listener {Function}
    * @returns {Function} Функция отписки
    */
-  subscribe(listener: { (...args: any[]): void; (...args: any[]): void; }): Function {
+  subscribe(listener: {
+    (...args: any[]): void;
+    (...args: any[]): void;
+  }): Function {
     this.listeners.push(listener);
     // Возвращается функция для удаления добавленного слушателя
     return () => {
@@ -103,7 +117,7 @@ class Store {
       console.log(`%c${"next:"}`, `color: ${"#2fa827"}`, newState);
       console.groupEnd();
     }
-    this.state = newState;
+    this.state = newState as TActions;
     // Вызываем всех слушателей
     for (const listener of this.listeners) listener(this.state);
   }
