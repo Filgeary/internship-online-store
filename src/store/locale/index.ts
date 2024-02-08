@@ -4,7 +4,7 @@ type TLocaleState = {
   lang: TLangs;
 };
 
-class LocaleState extends StoreModule {
+class LocaleState extends StoreModule<'locale'> {
   initState(): TLocaleState {
     return {
       lang: 'ru',
@@ -15,7 +15,7 @@ class LocaleState extends StoreModule {
    * Установка кода языка (локали)
    * @param lang
    */
-  setLang(lang) {
+  setLang(lang: TLangs) {
     this.setState({ lang }, 'Установлена локаль');
   }
 }

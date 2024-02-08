@@ -60,7 +60,7 @@ function Catalog({ children, ...props }: CatalogProps) {
     ),
     // Открыть модалку с выбором количества товара для добавления
     openModalOfCount: useCallback(
-      (item: TItem) => {
+      (item: TArticle) => {
         store.actions.basket.setActive(item);
         const promiseOfModal = store.actions.modals.open('countModal');
 

@@ -2,9 +2,9 @@ import { useLayoutEffect, useMemo, useState } from 'react';
 import shallowequal from 'shallowequal';
 import useStore from './use-store';
 
-import { IGlobalState } from '@src/store/exports';
+import { TGlobalState } from '@src/store/exports';
 
-type TSelectorFunc = (state: IGlobalState) => any;
+type TSelectorFunc = (state: TGlobalState) => any;
 
 /**
  * Хук для выборки данных из store и отслеживания их изменения

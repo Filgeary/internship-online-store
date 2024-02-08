@@ -1,11 +1,10 @@
-import { TConfig } from '@src/config';
 import StoreModule from '../module';
 import simplifyErrors from '@src/utils/simplify-errors';
 
 type TSessionState = {
   user: TSession | {};
   token: string | null;
-  errors: string[] | null;
+  errors: string[] | Record<string, string[]>;
   waiting: boolean;
   exists: boolean;
 };
@@ -13,9 +12,7 @@ type TSessionState = {
 /**
  * Сессия
  */
-class SessionState extends StoreModule {
-  config: TConfig['store']['modules']['session'];
-
+class SessionState extends StoreModule<'session'> {
   /**
    * Начальное состояние
    * @return {Object}
@@ -62,8 +59,6 @@ class SessionState extends StoreModule {
 
         // Запоминаем токен, чтобы потом автоматически аутентифицировать юзера
         window.localStorage.setItem('token', res.data.result.token);
-
-        console.log(res.data.result);
 
         // Устанавливаем токен в АПИ
         this.services.api.setHeader(

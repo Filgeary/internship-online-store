@@ -1,15 +1,18 @@
 import { TConfig } from '@src/config';
+import { TGlobalState } from './exports';
 
 import Services from '@src/services';
 import Store from '.';
+
+type TStoreName = keyof TGlobalState | keyof TConfig['store']['modules'] | null;
 
 /**
  * Базовый класс для модулей хранилища
  * Для группировки действий над внешним состоянием
  */
-class StoreModule {
+class StoreModule<T extends TStoreName = null> {
   readonly name: string;
-  readonly config: TConfig | {};
+  readonly config: TConfig['store']['modules'][T] | {};
   store: Store;
   services: Services;
 
@@ -18,7 +21,7 @@ class StoreModule {
    * @param name {String}
    * @param [config] {Object}
    */
-  constructor(store, name, config = {}) {
+  constructor(store: Store, name: string, config = {}) {
     this.store = store;
     this.name = name;
     this.config = config;
@@ -26,15 +29,15 @@ class StoreModule {
     this.services = store.services;
   }
 
-  initState() {
-    return {};
+  initState(): TGlobalState[T] {
+    return {} as TGlobalState[T];
   }
 
-  getState() {
+  getState(): TGlobalState[T] {
     return this.store.getState()[this.name];
   }
 
-  setState(newState, description = 'setState') {
+  setState(newState: TGlobalState[T], description = 'setState') {
     this.store.setState(
       {
         ...this.store.getState(),

@@ -2,8 +2,10 @@ import { TConfig } from '@src/config';
 import StoreModule from '../module';
 import exclude from '@src/utils/exclude';
 
+type TCatalogArticle = TArticle & { count?: number };
+
 type TCatalogState = {
-  list: TArticle[];
+  list: TCatalogArticle[];
   params: {
     page: number;
     limit: number;
@@ -18,9 +20,7 @@ type TCatalogState = {
 /**
  * Состояние каталога - параметры фильтра исписок товара
  */
-class CatalogState extends StoreModule {
-  config: TConfig['store']['modules']['catalog'];
-
+class CatalogState extends StoreModule<'catalog'> {
   /**
    * Начальное состояние
    * @return {Object}
@@ -46,7 +46,7 @@ class CatalogState extends StoreModule {
    * @param [newParams] {Object} Новые параметры
    * @return {Promise<void>}
    */
-  async initParams(newParams = {}) {
+  async initParams(newParams = {}): Promise<void> {
     const urlParams = new URLSearchParams(window.location.search);
     const validParams: Record<string, any> = {};
     if (!this.config.ignoreUrlOnInit) {
@@ -70,7 +70,7 @@ class CatalogState extends StoreModule {
    * @param [newParams] {Object} Новые параметры
    * @return {Promise<void>}
    */
-  async resetParams(newParams = {}) {
+  async resetParams(newParams = {}): Promise<void> {
     // Итоговые параметры из начальных, из URL и из переданных явно
     const params = { ...this.initState().params, ...newParams };
     // Установка параметров и загрузка данных
@@ -83,7 +83,7 @@ class CatalogState extends StoreModule {
    * @param [replaceHistory] {Boolean} Заменить адрес (true) или новая запись в истории браузера (false)
    * @returns {Promise<void>}
    */
-  async setParams(newParams = {}, replaceHistory = false) {
+  async setParams(newParams = {}, replaceHistory = false): Promise<void> {
     const params = { ...this.getState().params, ...newParams };
 
     // Установка новых параметров и признака загрузки
@@ -129,33 +129,32 @@ class CatalogState extends StoreModule {
       }
     );
 
-    let res = null;
     try {
-      res = await this.services.api.request<{ items: TArticle[] }>({
+      const res = await this.services.api.request<{
+        items: TArticle[];
+        count: number;
+      }>({
         url: `/api/v1/articles?${new URLSearchParams(apiParams)}`,
         timeout: 5000,
       });
-      // this.services.api.
+      const newState = {
+        ...this.getState(),
+        list: res.data.result.items,
+        count: res.data.result.count,
+        waiting: false,
+      };
+
+      this.setState(newState, 'Загружен список товаров из АПИ');
     } catch (err) {
       alert(err.message);
-      return;
     }
-
-    const newState = {
-      ...this.getState(),
-      list: res.data.result.items,
-      count: res.data.result.count,
-      waiting: false,
-    };
-
-    this.setState(newState, 'Загружен список товаров из АПИ');
   }
 
   /**
    * Увеличить количество товара в корзине
    * @param item
    */
-  incrementCount(item) {
+  incrementCount(item: TItem): void {
     const list = this.getState().list.map((elem) => {
       if (elem._id === item._id) {
         return { ...elem, count: elem.count ? elem.count + 1 : 1 };

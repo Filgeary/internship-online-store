@@ -1,9 +1,8 @@
 import Services from '@src/services';
-import modules, { IGlobalActions, IGlobalState } from './exports';
+import modules, { TGlobalActions, TGlobalState } from './exports';
 
 import { TConfig } from '@src/config';
 
-type TActions = IGlobalActions;
 type TListeners = Array<(...args: any[]) => void>;
 
 /**
@@ -13,8 +12,8 @@ class Store {
   services: Services;
   config: TConfig['store'];
   listeners: TListeners;
-  state: IGlobalState;
-  actions: TActions;
+  state: TGlobalState;
+  actions: TGlobalActions;
 
   /**
    * @param services {Services}
@@ -25,7 +24,7 @@ class Store {
     this.services = services;
     this.config = config as TConfig['store'];
     this.listeners = []; // Слушатели изменений состояния
-    this.state = initState as IGlobalState;
+    this.state = initState as TGlobalState;
     /** @type {{
      * basket: BasketState,
      * catalog: CatalogState,
@@ -36,7 +35,7 @@ class Store {
      * session: SessionState,
      * profile: ProfileState
      * }} */
-    this.actions = {} as TActions;
+    this.actions = {} as TGlobalActions;
     for (const name in modules) {
       const instanceState = new modules[name](
         this,
@@ -77,18 +76,8 @@ class Store {
 
   /**
    * Выбор состояния
-   * @returns {{
-   * basket: Object,
-   * catalog: Object,
-   * modals: Object,
-   * article: Object,
-   * locale: Object,
-   * categories: Object,
-   * session: Object,
-   * profile: Object,
-   * }}
    */
-  getState(): IGlobalState {
+  getState(): TGlobalState {
     return this.state;
   }
 
@@ -96,7 +85,7 @@ class Store {
    * Установка состояния
    * @param newState {Object}
    */
-  setState(newState, description = 'setState') {
+  setState(newState: TGlobalState, description: string = 'setState') {
     if (this.config.log) {
       console.group(
         `%c${'store.setState'} %c${description}`,

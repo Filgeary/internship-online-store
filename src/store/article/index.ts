@@ -8,7 +8,7 @@ type TArticleState = {
 /**
  * Детальная ифнормация о товаре для страницы товара
  */
-class ArticleState extends StoreModule {
+class ArticleState extends StoreModule<'article'> {
   initState(): TArticleState {
     return {
       data: {},

@@ -8,7 +8,7 @@ type TProfileState = {
 /**
  * Детальная информация о пользователе
  */
-class ProfileState extends StoreModule {
+class ProfileState extends StoreModule<'profile'> {
   initState(): TProfileState {
     return {
       data: {},
@@ -20,7 +20,7 @@ class ProfileState extends StoreModule {
    * Загрузка профиля
    * @return {Promise<void>}
    */
-  async load() {
+  async load(): Promise<void> {
     // Сброс текущего профиля и установка признака ожидания загрузки
     this.setState({
       data: {},

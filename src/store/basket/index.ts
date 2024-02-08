@@ -1,17 +1,20 @@
 import StoreModule from '../module';
 
+type TBasketArticle = TArticle & { amount?: number };
+type TBasketActive = TBasketArticle & { countToAdd?: number };
+
 type TBasketState = {
-  list: TArticle[];
+  list: TBasketArticle[];
   sum: number;
   amount: number;
-  active: string | null;
+  active: TBasketActive;
   waiting: boolean;
 };
 
 /**
  * Покупательская корзина
  */
-class BasketState extends StoreModule {
+class BasketState extends StoreModule<'basket'> {
   initState(): TBasketState {
     return {
       list: [],
@@ -43,12 +46,17 @@ class BasketState extends StoreModule {
 
     if (!exist) {
       // Поиск товара в каталоге, чтобы его добавить в корзину.
-      let res = null;
       try {
-        res = await this.services.api.request<TArticle>({
+        const res = await this.services.api.request<TArticle>({
           url: `/api/v1/articles/${_id}`,
-          timeout: 5000,
+          timeout: 10000,
         });
+
+        const item = res.data.result;
+
+        list.push({ ...item, amount: count }); // list уже новый, в него можно пушить.
+        // Добавляем к сумме.
+        sum += item.price * count;
       } catch (err) {
         alert(err.message);
         this.setState({
@@ -57,12 +65,6 @@ class BasketState extends StoreModule {
         });
         return;
       }
-
-      const item = res.data.result;
-
-      list.push({ ...item, amount: count }); // list уже новый, в него можно пушить.
-      // Добавляем к сумме.
-      sum += item.price * count;
     }
 
     this.setState(
@@ -82,7 +84,7 @@ class BasketState extends StoreModule {
    * @param item {Object} объект товара
    * @param count {Number} Количество товара
    */
-  async addToBasketItem(item: TItem, count: number = 1) {
+  async addToBasketItem(item: TArticle, count: number = 1) {
     let exist = false;
     let sum = 0;
 
@@ -98,9 +100,9 @@ class BasketState extends StoreModule {
     });
 
     if (!exist) {
-      item.amount = count;
-      list.push(item);
-      sum += count * item.price;
+      const newItem: TBasketArticle = { ...item, amount: count };
+      list.push(newItem);
+      sum += count * newItem.price;
     }
 
     this.setState({
@@ -121,21 +123,19 @@ class BasketState extends StoreModule {
     };
     const urlParams = new URLSearchParams(params);
 
-    let res = null;
     try {
-      res = await this.services.api.request({
+      const res = await this.services.api.request<{ items: TArticle[] }>({
         url: `/api/v1/articles?${urlParams}`,
+      });
+
+      const { items: requestedItems } = res.data.result;
+
+      requestedItems.forEach((item) => {
+        this.addToBasketItem(item, items[item._id]);
       });
     } catch (err) {
       alert(err.message);
-      return;
     }
-
-    const { items: requestedItems } = res.data.result;
-
-    requestedItems.forEach((item: TItem) => {
-      this.addToBasketItem(item, items[item._id]);
-    });
   }
 
   /**
@@ -174,10 +174,12 @@ class BasketState extends StoreModule {
    * Добавление активного элемента
    * @param item
    */
-  setActive(item: TItem) {
+  setActive(item: TArticle) {
+    const activeItem: TBasketActive = { ...item, countToAdd: 1 };
+
     this.setState({
       ...this.getState(),
-      active: item,
+      active: activeItem,
     });
   }
 

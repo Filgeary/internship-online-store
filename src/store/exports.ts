@@ -20,7 +20,7 @@ import StoreModule from './module';
 
 type TExctractor<T extends StoreModule> = ReturnType<T['initState']>;
 
-export interface IGlobalActions {
+export type TGlobalActions = {
   basket: BasketState;
   catalog: CatalogState;
   separateCatalog: CatalogState;
@@ -30,19 +30,11 @@ export interface IGlobalActions {
   categories: CategoriesState;
   session: SessionState;
   profile: ProfileState;
-}
+};
 
-export interface IGlobalState {
-  basket: TExctractor<BasketState>;
-  catalog: TExctractor<CatalogState>;
-  separateCatalog: TExctractor<CatalogState>;
-  modals: TExctractor<ModalsState>;
-  article: TExctractor<ArticleState>;
-  locale: TExctractor<LocaleState>;
-  categories: TExctractor<CategoriesState>;
-  session: TExctractor<SessionState>;
-  profile: TExctractor<ProfileState>;
-}
+export type TGlobalState = {
+  [P in keyof TGlobalActions]: TExctractor<TGlobalActions[P]>;
+};
 
 const modules = {
   basket: BasketState,
