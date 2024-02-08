@@ -6,7 +6,7 @@ const initialState = {
 };
 
 // Обработчик действий
-function reducer(state = initialState, action) {
+function reducer(state = initialState, action: { type: any; payload: { name: string; data: any; }; }) {
   switch (action.type) {
     case "modal/open":
       return {

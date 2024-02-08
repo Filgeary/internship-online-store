@@ -3,9 +3,9 @@ import { cn as bem } from "@bem-react/classname";
 import "./style.css";
 
 type ISideLayoutProps = {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   side?: "start" | "end" | "between";
-  padding: "small" | "medium";
+  padding?: "small" | "medium";
 };
 
 function SideLayout({ children, side, padding }: ISideLayoutProps) {

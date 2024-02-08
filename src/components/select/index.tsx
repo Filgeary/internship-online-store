@@ -2,8 +2,8 @@ import { memo } from "react";
 import "./style.css";
 
 type ISelectProps = {
-  options: { value: string | number; title: string }[];
-  value: any;
+  options?: { value: string | number; title: string }[];
+  value?: any;
   onChange: (value: string | number) => void;
 };
 function Select(props: ISelectProps) {

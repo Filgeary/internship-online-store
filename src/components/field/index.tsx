@@ -3,9 +3,9 @@ import { cn as bem } from "@bem-react/classname";
 import "./style.css";
 
 type IFieldProps = {
-  label: React.ReactNode;
-  error: React.ReactNode;
-  children: React.ReactNode;
+  label?: React.ReactNode;
+  error?: React.ReactNode;
+  children?: React.ReactNode;
 };
 function Field({ label, error, children }: IFieldProps) {
   const cn = bem("Field");

@@ -78,6 +78,7 @@ function CatalogList(props) {
     ),
   };
 
+
   return (
     <Spinner active={select.waiting}>
       <List list={select.list} renderItem={renders.item} />
@@ -87,6 +88,7 @@ function CatalogList(props) {
         limit={select.limit}
         onChange={callbacks.onPaginate}
         makeLink={callbacks.makePaginatorLink}
+        indent={1}
       />
     </Spinner>
   );

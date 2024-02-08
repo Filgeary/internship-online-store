@@ -3,7 +3,7 @@ export default {
    * Открытие модалки по названию
    * @param name
    */
-  open: (name, id) => {
+  open: (name: string) => {
     return { type: "modal/open", payload: { name } };
   },
 
@@ -12,7 +12,7 @@ export default {
    * @param name
    * @param data
    */
-  close: (name, data) => {
+  close: (name: string, data=null) => {
     return { type: "modal/close", payload: { name, data } };
   },
 

@@ -4,8 +4,8 @@ export default {
    * @param id
    * @return {Function}
    */
-  load: (id) => {
-    return async (dispatch, getState, services) => {
+  load: (id: string): Function => {
+    return async (dispatch: (arg0: { type: string; payload?: { data: any; }; }) => void, getState: any, services: { api: { request: (arg0: { url: string; }) => any; }; }) => {
       // Сброс текущего товара и установка признака ожидания загрузки
       dispatch({type: 'article/load-start'});
 

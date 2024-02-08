@@ -4,7 +4,7 @@ import numberFormat from "@src/utils/number-format";
 import "./style.css";
 
 type IArticleCardProps = {
-  article: {
+  article?: {
     _id: string;
     description: string;
     madeIn: { title: string; code: string; _id: string };

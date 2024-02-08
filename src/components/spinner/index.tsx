@@ -2,8 +2,8 @@ import { memo } from "react";
 import "./style.css";
 
 type ISpinnerProps = {
-  active: boolean;
-  children: React.ReactNode;
+  active?: boolean;
+  children?: React.ReactNode;
 }
 
 function Spinner ({ active, children }:ISpinnerProps)  {

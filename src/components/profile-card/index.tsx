@@ -36,7 +36,6 @@ function ProfileCard ({ data }:IProfileCardProps) {
 };
 
 /* ProfileCard.defaultProps = {
-  onAdd: () => {}
 } */
 
 export default memo(ProfileCard);

@@ -11,10 +11,10 @@ import debounce from "lodash.debounce";
 import "./style.css";
 
 type IInputProps = {
-  value: string;
+  value?: string;
   name?: string;
   type?: string;
-  placeholder: string;
+  placeholder?: string;
   onChange: (value: string, name?: string) => void;
   theme?: string;
 };

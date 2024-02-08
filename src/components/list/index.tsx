@@ -2,7 +2,7 @@ import { memo } from "react";
 import "./style.css";
 
 type IListProps = {
-  list: [{ _id: string | number }];
+  list?: [{ _id: string | number }];
   renderItem: (item: { _id: string | number }) => React.ReactNode;
 };
 

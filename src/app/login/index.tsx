@@ -23,10 +23,12 @@ function Login() {
     store.actions.session.resetErrors();
   });
 
-  const select = useSelector((state) => ({
-    waiting: state.session.waiting,
-    errors: state.session.errors,
-  }));
+  const select = useSelector(
+    (state: { session: { waiting: any; errors: any } }) => ({
+      waiting: state.session.waiting,
+      errors: state.session.errors,
+    })
+  );
 
   const [data, setData] = useState({
     login: "",
@@ -35,13 +37,13 @@ function Login() {
 
   const callbacks = {
     // Колбэк на ввод в элементах формы
-    onChange: useCallback((value, name) => {
+    onChange: useCallback((value: any, name: any) => {
       setData((prevData) => ({ ...prevData, [name]: value }));
     }, []),
 
     // Отправка данных формы для авторизации
     onSubmit: useCallback(
-      (e) => {
+      (e: { preventDefault: () => void }) => {
         e.preventDefault();
         store.actions.session.signIn(data, () => {
           // Возврат на страницу, с которой пришли

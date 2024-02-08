@@ -1,10 +1,15 @@
 import APIService from "./api";
+import { TConfig } from "./config";
 import Store from "./store";
 import createStoreRedux from "./store-redux";
 
 class Services {
-
-  constructor(config) {
+  config: TConfig;
+  private _api: any;
+  private _store: any;
+  private _redux: any;
+  
+  constructor(config:TConfig) {
     this.config = config;
   }
 
@@ -12,7 +17,7 @@ class Services {
    * Сервис АПИ
    * @returns {APIService}
    */
-  get api() {
+  get api(): APIService {
     if (!this._api) {
       this._api = new APIService(this, this.config.api);
     }
@@ -23,7 +28,7 @@ class Services {
    * Сервис Store
    * @returns {Store}
    */
-  get store() {
+  get store(): Store {
     if (!this._store) {
       this._store = new Store(this, this.config.store);
     }
@@ -33,7 +38,7 @@ class Services {
   /**
    * Redux store
    */
-  get redux(){
+  get redux() {
     if (!this._redux) {
       this._redux = createStoreRedux(this, this.config.redux);
     }

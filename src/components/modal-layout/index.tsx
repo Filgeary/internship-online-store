@@ -5,10 +5,10 @@ import "./style.css";
 type IModalLayoutProps = {
   title: string;
   onClose: () => void;
-  children: React.ReactNode;
+  children?: React.ReactNode;
   labelClose: string;
-  key: boolean;
-  code: boolean;
+  key?: boolean;
+  code?: boolean;
 };
 
 function ModalLayout(props: IModalLayoutProps) {

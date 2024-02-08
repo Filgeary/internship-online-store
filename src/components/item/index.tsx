@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import useSelector from "@src/hooks/use-selector";
 
 type IItemProps = {
-  item: {
+  item?: {
     _id: string | number;
     title: string;
     price: number;
@@ -15,7 +15,7 @@ type IItemProps = {
   onAdd: (id: string | number) => void;
   labelCurr: string;
   labelAdd: string;
-  catalog: boolean;
+  catalog?: boolean;
   onSelect: (item: {
     _id: string | number;
     title: string;

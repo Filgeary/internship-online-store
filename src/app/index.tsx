@@ -12,7 +12,7 @@ import Modals from "@src/containers/modals";
  * Приложение
  * @returns {React.ReactElement}
  */
-function App() {
+function App(): React.ReactElement {
   const store = useStore();
   useInit(async () => {
     await store.actions.session.remind();

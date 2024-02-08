@@ -18,6 +18,9 @@ const config = {
   api: {
     baseUrl: "",
   },
+  redux: {},
 };
+
+export type TConfig = typeof config;
 
 export default config;

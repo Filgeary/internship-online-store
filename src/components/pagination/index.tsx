@@ -25,6 +25,8 @@ function Pagination(props: IPaginationProps) {
   let items = [];
   // Первая страница всегда нужна
   if (left > 1) items.push(1);
+  console.log();
+
   // Пропуск
   if (left > 2) items.push(null);
   // Последовательность страниц
@@ -43,6 +45,7 @@ function Pagination(props: IPaginationProps) {
     };
 
   const cn = bem("Pagination");
+
   return (
     <ul className={cn()}>
       {items.map((number, index) => (
@@ -74,6 +77,6 @@ function Pagination(props: IPaginationProps) {
   limit: 10,
   count: 1000,
   indent: 1,
-}; */
+};  */
 
 export default memo(Pagination);
