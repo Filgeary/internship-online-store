@@ -1,6 +1,6 @@
 import React, { memo, useEffect } from 'react';
 
-import useSelector from '@src/hooks/use-selector';
+import { useAppSelector } from '@src/hooks/use-selector';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 type ProtectedProps = {
@@ -9,7 +9,7 @@ type ProtectedProps = {
 };
 
 function Protected({ children, redirect }: ProtectedProps) {
-  const select = useSelector((state) => ({
+  const select = useAppSelector((state) => ({
     exists: state.session.exists,
     waiting: state.session.waiting,
   }));

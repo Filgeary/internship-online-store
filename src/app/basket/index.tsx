@@ -1,6 +1,6 @@
 import { memo, useCallback } from 'react';
 import useStore from '@src/hooks/use-store';
-import useSelector from '@src/hooks/use-selector';
+import { useAppSelector } from '@src/hooks/use-selector';
 import useTranslate from '@src/hooks/use-translate';
 import ItemBasket from '@src/components/item-basket';
 import List from '@src/components/list';
@@ -12,12 +12,11 @@ import Spinner from '@src/components/spinner';
 function Basket() {
   const store = useStore();
 
-  const select = useSelector((state: any) => ({
+  const select = useAppSelector((state) => ({
     list: state.basket.list,
     amount: state.basket.amount,
     sum: state.basket.sum,
     waiting: state.basket.waiting,
-    dataObj: state.modals.dataObj,
   }));
 
   const callbacks = {

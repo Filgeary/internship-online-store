@@ -1,7 +1,7 @@
 import { memo, useCallback, useMemo } from 'react';
 
 import useStore from '@src/hooks/use-store';
-import useSelector from '@src/hooks/use-selector';
+import { useAppSelector } from '@src/hooks/use-selector';
 import useTranslate from '@src/hooks/use-translate';
 import Menu from '@src/components/menu';
 import BasketTool from '@src/components/basket-tool';
@@ -10,7 +10,7 @@ import SideLayout from '@src/components/side-layout';
 function Navigation() {
   const store = useStore();
 
-  const select = useSelector((state) => ({
+  const select = useAppSelector((state) => ({
     amount: state.basket.amount,
     sum: state.basket.sum,
     lang: state.locale.lang,

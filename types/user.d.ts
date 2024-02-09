@@ -15,13 +15,13 @@ declare global {
     dateCreate: string;
     dateUpdate: string;
     isDeleted: boolean;
-  }
-  
+  };
+
   export type TRole = {
     _id: string;
     _type: string;
-  }
-  
+  };
+
   export type TInfoProfile = {
     name: string;
     surname: string;
@@ -30,10 +30,10 @@ declare global {
     birthday: string;
     position: string;
     street: string;
-  }
+  };
 
   export type TSession = {
     token: string;
     user: TProfile;
-  }
+  };
 }

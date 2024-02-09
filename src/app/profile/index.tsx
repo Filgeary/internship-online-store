@@ -1,7 +1,7 @@
 import { memo } from 'react';
 
 import useStore from '@src/hooks/use-store';
-import useSelector from '@src/hooks/use-selector';
+import { useAppSelector } from '@src/hooks/use-selector';
 import useTranslate from '@src/hooks/use-translate';
 import useInit from '@src/hooks/use-init';
 
@@ -20,7 +20,7 @@ function Profile() {
     store.actions.profile.load();
   }, []);
 
-  const select = useSelector((state) => ({
+  const select = useAppSelector((state) => ({
     profile: state.profile.data,
     waiting: state.profile.waiting,
   }));

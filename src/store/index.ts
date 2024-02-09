@@ -47,11 +47,11 @@ class Store {
     }
   }
 
-  // create<Key extends keyModules>(name: Key) {
-  //   let b = modules[name] as importModules[Key];
-  //   let a = new b(this, name, {} as any) as Actions[Key];
+  // create<Key extends TKeyModules>(name: Key) {
+  //   const b = modules[name] as TImportModules[Key];
+  //   const a = new b(this, name, {} as any) as TGlobalActions[Key];
   //   this.actions[name] = a;
-  //   this.state[name] = this.actions[name].initState() as StoreState[Key];
+  //   this.state[name] = this.actions[name].initState() as TGlobalState[Key];
   // }
 
   /**

@@ -2,9 +2,9 @@ import StoreModule from '../module';
 import simplifyErrors from '@src/utils/simplify-errors';
 
 type TSessionState = {
-  user: TSession | {};
+  user: TProfile;
   token: string | null;
-  errors: string[] | Record<string, string[]>;
+  errors: Record<string, string>;
   waiting: boolean;
   exists: boolean;
 };
@@ -19,7 +19,7 @@ class SessionState extends StoreModule<'session'> {
    */
   initState(): TSessionState {
     return {
-      user: {},
+      user: {} as TProfile,
       token: null,
       errors: null,
       waiting: true,

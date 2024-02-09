@@ -1,7 +1,7 @@
 import React, { memo, createContext, useContext, useCallback } from 'react';
 
 import useStore from '@src/hooks/use-store';
-import useSelector from '@src/hooks/use-selector';
+import { useAppSelector } from '@src/hooks/use-selector';
 
 const CatalogContext = createContext(null);
 
@@ -25,7 +25,7 @@ type CatalogProps = {
 function Catalog({ children, ...props }: CatalogProps) {
   const store = useStore();
 
-  const select = useSelector((state) => ({
+  const select = useAppSelector((state) => ({
     list: state[props.stateName].list,
     page: state[props.stateName].params.page,
     limit: state[props.stateName].params.limit,

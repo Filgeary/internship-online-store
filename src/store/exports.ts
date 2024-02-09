@@ -15,7 +15,6 @@ import LocaleState from './locale';
 import CategoriesState from './categories';
 import SessionState from './session';
 import ProfileState from './profile';
-
 import StoreModule from './module';
 
 type TExctractor<T extends StoreModule> = ReturnType<T['initState']>;

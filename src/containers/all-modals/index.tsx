@@ -1,5 +1,5 @@
 import React, { useEffect, memo } from 'react';
-import useSelector from '@src/hooks/use-selector';
+import { useAppSelector } from '@src/hooks/use-selector';
 
 import Basket from '@src/app/basket';
 import CountToAdd from '@src/containers/count-to-add';
@@ -10,7 +10,7 @@ type AllModalsProps = {
 };
 
 function AllModals({ toDisableFocus }: AllModalsProps) {
-  const activeModals = useSelector((state) => state.modals.mapOfOpened);
+  const activeModals = useAppSelector((state) => state.modals.mapOfOpened);
   const modalsIds = Object.keys(activeModals);
 
   useEffect(() => {
@@ -19,7 +19,7 @@ function AllModals({ toDisableFocus }: AllModalsProps) {
     toDisableFocus.current.inert = Boolean(modalsIds.length);
   }, [activeModals]);
 
-  const modalsReducer = (name: string) => {
+  const modalsReducer = (name: TModalsNames) => {
     switch (name) {
       case 'basket':
         return <Basket />;

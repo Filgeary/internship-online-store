@@ -1,5 +1,5 @@
 import useStore from './use-store';
-import useSelector from './use-selector';
+import { useAppSelector } from './use-selector';
 
 /**
  * Хук для выборки функции закрытия родительского модального окна
@@ -8,7 +8,7 @@ import useSelector from './use-selector';
  */
 function useCloseParentFn(id: string): () => void {
   const store = useStore();
-  const activeModals = useSelector((state) => state.modals.mapOfOpened);
+  const activeModals = useAppSelector((state) => state.modals.mapOfOpened);
   const modalsIds = Reflect.ownKeys(activeModals) as string[];
 
   for (let i = 1; i < modalsIds.length; i++) {
