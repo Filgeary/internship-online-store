@@ -1,4 +1,10 @@
 export interface InitialStateCategories {
-  list: [];
+  list: unknown[];
   waiting: boolean;
+}
+
+export interface ResponseDataCategories {
+  result: {
+    items: any[]
+  }
 }

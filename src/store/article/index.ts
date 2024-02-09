@@ -4,7 +4,7 @@ import type { ResponseData, InitialStateArticle } from "./type";
 /**
  * Детальная ифнормация о товаре для страницы товара
  */
-class ArticleState extends StoreModule {
+class ArticleState extends StoreModule<"article"> {
 
   initState(): InitialStateArticle {
     return {

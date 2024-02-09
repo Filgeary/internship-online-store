@@ -45,7 +45,7 @@ function Login() {
     onSubmit: useCallback(
       (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        store.actions.session.signIn(data, () => {
+        store.actions.session?.signIn(data, () => {
           // Возврат на страницу, с которой пришли
           const back =
             location.state?.back && location.state?.back !== location.pathname

@@ -23,12 +23,12 @@ function ModalCatalog() {
 
   const callbacks = {
     onClose: useCallback(() => {
-      store.actions.modals.close(modalId);
+      store.actions.modals.close(modalId!);
       store.actions[storeName].resetSelectedItems();
       store.delete(storeName);
     }, [store, modalId]),
     onAddToBasket: useCallback(() => {
-      store.actions.modals.close(modalId, selectedItems);
+      store.actions.modals.close(modalId!, selectedItems);
       store.actions[storeName].resetSelectedItems();
     }, [store, selectedItems, modalId]),
   }

@@ -2,11 +2,11 @@ import type { Profile } from "../profile/type";
 
 export interface InitialStateSession {
   errors: {
-    other: string[]
+    other?: string[]
   } | null,
   exists: boolean,
   token: string | null,
-  user: Profile | {},
+  user: Partial<Profile>,
   waiting: boolean
 }
 
@@ -38,9 +38,7 @@ interface ResponseDataSessionSuccess {
 }
 
 interface ResponseDataSessionRemindSuccess {
-  result?: {
-    user: Profile;
-  };
+  result?: Profile;
 }
 
 export type ResponseDataSessionRemind = ResponseDataSessionRemindSuccess &

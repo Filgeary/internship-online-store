@@ -1,8 +1,8 @@
 import StoreModule from "../module";
 import codeGenerator from "@src/utils/code-generator";
-import type { InitialStateModals, NameModal } from "./type";
+import type { InitialStateModals } from "./type";
 
-class ModalsState extends StoreModule {
+class ModalsState extends StoreModule<"modals"> {
   initState(): InitialStateModals {
     return {
       list: [],
@@ -10,9 +10,9 @@ class ModalsState extends StoreModule {
     };
   }
 
-  open(name: NameModal) {
+  open(name: string) {
     return new Promise((resolve) => {
-      const id = codeGenerator(this.getState().lastOpenModalId)();
+      const id: number = codeGenerator(this.getState().lastOpenModalId)();
       this.setState(
         {
           ...this.getState(),
@@ -24,10 +24,10 @@ class ModalsState extends StoreModule {
     });
   }
 
-  close(id: number, data?: string[] | string) {
+  close(id: number, data?: string[] | string | number) {
     if (data) {
-      const { resolve } = this.getState().list.find(item => item.id === id);
-      resolve(data);
+      const modal = this.getState().list.find(item => item.id === id);
+      modal?.resolve(data);
     }
 
     const list = this.getState().list.filter((item) => item.id !== id);

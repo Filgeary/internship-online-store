@@ -5,7 +5,7 @@ import type { InitialStateCatalog, Params, ResponseCatalog } from "./type";
 /**
  * Состояние каталога - параметры фильтра исписок товара
  */
-class CatalogState extends StoreModule {
+class CatalogState extends StoreModule<"catalog"> {
   /**
    * Начальное состояние
    * @return {Object}
@@ -35,7 +35,7 @@ class CatalogState extends StoreModule {
   async initParams(newParams: Partial<Params> = {}): Promise<void> {
     const urlParams = new URLSearchParams(window.location.search);
     let validParams: Partial<Params> = {};
-    
+
     if (!this.config.ignoreURL) {
       if (urlParams.has("page"))
         validParams.page = Number(urlParams.get("page")) || 1;
@@ -149,7 +149,7 @@ class CatalogState extends StoreModule {
       );
     } else {
       const selectedItems = this.getState().selected.filter(
-        (item) => item !== _id
+        (item: string) => item !== _id
       );
       this.setState(
         {

@@ -5,7 +5,7 @@ import type { InitialStateBasket } from "./type";
 /**
  * Покупательская корзина
  */
-class BasketState extends StoreModule {
+class BasketState extends StoreModule<"basket"> {
   initState(): InitialStateBasket {
     return {
       list: [],

@@ -1,10 +1,10 @@
 export interface InitialStateModals {
   list: {
-    name: NameModal;
+    name: string;
     id: number;
-    resolve: Function;
+    resolve: (value: unknown) => void | PromiseLike<void>;
   }[];
   lastOpenModalId: number;
 }
 
-export type NameModal = "basket" | "count" | "catalogModal";
+// export type NameModal = "basket" | "count" | "catalogModal";

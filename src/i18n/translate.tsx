@@ -1,5 +1,6 @@
-import translations from './translations';
+import * as translations from './translations';
 
+type Lang = keyof typeof translations;
 export type Text = keyof typeof translations["ru"];
 
 /**
@@ -15,9 +16,10 @@ export default function translate(
   plural?: number
 ): string {
 
-  let result = (lang === "en" || lang === "ru") &&
-    translations[lang] && text in translations[lang]
-      ? translations[lang][text]
+  let result =
+    translations[lang as Lang] &&
+    text in translations[lang as Lang]
+      ? translations[lang as Lang][text]
       : text;
 
   if (typeof plural !== "undefined" && typeof result === "object") {

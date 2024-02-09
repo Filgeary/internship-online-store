@@ -4,8 +4,8 @@ import Store from "./store";
 
 class Services {
   config: Config;
-  _api?: APIService;
-  _store?: Store;
+  private _api?: APIService;
+  private _store?: Store;
 
   constructor(config: Config) {
     this.config = config;

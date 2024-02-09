@@ -5,7 +5,7 @@ import { Credentials, InitialStateSession, ResponseDataSession, ResponseDataSess
 /**
  * Сессия
  */
-class SessionState extends StoreModule {
+class SessionState extends StoreModule<"session"> {
   /**
    * Начальное состояние
    * @return {Object}
@@ -26,7 +26,7 @@ class SessionState extends StoreModule {
    * @param onSuccess
    * @returns {Promise<void>}
    */
-  async signIn(data: Credentials, onSuccess): Promise<void> {
+  async signIn(data: Credentials, onSuccess: () => void): Promise<void> {
     this.setState(this.initState(), 'Авторизация');
     try {
       const res =
@@ -106,8 +106,9 @@ class SessionState extends StoreModule {
         }, 'Сессии нет');
       } else {
         this.setState({
-          ...this.getState(), token: token, user: res.data.result, exists: true, waiting: false
+          ...this.getState(), token: token, user: res.data.result!, exists: true, waiting: false
         }, 'Успешно вспомнили сессию');
+        console.log(res.data.result);
       }
     } else {
       // Если токена не было, то сбрасываем ожидание (так как по умолчанию true)

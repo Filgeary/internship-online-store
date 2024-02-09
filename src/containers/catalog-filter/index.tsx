@@ -8,7 +8,7 @@ import SideLayout from "@src/components/side-layout";
 import treeToList from "@src/utils/tree-to-list";
 import listToTree from "@src/utils/list-to-tree";
 
-function CatalogFilter(props: { storeName: "catalog" | "copyCatalog" }) {
+function CatalogFilter(props: { storeName: string }) {
   const store = useStore();
 
   const select = useSelector((state: any) => ({

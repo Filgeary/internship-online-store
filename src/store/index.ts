@@ -1,42 +1,22 @@
-import { Config } from '@src/config.ts';
 import * as modules from './exports.ts';
+import type { Config } from '@src/config.ts';
 import Services from '@src/services.ts';
+import type { Actions, AllStoreNames, StoreState, keyModules } from './type.ts';
 
-type importModules = typeof modules;
-export type keyModules = keyof importModules;
-type State = ReturnType<InstanceType<importModules[keyModules]>["initState"]>;
-// type AutocompleteName<T extends string> = T | Omit<string, T>;
-// type AllStoreNames = AutocompleteName<keyModules>;
-type InitialState = {
-  [key in keyModules]: State;
-};
-type PickMatching<T, V> = {
-  [K in keyof T as T[K] extends V ? K : never]: T[K];
-};
-type ExtractMethods<T> = PickMatching<T, Function>;
-type Actions = ExtractMethods<InstanceType<importModules[keyModules]>>;
-type A = {
-  [key in keyModules]: Actions;
-};
 /**
  * Хранилище состояния приложения
  */
 class Store {
   services: Services;
-  config: Partial<Config["store"]>;
+  config: Config["store"];
   listeners: Function[];
-  actions: Partial<Actions>;
-  state: Partial<InitialState>;
+  actions: Actions;
+  state: StoreState;
 
-  /**
-   * @param services {Services}
-   * @param config {Object}
-   * @param initState {Object}
-   */
   constructor(
     services: Services,
-    config: Partial<Config["store"]> = {},
-    initState: Partial<InitialState> = {}
+    config = {} as Config["store"],
+    initState = {} as StoreState
   ) {
     this.services = services;
     this.config = config;
@@ -52,14 +32,14 @@ class Store {
      * session: SessionState,
      * profile: ProfileState
      * }} */
-    this.actions = {};
+    this.actions = {} as Actions;
     for (const name of Object.keys(modules)) {
-      this.actions[name] = new modules[name as keyModules](
+      this.actions[name] = new modules[name](
         this,
-        name as keyModules,
-        this.config.modules[name] || {}
+        name,
+        (this.config as Config["store"])?.modules[name] || {}
       );
-      this.state[name as keyModules] = this.actions[name].initState();
+      this.state[name] = this.actions[name].initState();
     }
     console.log(this.actions);
   }
@@ -67,11 +47,14 @@ class Store {
   /**
    * Создание копии стейта
    */
-  make(name, base: keyModules) {
+  make(name: string, base: string) {
     this.actions[name] = new modules[base](
       this,
       name,
-      { ...this.config?.modules[base], ...this.config?.modules[name] } || {}
+      {
+        ...this.config?.modules[base],
+        ...this.config?.modules[name],
+      } || {}
     );
     this.state[name] = this.actions[name].initState();
   }
@@ -79,7 +62,7 @@ class Store {
   /**
    * Удаление копии стейта
    */
-  delete(name) {
+  delete(name: string) {
     delete this.actions[name];
     delete this.state[name];
   }
@@ -109,15 +92,15 @@ class Store {
    * profile: Object,
    * }}
    */
-  getState(): InitialState {
-    return this.state as InitialState;
+  getState(): StoreState {
+    return this.state as StoreState;
   }
 
   /**
    * Установка состояния
    * @param newState {Object}
    */
-  setState(newState: Partial<InitialState>, description = "setState") {
+  setState(newState: StoreState, description = "setState") {
     if (this.config.log) {
       console.group(
         `%c${"store.setState"} %c${description}`,

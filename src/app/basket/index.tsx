@@ -33,12 +33,12 @@ function Basket() {
     removeFromBasket: useCallback((_id: string) => store.actions.basket.removeFromBasket(_id), [store]),
     // Закрытие любой модалки
     closeModal: useCallback(() => {
-      store.actions.modals.close(modalId)
+      store.actions.modals.close(modalId!)
     }, [store, modalId]),
     addToBasket: useCallback(async ()=> {
         store.make(options.storeName, options.baseStore);
-        store.actions.modals.open(options.modalName).then((selectedItems: string[]) => {
-          store.actions.basket.addManyToBasket(selectedItems);
+        store.actions.modals.open(options.modalName).then((selectedItems) => {
+          store.actions.basket.addManyToBasket(selectedItems as string[]);
           store.delete(options.storeName);
         });
     }, [store])

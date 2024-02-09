@@ -20,10 +20,10 @@ function Article() {
   const params = useParams();
 
   useInit(() => {
-    store.actions.article.load(params.id);
-  }, [params.id],);
+    store.actions.article.load(params.id!);
+  }, [params.id]);
 
-  const select = useSelector((state: any) => ({
+  const select = useSelector((state) => ({
     article: state.article.data,
     waiting: state.article.waiting,
   })); // Нужно указать функцию для сравнения свойства объекта, так как хуком вернули объект
@@ -36,7 +36,7 @@ function Article() {
         const storeName = "count";
         store.actions.modals
           .open(storeName)
-          .then((count: number) => store.actions.basket.addToBasket(_id, count));
+          .then((count) => store.actions.basket?.addToBasket(_id, count as number));
     }, [store]),
   };
 

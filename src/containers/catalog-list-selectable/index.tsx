@@ -7,7 +7,7 @@ import Spinner from "@src/components/spinner";
 import SelectableItem from "@src/components/selectable-item";
 import { ItemType } from "@src/components/item-basket/type";
 
-function CatalogListSelectable(props: { storeName: "copyCatalog" }) {
+function CatalogListSelectable(props: { storeName: string }) {
   const store = useStore();
 
   const select = useSelector((state: any) => ({

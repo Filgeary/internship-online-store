@@ -4,7 +4,7 @@ import type { InitialStateProfile, ResponseProfile } from "./type";
 /**
  * Детальная информация о пользователе
  */
-class ProfileState extends StoreModule {
+class ProfileState extends StoreModule<"profile"> {
 
   initState(): InitialStateProfile {
     return {

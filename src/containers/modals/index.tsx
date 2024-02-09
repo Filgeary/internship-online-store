@@ -5,9 +5,9 @@ import CountItemModal from "@src/containers/count-item-modal";
 import ModalCatalog from "../modal-catalog";
 
 function Modals() {
-  const activeModals = useSelector((state: any) => state.modals.list);
+  const activeModals = useSelector((state) => state.modals.list);
 
-  const modals = (name) => {
+  const modals = (name: string) => {
     switch (name) {
       case "basket":
         return <Basket />;

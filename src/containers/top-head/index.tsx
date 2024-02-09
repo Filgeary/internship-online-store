@@ -12,7 +12,7 @@ function TopHead() {
   const location = useLocation();
   const store = useStore();
 
-  const select = useSelector((state: any) => ({
+  const select = useSelector((state) => ({
     user: state.session.user,
     exists: state.session.exists
   }));
@@ -25,7 +25,7 @@ function TopHead() {
 
     // Отмена авторизации
     onSignOut: useCallback(() => {
-      store.actions.session.signOut();
+      store.actions.session?.signOut();
     }, []),
   }
 

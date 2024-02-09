@@ -12,10 +12,10 @@ function CountItemModal() {
   const callbacks = {
     // Закрытие модалки
     closeModal: useCallback(() => {
-      store.actions.modals.close(modalId)
+      store.actions.modals.close(modalId!)
     }, [store, modalId]),
     onSubmit: useCallback((count: string) => {
-      store.actions.modals.close(modalId, +count);
+      store.actions.modals.close(modalId!, +count);
     }, [store, modalId]),
   };
 

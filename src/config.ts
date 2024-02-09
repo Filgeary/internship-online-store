@@ -12,18 +12,21 @@ const config = {
     modules: {
       session: {
         // Названия токена в АПИ
-        tokenHeader: 'X-Token'
+        tokenHeader: "X-Token",
       },
       //Настройки для копируемого состояния каталога
       copyCatalog: {
         //Не добавлять параметры из/в адресную строку
-        ignoreURL: true
-      }
-    }
+        ignoreURL: true,
+      },
+      catalog: {
+        ignoreURL: false,
+      },
+    },
   },
   api: {
-    baseUrl: ''
+    baseUrl: "",
   },
-}
+};
 
 export default config;

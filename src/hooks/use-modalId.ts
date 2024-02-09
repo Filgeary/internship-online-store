@@ -8,7 +8,7 @@ import useInit from "./use-init";
 function useModalId() {
   const [modalId, setModalId] = useState(null);
 
-  const id = useSelector((state) => state.modals.lastOpenModalId);
+  const id = useSelector((state: any) => state.modals.lastOpenModalId);
 
   useInit(() => {
     setModalId(id);

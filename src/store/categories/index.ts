@@ -1,16 +1,17 @@
 import StoreModule from "../module";
+import { InitialStateCategories, ResponseDataCategories } from "./type";
 
 
 /**
  * Список категорий
  */
-class CategoriesState extends StoreModule {
+class CategoriesState extends StoreModule<"categories"> {
 
   /**
    * Начальное состояние
    * @return {Object}
    */
-  initState() {
+  initState(): InitialStateCategories {
     return {
       list: [],
       waiting: false
@@ -23,9 +24,10 @@ class CategoriesState extends StoreModule {
   async load() {
     this.setState({...this.getState(), waiting: true}, 'Ожидание загрузки категорий');
 
-    const res = await this.services.api.request({
-      url: `/api/v1/categories?fields=_id,title,parent(_id)&limit=*`
-    });
+    const res =
+      await this.services.api.request<ResponseDataCategories>({
+        url: `/api/v1/categories?fields=_id,title,parent(_id)&limit=*`,
+      });
 
     if(res.status === 200) {
       // Товар загружен успешно
