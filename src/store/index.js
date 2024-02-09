@@ -33,9 +33,14 @@ class Store {
   }
 
   make(name, base) {
-    this.actions[name] = new modules[base](this, name, this.config?.modules[base] || {});
+    this.actions[name] = new modules[base](
+      this,
+      name,
+      this.config?.modules[base] || {}
+    );
     this.state[name] = this.actions[name].initState();
   }
+
 
   /**
    * Подписка слушателя на изменения состояния

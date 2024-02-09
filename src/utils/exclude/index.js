@@ -1,4 +1,5 @@
-import isPlainObject from '../is-plain-object';
+import isPlainObject from '../is-plain-object'
+import { IObjectExc, IObjectSrc } from './types'
 
 /**
  * Возвращает объект, в котором не будет совпадений со вторым объектом
@@ -23,3 +24,4 @@ export default function exclude(objectSrc, objectExc) {
     return objectSrc;
   }
 }
+

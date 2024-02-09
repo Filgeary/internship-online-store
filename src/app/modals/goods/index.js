@@ -3,12 +3,12 @@ import {useDispatch, useStore as useStoreRedux} from 'react-redux';
 import useInit from '@src/hooks/use-init';
 import useStore from "@src/hooks/use-store";
 import useTranslate from "@src/hooks/use-translate";
-import ModalLayout from "@src/components/modal-layout";
-import modalsActions from '@src/store-redux/modals/actions';
-import CatalogList from '@src/containers/catalog-list';
+import ModalLayout from "@src/components/modal-layout"
+import modalsActions from '@src/store-redux/modals/actions'
+import CatalogList from '@src/containers/catalog-list'
 import { CatalogFilterForModal } from '@src/containers/hoc/with-catalog-filter'
-import {useSelector as useSelectorRedux} from 'react-redux';
-import closeId from '@src/utils/closeId';
+import {useSelector as useSelectorRedux} from 'react-redux'
+import closeId from '@src/utils/closeId'
 
 function Goods() {
 
@@ -16,7 +16,6 @@ function Goods() {
   const dispatch = useDispatch()
 
   const stateModal = useSelectorRedux(state => state.modals.modals)
-  const nameModal = useSelectorRedux(state => state.modals.name)
 
   const callbacks = {
     closeModal: useCallback(() => {
