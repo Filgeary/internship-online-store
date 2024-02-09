@@ -1,36 +1,5 @@
 import StoreModule from "../module";
-
-export interface Article {
-  _id: string;
-  _key: string;
-  name: string;
-  title: string;
-  description: string;
-  price: number;
-  madeIn: MadeIn;
-  edition: number;
-  category: Category;
-  order: number;
-  isNew: boolean;
-  isDeleted: boolean;
-  isFavorite: boolean;
-}
-
-export interface MadeIn {
-  title: string;
-  code: string;
-  _id: string;
-}
-
-export interface Category {
-  title: string;
-  _id: string;
-}
-
-interface IArticleState {
-  data: Article;
-  waiting: boolean;
-}
+import { Article, IArticleState } from "./types";
 
 /**
  * Детальная ифнормация о товаре для страницы товара
@@ -67,7 +36,7 @@ class ArticleState extends StoreModule {
       // Ошибка при загрузке
       // @todo В стейт можно положить информацию об ошибке
       this.setState({
-        data: {},
+        data: {} as Article,
         waiting: false,
       });
     }

@@ -11,6 +11,7 @@ const modalsList = {
 };
 
 function Modals() {
+  //@ts-ignore
   const activeModals = useSelectorRedux((state) => state.modals.activeModals);
 
   return activeModals.map((modal, i, arr) => {

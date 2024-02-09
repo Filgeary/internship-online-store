@@ -6,7 +6,6 @@ import {
 } from "react-redux";
 import useStore from "@src/hooks/use-store";
 import useSelector from "@src/hooks/use-selector";
-import useInit from "@src/hooks/use-init";
 import useTranslate from "@src/hooks/use-translate";
 import ItemBasket from "@src/components/item-basket";
 import List from "@src/components/list";
@@ -25,9 +24,10 @@ function Basket({ onTop, id }: ModalProps) {
     sum: state.basket.sum,
   }));
 
-  const promiseRef = useRef();
+  const promiseRef = useRef(null);
 
   useSelectorRedux((state) => {
+    //@ts-ignore
     promiseRef.current = state.modals.activeModals.find(
       (el) => el.id === id
     )?.promise;
@@ -35,15 +35,14 @@ function Basket({ onTop, id }: ModalProps) {
 
   const callbacks = {
     openCatalogListModal: useCallback(() => {
+      //@ts-ignore
       dispatch(modalsActions.open("catalog-list-modal"));
-      promiseRef.current?.then(async (items) => {
+
+      promiseRef.current.then(async (items) => {
         for (const i in items) {
           console.log(items[i], "item");
           await store.actions.basket.addToBasket(items[i], 1);
         }
-        // items.forEach((item) => {
-        //   store.actions.basket.addToBasket(item, 1);
-        // });
         dispatch(modalsActions.close(id));
       });
     }, [store]),

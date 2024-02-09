@@ -34,6 +34,7 @@ function CatalogListModal({ onTop, id }: ModalProps) {
   );
 
   const resolve = useSelectorRedux(
+    //@ts-ignore
     (state) => state.modals.activeModals.find((el) => el.id === id).resolve
   );
 
@@ -48,6 +49,7 @@ function CatalogListModal({ onTop, id }: ModalProps) {
   const promiseRef = useRef();
 
   useSelectorRedux((state) => {
+    //@ts-ignore
     promiseRef.current = state.modals.activeModals.find(
       (el) => el.id === id
     )?.promise;

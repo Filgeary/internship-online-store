@@ -46,7 +46,6 @@ function CountModal({ title, onTop, id }: ModalProps) {
     },
   };
 
-  //@ts-ignore
   const { t } = useTranslate();
 
   return (
@@ -56,8 +55,7 @@ function CountModal({ title, onTop, id }: ModalProps) {
       onClose={callbacks.onCancel}
       onTop={onTop}
     >
-      {/* @ts-ignore  */}
-      <CountPicker callbacks={callbacks} t={t} count={count} title={title} />
+      <CountPicker callbacks={callbacks} count={count} title={title} />
     </ModalLayout>
   );
 }
