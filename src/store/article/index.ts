@@ -21,7 +21,7 @@ class ArticleState extends StoreModule<'article'> {
    * @param id {String}
    * @return {Promise<void>}
    */
-  async load(id) {
+  async load(id: string | number): Promise<void> {
     // Сброс текущего товара и установка признака ожидания загрузки
     this.setState({
       data: {},

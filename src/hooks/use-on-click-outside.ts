@@ -21,14 +21,17 @@ function useOnClickOutside(
     //   }
     // };
 
-    ref.current.addEventListener('click', listener);
-    ref.current.addEventListener('touchstart', listener);
+    // ref.current.addEventListener('click', listener);
+    // ref.current.addEventListener('touchstart', listener);
+    ref.current.addEventListener('pointerdown', listener);
 
     // document.addEventListener('keydown', keyListener);
 
     return () => {
-      ref.current?.removeEventListener('click', listener);
-      ref.current?.removeEventListener('touchstart', listener);
+      // ref.current?.removeEventListener('click', listener);
+      // ref.current?.removeEventListener('touchstart', listener);
+
+      ref.current?.removeEventListener('pointerdown', listener);
 
       // document.addEventListener('keydown', keyListener);
     };

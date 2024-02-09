@@ -13,7 +13,6 @@ declare global {
     category: TCategory;
     order: number;
     isNew: boolean;
-    proto: TProto;
     _type: string;
     dateCreate: string;
     dateUpdate: string;
@@ -33,6 +32,4 @@ declare global {
     _type: string;
     title: string;
   };
-
-  export type TProto = {};
 }

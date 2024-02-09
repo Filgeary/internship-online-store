@@ -20,7 +20,7 @@ class Store {
    * @param config {Object}
    * @param initState {Object}
    */
-  constructor(services, config = {}, initState = {}) {
+  constructor(services: Services, config = {}, initState = {}) {
     this.services = services;
     this.config = config as TConfig['store'];
     this.listeners = []; // Слушатели изменений состояния
@@ -46,6 +46,13 @@ class Store {
       this.state[name] = this.actions[name].initState();
     }
   }
+
+  // create<Key extends keyModules>(name: Key) {
+  //   let b = modules[name] as importModules[Key];
+  //   let a = new b(this, name, {} as any) as Actions[Key];
+  //   this.actions[name] = a;
+  //   this.state[name] = this.actions[name].initState() as StoreState[Key];
+  // }
 
   /**
    * Создать копию, на основе существующего состояния

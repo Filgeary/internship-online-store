@@ -27,6 +27,7 @@ class ModalsState extends StoreModule<'modals'> {
   open: (name: string) => Promise<unknown> = (name: string) => {
     if (this.config.onlyUnique && this.getState().mapOfOpened[name]) return;
     const id = generateHash();
+    // const id = self.crypto.randomUUID();
 
     const promise = new Promise((resolve, reject) => {
       this.setState({
