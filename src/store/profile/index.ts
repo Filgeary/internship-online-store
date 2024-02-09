@@ -1,11 +1,12 @@
 import StoreModule from "../module";
+import { IProfileInitState } from "./types";
 
 /**
  * Детальная информация о пользователе
  */
 class ProfileState extends StoreModule {
 
-  initState() {
+  initState(): IProfileInitState {
     return {
       data: {},
       waiting: false // признак ожидания загрузки

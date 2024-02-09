@@ -1,11 +1,12 @@
 import StoreModule from "../module";
+import { IArticleInitState } from "./types";
 
 /**
  * Детальная ифнормация о товаре для страницы товара
  */
 class ArticleState extends StoreModule {
 
-  initState() {
+  initState(): IArticleInitState {
     return {
       data: {},
       waiting: false // признак ожидания загрузки

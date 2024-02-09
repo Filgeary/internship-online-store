@@ -1,8 +1,10 @@
 import StoreModule from "../module";
+import { IModalsInitState } from "./types";
+
 
 class ModalsState extends StoreModule {
 
-  initState() {
+  initState(): IModalsInitState {
     return {
       name: null
     }

@@ -1,4 +1,6 @@
-import StoreModule from "./module";
+/* eslint-disable class-methods-use-this, import/no-default-export */
+import StoreModule from '../module';
+import { type IForkInitState } from './types';
 
 /**
  * Позволяет отделять оригиналы от форков, реагировать на удаление форка и содержит информацию для отладки
@@ -15,10 +17,9 @@ import StoreModule from "./module";
  * }
  */
 class ForkState extends StoreModule {
-
-  initState() {
+  initState(): IForkInitState {
     return {
-      list: []
+      list: [],
     };
   }
 }

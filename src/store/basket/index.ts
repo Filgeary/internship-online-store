@@ -1,11 +1,12 @@
 import StoreModule from "../module";
+import { IBasketInitState } from "./types";
 
 /**
  * Покупательская корзина
  */
 class BasketState extends StoreModule {
 
-  initState() {
+  initState(): IBasketInitState {
     return {
       list: [],
       sum: 0,
@@ -26,7 +27,7 @@ class BasketState extends StoreModule {
     let lock = this.getState().lock;
     let i = 0;
     while (lock && i < 1000) {
-      await new Promise(resolve => setTimeout(() => resolve(), 100));
+      await new Promise(resolve => setTimeout(() => resolve(null), 100));
       lock = this.getState().lock;
       i++;
     }
@@ -37,7 +38,7 @@ class BasketState extends StoreModule {
     }, 'Начинаем добавление в корзину');
 
     // Итемы, которые запросим с сервера в одном запросе
-    const notExistInBasket = [];
+    const notExistInBasket: Record<string, unknown>[] = [];
 
     let list = this.getState().list;
     let sum = 0;
@@ -75,7 +76,7 @@ class BasketState extends StoreModule {
       const itemsArray = res.data.result.items;
 
       for (const item of itemsArray) {
-        const pcsNum = Number(notExistInBasket.find(({_id}) => _id === item._id).pcs)
+        const pcsNum = Number(notExistInBasket.find(({_id}) => _id === item._id)?.pcs)
 
         list.push({...item, amount: pcsNum}); // list уже новый, в него можно пушить.
         // Добавляем к сумме.

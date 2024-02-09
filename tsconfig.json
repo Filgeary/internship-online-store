@@ -1,0 +1,28 @@
+{
+  "extends": "@tsconfig/recommended/tsconfig.json",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "outDir": "./dist",
+    "allowJs": true,
+    "noImplicitAny": false,
+    "removeComments": false,
+    "sourceMap": true,
+    "paths": {
+      "@src/*": ["./src/*"]
+    }
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx"
+  ],
+  "exclude": [
+    "src/**/*.js",
+    "src/**/*.jsx",
+    "dist",
+    "img",
+    "api-examples",
+    "node_modules",
+    "./dist/**/*"
+  ]
+}
+

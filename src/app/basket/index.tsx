@@ -21,7 +21,7 @@ function Basket(props) {
   const select = useSelector(state => ({
     list: state.basket.list,
     amount: state.basket.amount,
-    sum: state.basket.sum
+    sum: state.basket.sum,
   }));
 
   const callbacks = {

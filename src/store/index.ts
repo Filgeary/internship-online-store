@@ -1,11 +1,59 @@
 import * as modules from './exports.js';
-import ForkState from './fork.js';
+import ForkState from './fork';
 import { theme } from './log-theme.js';
+import StoreModule from './module.js';
+
+// Вот такой вариант работает, но он не автоматический
+type TState = {
+  basket: ReturnType<modules.basket['initState']>;
+  catalog: ReturnType<modules.catalog['initState']>;
+  modals: ReturnType<modules.modals['initState']>;
+  article: ReturnType<modules.article['initState']>;
+  locale: ReturnType<modules.locale['initState']>;
+  categories: ReturnType<modules.categories['initState']>;
+  session: ReturnType<modules.session['initState']>;
+  profile: ReturnType<modules.profile['initState']>;
+  // Стейт форков у меня подключается отдельно
+  forks: ReturnType<ForkState['initState']>;
+}
+
+// Дальше попытка это всё автоматизировать
+type moduleType = typeof modules;
+
+// Вот такая строка работает нормально, но в ней жёстко задано 'modules.basket'
+type TTest1 = Record<keyof moduleType, ReturnType<modules.basket['initState']>>
+// Вывод:
+// type TTest1 = {
+//    basket: IBasketInitState;
+//    catalog: IBasketInitState;
+//    modals: IBasketInitState;
+//    ...
+// }
+
+// Попытки автоматизировать это дело уже не работают:
+type TTest2<Type extends Partial<StoreModule>> = {
+    [Property in keyof Type]: ReturnType<Type[Property]['initState']>
+};
+
+type TResult = TTest2<moduleType>
+// Вывод:
+// type TResult = {
+//   basket: any;
+//   catalog: any;
+//   ...
+// }
 
 /**
  * Хранилище состояния приложения
  */
 class Store {
+  listeners: ((arg?: typeof this.state) => void)[];
+  state: TState;
+  //services;
+  //config;
+  //forks;
+  //actions;
+  [field: string]: any;
 
   /**
    * @param services {Services}
@@ -17,7 +65,7 @@ class Store {
     this.config = config;
     this.forks = [];
     this.listeners = []; // Слушатели изменений состояния
-    this.state = initState;
+    this.state = initState as typeof this.state;
     /** @type {{
      * basket: BasketState,
      * catalog: CatalogState,
@@ -46,7 +94,7 @@ class Store {
    * @param parent {String}
    * @param opt {Object} - {_id, configName, initStateName, initState}
    */
-  fork(name, parent, opt = {}) {
+  fork(name, parent, opt: Record<string, any> = {}) {
     opt.configName ??= parent;
     opt.initStateName ??= name;
     opt.initState ??= null;

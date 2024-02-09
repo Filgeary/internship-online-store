@@ -1,6 +1,7 @@
 import StoreModule from "../module";
 import exclude from "@src/utils/exclude";
 import shallowequal from "shallowequal";
+import { ICatalogInitState } from "./types";
 
 /**
  * Состояние каталога - параметры фильтра исписок товара
@@ -11,7 +12,7 @@ class CatalogState extends StoreModule {
    * Начальное состояние
    * @return {Object}
    */
-  initState() {
+  initState(): ICatalogInitState {
     return {
       list: [],
       params: {
@@ -36,7 +37,7 @@ class CatalogState extends StoreModule {
    */
   async initParams(newParams = {}) {
     const urlParams = new URLSearchParams(window.location.search);
-    let validParams = {};
+    let validParams: Record<string, unknown> = {};
     if (this.name === 'catalog') { // только для компонента 'catalog', не для его форков
       if (urlParams.has('page')) validParams.page = Number(urlParams.get('page')) || 1;
       if (urlParams.has('limit')) validParams.limit = Math.min(Number(urlParams.get('limit')) || 10, 50);
@@ -57,7 +58,7 @@ class CatalogState extends StoreModule {
     let lock = this.getState().lock;
     let i = 0;
     while (lock && i < 1000) {
-      await new Promise(resolve => setTimeout(() => resolve(), 100));
+      await new Promise(resolve => setTimeout(() => resolve(null), 100));
       lock = this.getState().lock;
       i++;
     }

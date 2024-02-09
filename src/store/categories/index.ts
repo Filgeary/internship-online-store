@@ -1,5 +1,5 @@
 import StoreModule from "../module";
-
+import { ICategoriesInitState } from "./types";
 
 /**
  * Список категорий
@@ -10,7 +10,7 @@ class CategoriesState extends StoreModule {
    * Начальное состояние
    * @return {Object}
    */
-  initState() {
+  initState(): ICategoriesInitState {
     return {
       list: [],
       waiting: false

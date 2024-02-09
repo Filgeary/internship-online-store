@@ -7,7 +7,7 @@ import * as translations from './translations';
  * @param [plural] {Number} Число для плюрализации
  * @returns {String} Переведенный текст
  */
-export default function translate(lang, text, plural) {
+export default function translate(lang: string, text: string, plural: number): string {
   let result = translations[lang] && (text in translations[lang])
     ? translations[lang][text]
     : text;

@@ -14,7 +14,8 @@ let config = {
   },
   mode: process.env.NODE_ENV,
   resolve: {
-    extensions: ['.js', '.jsx'], // расширения по умолчанию если не указаны в import
+    // Docs: https://webpack.js.org/configuration/resolve/#resolveextensions
+    extensions: ['.js', '.jsx', '.ts', '.tsx', '...'], // расширения по умолчанию если не указаны в import
     modules: ['./', 'node_modules'], // Где искать файлы подключаемых модулей (пакетов)
     alias: {
       '@src': path.resolve(__dirname, './src'),
@@ -24,7 +25,7 @@ let config = {
     rules: [
       // Транспиляция JS/JSX
       {
-        test: /\.jsx?$/,
+        test: /\.(j|t)sx?$/,
         exclude: /node_modules/,
         use: [{loader: 'babel-loader'}],
       },

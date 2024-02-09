@@ -1,5 +1,6 @@
 import StoreModule from "../module";
 import simplifyErrors from "@src/utils/simplify-errors";
+import { ISessionInitState } from "./types";
 
 /**
  * Сессия
@@ -9,7 +10,7 @@ class SessionState extends StoreModule {
    * Начальное состояние
    * @return {Object}
    */
-  initState() {
+  initState(): ISessionInitState {
     return {
       user: {},
       token: null,

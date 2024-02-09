@@ -1,9 +1,10 @@
-import {memo} from "react";
+import React, {memo} from "react";
 import { cn as bem } from '@bem-react/classname';
 import CircleSpinner from "../circle-spinner";
+import { IButtonProps } from "./types";
 import './style.css';
 
-function Button({ isLoading, value, size, height, ...props }) {
+function Button({ isLoading, value, size, height, ...props }: IButtonProps) {
   const cn = bem('Button');
 
   return (

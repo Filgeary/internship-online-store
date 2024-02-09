@@ -1,11 +1,12 @@
-import {memo} from "react";
-import PropTypes from 'prop-types';
+import { memo } from "react";
+import PropTypes, { string } from 'prop-types';
 import {cn as bem} from '@bem-react/classname';
 import numberFormat from "@src/utils/number-format";
+import Button from "@src/components/button";
+import { IArticleCardProps } from "./types";
 import './style.css';
-import Button from "../button";
 
-function ArticleCard({article, onAdd, isDialog, t}) {
+function ArticleCard({article, onAdd, isDialogOpen, t}: IArticleCardProps) {
   const cn = bem('ArticleCard');
   return (
     <div className={cn()}>
@@ -26,7 +27,7 @@ function ArticleCard({article, onAdd, isDialog, t}) {
         <div className={cn('label')}>Цена:</div>
         <div className={cn('value')}>{numberFormat(article.price)} ₽</div>
       </div>
-      <Button onClick={() => onAdd(article._id)} value={t('article.add')} isLoading={isDialog} />
+      <Button onClick={() => onAdd?.(article._id)} value={t?.('article.add')} isLoading={isDialogOpen} />
     </div>
   );
 }
@@ -41,12 +42,14 @@ ArticleCard.propTypes = {
     price: PropTypes.number
   }).isRequired,
   onAdd: PropTypes.func,
-  t: PropTypes.func
+  t: PropTypes.func,
+  isDialogOpen: PropTypes.bool,
 };
 
 ArticleCard.defaultProps = {
   onAdd: () => {},
-  t: (text) => text
+  t: (text: string): string => text,
+  isDialogOpen: false,
 }
 
 export default memo(ArticleCard);

@@ -3,6 +3,11 @@
  * Для группировки действий над внешним состоянием
  */
 class StoreModule {
+  store;
+  name;
+  config;
+  services;
+  [field: string]: any;
 
   /**
    * @param store {Store}
@@ -17,7 +22,7 @@ class StoreModule {
     this.services = store.services;
   }
 
-  initState() {
+  initState(): Record<string, any> {
     return {}
   }
 

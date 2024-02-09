@@ -21,7 +21,7 @@ export function I18nProvider({children}) {
     // Функция для смены локали
     setLang,
     // Функция для локализации текстов с замыканием на код языка
-    t: (text, number) => translate(lang, text, number)
+    t: (text: string, number: number) => translate(lang, text, number)
   }), [lang]);
 
   return (

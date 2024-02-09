@@ -55,7 +55,7 @@ function Article() {
       <Spinner active={select.waiting}>
         <ArticleCard article={select.article}
           onAdd={callbacks.addToBasketDialog}
-          isDialog={select.addProductWaiting}
+          isDialogOpen={select.addProductWaiting}
           t={t}
         />
       </Spinner>

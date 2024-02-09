@@ -1,8 +1,9 @@
 import StoreModule from "../module";
+import { ILocaleInitState } from "./types";
 
 class LocaleState extends StoreModule {
 
-  initState() {
+  initState(): ILocaleInitState {
     return {
       lang: 'ru'
     };
