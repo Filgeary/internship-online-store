@@ -1,16 +1,22 @@
 import StoreModule from "../module";
-import exclude from "@src/utils/exclude";
+import exclude from "../../utils/exclude";
+import { CatalogArticleType, CatalogParamsType, CatalogStateType } from "./types";
 
 /**
  * Состояние каталога - параметры фильтра исписок товара
  */
 class CatalogState extends StoreModule {
 
+  waiting: boolean;
+  count: number;
+  list: CatalogArticleType[];
+  params: CatalogParamsType
+
   /**
    * Начальное состояние
    * @return {Object}
    */
-  initState() {
+  initState(): CatalogStateType {
     return {
       list: [],
       params: {
@@ -31,9 +37,9 @@ class CatalogState extends StoreModule {
    * @param [newParams] {Object} Новые параметры
    * @return {Promise<void>}
    */
-  async initParams(newParams = {}) {
+  async initParams(newParams: CatalogParamsType): Promise<void> {
     const urlParams = new URLSearchParams(window.location.search);
-    let validParams = {};
+    let validParams: CatalogParamsType;
     if (urlParams.has('page')) validParams.page = Number(urlParams.get('page')) || 1;
     if (urlParams.has('limit')) validParams.limit = Math.min(Number(urlParams.get('limit')) || 10, 50);
     if (urlParams.has('sort')) validParams.sort = urlParams.get('sort');
@@ -48,7 +54,7 @@ class CatalogState extends StoreModule {
    * @param [changeUrl] {Boolean} Менять параметры адресной строки браузера (true) или нет (false)
    * @return {Promise<void>}
    */
-  async resetParams(newParams = {}, changeUrl = true) {
+  async resetParams(newParams: CatalogParamsType | {} = {}, changeUrl: boolean = true): Promise<void> {
     // Итоговые параметры из начальных, из URL и из переданных явно
     const params = {...this.initState().params, ...newParams};
     // Установка параметров и загрузка данных
@@ -62,8 +68,12 @@ class CatalogState extends StoreModule {
    * @param [changeUrl] {Boolean} Заменить url адресной строки (true) или не менять адрес окна в браузере (false)
    * @returns {Promise<void>}
    */
-  async setParams(newParams = {}, replaceHistory = false, changeUrl = true) {
-    const params = {...this.getState().params, ...newParams};
+  async setParams(
+      newParams: CatalogParamsType | {} = {},
+      replaceHistory: boolean = false,
+      changeUrl: boolean = true
+    ): Promise<void> {
+    const params: CatalogParamsType = {...this.getState().params, ...newParams};
 
     // Установка новых параметров и признака загрузки
     this.setState({

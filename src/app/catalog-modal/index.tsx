@@ -1,15 +1,17 @@
-import Button from "@src/components/button";
-import ModalLayout from "@src/components/modal-layout";
-import CatalogFilter from "@src/containers/catalog-filter";
-import CatalogList from "@src/containers/catalog-list";
-import useInit from "@src/hooks/use-init";
-import useStore from "@src/hooks/use-store";
-import { memo, useCallback, useEffect, useState } from "react"
+import React from "react";
+import Button from "../../components/button";
+import ModalLayout from "../../components/modal-layout";
+import CatalogFilter from "../../containers/catalog-filter";
+import CatalogList from "../../containers/catalog-list";
+import useInit from "../../hooks/use-init";
+import useStore from "../../hooks/use-store";
+import { memo, useCallback, useState } from "react"
+import { CatalogModalPropsType } from "./types";
 
 
-function CatalogModal({close, storeSlice}) {
+function CatalogModal({storeSlice, close}: CatalogModalPropsType) {
   const store = useStore()
-  const [articles, setArticles] = useState([]);
+  const [articles, setArticles] = useState<string[]>([]);
 
   useInit(async () => {
     await store.actions[storeSlice].resetParams({}, false);
@@ -17,7 +19,7 @@ function CatalogModal({close, storeSlice}) {
 
   const callbacks = {
     closeModal: useCallback(() => close(), []),
-    addArticle: (id) => {
+    addArticle: (id: string) => {
       let item = articles.find(item => item === id);
       if(item) {
         setArticles([...articles.filter(item => item !== id)]);

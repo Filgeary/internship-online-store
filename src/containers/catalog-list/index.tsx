@@ -1,19 +1,29 @@
 import {memo, useCallback } from "react";
-import useStore from "@src/hooks/use-store";
-import useSelector from "@src/hooks/use-selector";
-import useTranslate from "@src/hooks/use-translate";
-import Item from "@src/components/item";
-import List from "@src/components/list";
-import Pagination from "@src/components/pagination";
-import Spinner from "@src/components/spinner";
-import ItemModalCatalog from "@src/components/item-modal-catalog";
+import useStore from "../../hooks/use-store";
+import useSelector from "../../hooks/use-selector";
+import useTranslate from "../../hooks/use-translate";
+import Item from "../../components/item";
+import List from "../../components/list";
+import Pagination from "../../components/pagination";
+import Spinner from "../../components/spinner";
+import ItemModalCatalog from "../../components/item-modal-catalog";
+import React from "react";
+import { CatalogArticleType } from '../../store/catalog/types';
+
+type CatalogListType = {
+  isModal?: boolean;
+  storeSlice?: string;
+  onAdd?: (value: string) => void;
+  selectedArticles: string[];
+}
+
 
 function CatalogList({
     storeSlice = 'catalog',
     isModal = false,
     onAdd,
     selectedArticles,
-  }) {
+  }: CatalogListType) {
   const store = useStore();
 
   const select = useSelector(state => ({
@@ -28,8 +38,8 @@ function CatalogList({
 
   const callbacks = {
     // Добавление в корзину
-    arcticleCount: useCallback((_id, _title) => {
-      store.actions.modals.open("addToBasket", {title: _title, count: 1})
+    arcticleCount: useCallback((_id: string, _title: string) => {
+      store.actions.modals.open<number>("addToBasket", {title: _title, count: 1})
         .then( result => {
           if(result) {
             store.actions.basket.addToBasket(_id, result)
@@ -37,9 +47,9 @@ function CatalogList({
         });
     }, [store]),
     // Пагинация
-    onPaginate: useCallback(page => store.actions[storeSlice].setParams({page}, false, !isModal), [store]),
+    onPaginate: useCallback((page: number) => store.actions[storeSlice].setParams({page}, false, !isModal), [store]),
     // генератор ссылки для пагинатора
-    makePaginatorLink: useCallback((page) => {
+    makePaginatorLink: useCallback((page: number) => {
       return `?${new URLSearchParams({page, limit: select.limit, sort: select.sort, query: select.query})}`;
     }, [select.limit, select.sort, select.query])
   }
@@ -47,10 +57,10 @@ function CatalogList({
   const {t} = useTranslate();
 
   const renders = {
-    item: useCallback(item => (
+    item: useCallback((item: CatalogArticleType) => (
       <Item item={item} onAdd={callbacks.arcticleCount} link={`/articles/${item._id}`} labelAdd={t('article.add')}/>
     ), [callbacks.arcticleCount, t]),
-    modalItem: useCallback(item => (
+    modalItem: useCallback((item: CatalogArticleType) => (
       <ItemModalCatalog item={item} onAdd={onAdd} selected={!!selectedArticles.find(id => item._id === id)}/>
     ), [t, onAdd])
   };

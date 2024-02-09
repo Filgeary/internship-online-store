@@ -1,15 +1,23 @@
 import StoreModule from "../module";
-import simplifyErrors from "@src/utils/simplify-errors";
+import simplifyErrors from "../../utils/simplify-errors";
+import { SessionErrorType, SessionStateType } from "./types";
+import { UserProfileType } from "../profile/types";
 
 /**
  * Сессия
  */
 class SessionState extends StoreModule {
+
+  waiting: boolean;
+  exists: boolean;
+  token: string | null;
+  errors: SessionErrorType | null;
+  user: UserProfileType | {};
   /**
    * Начальное состояние
    * @return {Object}
    */
-  initState() {
+  initState(): SessionStateType {
     return {
       user: {},
       token: null,
@@ -25,7 +33,7 @@ class SessionState extends StoreModule {
    * @param onSuccess
    * @returns {Promise<void>}
    */
-  async signIn(data, onSuccess) {
+  async signIn(data: {login: string, password: string}, onSuccess: () => void): Promise<void> {
     this.setState(this.initState(), 'Авторизация');
     try {
       const res = await this.services.api.request({
@@ -67,7 +75,7 @@ class SessionState extends StoreModule {
    * Отмена авторизации (выход)
    * @returns {Promise<void>}
    */
-  async signOut() {
+  async signOut(): Promise<void> {
     try {
       await this.services.api.request({
         url: '/api/v1/users/sign',
@@ -87,7 +95,7 @@ class SessionState extends StoreModule {
    * По токену восстановление сессии
    * @return {Promise<void>}
    */
-  async remind() {
+  async remind(): Promise<void> {
     const token = localStorage.getItem('token');
     if (token) {
       // Устанавливаем токен в АПИ
@@ -118,7 +126,7 @@ class SessionState extends StoreModule {
   /**
    * Сброс ошибок авторизации
    */
-  resetErrors() {
+  resetErrors(): void {
     this.setState({...this.initState(), errors: null})
   }
 }

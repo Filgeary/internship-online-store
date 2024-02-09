@@ -1,17 +1,19 @@
+
+import React, { FormEvent } from "react";
 import {memo, useCallback, useState} from "react";
-import useTranslate from "@src/hooks/use-translate";
-import Head from "@src/components/head";
-import LocaleSelect from "@src/containers/locale-select";
-import Navigation from "@src/containers/navigation";
-import PageLayout from "@src/components/page-layout";
-import Input from "@src/components/input";
-import Field from "@src/components/field";
-import SideLayout from "@src/components/side-layout";
-import TopHead from "@src/containers/top-head";
+import useTranslate from "../../hooks/use-translate";
+import Head from "../../components/head";
+import LocaleSelect from "../../containers/locale-select";
+import Navigation from "../../containers/navigation";
+import PageLayout from "../../components/page-layout";
+import Input from "../../components/input";
+import Field from "../../components/field";
+import SideLayout from "../../components/side-layout";
+import TopHead from "../../containers/top-head";
 import {useLocation, useNavigate} from "react-router-dom";
-import useStore from "@src/hooks/use-store";
-import useSelector from "@src/hooks/use-selector";
-import useInit from "@src/hooks/use-init";
+import useStore from "../../hooks/use-store";
+import useSelector from "../../hooks/use-selector";
+import useInit from "../../hooks/use-init";
 
 
 function Login() {
@@ -35,14 +37,15 @@ function Login() {
     password: ''
   });
 
+
   const callbacks = {
     // Колбэк на ввод в элементах формы
-    onChange: useCallback((value, name) => {
+    onChange: useCallback((value: string, name: string) => {
       setData(prevData => ({...prevData, [name]: value}));
     }, []),
 
     // Отправка данных формы для авторизации
-    onSubmit: useCallback((e) => {
+    onSubmit: useCallback((e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       store.actions.session.signIn(data, () => {
         // Возврат на страницу, с которой пришли
