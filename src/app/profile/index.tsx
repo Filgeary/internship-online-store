@@ -17,7 +17,7 @@ function Profile() {
     store.actions.profile.load();
   }, []);
 
-  const select = useSelector((state: any) => ({
+  const select = useSelector((state) => ({
     profile: state.profile.data,
     waiting: state.profile.waiting,
   }));

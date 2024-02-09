@@ -9,7 +9,7 @@ import SideLayout from "@src/components/side-layout";
 function Navigation() {
   const store = useStore();
 
-  const select = useSelector((state: any) => ({
+  const select = useSelector((state) => ({
     amount: state.basket.amount,
     sum: state.basket.sum,
     lang: state.locale.lang

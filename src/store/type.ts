@@ -4,9 +4,7 @@ export type importModules = typeof modules;
 export type keyModules = keyof importModules;
 
 export type StoreState = {
-  [key in keyModules]: ReturnType<
-    InstanceType<importModules[key]>["initState"]
-  >;
+  [key in keyModules]: ReturnType<Actions[key]["initState"]>;
 };
 
 export type Actions = {

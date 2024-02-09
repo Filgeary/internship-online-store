@@ -11,7 +11,7 @@ import { ItemType } from "@src/components/item-basket/type";
 function CatalogList() {
   const store = useStore();
 
-  const select = useSelector((state: any) => ({
+  const select = useSelector((state) => ({
     list: state.catalog.list,
     waiting: state.catalog.waiting,
   }));
@@ -25,7 +25,7 @@ function CatalogList() {
     addToBasket: useCallback( async( _id: string ) => {
       store.actions.modals
         .open(storeName.count)
-        .then((count: string) => store.actions.basket.addToBasket(_id, +count));
+        .then((count) => store.actions.basket.addToBasket(_id, Number(count)));
       }, [store])
   };
 

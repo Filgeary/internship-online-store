@@ -5,7 +5,7 @@ import { ProtectedProps } from "./type";
 
 function Protected({children, redirect}: ProtectedProps) {
 
-  const select = useSelector((state: any) => ({
+  const select = useSelector((state) => ({
     exists: state.session.exists,
     waiting: state.session.waiting
   }));

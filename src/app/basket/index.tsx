@@ -15,7 +15,7 @@ function Basket() {
   const store = useStore();
   const modalId = useModalId();
 
-  const select = useSelector((state: any) => ({
+  const select = useSelector((state) => ({
     list: state.basket.list,
     amount: state.basket.amount,
     sum: state.basket.sum,

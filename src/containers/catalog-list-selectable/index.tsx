@@ -6,11 +6,12 @@ import List from "@src/components/list";
 import Spinner from "@src/components/spinner";
 import SelectableItem from "@src/components/selectable-item";
 import { ItemType } from "@src/components/item-basket/type";
+import { AllStoreNames } from "@src/store/type";
 
 function CatalogListSelectable(props: { storeName: string }) {
   const store = useStore();
 
-  const select = useSelector((state: any) => ({
+  const select = useSelector((state) => ({
     list: state[props.storeName].list,
     waiting: state[props.storeName].waiting,
     selected: state[props.storeName].selected,

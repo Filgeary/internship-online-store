@@ -15,7 +15,7 @@ function ModalCatalog() {
   const modalId = useModalId();
 
   const storeName = "copyCatalog";
-  const selectedItems = useSelector((state: any) => state[storeName].selected);
+  const selectedItems = useSelector((state) => state[storeName].selected);
 
   useInit(() => {
     store.actions[storeName].initParams();

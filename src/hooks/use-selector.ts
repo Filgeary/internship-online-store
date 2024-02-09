@@ -19,7 +19,7 @@ export default function useSelector(
     // Подписка. Возврат функции для отписки
     return store.subscribe(() => {
       const newState = selectorFunc(store.getState());
-      setState((prevState) =>
+      setState((prevState: any) =>
         shallowequal(prevState, newState) ? prevState : newState
       );
     });

@@ -7,11 +7,12 @@ import Input from "@src/components/input";
 import SideLayout from "@src/components/side-layout";
 import treeToList from "@src/utils/tree-to-list";
 import listToTree from "@src/utils/list-to-tree";
+import { AllStoreNames } from "@src/store/type";
 
 function CatalogFilter(props: { storeName: string }) {
   const store = useStore();
 
-  const select = useSelector((state: any) => ({
+  const select = useSelector((state) => ({
     sort: state[props.storeName].params.sort,
     query: state[props.storeName].params.query,
     category: state[props.storeName].params.category,

@@ -6,9 +6,9 @@ import type { StoreState } from "./type";
  * Базовый класс для модулей хранилища
  * Для группировки действий над внешним состоянием
  */
-type StoreNames = keyof StoreState | keyof Config["store"]["modules"];
+export type StoreNames = keyof StoreState | keyof Config["store"]["modules"];
 
-class StoreModule<T extends keyof StoreState> {
+class StoreModule<T extends StoreNames> {
   store: Store;
   name: string;
   config: Config["store"]["modules"][T];

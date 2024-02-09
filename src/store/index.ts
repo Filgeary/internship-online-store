@@ -1,7 +1,7 @@
 import * as modules from './exports.ts';
 import type { Config } from '@src/config.ts';
 import Services from '@src/services.ts';
-import type { Actions, AllStoreNames, StoreState, keyModules } from './type.ts';
+import type { Actions, AllStoreNames, StoreState, importModules, keyModules } from './type.ts';
 
 /**
  * Хранилище состояния приложения
@@ -33,15 +33,22 @@ class Store {
      * profile: ProfileState
      * }} */
     this.actions = {} as Actions;
-    for (const name of Object.keys(modules)) {
-      this.actions[name] = new modules[name](
-        this,
-        name,
-        (this.config as Config["store"])?.modules[name] || {}
-      );
-      this.state[name] = this.actions[name].initState();
+    const keys = Object.keys(modules) as keyModules[];
+    for (const name of keys) {
+      this.create(name);
     }
     console.log(this.actions);
+  }
+
+  create<Key extends keyModules>(name: Key) {
+    const module = modules[name] as importModules[Key];
+    const action = new module(
+      this,
+      name,
+      this.config?.modules[name] || {}
+    ) as Actions[Key];
+    this.actions[name] = action;
+    this.state[name] = this.actions[name].initState() as StoreState[Key];
   }
 
   /**
