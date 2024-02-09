@@ -1,5 +1,5 @@
 import { TConfig } from '@src/config';
-import { TGlobalState } from './exports';
+import { TGlobalState } from './types';
 
 import Services from '@src/services';
 import Store from '.';

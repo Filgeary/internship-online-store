@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import { memo } from 'react';
 import numberFormat from '@src/utils/number-format';
 import { cn as bem } from '@bem-react/classname';
 import { Link } from 'react-router-dom';

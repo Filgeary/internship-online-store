@@ -2,7 +2,7 @@ import { useLayoutEffect, useMemo, useState } from 'react';
 import shallowequal from 'shallowequal';
 import useStore from './use-store';
 
-import { TGlobalState } from '@src/store/exports';
+import { TGlobalState } from '@src/store/types';
 
 type TypedUseSelectorHook<TState> = {
   <TSelected>(selector: (state: TState) => TSelected): TSelected;

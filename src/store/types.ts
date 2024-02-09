@@ -1,12 +1,19 @@
-// import * as modules from './exports';
+import * as modules from './exports';
 
-// export type TImportModules = typeof modules;
-// export type TKeyModules = keyof TImportModules;
+type TModules = typeof modules;
+export type TDefaultKeysModules = keyof TModules;
 
-// export type TGlobalState = {
-//   [key in TKeyModules]: ReturnType<TGlobalActions[key]['initState']>;
-// };
+export interface IExtendedModules extends TModules {
+  separateCatalog: typeof modules.catalog;
+}
 
-// export type TGlobalActions = {
-//   [key in TKeyModules]: InstanceType<TImportModules[key]>;
-// };
+export type TImportModules = IExtendedModules;
+export type TKeyModules = keyof TImportModules;
+
+export type TGlobalState = {
+  [key in TKeyModules]: ReturnType<TGlobalActions[key]['initState']>;
+};
+
+export type TGlobalActions = {
+  [key in TKeyModules]: InstanceType<TImportModules[key]>;
+};

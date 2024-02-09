@@ -1,4 +1,3 @@
-import { TConfig } from '@src/config';
 import StoreModule from '../module';
 import exclude from '@src/utils/exclude';
 

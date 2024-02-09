@@ -1,4 +1,4 @@
-import React, { useCallback, useState, memo } from 'react';
+import { useCallback, useState, memo } from 'react';
 
 import useStore from '@src/hooks/use-store';
 import useTranslate from '@src/hooks/use-translate';

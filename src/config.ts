@@ -1,6 +1,6 @@
-const isProduction = process.env.NODE_ENV === 'production';
+import { TGlobalState } from './store/types';
 
-import { TGlobalState } from './store/exports';
+const isProduction = process.env.NODE_ENV === 'production';
 
 /**
  * Настройки сервисов

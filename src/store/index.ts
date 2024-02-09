@@ -1,5 +1,12 @@
 import Services from '@src/services';
-import modules, { TGlobalActions, TGlobalState } from './exports';
+import * as modules from './exports';
+
+import {
+  TDefaultKeysModules,
+  TGlobalActions,
+  TGlobalState,
+  TImportModules,
+} from './types';
 
 import { TConfig } from '@src/config';
 
@@ -47,12 +54,12 @@ class Store {
     }
   }
 
-  // create<Key extends TKeyModules>(name: Key) {
-  //   const b = modules[name] as TImportModules[Key];
-  //   const a = new b(this, name, {} as any) as TGlobalActions[Key];
-  //   this.actions[name] = a;
-  //   this.state[name] = this.actions[name].initState() as TGlobalState[Key];
-  // }
+  create<Key extends TDefaultKeysModules>(name: Key) {
+    const b = modules[name] as TImportModules[Key];
+    const a = new b(this, name, {} as any) as TGlobalActions[Key];
+    this.actions[name] = a;
+    this.state[name] = this.actions[name].initState() as TGlobalState[Key];
+  }
 
   /**
    * Создать копию, на основе существующего состояния
