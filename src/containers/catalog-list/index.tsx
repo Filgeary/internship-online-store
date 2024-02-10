@@ -17,7 +17,7 @@ const CatalogList: React.FC<Props> = ({stateName = 'catalog'}) => {
 
   const store = useStore();
 
-  const {t}: any = useTranslate();
+  const {t} = useTranslate();
 
   const select = useSelector((state: any) => ({
     list: state[stateName].list,

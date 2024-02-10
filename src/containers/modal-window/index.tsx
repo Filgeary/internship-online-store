@@ -21,7 +21,7 @@ function ModalWindow() {
 
   useInit(() => {
     // Для одного из модальных окон необходимо создать определенный стор
-    store.make('modal-catalog', 'catalog', [false])
+    store.make('modal-catalog', 'catalog', {entryURLParams: false})
   }, [])
 
   return (

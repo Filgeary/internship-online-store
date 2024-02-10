@@ -12,6 +12,10 @@ const config = {
       session: {
         // Названия токена в АПИ
         tokenHeader: 'X-Token'
+      },
+      catalog: {
+        // Разрешить записывать параметры поиска в URl
+        entryURLParams: true,
       }
     }
   },

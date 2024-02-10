@@ -10,7 +10,7 @@ class CatalogState extends StoreModule {
    * Начальное состояние
    * @return {Object}
    */
-  initState(changingURL = true) {
+  initState() {
     return {
       list: [],
       params: {
@@ -22,7 +22,6 @@ class CatalogState extends StoreModule {
       },
       count: 0,
       waiting: false,
-      changingURL: changingURL,
     }
   }
 
@@ -59,11 +58,9 @@ class CatalogState extends StoreModule {
    * Установка параметров и загрузка списка товаров
    * @param [newParams] {Object} Новые параметры
    * @param [replaceHistory] {Boolean} Заменить адрес (true) или новая запись в истории браузера (false)4
-   * @param [changingURL] {Boolean} Нужно ли перезаписывать url
-   *
    * @returns {Promise<void>}
    */
-  async setParams(newParams = {}, replaceHistory = false, changingURL = true) {
+  async setParams(newParams = {}, replaceHistory = false) {
     const params = {...this.getState().params, ...newParams};
 
     // Установка новых параметров и признака загрузки
@@ -74,7 +71,7 @@ class CatalogState extends StoreModule {
     }, 'Установлены параметры каталога');
 
     // Копиям каталога будет запрещено изменять url
-    if (this.getState().changingURL) {
+    if (this.config.entryURLParams) {
       // Сохранить параметры в адрес страницы
       let urlSearch = new URLSearchParams(exclude(params, this.initState().params)).toString();
       const url = window.location.pathname + (urlSearch ? `?${urlSearch}` : '') + window.location.hash;
