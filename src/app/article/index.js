@@ -16,14 +16,14 @@ import useServices from '@src/hooks/use-services';
 function Article() {
   const store = useStore();
   const services = useServices()
-  const {t} = useTranslate();
+  const {t, lang} = useTranslate();
 
   // Параметры из пути /articles/:id
   const params = useParams();
 
   useInit(() => {
     store.actions.article.load(params.id)
-  }, [params.id, store]);
+  }, [params.id, store, lang]);
 
   const select = useSelector(state => ({
     article: state.article.data,

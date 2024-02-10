@@ -43,6 +43,7 @@ Input.propTypes = {
   placeholder: PropTypes.string,
   onChange: PropTypes.func,
   theme: PropTypes.string,
+  delay: PropTypes.number
 }
 
 Input.defaultProps = {

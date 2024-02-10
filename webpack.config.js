@@ -5,7 +5,7 @@ const path = require("path");
 module.exports = () => {
 	const paths = {
 		context: path.join(__dirname, '/src'), // Директория с исходным кодом приложения
-    entry: "index.js", // Главный файл приложения
+    entry: "index.tsx", // Главный файл приложения
     output: {
       path: path.join(__dirname, 'dist'), // Куда делать оброку
     },
