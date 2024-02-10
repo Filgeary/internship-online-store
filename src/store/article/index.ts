@@ -1,9 +1,5 @@
 import StoreModule from '../module';
-
-type TArticleState = {
-  data: TArticle | {};
-  waiting: boolean;
-};
+import { TArticleState } from './types';
 
 /**
  * Детальная ифнормация о товаре для страницы товара

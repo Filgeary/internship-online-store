@@ -27,7 +27,7 @@ export default function useSelector<TState, Selected>(
     // Подписка. Возврат функции для отписки
     return store.subscribe(() => {
       const newState = selectorFunc(store.getState() as TState);
-      setState((prevState: any) =>
+      setState((prevState: Selected) =>
         shallowequal(prevState, newState) ? prevState : newState
       );
     });

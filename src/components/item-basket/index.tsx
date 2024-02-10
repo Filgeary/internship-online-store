@@ -8,7 +8,7 @@ type ItemBasketProps = {
   item: TItem;
   link: string;
   onLink: () => void;
-  onRemove: (id: string) => void;
+  onRemove: (id: string | number) => void;
   labelCurr: string;
   labelDelete: string;
   labelUnit: string;

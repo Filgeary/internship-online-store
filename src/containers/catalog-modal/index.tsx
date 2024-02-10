@@ -14,7 +14,9 @@ import Catalog from '../catalog';
 
 function CatalogModal() {
   const store = useStore();
-  const [updatedItems, setUpdatedItems] = useState<Record<string, number>>({});
+  const [updatedItems, setUpdatedItems] = useState<
+    Record<string | number, number>
+  >({});
   const [isSuccess, setIsSuccess] = useState(false);
 
   const modalId = useModalId();

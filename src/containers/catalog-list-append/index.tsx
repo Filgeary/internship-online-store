@@ -11,7 +11,7 @@ import { useCatalog } from '../catalog';
 type CatalogListAppendProps = {
   onItemClick?: (item: TItem) => void;
   onItemDelete?: (item: TItem) => void;
-  countOfItems?: Record<string, number>;
+  countOfItems?: Record<string | number, number>;
   appendixOfItem?: (count: number) => string;
 };
 

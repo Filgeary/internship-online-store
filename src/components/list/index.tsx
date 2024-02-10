@@ -2,8 +2,8 @@ import React, { memo } from 'react';
 import './style.css';
 
 type ListProps = {
-  list: Array<{ _id: string }>;
-  renderItem: (elem: { _id: string }) => React.ReactNode;
+  list: TItem[];
+  renderItem: (item: TItem) => React.ReactNode;
 };
 
 const defaultProps: Omit<ListProps, 'list'> = {

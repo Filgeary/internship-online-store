@@ -1,9 +1,5 @@
 import StoreModule from '../module';
-
-type TProfileState = {
-  data: TProfile | {};
-  waiting: boolean;
-};
+import { TProfileState } from './types';
 
 /**
  * Детальная информация о пользователе

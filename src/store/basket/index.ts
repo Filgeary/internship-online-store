@@ -1,15 +1,5 @@
 import StoreModule from '../module';
-
-type TBasketArticle = TArticle & { amount?: number };
-type TBasketActive = TBasketArticle & { countToAdd?: number };
-
-type TBasketState = {
-  list: TBasketArticle[];
-  sum: number;
-  amount: number;
-  active: TBasketActive;
-  waiting: boolean;
-};
+import { TBasketActive, TBasketArticle, TBasketState } from './types';
 
 /**
  * Покупательская корзина
@@ -117,7 +107,7 @@ class BasketState extends StoreModule<'basket'> {
    * Добавление в корзину сразу нескольких элементов
    * @param items {Array} @example {_id: 1, count: 5}
    */
-  async addMany(items: { _id: string | number; count: number }[]) {
+  async addMany(items: Record<string | number, number>) {
     const params = {
       'search[ids]': Object.keys(items).join('|'),
     };

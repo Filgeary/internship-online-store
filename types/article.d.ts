@@ -2,7 +2,7 @@ export {};
 
 declare global {
   export interface TArticle {
-    _id: string;
+    _id: string | number;
     _key: string;
     name: string;
     title: string;

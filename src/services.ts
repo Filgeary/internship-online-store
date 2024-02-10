@@ -10,7 +10,7 @@ class Services {
   _store: Store;
   _redux: any;
 
-  constructor(config) {
+  constructor(config: TConfig) {
     this.config = config;
   }
 

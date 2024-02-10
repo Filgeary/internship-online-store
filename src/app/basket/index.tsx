@@ -30,7 +30,7 @@ function Basket() {
       const promiseOfModal = store.actions.modals.open('catalogModal');
 
       promiseOfModal
-        .then((updatedItems: any) => {
+        .then((updatedItems: Record<string | number, number>) => {
           store.actions.basket.addMany(updatedItems);
         })
         .catch(() => {});

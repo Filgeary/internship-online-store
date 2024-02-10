@@ -1,10 +1,12 @@
 export type TModalsState = {
-  mapOfOpened: Record<string, TOpenedModal> | {};
+  mapOfOpened: TMapOfOpened;
   lastOpened: string | null;
 };
 
-type TOpenedModal = {
+export type TOpenedModal = {
   name: TModalsNames;
   resolve: (...value: any[]) => void;
   reject: (...value: any[]) => void;
 };
+
+export type TMapOfOpened = Record<TModalsNames | string, TOpenedModal>;

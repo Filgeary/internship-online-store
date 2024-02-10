@@ -1,12 +1,12 @@
 import StoreModule from '../module';
 import generateHash from '@src/utils/generate-hash';
 
-import { TModalsState } from './types';
+import { TMapOfOpened, TModalsState } from './types';
 
 class ModalsState extends StoreModule<'modals'> {
   initState(): TModalsState {
     return {
-      mapOfOpened: {}, // Для быстрого поиска
+      mapOfOpened: {} as TMapOfOpened, // Для быстрого поиска
       lastOpened: null, // Последняя открытая модалка (ID),
     };
   }
@@ -15,7 +15,7 @@ class ModalsState extends StoreModule<'modals'> {
    * Открыть модалку
    * @param name {String}
    */
-  open: (name: TModalsNames) => Promise<unknown> = (name: string) => {
+  open: (name: TModalsNames) => Promise<unknown> = (name: TModalsNames) => {
     if (this.config.onlyUnique && this.getState().mapOfOpened[name]) return;
     const id = generateHash();
     // const id = self.crypto.randomUUID();

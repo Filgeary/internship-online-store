@@ -1,20 +1,6 @@
 import StoreModule from '../module';
 import exclude from '@src/utils/exclude';
-
-type TCatalogArticle = TArticle & { count?: number };
-
-type TCatalogState = {
-  list: TCatalogArticle[];
-  params: {
-    page: number;
-    limit: number;
-    sort: string;
-    query: string;
-    category: string;
-  };
-  count: number;
-  waiting: boolean;
-};
+import { TCatalogState } from './types';
 
 /**
  * Состояние каталога - параметры фильтра исписок товара

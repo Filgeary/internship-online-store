@@ -5,7 +5,8 @@ const isProduction = process.env.NODE_ENV === 'production';
 /**
  * Настройки сервисов
  */
-const modules: Partial<Record<keyof TGlobalState, any>> = {
+export type TConfigModules = Partial<Record<keyof TGlobalState, any>>;
+const modules: TConfigModules = {
   session: {
     // Названия токена в АПИ
     tokenHeader: 'X-Token',

@@ -1,8 +1,5 @@
 import StoreModule from '../module';
-
-type TLocaleState = {
-  lang: TLangs;
-};
+import { TLocaleState } from './types';
 
 class LocaleState extends StoreModule<'locale'> {
   initState(): TLocaleState {

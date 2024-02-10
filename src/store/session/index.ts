@@ -1,13 +1,6 @@
 import StoreModule from '../module';
 import simplifyErrors from '@src/utils/simplify-errors';
-
-type TSessionState = {
-  user: TProfile;
-  token: string | null;
-  errors: Record<string, string>;
-  waiting: boolean;
-  exists: boolean;
-};
+import { TSessionState } from './types';
 
 /**
  * Сессия
@@ -33,7 +26,10 @@ class SessionState extends StoreModule<'session'> {
    * @param onSuccess
    * @returns {Promise<void>}
    */
-  async signIn(data, onSuccess) {
+  async signIn(
+    data: { login: string; password: string },
+    onSuccess?: () => void
+  ): Promise<void> {
     this.setState(this.initState(), 'Авторизация');
     try {
       const res = await this.services.api.request<{
@@ -86,7 +82,7 @@ class SessionState extends StoreModule<'session'> {
    * Отмена авторизации (выход)
    * @returns {Promise<void>}
    */
-  async signOut() {
+  async signOut(): Promise<void> {
     try {
       await this.services.api.request({
         url: '/api/v1/users/sign',
@@ -106,7 +102,7 @@ class SessionState extends StoreModule<'session'> {
    * По токену восстановление сессии
    * @return {Promise<void>}
    */
-  async remind() {
+  async remind(): Promise<void> {
     const token = localStorage.getItem('token');
     if (token) {
       // Устанавливаем токен в АПИ

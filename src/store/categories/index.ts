@@ -1,9 +1,5 @@
 import StoreModule from '../module';
-
-type TCategoriesState = {
-  list: string[];
-  waiting: boolean;
-};
+import { TCategoriesState } from './types';
 
 /**
  * Список категорий

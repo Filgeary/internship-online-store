@@ -2,13 +2,15 @@ import Services from '@src/services';
 import * as modules from './exports';
 
 import {
+  IExtendedModules,
   TDefaultKeysModules,
   TGlobalActions,
   TGlobalState,
   TImportModules,
+  TKeyModules,
 } from './types';
 
-import { TConfig } from '@src/config';
+import { TConfig, TConfigModules } from '@src/config';
 
 type TListeners = Array<(...args: any[]) => void>;
 
@@ -19,8 +21,8 @@ class Store {
   services: Services;
   config: TConfig['store'];
   listeners: TListeners;
-  state: TGlobalState;
-  actions: TGlobalActions;
+  state: TGlobalState & Record<string, any>;
+  actions: TGlobalActions & Record<string, any>;
 
   /**
    * @param services {Services}
@@ -32,7 +34,7 @@ class Store {
     this.config = config as TConfig['store'];
     this.listeners = []; // Слушатели изменений состояния
     this.state = initState as TGlobalState;
-    /** @type {{
+    /** {{
      * basket: BasketState,
      * catalog: CatalogState,
      * modals: ModalsState,
@@ -42,22 +44,20 @@ class Store {
      * session: SessionState,
      * profile: ProfileState
      * }} */
-    this.actions = {} as TGlobalActions;
-    for (const name in modules) {
-      const instanceState = new modules[name](
-        this,
-        name,
-        this.config?.modules[name] || {}
-      );
-      this.actions[name] = instanceState;
-      this.state[name] = this.actions[name].initState();
+    const keys = Object.keys(modules) as TDefaultKeysModules[];
+    for (const name of keys) {
+      this.create(name);
     }
   }
 
   create<Key extends TDefaultKeysModules>(name: Key) {
-    const b = modules[name] as TImportModules[Key];
-    const a = new b(this, name, {} as any) as TGlobalActions[Key];
-    this.actions[name] = a;
+    const moduleCreator = modules[name] as TImportModules[Key];
+    const module = new moduleCreator(
+      this,
+      name,
+      {} as any
+    ) as TGlobalActions[Key];
+    this.actions[name] = module;
     this.state[name] = this.actions[name].initState() as TGlobalState[Key];
   }
 
@@ -66,11 +66,18 @@ class Store {
    * @param name {String}
    * @param base {String}
    */
-  make(name: string, base: string) {
+  make(name: string, base: keyof typeof modules) {
+    const configModule = this.config?.modules[
+      name as keyof IExtendedModules
+    ] as TConfigModules;
+
     this.actions[name] = new modules[base](
       this,
       name,
-      { ...this.config?.modules[base], ...this.config?.modules[name] } || {}
+      {
+        ...this.config?.modules[base],
+        ...configModule,
+      } || {}
     );
     this.state[name] = this.actions[name].initState();
   }
