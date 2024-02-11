@@ -23,7 +23,10 @@ const ModalLayout = React.forwardRef(
     const layout = useRef<HTMLDivElement>();
     const frame = useRef<HTMLDivElement>();
     useEffect(() => {
+      if (!layout.current || !frame.current) return;
+
       const resizeObserver = new ResizeObserver(() => {
+        if (!layout.current || !frame.current) return;
         // Центрирование frame или его прижатие к краю, если размеры больше чем у layout
         layout.current.style.alignItems =
           layout.current.clientHeight < frame.current.clientHeight
@@ -45,7 +48,7 @@ const ModalLayout = React.forwardRef(
     const callbacks = {
       close: (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
-        props.onClose();
+        props.onClose?.();
       },
     };
 
