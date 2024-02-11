@@ -19,11 +19,18 @@ const translate: TTranslateFn = (
   if (typeof plural !== 'undefined' && typeof result === 'object') {
     const key = new Intl.PluralRules(lang).select(plural);
     if (key in result) {
-      result = result[key];
+      result = result[key as keyof TPlurals];
     }
   }
 
   return typeof result === 'object' ? text : result;
 };
+
+type TPlurals =
+  | {
+      one: string;
+      other: string;
+    }
+  | { one: string; other: string; few: string; many: string };
 
 export default translate;

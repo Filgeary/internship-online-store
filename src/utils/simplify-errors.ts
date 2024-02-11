@@ -1,5 +1,12 @@
-export default function simplifyErrors(issues = []): Record<string, string> {
-  const result = {};
+type TResult = Record<string, string[]>;
+
+function simplifyErrors(
+  issues: {
+    message: string;
+    path: string[];
+  }[] = []
+): TResult {
+  const result: TResult = {};
   for (const issue of issues) {
     const key = issue.path.join('.') || 'other';
     if (result[key]) {
@@ -8,5 +15,8 @@ export default function simplifyErrors(issues = []): Record<string, string> {
       result[key] = [issue.message];
     }
   }
+
   return result;
 }
+
+export default simplifyErrors;

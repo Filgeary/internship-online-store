@@ -5,7 +5,7 @@
  * @returns {Array} Корневые узлы
  */
 function listToTree(
-  list: TChildren,
+  list: TChild[],
   key: keyof TChild['parent'] = '_id'
 ): TBranch[] {
   const trees: Record<string, TTree> = {};

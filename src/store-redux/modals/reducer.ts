@@ -12,7 +12,10 @@ const initialState: TModalsState = {
 };
 
 // Обработчик действий
-function reducer(state = initialState, action) {
+function reducer(
+  state = initialState,
+  action: { type: string; payload: { name: string } }
+) {
   switch (action.type) {
     case 'modal/open':
       return {

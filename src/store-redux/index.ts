@@ -1,8 +1,9 @@
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
 import * as reducers from './exports';
+import Services from '@src/services';
 
-export default function createStoreRedux(services, config = {}) {
+export default function createStoreRedux(services: Services, config = {}) {
   return createStore(
     combineReducers(reducers),
     undefined,

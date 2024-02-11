@@ -4,7 +4,7 @@ import './style.css';
 
 type FieldProps = {
   label?: React.ReactNode;
-  error?: string;
+  error?: string[];
   children?: React.ReactNode;
 };
 

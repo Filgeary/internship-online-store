@@ -9,7 +9,19 @@ type TRequest = {
 } & Partial<any>; // Для rest-параметра options
 
 type TResponse<T> = {
-  data: { result: T; error: { data: { issues: Array<{ message: string }> } } };
+  data: {
+    result: T;
+    error: {
+      data: {
+        issues: Array<{
+          path: Array<any>;
+          rule?: string;
+          accept: boolean;
+          message: string;
+        }>;
+      };
+    };
+  };
   status: number;
   headers: Record<string, any>;
 };
