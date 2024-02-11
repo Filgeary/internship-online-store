@@ -6,7 +6,7 @@ import List from "@src/components/list";
 import Pagination from "@src/components/pagination";
 import PropTypes from "prop-types";
 import ItemSelect from "@src/components/item-select";
-import {ArticleInterface} from "@src/types/ArticleInterface";
+import {ArticleInterface} from "../../../types/ArticleInterface";
 
 interface Props {
   stateName: string,

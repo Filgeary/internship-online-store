@@ -9,8 +9,6 @@ import CatalogFilter from "@src/containers/catalog-filter";
 import CatalogList from "@src/containers/catalog-list";
 import LocaleSelect from "@src/containers/locale-select";
 import TopHead from "@src/containers/top-head";
-import ModalLayout from "@src/components/modal-layout";
-import {useSelector as useSelectorRedux} from "react-redux/es/hooks/useSelector";
 
 function Main() {
 

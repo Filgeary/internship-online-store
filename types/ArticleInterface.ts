@@ -21,7 +21,8 @@ export interface ArticleInterface {
   name?: string,
   order?: number,
   price: number,
-  title: string
+  title: string,
+  amount?: number
 }
 
 /*

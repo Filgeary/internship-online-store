@@ -1,27 +1,26 @@
-import React, {memo, useCallback, useLayoutEffect, useState} from 'react';
-import PropTypes from "prop-types";
+import React, {useCallback, useLayoutEffect, useState} from 'react';
 import {cn as bem} from '@bem-react/classname';
 import debounce from 'lodash.debounce';
 
 import './style.css';
 
-interface Props {
+interface Props<T> {
   value?: string,
-  name?: string,
+  name: T,
   type?: string,
   placeholder?: string,
-  onChange: (text: string, name?: string) => void,
+  onChange: (text: string, name: T) => void,
   theme?: string,
   delay?: number
 }
 
-const Input: React.FC<Props> = ({value = '', name = '', type = 'text', placeholder = '', onChange, theme = '', delay = 1000}) => {
+function Input<T>({ value, name, type = 'text', placeholder = '', onChange, theme = '', delay = 600 }: Props<T>) {
 
   // Внутренний стейт для быстрого отображения ввода
   const [valueLocal, setValueLocal] = useState(value);
 
   const onChangeDebounce = useCallback(
-    debounce(value => onChange(value, name), 600),
+    debounce(value => onChange(value, name), delay),
     [onChange, name]
   );
 
@@ -46,4 +45,4 @@ const Input: React.FC<Props> = ({value = '', name = '', type = 'text', placehold
   )
 }
 
-export default memo(Input);
+export default Input;

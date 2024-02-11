@@ -13,7 +13,7 @@ import ModalWindow from "@src/containers/modal-window";
  * Приложение
  * @returns {React.ReactElement}
  */
-function App() {
+function App(): React.JSX.Element {
 
   const store = useStore();
   useInit(async () => {

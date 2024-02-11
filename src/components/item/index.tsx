@@ -3,7 +3,7 @@ import {cn as bem} from '@bem-react/classname';
 import numberFormat from "@src/utils/number-format";
 import './style.css';
 import {Link} from "react-router-dom";
-import {ArticleInterface} from "@src/types/ArticleInterface";
+import {ArticleInterface} from "../../../types/ArticleInterface";
 
 interface Props {
   item: ArticleInterface,

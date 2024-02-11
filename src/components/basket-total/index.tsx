@@ -2,10 +2,11 @@ import React, {memo} from "react";
 import {cn as bem} from '@bem-react/classname';
 import numberFormat from "../../utils/number-format";
 import './style.css';
+import {TranslateFunction} from "@src/i18n/context";
 
 interface Props {
     sum: number,
-    t: (key: string, amount?: number) => string
+    t: TranslateFunction
 }
 
 const BasketTotal: React.FC<Props> = ({sum, t}) => {

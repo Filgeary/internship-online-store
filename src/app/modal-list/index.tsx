@@ -1,19 +1,18 @@
-import React, {memo, useCallback, useEffect, useState} from 'react';
+import React, {memo, useCallback, useState} from 'react';
 import CatalogFilter from "@src/containers/catalog-filter";
-import CatalogList from "@src/containers/catalog-list";
 import ModalLayout from "@src/components/modal-layout";
 import useTranslate from "@src/hooks/use-translate";
 import useStore from "@src/hooks/use-store";
-import useSelector from "@src/hooks/use-selector";
 import useInit from "@src/hooks/use-init";
 import Spinner from "@src/components/spinner";
 import Controls from "@src/components/controls";
 import CatalogListSelected from "@src/containers/catalog-list-selected";
+import {onCloseModal} from "@src/containers/modal-window";
 
 /**
  * Пометка, данный компонент является "умным"
  * */
-function ModalList({onClose}) {
+function ModalList({onClose}: { onClose: onCloseModal }) {
 
   const {t} = useTranslate();
 
@@ -38,7 +37,7 @@ function ModalList({onClose}) {
     setWaiting(true)
     // Загружаем список в любом случае, но конкретно в созданную стора
     await Promise.all([
-      store.actions['modal-catalog'].setParams({}, false, false),
+      store.actions['modal-catalog'].setParams({}, false),
       store.actions.categories.load()
     ])
     setWaiting(false)

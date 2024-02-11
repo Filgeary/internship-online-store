@@ -63,6 +63,9 @@ let config = {
         NODE_ENV: JSON.stringify(process.env.NODE_ENV),
       },
     }),
+    new webpack.ProvidePlugin({
+      "React": "react",
+    }),
   ],
 }
 

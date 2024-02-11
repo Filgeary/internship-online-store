@@ -1,20 +1,17 @@
 import {memo, useCallback} from 'react';
-import {useDispatch, useStore as useStoreRedux} from 'react-redux';
 import useStore from "@src/hooks/use-store";
 import useSelector from "@src/hooks/use-selector";
-import useInit from "@src/hooks/use-init";
 import useTranslate from "@src/hooks/use-translate";
 import ItemBasket from "@src/components/item-basket";
 import List from "@src/components/list";
 import ModalLayout from "@src/components/modal-layout";
 import BasketTotal from "@src/components/basket-total";
-import modalsActions from '@src/store-redux/modals/actions';
 import Controls from "@src/components/controls";
+import {ArticleInterface} from "../../../types/ArticleInterface";
 
-function Basket({onClose}) {
+function Basket({onClose}: any) {
 
   const store = useStore();
-  const dispatch = useDispatch();
 
   const select = useSelector(state => ({
     list: state.basket.list,
@@ -24,9 +21,9 @@ function Basket({onClose}) {
 
   const callbacks = {
     // Удаление из корзины
-    removeFromBasket: useCallback(_id => store.actions.basket.removeFromBasket(_id), [store]),
+    removeFromBasket: useCallback((_id: string | number) => store.actions.basket.removeFromBasket(_id), [store]),
     // Закрытие любой модалки
-    closeModal: useCallback((value) => {
+    closeModal: useCallback((value: any) => {
       onClose(value)
     }, [store]),
     openModalList: useCallback(async () => {
@@ -38,7 +35,7 @@ function Basket({onClose}) {
   const {t} = useTranslate();
 
   const renders = {
-    itemBasket: useCallback((item) => (
+    itemBasket: useCallback((item: ArticleInterface) => (
       <ItemBasket item={item}
                   link={`/articles/${item._id}`}
                   onRemove={callbacks.removeFromBasket}

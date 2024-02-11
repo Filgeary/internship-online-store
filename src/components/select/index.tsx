@@ -1,7 +1,7 @@
 import React, {memo} from "react";
 import './style.css';
 
-interface Option {
+export interface Option {
   value: string,
   title: string
 }

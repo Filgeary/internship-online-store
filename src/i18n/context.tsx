@@ -2,7 +2,7 @@ import React, {createContext, useMemo, useState} from "react";
 import translate, {Lang} from "./translate";
 import {TranslationKeys} from "@src/i18n/translations";
 
-type TranslateFunction = (key: TranslationKeys, number?: number) => string;
+export type TranslateFunction = (key: TranslationKeys, number?: number) => string;
 
 // Интерфейс экспортируемого контекста
 export interface I18nContextType {

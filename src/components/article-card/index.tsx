@@ -2,12 +2,13 @@ import React, {memo} from "react";
 import {cn as bem} from '@bem-react/classname';
 import numberFormat from "../../utils/number-format";
 import './style.css';
-import {ArticleInterface} from "@src/types/ArticleInterface";
+import {ArticleInterface} from "../../../types/ArticleInterface";
+import {TranslateFunction} from "@src/i18n/context";
 
 interface Props {
     article: ArticleInterface,
-    onAdd: (id: string) => void,
-    t: (text: string) => string
+    onAdd: (_id: string) => void,
+    t: TranslateFunction
 }
 
 const ArticleCard: React.FC<Props> = ({article, onAdd, t}) => {

@@ -1,4 +1,4 @@
-import {memo, useCallback, useState} from "react";
+import React, {memo, useCallback, useState} from "react";
 import useTranslate from "@src/hooks/use-translate";
 import Head from "@src/components/head";
 import LocaleSelect from "@src/containers/locale-select";
@@ -34,15 +34,16 @@ function Login() {
     login: '',
     password: ''
   });
+  type nameData = keyof typeof data
 
   const callbacks = {
     // Колбэк на ввод в элементах формы
-    onChange: useCallback((value, name) => {
+    onChange: useCallback((value: string, name: nameData) => {
       setData(prevData => ({...prevData, [name]: value}));
     }, []),
 
     // Отправка данных формы для авторизации
-    onSubmit: useCallback((e) => {
+    onSubmit: useCallback((e:  React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       store.actions.session.signIn(data, () => {
         // Возврат на страницу, с которой пришли
@@ -69,11 +70,10 @@ function Login() {
             <Input name="login" value={data.login} onChange={callbacks.onChange}/>
           </Field>
           <Field label={t('auth.password')} error={select.errors?.password}>
-            <Input name="password" type="password" value={data.password}
+            <Input<nameData> name="password" type="password" value={data.password}
                    onChange={callbacks.onChange}/>
           </Field>
-          <Field error={select.errors?.other}/>
-          <Field>
+          <Field error={select.errors?.other}>
             <button type="submit">{t('auth.signIn')}</button>
           </Field>
         </form>

@@ -2,7 +2,7 @@ import React, {memo, useCallback, useMemo} from "react";
 import useTranslate from "@src/hooks/use-translate";
 import useStore from "@src/hooks/use-store";
 import useSelector from "@src/hooks/use-selector";
-import Select from "@src/components/select";
+import Select, {Option} from "@src/components/select";
 import Input from "@src/components/input";
 import SideLayout from "@src/components/side-layout";
 import treeToList from "@src/utils/tree-to-list";
@@ -28,7 +28,7 @@ const CatalogFilter: React.FC<Props> = ({stateName = 'catalog'}) => {
       store.actions[stateName].setParams({sort})
     }, []),
     // Поиск
-    onSearch: useCallback((query: any) => {
+    onSearch: useCallback((query: any, name: 'filter') => {
       store.actions[stateName].setParams({query, page: 1})
     }, []),
     // Сброс
@@ -51,19 +51,19 @@ const CatalogFilter: React.FC<Props> = ({stateName = 'catalog'}) => {
     ]), []),
     categories: useMemo(() => ([
       {value: '', title: 'Все'},
-      ...treeToList(listToTree(select.categories), (item: any, level: any) => (
+      ...treeToList<Option>(listToTree(select.categories), (item: any, level: any) => (
         {value: item._id, title: '- '.repeat(level) + item.title}
       ))
     ]), [select.categories]),
   };
 
-  const {t}: any = useTranslate();
+  const {t} = useTranslate();
 
   return (
     <SideLayout padding='medium'>
       <Select options={options.categories} value={select.params.category} onChange={callbacks.onCategory}/>
       <Select options={options.sort} value={select.params.sort} onChange={callbacks.onSort}/>
-      <Input value={select.params.query} onChange={callbacks.onSearch} placeholder={'Поиск'}
+      <Input<'filter'> name={'filter'} value={select.params.query} onChange={callbacks.onSearch} placeholder={'Поиск'}
              delay={1000}/>
       <button onClick={callbacks.onReset}>{t('filter.reset')}</button>
     </SideLayout>

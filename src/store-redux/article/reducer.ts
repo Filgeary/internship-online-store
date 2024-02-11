@@ -1,4 +1,4 @@
-import {ArticleInterface} from "@src/types/ArticleInterface";
+import {ArticleInterface} from "../../../types/ArticleInterface";
 
 interface State {
   data: ArticleInterface,

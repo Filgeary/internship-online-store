@@ -1,5 +1,4 @@
-import {memo, useCallback, useMemo} from 'react';
-import {useParams} from "react-router-dom";
+import {memo} from 'react';
 import useStore from "@src/hooks/use-store";
 import useSelector from "@src/hooks/use-selector";
 import useTranslate from "@src/hooks/use-translate";
@@ -8,7 +7,6 @@ import PageLayout from "@src/components/page-layout";
 import Head from "@src/components/head";
 import Navigation from "@src/containers/navigation";
 import Spinner from "@src/components/spinner";
-import ArticleCard from "@src/components/article-card";
 import LocaleSelect from "@src/containers/locale-select";
 import TopHead from "@src/containers/top-head";
 import ProfileCard from "@src/components/profile-card";

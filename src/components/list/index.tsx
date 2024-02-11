@@ -1,6 +1,6 @@
 import React, {memo} from "react";
 import './style.css';
-import {ArticleInterface} from "@src/types/ArticleInterface";
+import {ArticleInterface} from "../../../types/ArticleInterface";
 
 interface Props {
   list: ArticleInterface[],

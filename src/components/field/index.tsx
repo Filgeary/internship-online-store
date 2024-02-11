@@ -4,9 +4,9 @@ import {cn as bem} from '@bem-react/classname';
 import './style.css';
 
 interface Props {
-    label: string,
-    error?: string,
-    children: ReactNode
+    label?: string,
+    error: string,
+    children?: ReactNode
 }
 
 const Field: React.FC<Props> = ({label, error, children}) => {

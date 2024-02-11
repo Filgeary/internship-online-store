@@ -31,7 +31,7 @@ function Article() {
 
   const callbacks = {
     // Добавление в корзину
-    addToBasket: useCallback(async _id => {
+    addToBasket: useCallback(async (_id: number | string) => {
       // Я посчитал логичным, что модальное окно по добавлению товара будет вызываться со страницы товара
       const result = await store.actions.modals.open(`adding`, {
         _id: select.article._id,

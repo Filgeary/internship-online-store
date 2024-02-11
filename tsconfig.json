@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es6",                       /* Уровень версии JavaScript для компиляции вашего кода */
+    "target": "es5",                       /* Уровень версии JavaScript для компиляции вашего кода */
     "lib": ["dom", "dom.iterable", "esnext"],   /* Библиотеки для работы с TypeScript */
     "allowJs": true,                      /* Разрешить компиляцию JavaScript файлов */
     "skipLibCheck": true,                 /* Пропустить проверку типов для файлов .d.ts */
@@ -10,10 +10,10 @@
     "forceConsistentCasingInFileNames": true, /* Гарантия согласованности регистра в именах файлов */
     "module": "esnext",                   /* Тип модуля */
     "moduleResolution": "node",           /* Разрешение пути модуля */
-    "jsx": "react",                       /* Включить поддержку JSX */
+    "jsx": "react-jsx",                       /* Включить поддержку JSX */
     "declaration": true,                  /* Генерация .d.ts файлов */
     "sourceMap": true,                    /* Генерация source maps */
-    "rootDir": "./src",                   /* Корневая директория вашего проекта */
+    "rootDir": ".",                   /* Корневая директория вашего проекта */
     "outDir": "./dist",                  /* Директория, в которую будут скомпилированы .js и .d.ts файлы */
     "baseUrl": ".", // Относительные пути будут рассчитываться относительно корневой директории
     "resolveJsonModule": true,
