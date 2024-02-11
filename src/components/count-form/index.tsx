@@ -2,7 +2,7 @@ import { memo, useCallback, useState } from "react";
 import { cn as bem } from "@bem-react/classname";
 import "./style.css";
 
-type ICountFormProps = {
+type TCountFormProps = {
   onSubmit: (number: number) => void;
   closeModal: () => void;
   basketUnit: string;
@@ -10,7 +10,7 @@ type ICountFormProps = {
   ok: string;
   cancel: string;
 };
-function CountForm(props: ICountFormProps) {
+function CountForm(props: TCountFormProps) {
   const cn = bem("CountForm");
   const [count, setCount] = useState(0);
 

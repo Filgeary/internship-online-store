@@ -3,7 +3,7 @@ import { cn as bem } from "@bem-react/classname";
 import { Link } from "react-router-dom";
 import "./style.css";
 
-type IMenuProps = {
+type TMenuProps = {
   items: [
     {
       key: number;
@@ -13,7 +13,7 @@ type IMenuProps = {
   ];
   onNavigate: (item: { key: number; link: string; title: string }) => void;
 };
-function Menu({ items, onNavigate }: IMenuProps) {
+function Menu({ items, onNavigate }: TMenuProps) {
   const cn = bem("Menu");
   return (
     <ul className={cn()}>

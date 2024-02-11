@@ -1,12 +1,12 @@
 import { memo } from "react";
 import "./style.css";
 
-type IListProps = {
-  list?: [{ _id: string | number }];
+type TListProps = {
+  list: [{ _id: string | number }];
   renderItem: (item: { _id: string | number }) => React.ReactNode;
 };
 
-function List({ list, renderItem }: IListProps) {
+function List({ list, renderItem }: TListProps) {
   return (
     <div className="List">
       {list.map((item) => (

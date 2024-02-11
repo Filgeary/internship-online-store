@@ -1,7 +1,12 @@
 import StoreModule from "../module";
 
+export type TCategoryList = {
+  title: string;
+  _id: string;
+};
+
 export type TCategoriesState = {
-  list: any[];
+  list: TCategoryList[];
   waiting: boolean;
 };
 /**

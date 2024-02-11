@@ -1,16 +1,18 @@
 import Services from "@src/services.ts";
 import * as modules from "./exports.ts";
 import { TConfig } from "@src/config.ts";
+import { TActions, TImportModules, TKeyModules, TStoreState } from "./types.ts";
 
-type TListeners = Array<(...args: any[]) => void>;
-type TActions = {
-  basket: any;
-  catalog: any;
-  locale: any;
-  categories: any;
-  session: any;
-  profile: any;
-};
+/* 
+create<Key extends keyModules>(name: Key) {
+    let b = modules[name] as importModules[Key];
+    let a = new b(this, name,import { TConfig } from '@src/config';
+ {} as any) as Actions[Key];import { TStoreState } from '@src/store/types';
+
+    this.actions[name] = a;
+    this.state[name] = this.actions[name].initState() as StoreState[Key];
+  }
+   */
 
 /**
  * Хранилище состояния приложения
@@ -18,8 +20,8 @@ type TActions = {
 class Store {
   services: Services;
   config: TConfig["store"];
-  listeners: TListeners;
-  state: TActions;
+  listeners: Function[];
+  state: TStoreState & Record<string, any>;
   actions: TActions;
 
   /**
@@ -29,13 +31,13 @@ class Store {
    */
   constructor(
     services: Services,
-    config: { log: boolean; modules: { session: { tokenHeader: string } } },
-    initState: object = {}
+    config = {} as TConfig["store"],
+    initState = {} as TStoreState
   ) {
     this.services = services;
     this.config = config;
     this.listeners = []; // Слушатели изменений состояния
-    this.state = initState as TActions;
+    this.state = initState;
     /** @type {{
      * basket: BasketState,
      * catalog: CatalogState,
@@ -47,17 +49,29 @@ class Store {
      * profile: ProfileState
      * }} */
     this.actions = {} as TActions;
-    for (const name of Object.keys(modules)) {
-      this.actions[name] = new modules[name](
-        this,
-        name,
-        this.config?.modules[name] || {}
-      );
-      this.state[name] = this.actions[name].initState();
+    for (const name of Object.keys(modules) as TKeyModules[]) {
+      this.create(name);
     }
   }
 
+  create<Key extends TKeyModules>(name: Key) {
+    let b = modules[name] as TImportModules[Key];
+    let a = new b(this, name, {} as any) as TActions[Key];
+    this.actions[name] = a;
+    this.state[name] = this.actions[name].initState() as TStoreState[Key];
+  }
+
+cr<Key extends TKeyModules>(name: Key, base:Key){
+  let b = modules[name] as TImportModules[Key];
+  let c = modules[base] as TImportModules[Key];
+  let a = new c(this, name, {} as any) as TActions[Key];
+  let d = new b(this, name, {} as any) as TActions[Key];
+  this.actions[name] = d;
+
+}
+
   make(name: string | number, base: string | number) {
+
     this.actions[name] = new modules[base](
       this,
       name,
@@ -66,7 +80,7 @@ class Store {
     this.state[name] = this.actions[name].initState();
   }
 
-  clear(name: string | number) {
+  clear(name:string ) {
     this.state[name] = this.actions[name].initState();
   }
   /**
@@ -75,8 +89,8 @@ class Store {
    * @returns {Function} Функция отписки
    */
   subscribe(listener: {
-    (...args: any[]): void;
-    (...args: any[]): void;
+    (...args: any ): void;
+    (...args: any): void;
   }): Function {
     this.listeners.push(listener);
     // Возвращается функция для удаления добавленного слушателя
@@ -98,8 +112,8 @@ class Store {
    * profile: Object,
    * }}
    */
-  getState() {
-    return this.state;
+  getState():TStoreState {
+    return this.state as TStoreState;
   }
 
   /**
@@ -117,7 +131,7 @@ class Store {
       console.log(`%c${"next:"}`, `color: ${"#2fa827"}`, newState);
       console.groupEnd();
     }
-    this.state = newState as TActions;
+    this.state = newState as TStoreState;
     // Вызываем всех слушателей
     for (const listener of this.listeners) listener(this.state);
   }

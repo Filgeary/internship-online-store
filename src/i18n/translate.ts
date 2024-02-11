@@ -1,4 +1,6 @@
-import * as translations from "./translations";
+import translations, { TDictionaryKeys } from "./translations";
+
+export type TLang = "ru" | "en";
 
 /**
  * Перевод фразу по словарю
@@ -8,8 +10,8 @@ import * as translations from "./translations";
  * @returns {String} Переведенный текст
  */
 export default function translate(
-  lang: string,
-  text?: string,
+  lang: TLang,
+  text: TDictionaryKeys,
   plural?: number
 ): string {
   let result =
@@ -17,12 +19,12 @@ export default function translate(
       ? translations[lang][text]
       : text;
 
-  if (typeof plural !== "undefined") {
+  if (typeof plural !== "undefined" && typeof result === "object") {
     const key = new Intl.PluralRules(lang).select(plural);
     if (key in result) {
-      result = result[key];
+      result = result[key as keyof typeof result];
     }
   }
 
-  return result;
+  return result as string;
 }

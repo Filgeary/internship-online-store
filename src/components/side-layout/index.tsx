@@ -2,13 +2,13 @@ import React, { memo } from "react";
 import { cn as bem } from "@bem-react/classname";
 import "./style.css";
 
-type ISideLayoutProps = {
+type TSideLayoutProps = {
   children?: React.ReactNode;
   side?: "start" | "end" | "between";
   padding?: "small" | "medium";
 };
 
-function SideLayout({ children, side, padding }: ISideLayoutProps) {
+function SideLayout({ children, side, padding }: TSideLayoutProps) {
   const cn = bem("SideLayout");
   return (
     <div className={cn({ side, padding })}>

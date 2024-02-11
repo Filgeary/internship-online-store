@@ -1,12 +1,12 @@
 import { memo } from "react";
 import "./style.css";
 
-type IControlsProps = {
+type TControlsProps = {
   onAdd: () => void;
   title: string;
 };
 
-function Controls({ onAdd, title }: IControlsProps) {
+function Controls({ onAdd, title }: TControlsProps) {
   return (
     <div className="Controls">
       <button onClick={() => onAdd()}>{title}</button>

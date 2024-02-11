@@ -5,8 +5,8 @@ import "./style.css";
 import { Link } from "react-router-dom";
 import useSelector from "@src/hooks/use-selector";
 
-type IItemProps = {
-  item?: {
+type TItemProps = {
+  item: {
     _id: string | number;
     title: string;
     price: number;
@@ -23,7 +23,7 @@ type IItemProps = {
   }) => void;
 };
 
-function Item(props: IItemProps) {
+function Item(props: TItemProps) {
   const cn = bem("Item");
 
   const selected = useSelector(

@@ -10,25 +10,27 @@ import debounce from "lodash.debounce";
 
 import "./style.css";
 
-type IInputProps = {
-  value?: string;
+type TInputProps = {
+  value: string|undefined;
   name?: string;
   type?: string;
   placeholder?: string;
   onChange: (value: string, name?: string) => void;
   theme?: string;
 };
-function Input(props: IInputProps) {
+function Input(props: TInputProps) {
   // Внутренний стейт для быстрого отображения ввода
   const [value, setValue] = useState(props.value);
 
   const onChangeDebounce = useCallback(
-    debounce((value) => props.onChange(value, props.name), 600),
+    debounce((value:string) => props.onChange(value, props.name), 600),
     [props.onChange, props.name]
   );
 
   // Обработчик изменений в поле
-  const onChange = (event: { target: { value: SetStateAction<string> } }) => {
+  const onChange = (event: {
+    target: { value: SetStateAction<string | undefined> };
+  }) => {
     setValue(event.target.value);
     onChangeDebounce(event.target.value);
   };

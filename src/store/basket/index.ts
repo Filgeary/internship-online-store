@@ -1,17 +1,13 @@
-import { TArticle } from "../article/types";
 import StoreModule from "../module";
+import { TBasketState } from "./types";
 
-export type TBasketState = {
-  list: TArticle[];
-  sum: number;
-  amount: number;
-  active: string | number;
-};
+
 /**
  * Покупательская корзина
  */
 class BasketState extends StoreModule {
-  initState() {
+
+  initState():TBasketState{
     return {
       list: [],
       sum: 0,

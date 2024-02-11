@@ -2,7 +2,7 @@ import { memo } from "react";
 import { cn as bem } from "@bem-react/classname";
 import "./style.css";
 
-type IPaginationProps = {
+type TPaginationProps = {
   page: number;
   limit: number;
   count: number;
@@ -11,7 +11,7 @@ type IPaginationProps = {
   makeLink: (pageNumber: number) => string;
 };
 
-function Pagination(props: IPaginationProps) {
+function Pagination(props: TPaginationProps) {
   // Количество страниц
   const length = Math.ceil(props.count / Math.max(props.limit, 1));
 

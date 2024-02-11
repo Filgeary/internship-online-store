@@ -2,21 +2,15 @@ import { memo } from "react";
 import { cn as bem } from "@bem-react/classname";
 import numberFormat from "@src/utils/number-format";
 import "./style.css";
+import { TArticle } from "@src/store/article/types";
 
-type IArticleCardProps = {
-  article?: {
-    _id: string;
-    description: string;
-    madeIn: { title: string; code: string; _id: string };
-    category: { title: string; _id: string };
-    edition: [string, number];
-    price: number;
-  };
+type TArticleCardProps = {
+  article: TArticle;
   onAdd: (id: string) => void;
   t: (text: string) => string;
 };
 
-function ArticleCard({ article, onAdd, t }: IArticleCardProps) {
+function ArticleCard({ article, onAdd, t }: TArticleCardProps) {
   const cn = bem("ArticleCard");
 
   return (

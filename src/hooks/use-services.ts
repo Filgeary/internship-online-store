@@ -7,5 +7,5 @@ import Services from "@src/services";
  * @return {Services}
  */
 export default function useServices(): Services {
-  return useContext(ServicesContext);
+  return useContext(ServicesContext) as Services;
 }

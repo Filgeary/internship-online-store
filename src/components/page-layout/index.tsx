@@ -2,12 +2,12 @@ import { memo } from "react";
 import { cn as bem } from "@bem-react/classname";
 import "./style.css";
 
-type IPageLayoutProps = {
+type TPageLayoutProps = {
   head?: React.ReactNode;
   footer?: React.ReactNode;
   children?: React.ReactNode;
 };
-function PageLayout({ head, footer, children }: IPageLayoutProps) {
+function PageLayout({ head, footer, children }: TPageLayoutProps) {
   const cn = bem("PageLayout");
 
   return (

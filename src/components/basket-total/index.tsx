@@ -3,12 +3,12 @@ import { cn as bem } from "@bem-react/classname";
 import numberFormat from "@src/utils/number-format";
 import "./style.css";
 
-type IBasketTotalProps = {
+type TBasketTotalProps = {
   sum: number;
   t: (text: string, number?: number) => string;
   open: () => void;
 };
-function BasketTotal({ sum, t, open }: IBasketTotalProps) {
+function BasketTotal({ sum, t, open }: TBasketTotalProps) {
   const cn = bem("BasketTotal");
   return (
     <>

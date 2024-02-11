@@ -4,23 +4,23 @@ import { cn as bem } from "@bem-react/classname";
 import { Link } from "react-router-dom";
 import "./style.css";
 
-export type IItemBasketProps = {
-  _id?: any;
-  item?: {
-    _id?: string | number;
+export type TItemBasketProps = {
+  _id: string;
+  item: {
+    _id: string | number;
     title?: string;
-    price?: number;
+    price: number;
     amount?: number;
   };
   link?: string;
-  onLink?: () => void;
-  onRemove?: (id: string | number) => void;
+  onLink: () => void;
+  onRemove: (id: string | number) => void;
   labelCurr?: string;
   labelDelete?: string;
   labelUnit?: string;
 };
 
-function ItemBasket(props: IItemBasketProps) {
+function ItemBasket(props: TItemBasketProps) {
   const cn = bem("ItemBasket");
 
   const callbacks = {

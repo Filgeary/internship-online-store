@@ -1,11 +1,11 @@
 import { memo } from "react";
 import "./style.css";
 
-type IHeadProps = {
+type THeadProps = {
   title: React.ReactNode;
   children: React.ReactNode;
 };
-function Head({ title, children }: IHeadProps) {
+function Head({ title, children }: THeadProps) {
   return (
     <div className="Head">
       <div className="Head-place">

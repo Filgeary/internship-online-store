@@ -2,12 +2,12 @@ import { memo } from "react";
 import { cn as bem } from "@bem-react/classname";
 import "./style.css";
 
-type IFieldProps = {
+type TFieldProps = {
   label?: React.ReactNode;
   error?: React.ReactNode;
   children?: React.ReactNode;
 };
-function Field({ label, error, children }: IFieldProps) {
+function Field({ label, error, children }: TFieldProps) {
   const cn = bem("Field");
   return (
     <div className={cn()}>

@@ -3,14 +3,14 @@ import { cn as bem } from "@bem-react/classname";
 import numberFormat from "@src/utils/number-format";
 import "./style.css";
 
-type IBasketToolProps = {
+type TBasketToolProps = {
   sum: number;
   amount: number;
   onOpen: () => void;
   t: (text: string, number?: number) => string;
 }
 
-function BasketTool ({ sum, amount, onOpen, t }:IBasketToolProps)  {
+function BasketTool ({ sum, amount, onOpen, t }:TBasketToolProps)  {
   const cn = bem("BasketTool");
   return (
     <div className={cn()}>

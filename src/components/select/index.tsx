@@ -1,12 +1,12 @@
 import { memo } from "react";
 import "./style.css";
 
-type ISelectProps = {
-  options?: { value: string | number; title: string }[];
+type TSelectProps = {
+  options: { value: string | number; title: string }[];
   value?: any;
   onChange: (value: string | number) => void;
 };
-function Select(props: ISelectProps) {
+function Select(props: TSelectProps) {
   const onSelect = (e: { target: { value: string | number } }) => {
     props.onChange(e.target.value);
   };

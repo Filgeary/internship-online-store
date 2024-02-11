@@ -2,7 +2,7 @@ import { memo, useEffect, useRef } from "react";
 import { cn as bem } from "@bem-react/classname";
 import "./style.css";
 
-type IModalLayoutProps = {
+type TModalLayoutProps = {
   title: string;
   onClose: () => void;
   children?: React.ReactNode;
@@ -11,7 +11,7 @@ type IModalLayoutProps = {
   code?: boolean;
 };
 
-function ModalLayout(props: IModalLayoutProps) {
+function ModalLayout(props: TModalLayoutProps) {
   const cn = bem("ModalLayout");
 
   // Корректировка центра, если модалка больше окна браузера.

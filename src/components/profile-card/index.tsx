@@ -2,7 +2,7 @@ import { memo } from "react";
 import { cn as bem } from "@bem-react/classname";
 import "./style.css";
 
-type IProfileCardProps = {
+type TProfileCardProps = {
     data: {
       profile: {
         name: string
@@ -13,7 +13,7 @@ type IProfileCardProps = {
   }
   
 
-function ProfileCard ({ data }:IProfileCardProps) {
+function ProfileCard ({ data }:TProfileCardProps) {
   const cn = bem("ProfileCard");
 
   return (
