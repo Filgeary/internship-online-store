@@ -1,4 +1,4 @@
-import StoreModule from "../module";
+/* import StoreModule from "../module";
 
 export type TModals = {
   name: string | null;
@@ -20,3 +20,4 @@ class ModalsState extends StoreModule {
 }
 
 export default ModalsState;
+ */

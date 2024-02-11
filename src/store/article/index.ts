@@ -1,10 +1,10 @@
-import StoreModule from "../module";
+/* import StoreModule from "../module";
 import { TArticle, TArticleState } from "./types";
 
-/**
- * Детальная ифнормация о товаре для страницы товара
- */
-class ArticleState extends StoreModule {
+
+ // Детальная ифнормация о товаре для страницы товара
+ 
+class ArticleState extends StoreModule<'article'> {
   initState(): TArticleState {
     return {
       data: {} as TArticle,
@@ -12,11 +12,11 @@ class ArticleState extends StoreModule {
     };
   }
 
-  /**
-   * Загрузка товаров по id
-   * @param id {String}
-   * @return {Promise<void>}
-   */
+  
+   // Загрузка товаров по id
+   // @param id {String}
+   // @return {Promise<void>}
+   
   async load(id: string): Promise<void> {
     // Сброс текущего товара и установка признака ожидания загрузки
     this.setState({
@@ -49,3 +49,4 @@ class ArticleState extends StoreModule {
 }
 
 export default ArticleState;
+ */

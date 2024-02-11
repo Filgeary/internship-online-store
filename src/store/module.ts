@@ -7,14 +7,11 @@ import type { TStoreState } from "./types";
  * Базовый класс для модулей хранилища
  * Для группировки действий над внешним состоянием
  */
-export type TStoreNames =
-  | keyof TStoreState
-  | keyof TConfig["store"]["modules"]
-  | null;
+export type TStoreName = keyof TStoreState | keyof TConfig["store"]["modules"];
 
-class StoreModule {
+class StoreModule<T extends TStoreName> {
   store: Store;
-  name: string;
+  name: T;
   config = {} as any;
   services: Services;
 
@@ -23,23 +20,35 @@ class StoreModule {
    * @param name {String}
    * @param [config] {Object}
    */
-  constructor(store: Store, name: string, config: {}) {
+  constructor(store: Store, name: T, config: {}) {
     this.store = store;
-    this.name = name as string;
+    this.name = name as T;
     this.config = config;
     /** @type {Services} */
     this.services = store.services;
   }
 
-  initState(){
-    return {} ;
+  initState(): TStoreState {
+    return {} as TStoreState;
   }
 
   getState() {
-    return this.store.getState()[this.name];
+    return this.store.getState()[this.name as T];
   }
 
-  setState(newState: { lang?: string; user?: {} | { userName: string; }; token?: string; errors?: string[]; waiting?: boolean; exists?: boolean; data?: any; name?: any; }, description = "setState") {
+  setState(
+    newState: {
+      lang?: string;
+      user?: {} | { userName: string };
+      token?: string;
+      errors?: string[];
+      waiting?: boolean;
+      exists?: boolean;
+      data?: any;
+      name?: any;
+    },
+    description = "setState"
+  ) {
     this.store.setState(
       {
         ...this.store.getState(),

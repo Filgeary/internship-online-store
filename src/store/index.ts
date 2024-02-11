@@ -21,7 +21,7 @@ class Store {
   services: Services;
   config: TConfig["store"];
   listeners: Function[];
-  state: TStoreState & Record<string, any>;
+  state: TStoreState;
   actions: TActions;
 
   /**

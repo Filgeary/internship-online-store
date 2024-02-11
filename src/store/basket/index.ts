@@ -5,7 +5,7 @@ import { TBasketState } from "./types";
 /**
  * Покупательская корзина
  */
-class BasketState extends StoreModule {
+class BasketState extends StoreModule<'basket'> {
 
   initState():TBasketState{
     return {
