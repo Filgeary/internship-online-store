@@ -7,7 +7,7 @@ import { TUserTranslateFn } from '@src/i18n/types';
 
 type ArticleCardProps = {
   article: TArticle;
-  onAdd: (id: string) => void;
+  onAdd: (id: string | number) => void;
   t: TUserTranslateFn;
 };
 

@@ -7,7 +7,6 @@ import {
   TGlobalActions,
   TGlobalState,
   TImportModules,
-  TKeyModules,
 } from './types';
 
 import { TConfig, TConfigModules } from '@src/config';
@@ -44,8 +43,9 @@ class Store {
      * session: SessionState,
      * profile: ProfileState
      * }} */
-    const keys = Object.keys(modules) as TDefaultKeysModules[];
-    for (const name of keys) {
+    this.actions = {} as TGlobalActions;
+    const modulesKeys = Object.keys(modules) as TDefaultKeysModules[];
+    for (const name of modulesKeys) {
       this.create(name);
     }
   }
