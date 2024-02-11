@@ -1,35 +1,15 @@
-export type Dictionary = Record<Word, string | PlurableString>;
+import * as translations from "./translations";
 
-export type TranslateFunc = (text: Word, number?: number) => string;
+export type Language = keyof typeof translations;
+export type TranslationKey = keyof (typeof translations)[Language];
+
+export type TranslateFunc = (text: TranslationKey, number?: number) => string;
 
 export type PlurableString = {
   one?: string;
+  two?: string;
   few?: string;
   many?: string;
   other?: string;
+  zero?: string;
 };
-
-export type Language = "ru" | "en";
-
-export type Word =
-  | "title"
-  | "menu.main"
-  | "basket.title"
-  | "basket.open"
-  | "basket.close"
-  | "basket.inBasket"
-  | "basket.empty"
-  | "basket.total"
-  | "basket.unit"
-  | "basket.delete"
-  | "basket.articles"
-  | "count.title"
-  | "count.cancel"
-  | "article.add"
-  | "filter.reset"
-  | "auth.title"
-  | "auth.login"
-  | "auth.password"
-  | "auth.signIn"
-  | "session.signIn"
-  | "session.signOut";

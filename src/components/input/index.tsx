@@ -21,17 +21,20 @@ type InputProps = {
   delay?: number;
 };
 
-function Input(props: InputProps) {
+function Input(props: InputProps): JSX.Element {
   // Внутренний стейт для быстрого отображения ввода
   const [value, setValue] = useState(props.value);
 
   const onChangeDebounce = useCallback(
-    debounce((value) => props.onChange(value, props.name), props.delay || 600),
+    debounce(
+      (value: string) => props.onChange(value, props.name),
+      props.delay || 600
+    ),
     [props.onChange, props.name]
   );
 
   // Обработчик изменений в поле
-  const onChange = (event) => {
+  const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValue(event.target.value);
     onChangeDebounce(event.target.value);
   };

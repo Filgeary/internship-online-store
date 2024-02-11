@@ -1,7 +1,5 @@
-import { Dictionary } from "../types";
-
-const en: Dictionary = {
-  title: "Shop",
+{
+  "title": "Shop",
   "menu.main": "Main",
   "basket.title": "Cart",
   "basket.open": "Open",
@@ -12,11 +10,9 @@ const en: Dictionary = {
   "basket.unit": "pcs",
   "basket.delete": "Delete",
   "basket.articles": {
-    one: "article",
-    other: "articles",
+    "one": "article",
+    "other": "articles"
   },
-  "count.title": "Choose count",
-  "count.cancel": "Cancel",
   "article.add": "Add",
   "filter.reset": "Reset",
   "auth.title": "Sign In",
@@ -24,7 +20,5 @@ const en: Dictionary = {
   "auth.password": "Password",
   "auth.signIn": "Sign in",
   "session.signIn": "Sign In",
-  "session.signOut": "Sign Out",
-};
-
-export default en;
+  "session.signOut": "Sign Out"
+}

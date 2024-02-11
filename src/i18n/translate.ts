@@ -1,17 +1,15 @@
 import * as translations from "./translations";
-import { Language, Word } from "./types";
+import { Language, PlurableString, TranslationKey } from "./types";
 
 export default function translate(
   lang: Language,
-  text: Word,
+  text: TranslationKey,
   plural?: number
 ): string {
-  let result = translations[lang][text];
-
   if (typeof plural !== "undefined") {
+    let result = translations[lang][text] as PlurableString;
     const key = new Intl.PluralRules(lang).select(plural);
-    result = result[key];
+    return result[key];
   }
-
-  return result as string;
+  return translations[lang][text] as string;
 }

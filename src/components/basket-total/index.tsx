@@ -9,7 +9,7 @@ type BasketTotalProps = {
   t: TranslateFunc;
 };
 
-function BasketTotal({ sum, t }: BasketTotalProps) {
+function BasketTotal({ sum = 0, t }: BasketTotalProps) {
   const cn = bem("BasketTotal");
   return (
     <div className={cn()}>
@@ -19,10 +19,5 @@ function BasketTotal({ sum, t }: BasketTotalProps) {
     </div>
   );
 }
-
-BasketTotal.defaultProps = {
-  sum: 0,
-  t: (text) => text,
-};
 
 export default memo(BasketTotal);

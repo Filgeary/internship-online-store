@@ -7,6 +7,7 @@ import BasketTool from "@src/components/basket-tool";
 import SideLayout from "@src/components/side-layout";
 import { useDispatch } from "react-redux";
 import modalsActions from "@src/store-redux/modals/actions";
+import codeGenerator from "@src/utils/code-generator";
 
 function Navigation() {
   const store = useStore();
@@ -21,8 +22,9 @@ function Navigation() {
   const callbacks = {
     // Открытие модалки корзины
     openModalBasket: useCallback(() => {
+      const modalId = codeGenerator();
       //@ts-ignore
-      dispatch(modalsActions.open("basket"));
+      dispatch(modalsActions.open("basket", modalId()));
     }, [store]),
 
     // Обработка перехода на главную
@@ -42,7 +44,7 @@ function Navigation() {
   };
 
   return (
-    <SideLayout side="between">
+    <SideLayout side="between" padding="small">
       <Menu items={options.menu} onNavigate={callbacks.onNavigate} />
       <BasketTool
         onOpen={callbacks.openModalBasket}

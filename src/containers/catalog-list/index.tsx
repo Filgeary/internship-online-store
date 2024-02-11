@@ -34,11 +34,11 @@ function CatalogList() {
   const callbacks = {
     // Добавление в корзину
     addToBasket: (_id, message) => {
-      const id = codeGenerator();
-      dispatch(modalsActions.open("count-picker", id, message));
+      const modalId = codeGenerator()();
+      dispatch(modalsActions.open("count-picker", modalId, message));
       promiseRef.current?.then((count) => {
         store.actions.basket.addToBasket(_id, count);
-        dispatch(modalsActions.close(id));
+        dispatch(modalsActions.close(modalId));
       });
     },
     // Пагинация

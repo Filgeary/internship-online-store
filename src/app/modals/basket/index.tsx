@@ -13,6 +13,7 @@ import ModalLayout from "@src/components/modal-layout";
 import BasketTotal from "@src/components/basket-total";
 import modalsActions from "@src/store-redux/modals/actions";
 import { ModalProps } from "../types";
+import codeGenerator from "@src/utils/code-generator";
 
 function Basket({ onTop, id }: ModalProps) {
   const store = useStore();
@@ -35,15 +36,15 @@ function Basket({ onTop, id }: ModalProps) {
 
   const callbacks = {
     openCatalogListModal: useCallback(() => {
+      const modalId = codeGenerator()();
       //@ts-ignore
-      dispatch(modalsActions.open("catalog-list-modal"));
+      dispatch(modalsActions.open("catalog-list-modal", modalId));
 
       promiseRef.current.then(async (items) => {
         for (const i in items) {
-          console.log(items[i], "item");
           await store.actions.basket.addToBasket(items[i], 1);
         }
-        dispatch(modalsActions.close(id));
+        dispatch(modalsActions.close(modalId));
       });
     }, [store]),
     // Удаление из корзины
@@ -53,7 +54,6 @@ function Basket({ onTop, id }: ModalProps) {
     ),
     // Закрытие любой модалки
     closeModal: useCallback(() => {
-      //store.actions.modals.close();
       dispatch(modalsActions.close(id));
     }, [store]),
   };
