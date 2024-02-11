@@ -9,19 +9,11 @@ import ItemSelectable from '@src/components/item-selectable';
 import { useCatalog } from '../catalog';
 
 type CatalogListAppendProps = {
-  onItemClick?: (item: TItem) => void;
-  onItemDelete?: (item: TItem) => void;
-  countOfItems?: Record<string | number, number>;
-  appendixOfItem?: (count: number) => string;
+  onItemClick: (item: TItem) => void;
+  onItemDelete: (item: TItem) => void;
+  countOfItems: Record<string | number, number>;
+  appendixOfItem: (count: number) => string;
 };
-
-const defaultProps: CatalogListAppendProps = {
-  countOfItems: {},
-  onItemDelete: () => {},
-  appendixOfItem: () => '',
-};
-
-CatalogListAppend.defaultProps = defaultProps;
 
 function CatalogListAppend(props: CatalogListAppendProps) {
   const { select, callbacks } = useCatalog();

@@ -15,7 +15,9 @@ class ModalsState extends StoreModule<'modals'> {
    * Открыть модалку
    * @param name {String}
    */
-  open: (name: TModalsNames) => Promise<unknown> = (name: TModalsNames) => {
+  open: <T>(name: TModalsNames) => Promise<T> | undefined = (
+    name: TModalsNames
+  ) => {
     if (this.config.onlyUnique && this.getState().mapOfOpened[name]) return;
     const id = generateHash();
     // const id = self.crypto.randomUUID();
@@ -35,7 +37,7 @@ class ModalsState extends StoreModule<'modals'> {
       });
     });
 
-    return promise;
+    return promise as Promise<any>;
   };
 
   /**
@@ -44,6 +46,8 @@ class ModalsState extends StoreModule<'modals'> {
    */
   close(data?: any) {
     const lastModalId = Object.keys(this.getState().mapOfOpened).at(-1);
+    if (!lastModalId) return;
+
     const { resolve: lastEvent } = this.getState().mapOfOpened[lastModalId];
 
     lastEvent(data);
@@ -63,6 +67,8 @@ class ModalsState extends StoreModule<'modals'> {
    */
   closeRej(data?: any) {
     const lastModalId = Object.keys(this.getState().mapOfOpened).at(-1);
+    if (!lastModalId) return;
+
     const { reject: lastEvent } = this.getState().mapOfOpened[lastModalId];
 
     lastEvent(data);

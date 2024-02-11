@@ -1,5 +1,7 @@
-export type TBasketArticle = TArticle & { amount?: number };
-export type TBasketActive = TBasketArticle & { countToAdd?: number };
+export type TBasketArticle = TArticle & { amount: number };
+export type TBasketActive =
+  | (Omit<TBasketArticle, 'amount'> & { countToAdd?: number })
+  | null;
 
 export type TBasketState = {
   list: TBasketArticle[];

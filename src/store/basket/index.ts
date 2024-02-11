@@ -48,7 +48,9 @@ class BasketState extends StoreModule<'basket'> {
         // Добавляем к сумме.
         sum += item.price * count;
       } catch (err) {
-        alert(err.message);
+        if (err instanceof Error) {
+          alert(err.message);
+        }
         this.setState({
           ...this.getState(),
           active: null,
@@ -124,7 +126,9 @@ class BasketState extends StoreModule<'basket'> {
         this.addToBasketItem(item, items[item._id]);
       });
     } catch (err) {
-      alert(err.message);
+      if (err instanceof Error) {
+        alert(err.message);
+      }
     }
   }
 
@@ -156,7 +160,7 @@ class BasketState extends StoreModule<'basket'> {
    */
   addActiveToBasket() {
     const active = this.getState().active;
-
+    if (!active) return;
     this.addToBasket(active._id, active.countToAdd);
   }
 
@@ -188,10 +192,13 @@ class BasketState extends StoreModule<'basket'> {
    * @param count
    */
   setCountToAdd(count: number) {
+    const active = this.getState().active;
+    if (!active) return;
+
     this.setState({
       ...this.getState(),
       active: {
-        ...this.getState().active,
+        ...active,
         countToAdd: count,
       },
     });

@@ -7,7 +7,7 @@
  * @returns {Array} Корневые узлы
  */
 function treeToList<T>(
-  tree: TTree,
+  tree: TBranch[],
   callback: (item: any, level: number) => T,
   level: number = 0,
   result: T[] | any = []
@@ -15,7 +15,7 @@ function treeToList<T>(
   for (const item of tree) {
     result.push(callback ? callback(item, level) : item);
     if (item.children?.length)
-      treeToList(item.children, callback, level + 1, result);
+      treeToList(item.children as TBranch[], callback, level + 1, result);
   }
   return result;
 }

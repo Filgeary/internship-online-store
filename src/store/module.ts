@@ -11,7 +11,7 @@ type TStoreName = keyof TGlobalState | keyof TConfig['store']['modules'] | null;
  * Для группировки действий над внешним состоянием
  */
 class StoreModule<T extends TStoreName = null> {
-  readonly name: string;
+  readonly name: T;
   readonly config: TConfig['store']['modules'][T] | {};
   store: Store;
   services: Services;
@@ -21,9 +21,9 @@ class StoreModule<T extends TStoreName = null> {
    * @param name {String}
    * @param [config] {Object}
    */
-  constructor(store: Store, name: string, config = {}) {
+  constructor(store: Store, name: T | string, config = {}) {
     this.store = store;
-    this.name = name;
+    this.name = name as T;
     this.config = config;
     /** @type {Services} */
     this.services = store.services;

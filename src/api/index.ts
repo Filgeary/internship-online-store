@@ -11,7 +11,7 @@ type TRequest = {
 type TResponse<T> = {
   data: { result: T; error: { data: { issues: Array<{ message: string }> } } };
   status: number;
-  headers: Record<string, string>;
+  headers: Record<string, any>;
 };
 
 class APIService {
@@ -23,7 +23,7 @@ class APIService {
    * @param services {Services} Менеджер сервисов
    * @param config {Object}
    */
-  constructor(services, config = {}) {
+  constructor(services: Services, config = {}) {
     this.services = services;
     this.config = config as TConfig['api'];
     this.defaultHeaders = {
@@ -44,7 +44,7 @@ class APIService {
     url,
     method = 'GET',
     headers = {},
-    timeout = null,
+    timeout,
     ...options
   }: TRequest): Promise<TResponse<T>> {
     if (!url.match(/^(http|\/\/)/)) url = this.config.baseUrl + url;
@@ -87,7 +87,7 @@ class APIService {
    * @param name {String} Название заголовка
    * @param value {String|null} Значение заголовка
    */
-  setHeader(name, value = null) {
+  setHeader(name: string, value: string | null = null) {
     if (value) {
       this.defaultHeaders[name] = value;
     } else if (this.defaultHeaders[name]) {

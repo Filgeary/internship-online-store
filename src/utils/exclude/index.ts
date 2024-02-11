@@ -6,18 +6,22 @@ import isPlainObject from '../is-plain-object';
  * @param objectExc {Object} Объект-маска, вырезаемый из objectSrc
  * @returns {Object} Новый объект
  */
-export default function exclude(
-  objectSrc: object,
-  objectExc: object
+export default function exclude<T, U>(
+  objectSrc: T,
+  objectExc: U
 ): Record<string, any> {
   if (isPlainObject(objectSrc) && isPlainObject(objectExc)) {
-    const result = {};
-    const keys = Object.keys(objectSrc);
+    const result: Record<string, any> = {};
+    const keys = Object.keys(objectSrc) as (keyof T)[];
     for (const key of keys) {
-      if (objectSrc[key] !== objectExc[key]) {
-        const value = exclude(objectSrc[key], objectExc[key]);
+      // @ts-ignore:next-line
+      const src = objectSrc[key];
+      // @ts-ignore:next-line
+      const exc = objectExc[key];
+      if (src !== exc) {
+        const value = exclude(src, exc);
         if (typeof value !== 'undefined') {
-          result[key] = value;
+          result[key as string] = value;
         }
       }
     }

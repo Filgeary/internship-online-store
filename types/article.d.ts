@@ -1,7 +1,7 @@
 export {};
 
 declare global {
-  export interface TArticle {
+  export type TArticle = {
     _id: string | number;
     _key: string;
     name: string;
@@ -18,7 +18,7 @@ declare global {
     dateUpdate: string;
     isDeleted: boolean;
     isFavorite: boolean;
-  }
+  };
 
   export type TMadeIn = {
     _id: string;

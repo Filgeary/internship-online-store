@@ -1,7 +1,9 @@
 import { memo, useCallback } from 'react';
+
 import useStore from '@src/hooks/use-store';
 import { useAppSelector } from '@src/hooks/use-selector';
 import useTranslate from '@src/hooks/use-translate';
+
 import ItemBasket from '@src/components/item-basket';
 import List from '@src/components/list';
 import Modal from '@src/containers/modal';
@@ -22,15 +24,20 @@ function Basket() {
   const callbacks = {
     // Удаление из корзины
     removeFromBasket: useCallback(
-      (_id: string) => store.actions.basket.removeFromBasket(_id),
+      (_id: string | number) => store.actions.basket.removeFromBasket(_id),
       [store]
     ),
     // Открыть модалку каталога
     openCatalogModal: useCallback(() => {
-      const promiseOfModal = store.actions.modals.open('catalogModal');
+      const promiseOfModal =
+        store.actions.modals.open<Record<string | number, number>>(
+          'catalogModal'
+        );
+
+      if (!promiseOfModal) return;
 
       promiseOfModal
-        .then((updatedItems: Record<string | number, number>) => {
+        .then((updatedItems) => {
           store.actions.basket.addMany(updatedItems);
         })
         .catch(() => {});

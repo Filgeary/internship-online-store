@@ -3,7 +3,7 @@ export default {
    * Открытие модалки по названию
    * @param name
    */
-  open: (name) => {
+  open: (name: TModalsNames) => {
     return { type: 'modal/open', payload: { name } };
   },
 
@@ -11,7 +11,7 @@ export default {
    * Закрытие модалки
    * @param dataObj
    */
-  close: (dataObj) => {
+  close: (dataObj: any) => {
     return { type: 'modal/close', payload: dataObj };
   },
 

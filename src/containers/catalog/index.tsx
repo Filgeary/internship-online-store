@@ -20,6 +20,7 @@ export const useCatalog = () => {
 
 type CatalogProps = {
   children?: React.ReactNode;
+  // stateName: keyof TGlobalState & keyof TGlobalActions;
   stateName: string;
 };
 

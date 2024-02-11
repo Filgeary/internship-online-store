@@ -2,7 +2,7 @@ import treeToList from './index';
 
 describe('treeToList', () => {
   test('test1', () => {
-    const tree = [
+    const tree: TBranch[] = [
       {
         _id: 2,
         title: 'Электроника',
@@ -37,7 +37,7 @@ describe('treeToList', () => {
       },
     ];
 
-    const cb = (item, level) => ({
+    const cb = (item: TItem, level: number) => ({
       value: item._id,
       title: '- '.repeat(level) + item.title,
     });

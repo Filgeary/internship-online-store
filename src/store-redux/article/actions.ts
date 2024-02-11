@@ -1,4 +1,5 @@
 import Services from '@src/services';
+import { TReduxDispatch, TReduxState } from '../types';
 
 export default {
   /**
@@ -6,8 +7,12 @@ export default {
    * @param id
    * @return {Function}
    */
-  load: (id) => {
-    return async (dispatch, getState, services: Services) => {
+  load: (id: string | number) => {
+    return async (
+      dispatch: TReduxDispatch,
+      getState: () => TReduxState,
+      services: Services
+    ) => {
       // Сброс текущего товара и установка признака ожидания загрузки
       dispatch({ type: 'article/load-start' });
 

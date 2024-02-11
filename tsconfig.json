@@ -11,8 +11,8 @@
     "types": ["jest", "node"],
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
+    "noImplicitAny": true,
     "resolveJsonModule": true,
-    "noImplicitAny": false,
     "paths": {
       "@src/*": ["./src/*"],
       "*": ["./types/*.d.ts"]

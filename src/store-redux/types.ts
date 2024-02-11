@@ -1,4 +1,5 @@
 import createStore from '.';
 
 const store = createStore({}, {});
-export type TReduxStoreRoot = ReturnType<typeof store.getState>;
+export type TReduxState = ReturnType<typeof store.getState>;
+export type TReduxDispatch = typeof store.dispatch;

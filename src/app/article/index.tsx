@@ -13,7 +13,7 @@ import TopHead from '@src/containers/top-head';
 import { useDispatch, useSelector } from 'react-redux';
 import shallowequal from 'shallowequal';
 import articleActions from '@src/store-redux/article/actions';
-import { TReduxStoreRoot } from '@src/store-redux/types';
+import { TReduxState } from '@src/store-redux/types';
 
 function Article() {
   const store = useStore();
@@ -29,7 +29,7 @@ function Article() {
   }, [params.id]);
 
   const select = useSelector(
-    (state: TReduxStoreRoot) => ({
+    (state: TReduxState) => ({
       article: state.article.data,
       waiting: state.article.waiting,
     }),

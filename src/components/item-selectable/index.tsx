@@ -13,12 +13,14 @@ type ItemSelectableProps = {
   onDelete: () => void;
   labelCurr: string;
   labelDelete: string;
-  count: number | null;
+  count: number;
   appendix: (count: number) => string;
 };
 
-const defaultProps: Omit<ItemSelectableProps, 'item' | 'appendix' | 'link'> = {
-  count: null,
+const defaultProps: Omit<
+  ItemSelectableProps,
+  'item' | 'appendix' | 'link' | 'count'
+> = {
   onClick: () => {},
   onDelete: () => {},
   labelCurr: '₽',
