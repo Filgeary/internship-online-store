@@ -2,7 +2,6 @@ import React, { memo, createContext, useContext, useCallback } from 'react';
 
 import useStore from '@src/hooks/use-store';
 import { useAppSelector } from '@src/hooks/use-selector';
-import { TGlobalActions, TGlobalState } from '@src/store/types';
 
 const CatalogContext = createContext(null);
 
@@ -20,8 +19,7 @@ export const useCatalog = () => {
 
 type CatalogProps = {
   children?: React.ReactNode;
-  // stateName: keyof TGlobalState & keyof TGlobalActions;
-  stateName: string;
+  stateName: 'catalog' | 'separateCatalog';
 };
 
 function Catalog({ children, ...props }: CatalogProps) {
@@ -56,7 +54,7 @@ function Catalog({ children, ...props }: CatalogProps) {
     // генератор ссылки для пагинатора
     makePaginatorLink: useCallback(
       (page: string) => {
-        return `?${new URLSearchParams({ page, limit: select.limit, sort: select.sort, query: select.query })}`;
+        return `?${new URLSearchParams({ page, limit: select.limit, sort: select.sort, query: select.query } as Record<string, any>)}`;
       },
       [select.limit, select.sort, select.query]
     ),

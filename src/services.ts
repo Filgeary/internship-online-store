@@ -8,7 +8,7 @@ class Services {
   config: TConfig;
   _api: APIService;
   _store: Store;
-  _redux: any;
+  _redux: ReturnType<typeof createStoreRedux>;
 
   constructor(config: TConfig) {
     this.config = config;

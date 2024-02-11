@@ -1,5 +1,5 @@
 import StoreModule from '../module';
-import { TCategoriesState } from './types';
+import { TCategoriesState, TCategory } from './types';
 
 /**
  * Список категорий
@@ -25,7 +25,7 @@ class CategoriesState extends StoreModule<'categories'> {
       'Ожидание загрузки категорий'
     );
 
-    const res = await this.services.api.request<{ items: string[] }>({
+    const res = await this.services.api.request<{ items: TCategory[] }>({
       url: `/api/v1/categories?fields=_id,title,parent(_id)&limit=*`,
     });
 

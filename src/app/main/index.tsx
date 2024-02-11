@@ -25,7 +25,7 @@ function Main() {
       </Head>
       <Navigation />
 
-      <Catalog stateName={options.stateName}>
+      <Catalog stateName={options.stateName as 'catalog'}>
         <CatalogFilter />
         <CatalogList />
       </Catalog>
