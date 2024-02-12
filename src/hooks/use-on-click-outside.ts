@@ -13,27 +13,20 @@ function useOnClickOutside(
       }
     };
 
-    // const keyListener = (e) => {
-    //   const escCode = 27;
+    const keyListener = (e: KeyboardEvent) => {
+      const escCode = 27;
 
-    //   if (e.keyCode === escCode) {
-    //     runHandlers();
-    //   }
-    // };
+      if (e.keyCode === escCode) {
+        runHandlers();
+      }
+    };
 
-    // ref.current.addEventListener('click', listener);
-    // ref.current.addEventListener('touchstart', listener);
     ref.current.addEventListener('pointerdown', listener);
-
-    // document.addEventListener('keydown', keyListener);
+    ref.current.addEventListener('keydown', keyListener);
 
     return () => {
-      // ref.current?.removeEventListener('click', listener);
-      // ref.current?.removeEventListener('touchstart', listener);
-
       ref.current?.removeEventListener('pointerdown', listener);
-
-      // document.addEventListener('keydown', keyListener);
+      ref.current?.addEventListener('keydown', keyListener);
     };
   }, [ref, handlers]);
 }

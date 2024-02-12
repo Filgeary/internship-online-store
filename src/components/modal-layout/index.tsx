@@ -59,6 +59,7 @@ const ModalLayout = React.forwardRef(
           layout.current = el;
           outerRef.current = el;
         }}
+        tabIndex={0}
       >
         <div className={cn('frame')} ref={frame}>
           <div className={cn('head')}>

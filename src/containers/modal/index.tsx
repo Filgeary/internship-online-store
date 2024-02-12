@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, memo } from 'react';
+import React, { useCallback, useRef, memo, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import useStore from '@src/hooks/use-store';
@@ -6,6 +6,7 @@ import useOnClickOutside from '@src/hooks/use-on-click-outside';
 import useModalId from '@src/hooks/use-modal-id';
 
 import ModalLayout from '@src/components/modal-layout';
+import { useAppSelector } from '@src/hooks/use-selector';
 
 type ModalProps = {
   title?: string;
@@ -23,6 +24,9 @@ Modal.defaultProps = defaultProps;
 
 function Modal({ children, ...props }: ModalProps) {
   const store = useStore();
+  const select = useAppSelector((state) => ({
+    modals: state.modals.mapOfOpened,
+  }));
 
   const modalId = useModalId();
   const modalRef = useRef(null);
@@ -36,6 +40,10 @@ function Modal({ children, ...props }: ModalProps) {
   const closeHandler = props.onClose || callbacks.closeModal;
 
   useOnClickOutside(modalRef, closeHandler);
+
+  useEffect(() => {
+    modalRef.current?.focus();
+  }, [select.modals]);
 
   return (
     <ModalLayout {...props} ref={modalRef} onClose={closeHandler}>
