@@ -5,7 +5,7 @@ import { TCatalogState, TItem, TParams } from "./types";
 /**
  * Состояние каталога - параметры фильтра исписок товара
  */
-class CatalogState extends StoreModule<'catalog'> {
+class CatalogState extends StoreModule {
   /**
    * Начальное состояние
    * @return {Object}
@@ -32,7 +32,7 @@ class CatalogState extends StoreModule<'catalog'> {
    * @param [newParams] {Object} Новые параметры
    * @return {Promise<void>}
    */
-  async initParams(newParams: object): Promise<void> {
+  async initParams(newParams = {}): Promise<void> {
     const urlParams = new URLSearchParams(window.location.search);
     let validParams = {} as TParams;
 
@@ -74,7 +74,10 @@ class CatalogState extends StoreModule<'catalog'> {
     newParams: object = {},
     replaceHistory: boolean = false
   ): Promise<void> {
-    const params = { ...this.getState().params, ...newParams };
+    const params: TParams = {
+      ...this.getState().params,
+      ...newParams,
+    };
 
     // Установка новых параметров и признака загрузки
     this.setState(
@@ -89,7 +92,7 @@ class CatalogState extends StoreModule<'catalog'> {
     // Сохранить параметры в адрес страницы
     if (this.name !== "catalogModal") {
       let urlSearch = new URLSearchParams(
-        exclude(params, this.initState().params)
+        exclude(params, this.initState().params) as any
       ).toString();
       const url =
         window.location.pathname +
@@ -102,7 +105,7 @@ class CatalogState extends StoreModule<'catalog'> {
       }
     }
 
-    const apiParams = exclude(
+    const apiParams: any = exclude(
       {
         limit: params.limit,
         skip: (params.page - 1) * params.limit,

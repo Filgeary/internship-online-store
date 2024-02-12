@@ -9,10 +9,10 @@ import type { TStoreState } from "./types";
  */
 export type TStoreName = keyof TStoreState | keyof TConfig["store"]["modules"];
 
-class StoreModule<T extends TStoreName> {
+class StoreModule {
+  readonly name: string;
+  readonly config: TConfig | {};
   store: Store;
-  name: T;
-  config = {} as any;
   services: Services;
 
   /**
@@ -20,35 +20,23 @@ class StoreModule<T extends TStoreName> {
    * @param name {String}
    * @param [config] {Object}
    */
-  constructor(store: Store, name: T, config: {}) {
+  constructor(store: Store, name: string, config: {}) {
     this.store = store;
-    this.name = name as T;
+    this.name = name;
     this.config = config;
     /** @type {Services} */
     this.services = store.services;
   }
 
-  initState(): TStoreState {
-    return {} as TStoreState;
+  initState() {
+    return {};
   }
 
   getState() {
-    return this.store.getState()[this.name as T];
+    return this.store.getState()[this.name];
   }
 
-  setState(
-    newState: {
-      lang?: string;
-      user?: {} | { userName: string };
-      token?: string;
-      errors?: string[];
-      waiting?: boolean;
-      exists?: boolean;
-      data?: any;
-      name?: any;
-    },
-    description = "setState"
-  ) {
+  setState(newState: {}, description = "setState") {
     this.store.setState(
       {
         ...this.store.getState(),

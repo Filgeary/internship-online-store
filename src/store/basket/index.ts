@@ -1,11 +1,11 @@
 import StoreModule from "../module";
-import { TBasketState } from "./types";
+import { TBasketArticle, TBasketState } from "./types";
 
 
 /**
  * Покупательская корзина
  */
-class BasketState extends StoreModule<'basket'> {
+class BasketState extends StoreModule {
 
   initState():TBasketState{
     return {
@@ -24,7 +24,7 @@ class BasketState extends StoreModule<'basket'> {
     let sum = 0;
     // Ищем товар в корзине, чтобы увеличить его количество
     let exist = false;
-    const list = this.getState().list.map((item) => {
+    const list = this.getState().list.map((item:TBasketArticle) => {
       let result = item;
       if (item._id === _id) {
         exist = true; // Запомним, что был найден в корзине
@@ -58,7 +58,7 @@ class BasketState extends StoreModule<'basket'> {
   }
 
   // мультидобавление в корзину
-  async multiAddToBasket(list) {
+  async multiAddToBasket(list: any[]) {
     this.setState({
       ...this.getState(),
       waiting: true,
@@ -83,7 +83,7 @@ class BasketState extends StoreModule<'basket'> {
    */
   removeFromBasket(_id: string | number) {
     let sum = 0;
-    const list = this.getState().list.filter((item) => {
+    const list = this.getState().list.filter((item:TBasketArticle) => {
       if (item._id === _id) return false;
       sum += item.price * item.amount;
       return true;

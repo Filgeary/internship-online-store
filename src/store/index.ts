@@ -55,33 +55,38 @@ class Store {
   }
 
   create<Key extends TKeyModules>(name: Key) {
-    let b = modules[name] as TImportModules[Key];
-    let a = new b(this, name, {} as any) as TActions[Key];
-    this.actions[name] = a;
+    this.actions[name] = new modules[name](
+      this,
+      name,
+      {} as any
+    ) as TActions[Key];
     this.state[name] = this.actions[name].initState() as TStoreState[Key];
   }
 
-cr<Key extends TKeyModules>(name: Key, base:Key){
-  let b = modules[name] as TImportModules[Key];
-  let c = modules[base] as TImportModules[Key];
-  let a = new c(this, name, {} as any) as TActions[Key];
-  let d = new b(this, name, {} as any) as TActions[Key];
-  this.actions[name] = d;
+  /* 
+  make<Key extends TKeyModules>(name: Key, base: Key) {
+    let newName = `${base}${name}`;
+    this.actions[name] = `${base}${name}` as TActions[Key];
+    this.actions[name] = new modules[base](
+      this,
+      newName,
+      {} as any
+    ) as TActions[Key];
+    this.state[name] = this.actions[name].initState() as TStoreState[Key];
+  } 
+  */
 
-}
-
-  make(name: string | number, base: string | number) {
-
+  make<Key extends TKeyModules>(name: Key, base: Key) {
     this.actions[name] = new modules[base](
       this,
       name,
-      this.config?.modules[base] || {}
-    );
-    this.state[name] = this.actions[name].initState();
+      {} as any
+    ) as TActions[Key];
+    this.state[name] = this.actions[name].initState() as TStoreState[Key];
   }
 
-  clear(name:string ) {
-    this.state[name] = this.actions[name].initState();
+  clear<Key extends TKeyModules>(name: Key) {
+    this.state[name] = this.actions[name].initState() as TStoreState[Key];
   }
   /**
    * Подписка слушателя на изменения состояния
@@ -89,7 +94,7 @@ cr<Key extends TKeyModules>(name: Key, base:Key){
    * @returns {Function} Функция отписки
    */
   subscribe(listener: {
-    (...args: any ): void;
+    (...args: any): void;
     (...args: any): void;
   }): Function {
     this.listeners.push(listener);
@@ -112,7 +117,7 @@ cr<Key extends TKeyModules>(name: Key, base:Key){
    * profile: Object,
    * }}
    */
-  getState():TStoreState {
+  getState(): TStoreState {
     return this.state as TStoreState;
   }
 

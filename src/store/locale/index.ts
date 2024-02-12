@@ -4,7 +4,7 @@ export type TLocaleState = {
   lang: string;
 };
 
-class LocaleState extends StoreModule <'locale'>{
+class LocaleState extends StoreModule {
   initState(): TLocaleState {
     return {
       lang: "ru",

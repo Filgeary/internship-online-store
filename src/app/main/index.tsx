@@ -15,6 +15,8 @@ function Main() {
 
   useInit(
     async () => {
+      /*  store.make('Modal', 'catalog') */
+      
       store.make('catalogModal', 'catalog')
       await Promise.all([
         store.actions.catalog.initParams(),

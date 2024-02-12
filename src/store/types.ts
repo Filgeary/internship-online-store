@@ -16,13 +16,10 @@ export type TAutocompleteName<T extends string> = T | Omit<string, T>;
 
 export type TAllStoreNames = TAutocompleteName<TKeyModules>;
 
-
-
-
-type TKey<T extends TKeyModules> = T | `${T}${number}`
+export type TKey<T extends TKeyModules> = T | `${T}${string}`;
 export type TFullKey = {
-  [X in TKeyModules as TKey<X> ]:TActions[X]
-}
+  [Key in TKeyModules as TKey<Key>]: TActions[Key];
+};
 
 //let s :TFullKey;
 //s.basket123.addToBasket

@@ -4,7 +4,7 @@ import { TArticle, TArticleState } from "./types";
 
  // Детальная ифнормация о товаре для страницы товара
  
-class ArticleState extends StoreModule<'article'> {
+class ArticleState extends StoreModule {
   initState(): TArticleState {
     return {
       data: {} as TArticle,

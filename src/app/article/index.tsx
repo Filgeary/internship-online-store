@@ -27,7 +27,7 @@ function Article() {
   }, [params.id]);
 
   const select = useSelectorRedux(
-    (state:any) => ({
+    (state: any) => ({
       article: state.article.data,
       waiting: state.article.waiting,
     }),
@@ -39,7 +39,7 @@ function Article() {
   const callbacks = {
     // Добавление в корзину
     addToBasket: useCallback(
-      (_id:string) => store.actions.basket.addToBasket(_id),
+      (_id: string) => store.actions.basket.addToBasket(_id),
       [store]
     ),
   };

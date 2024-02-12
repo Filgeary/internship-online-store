@@ -18,24 +18,22 @@ function Basket() {
   const dispatch = useDispatch();
   const { t } = useTranslate();
 
-  const select = useSelector(
-    (state: { basket: { list: any; amount: any; sum: any } }) => ({
-      list: state.basket.list,
-      amount: state.basket.amount,
-      sum: state.basket.sum,
-    })
-  );
+  const select = useSelector((state) => ({
+    list: state.basket.list,
+    amount: state.basket.amount,
+    sum: state.basket.sum,
+  }));
 
   const activeModal = useSelectorRedux(
     (state: { article: TArticleState; modals: TReducer }) => state.modals
   );
 
-    useInit(() => {
+  useInit(() => {
     if (Array.isArray(activeModal.data)) {
       store.actions.basket.multiAddToBasket(activeModal.data);
       dispatch(modalsActions.reset());
     }
-  }, [activeModal.data]); 
+  }, [activeModal.data]);
 
   const callbacks = {
     // Удаление из корзины

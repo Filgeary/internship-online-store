@@ -23,12 +23,10 @@ function Login() {
     store.actions.session.resetErrors();
   });
 
-  const select = useSelector(
-    (state: { session: { waiting: any; errors: any } }) => ({
-      waiting: state.session.waiting,
-      errors: state.session.errors,
-    })
-  );
+  const select = useSelector((state) => ({
+    waiting: state.session.waiting,
+    errors: state.session.errors,
+  }));
 
   const [data, setData] = useState({
     login: "",

@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import "./style.css";
 
 export type TItemBasketProps = {
-  _id: string;
+  _id?: string;
   item: {
     _id: string | number;
     title?: string;
