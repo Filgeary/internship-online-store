@@ -1,7 +1,7 @@
 import Services from "@src/services.ts";
 import * as modules from "./exports.ts";
 import { TConfig } from "@src/config.ts";
-import { TActions, TImportModules, TKeyModules, TStoreState } from "./types.ts";
+import { TActions, TAddCloneModule, TDefaultModules, TKeyModules, TStoreState } from "./types.ts";
 
 /* 
 create<Key extends keyModules>(name: Key) {
@@ -21,8 +21,8 @@ class Store {
   services: Services;
   config: TConfig["store"];
   listeners: Function[];
-  state: TStoreState;
-  actions: TActions;
+  state : TStoreState & Record<string, any>;
+  actions: TActions & Record<string, any>;
 
   /**
    * @param services {Services}
@@ -31,13 +31,13 @@ class Store {
    */
   constructor(
     services: Services,
-    config = {} as TConfig["store"],
-    initState = {} as TStoreState
+    config = {} ,
+    initState = {} 
   ) {
     this.services = services;
-    this.config = config;
+    this.config = config as TConfig['store'];
     this.listeners = []; // Слушатели изменений состояния
-    this.state = initState;
+    this.state = initState as TStoreState;
     /** @type {{
      * basket: BasketState,
      * catalog: CatalogState,
@@ -49,17 +49,19 @@ class Store {
      * profile: ProfileState
      * }} */
     this.actions = {} as TActions;
-    for (const name of Object.keys(modules) as TKeyModules[]) {
+    for (const name of Object.keys(modules) as TDefaultModules[]) {
       this.create(name);
     }
   }
 
-  create<Key extends TKeyModules>(name: Key) {
-    this.actions[name] = new modules[name](
+  create<Key extends TDefaultModules>(name: Key) {
+    const moduleCreator = modules[name] as TAddCloneModule[Key];
+    const module = new moduleCreator(
       this,
       name,
       {} as any
     ) as TActions[Key];
+    this.actions[name] = module;
     this.state[name] = this.actions[name].initState() as TStoreState[Key];
   }
 
@@ -76,7 +78,7 @@ class Store {
   } 
   */
 
-  make<Key extends TKeyModules>(name: Key, base: Key) {
+  make<Key extends TDefaultModules>(name: Key, base: Key) {
     this.actions[name] = new modules[base](
       this,
       name,
@@ -117,9 +119,9 @@ class Store {
    * profile: Object,
    * }}
    */
-  getState(): TStoreState {
-    return this.state as TStoreState;
-  }
+  getState() {
+    return this.state as any
+  } 
 
   /**
    * Установка состояния

@@ -14,7 +14,7 @@ type TSessionState = {
  * Сессия
  */
 class SessionState extends StoreModule {
-  config: TConfig["store"]["modules"]["session"];
+  config!: TConfig["store"]["modules"]["session"];
   /**
    * Начальное состояние
    * @return {Object}

@@ -4,7 +4,7 @@ import numberFormat from "@src/utils/number-format";
 import "./style.css";
 import { Link } from "react-router-dom";
 import useSelector from "@src/hooks/use-selector";
-import { TStoreState } from "@src/store/types";
+
 
 type TItemProps = {
   item: {

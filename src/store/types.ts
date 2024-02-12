@@ -1,15 +1,20 @@
 import * as modules from "./exports.ts";
 
-export type TImportModules = typeof modules;
+type TModules = typeof modules;
+export type TDefaultModules = keyof TModules;
 
-export type TKeyModules = keyof TImportModules;
+export type IAddCloneModule = TModules & {
+  catalogModal: typeof modules.catalog;
+};
+export type TAddCloneModule = IAddCloneModule;
+export type TKeyModules = keyof TAddCloneModule;
 
 export type TStoreState = {
   [key in TKeyModules]: ReturnType<TActions[key]["initState"]>;
 };
 
 export type TActions = {
-  [key in TKeyModules]: InstanceType<TImportModules[key]>;
+  [key in TKeyModules]: InstanceType<TAddCloneModule[key]>;
 };
 
 export type TAutocompleteName<T extends string> = T | Omit<string, T>;
