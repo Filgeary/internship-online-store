@@ -1,5 +1,4 @@
 import React, { useCallback, useRef, memo, useEffect } from 'react';
-import PropTypes from 'prop-types';
 
 import useStore from '@src/hooks/use-store';
 import useOnClickOutside from '@src/hooks/use-on-click-outside';
@@ -51,17 +50,5 @@ function Modal({ children, ...props }: ModalProps) {
     </ModalLayout>
   );
 }
-
-Modal.propTypes = {
-  title: PropTypes.string,
-  children: PropTypes.node,
-  labelClose: PropTypes.string,
-  onClose: PropTypes.func,
-};
-
-Modal.defaultProps = {
-  title: 'Модалка',
-  labelClose: 'Закрыть',
-};
 
 export default memo(Modal);

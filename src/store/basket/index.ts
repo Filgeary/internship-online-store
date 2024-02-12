@@ -158,10 +158,10 @@ class BasketState extends StoreModule<'basket'> {
   /**
    * Добавление активного товара в корзину
    */
-  addActiveToBasket() {
+  async addActiveToBasket() {
     const active = this.getState().active;
     if (!active) return;
-    this.addToBasket(active._id, active.countToAdd);
+    await this.addToBasket(active._id, active.countToAdd);
   }
 
   /**

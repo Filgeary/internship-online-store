@@ -21,9 +21,10 @@ function CatalogList() {
           onAdd={() => callbacks.openModalOfCount(item)}
           link={`/articles/${item._id}`}
           labelAdd={t('article.add')}
+          isBtnDisabled={select.activeItemBasket?._id === item._id}
         />
       ),
-      [callbacks.openModalOfCount, t]
+      [select.activeItemBasket?._id, callbacks.openModalOfCount, t]
     ),
   };
 

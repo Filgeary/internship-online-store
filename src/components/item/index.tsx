@@ -2,7 +2,6 @@ import './style.css';
 
 import React, { memo } from 'react';
 import { Link } from 'react-router-dom';
-import PropTypes from 'prop-types';
 
 import { cn as bem } from '@bem-react/classname';
 
@@ -14,6 +13,7 @@ type ItemProps = {
   onAdd?: () => void;
   labelCurr?: string;
   labelAdd?: string;
+  isBtnDisabled?: boolean;
 };
 
 const defaultProps: Omit<ItemProps, 'item'> = {
@@ -43,23 +43,12 @@ function Item(props: ItemProps) {
         <div className={cn('price')}>
           {numberFormat(props.item.price)} {props.labelCurr}
         </div>
-        <button onClick={callbacks.onAdd}>{props.labelAdd}</button>
+        <button disabled={props.isBtnDisabled} onClick={callbacks.onAdd}>
+          {props.labelAdd}
+        </button>
       </div>
     </div>
   );
 }
-
-Item.propTypes = {
-  item: PropTypes.shape({
-    _id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    title: PropTypes.string,
-    price: PropTypes.number,
-    count: PropTypes.number,
-  }).isRequired,
-  link: PropTypes.string,
-  onAdd: PropTypes.func,
-  labelCurr: PropTypes.string,
-  labelAdd: PropTypes.string,
-};
 
 export default memo(Item);

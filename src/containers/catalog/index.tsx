@@ -65,8 +65,8 @@ function Catalog({ children, ...props }: CatalogProps) {
         const promiseOfModal = store.actions.modals.open('countModal');
 
         promiseOfModal
-          .then(() => {
-            store.actions.basket.addActiveToBasket();
+          .then(async () => {
+            await store.actions.basket.addActiveToBasket();
           })
           .catch(() => {})
           .finally(() => {
