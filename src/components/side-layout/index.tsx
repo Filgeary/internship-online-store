@@ -5,8 +5,8 @@ import "./style.css";
 
 type Props = {
   children: React.ReactNode;
-  side: "start" | "end" | "between" | "center";
-  padding: "small" | "medium";
+  side?: "start" | "end" | "between" | "center";
+  padding?: "small" | "medium";
 };
 
 function SideLayout({ children, side, padding }: Props) {

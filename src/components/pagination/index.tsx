@@ -5,7 +5,7 @@ import './style.css';
 
 type Props = {
   onChange: (number: number) => void;
-  makeLink: (number: number) => string;
+  makeLink: (page: string) => string;
   page?: number;
   limit?: number;
   count?: number;
@@ -59,7 +59,7 @@ function Pagination({
           onClick={handleClick(number ?? 0)}>
           {number
             ? (makeLink
-              ? <a href={makeLink(number)}>{number}</a>
+              ? <a href={makeLink(String(number))}>{number}</a>
               : number
             )
             : '...'

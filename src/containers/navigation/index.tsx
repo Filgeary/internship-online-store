@@ -1,13 +1,17 @@
+import { memo, useCallback, useMemo } from "react";
+
 import BasketTool from "@src/components/basket-tool";
 import Menu from "@src/components/menu";
 import SideLayout from "@src/components/side-layout";
 import useSelector from "@src/hooks/use-selector";
 import useStore from "@src/hooks/use-store";
 import useTranslate from "@src/hooks/use-translate";
-import { memo, useCallback, useMemo } from "react";
+
+import type { TMenuItem } from "@src/components/menu";
 
 function Navigation() {
   const store = useStore();
+  const { t } = useTranslate();
 
   const select = useSelector((state) => ({
     amount: state.basket.amount,
@@ -16,22 +20,18 @@ function Navigation() {
   }));
 
   const callbacks = {
-    // Открытие модалки корзины
     openModalBasket: useCallback(() => {
       store.actions.modals.open("basket");
     }, [store]),
 
     // Обработка перехода на главную
     onNavigate: useCallback(
-      (item) => {
+      (item: TMenuItem) => {
         if (item.key === 1) store.actions.catalog.resetParams();
       },
       [store]
     ),
   };
-
-  // Функция для локализации текстов
-  const { t } = useTranslate();
 
   const options = {
     menu: useMemo(() => [{ key: 1, title: t("menu.main"), link: "/" }], [t]),

@@ -4,15 +4,15 @@ import { Link } from "react-router-dom";
 
 import './style.css';
 
-type Item = {
+export type TMenuItem = {
   key: number;
   link: string;
   title: string;
 };
 
 type Props = {
-  items: Item[],
-  onNavigate: (item: Item) => void
+  items: TMenuItem[],
+  onNavigate: (item: TMenuItem) => void
 }
 
 function Menu({ items, onNavigate }: Props) {

@@ -1,4 +1,3 @@
-import PropTypes from "prop-types";
 import { memo, useCallback } from "react";
 
 import Item from "@src/components/item";
@@ -10,12 +9,21 @@ import useSelector from "@src/hooks/use-selector";
 import useStore from "@src/hooks/use-store";
 import useTranslate from "@src/hooks/use-translate";
 
+import type { IArticle } from "@src/types/IArticle";
+
+type Props = {
+  isSelectionMode?: boolean;
+  onSelectItem?: (id: string | number, checked: boolean) => void;
+  selectedItems?: string[];
+  catalogSliceName?: string;
+};
+
 function CatalogList({
   isSelectionMode,
   onSelectItem,
   selectedItems,
   catalogSliceName = "catalog",
-}) {
+}: Props) {
   const store = useStore();
   const { t } = useTranslate();
 
@@ -30,19 +38,19 @@ function CatalogList({
   const callbacks = {
     // Добавление в корзину
     addToBasket: useCallback(
-      (_id, amount) => {
+      (_id: string, amount: number) => {
         store.actions.basket.addToBasket(_id, amount);
       },
       [store]
     ),
     // Пагинация
     onPaginate: useCallback(
-      (page) => store.actions[catalogSliceName].setParams({ page }),
+      (page: string | number) => store.actions[catalogSliceName].setParams({ page }),
       [store]
     ),
     // генератор ссылки для пагинатора
     makePaginatorLink: useCallback(
-      (page) => {
+      (page: string) => {
         return `?${new URLSearchParams({
           page,
           limit: select.limit,
@@ -55,10 +63,10 @@ function CatalogList({
   };
 
   const openDialogAmount = useCallback(
-    (_id) => {
+    (_id: string | number) => {
       store.actions.modals.open(
         "dialogAmount",
-        callbacks.addToBasket.bind(null, _id)
+        callbacks.addToBasket.bind(null, String(_id))
       );
     },
     [store]
@@ -66,7 +74,7 @@ function CatalogList({
 
   const renders = {
     item: useCallback(
-      (item) => (
+      (item: IArticle) => (
         <Item
           item={item}
           onAdd={openDialogAmount}
@@ -77,12 +85,12 @@ function CatalogList({
       [openDialogAmount, t]
     ),
     itemModalCatalog: useCallback(
-      (item) => (
+      (item: IArticle) => (
         <ItemModalCatalog
           item={item}
           onAdd={openDialogAmount}
-          onSelectItem={onSelectItem}
-          isSelected={selectedItems.includes(item._id)}
+          onSelectItem={onSelectItem ?? (() => { })}
+          isSelected={Boolean(selectedItems?.includes(item._id))}
           labelAdd={t("article.add")}
         />
       ),
@@ -106,17 +114,5 @@ function CatalogList({
     </Spinner>
   );
 }
-
-CatalogList.propTypes = {
-  isSelectionMode: PropTypes.bool,
-  onSelectItem: PropTypes.func,
-  selectedItems: PropTypes.array,
-};
-
-CatalogList.defaultProps = {
-  isSelectionMode: false,
-  onSelectItem: () => {},
-  selectedItems: [],
-};
 
 export default memo(CatalogList);

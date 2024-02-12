@@ -9,7 +9,17 @@ import useSelector from "@src/hooks/use-selector";
 import useStore from "@src/hooks/use-store";
 import useTranslate from "@src/hooks/use-translate";
 
-function Basket({ onClose }) {
+import type { IArticle } from "@src/types/IArticle";
+
+interface IArticleItemBasket extends IArticle {
+  amount: number
+}
+
+type Props = {
+  onClose: () => void;
+};
+
+function Basket({ onClose }: Props) {
   const store = useStore();
   const { t } = useTranslate();
 
@@ -21,14 +31,14 @@ function Basket({ onClose }) {
 
   const callbacks = {
     removeFromBasket: useCallback(
-      (_id) => store.actions.basket.removeFromBasket(_id),
+      (_id: string | number) => store.actions.basket.removeFromBasket(_id),
       [store]
     ),
     closeModal: useCallback(() => {
       onClose();
     }, [onClose]),
     addToBasket: useCallback(
-      async (productIDs) => {
+      async (productIDs: string[]) => {
         if (!productIDs.length) return;
 
         for (const id of productIDs) {
@@ -44,7 +54,7 @@ function Basket({ onClose }) {
 
   const renders = {
     itemBasket: useCallback(
-      (item) => (
+      (item: IArticleItemBasket) => (
         <ItemBasket
           item={item}
           link={`/articles/${item._id}`}

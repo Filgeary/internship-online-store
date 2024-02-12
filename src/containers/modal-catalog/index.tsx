@@ -7,10 +7,14 @@ import useTranslate from "@src/hooks/use-translate";
 import CatalogFilter from "../catalog-filter";
 import CatalogList from "../catalog-list";
 
-const ModalCatalog = ({ onClose }) => {
+type Props = {
+  onClose: (data: any) => void;
+}
+
+const ModalCatalog = ({ onClose }: Props) => {
   const store = useStore();
   const { t } = useTranslate();
-  const [selectedItems, setSelectedItems] = useState([]);
+  const [selectedItems, setSelectedItems] = useState<string[]>([]);
 
   useEffect(() => {
     const init = async () => await store.actions["modalCatalog"].initParams();
@@ -18,9 +22,9 @@ const ModalCatalog = ({ onClose }) => {
   }, []);
 
   const callbacks = {
-    closeModal: useCallback(data => onClose(data), [onClose]),
+    closeModal: useCallback((data: any) => onClose(data), [onClose]),
     handleSelectItem: useCallback(
-      (id, isAdding) => {
+      (id: string, isAdding: boolean) => {
         if (isAdding) {
           setSelectedItems((prevState) => [...prevState, id]);
         } else {

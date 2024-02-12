@@ -1,3 +1,5 @@
+import { memo, useCallback, useMemo } from "react";
+
 import Input from "@src/components/input";
 import Select from "@src/components/select";
 import SideLayout from "@src/components/side-layout";
@@ -6,9 +8,12 @@ import useStore from "@src/hooks/use-store";
 import useTranslate from "@src/hooks/use-translate";
 import listToTree from "@src/utils/list-to-tree";
 import treeToList from "@src/utils/tree-to-list";
-import { memo, useCallback, useMemo } from "react";
 
-function CatalogFilter({ catalogSliceName = "catalog" }) {
+type Props = {
+  catalogSliceName?: string;
+};
+
+function CatalogFilter({ catalogSliceName = "catalog" }: Props) {
   const store = useStore();
   const { t } = useTranslate();
 
@@ -22,12 +27,12 @@ function CatalogFilter({ catalogSliceName = "catalog" }) {
   const callbacks = {
     // Сортировка
     onSort: useCallback(
-      (sort) => store.actions[catalogSliceName].setParams({ sort }),
+      (sort: string) => store.actions[catalogSliceName].setParams({ sort }),
       [store]
     ),
     // Поиск
     onSearch: useCallback(
-      (query) => store.actions[catalogSliceName].setParams({ query, page: 1 }),
+      (query: string) => store.actions[catalogSliceName].setParams({ query, page: 1 }),
       [store]
     ),
     // Сброс
@@ -37,7 +42,7 @@ function CatalogFilter({ catalogSliceName = "catalog" }) {
     ),
     // Фильтр по категории
     onCategory: useCallback(
-      (category) =>
+      (category: string) =>
         store.actions[catalogSliceName].setParams({ category, page: 1 }),
       [store]
     ),
@@ -56,7 +61,7 @@ function CatalogFilter({ catalogSliceName = "catalog" }) {
     categories: useMemo(
       () => [
         { value: "", title: "Все" },
-        ...treeToList(listToTree(select.categories), (item, level) => ({
+        ...treeToList(listToTree(select.categories), (item: any, level: number) => ({
           value: item._id,
           title: "- ".repeat(level) + item.title,
         })),
@@ -78,6 +83,7 @@ function CatalogFilter({ catalogSliceName = "catalog" }) {
         onChange={callbacks.onSort}
       />
       <Input
+        name="query"
         value={select.query}
         onChange={callbacks.onSearch}
         placeholder={"Поиск"}

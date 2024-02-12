@@ -7,8 +7,8 @@ import "./style.css";
 type Props = {
   value: string;
   name: string;
-  placeholder: string;
   onChange: (value: string, name: string) => void;
+  placeholder?: string;
   type?: string;
   theme?: string;
   delay?: number;

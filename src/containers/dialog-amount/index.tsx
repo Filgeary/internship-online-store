@@ -5,11 +5,15 @@ import ModalLayout from "@src/components/modal-layout";
 import SideLayout from "@src/components/side-layout";
 import useTranslate from "@src/hooks/use-translate";
 
-const DialogAmount = ({ onClose }) => {
+type Props = {
+  onClose: (amount: number) => void;
+};
+
+const DialogAmount = ({ onClose }: Props) => {
   const { t } = useTranslate();
   const [value, setValue] = useState("");
 
-  const handleCloseModal = (amount) => {
+  const handleCloseModal = (amount: string | number) => {
     onClose(+amount);
   };
 
@@ -20,7 +24,7 @@ const DialogAmount = ({ onClose }) => {
       onClose={() => handleCloseModal(0)}
     >
       <div style={{ textAlign: "center" }}>
-        <Input type="number" value={value} onChange={setValue} delay={0} />
+        <Input type="number" name="amount" value={value} onChange={setValue} delay={0} />
 
         <SideLayout side="center" padding="medium">
           <button onClick={() => handleCloseModal(0)}>
