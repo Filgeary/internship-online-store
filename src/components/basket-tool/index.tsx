@@ -3,13 +3,15 @@ import { memo } from "react";
 
 import numberFormat from "@src/utils/number-format";
 
+import type { TTranslate } from '@src/i18n/context';
+
 import './style.css';
 
 type Props = {
   onOpen: () => void,
   sum: number,
   amount: number,
-  t: Function
+  t: TTranslate
 }
 
 function BasketTool({ onOpen, t, sum = 0, amount = 0 }: Props) {

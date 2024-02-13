@@ -1,15 +1,17 @@
 import { cn as bem } from '@bem-react/classname';
 import { memo } from "react";
 
-import type { IArticle } from "@src/types/IArticle";
 import numberFormat from "@src/utils/number-format";
+
+import type { TTranslate } from '@src/i18n/context';
+import type { IArticle } from "@src/types/IArticle";
 
 import './style.css';
 
 type Props = {
   article: IArticle
   onAdd: (id: string) => void
-  t: Function
+  t: TTranslate
 }
 
 function ArticleCard({ article, onAdd, t }: Props) {

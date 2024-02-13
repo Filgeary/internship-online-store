@@ -1,28 +1,32 @@
 import { createContext, useMemo, useState } from "react";
 import translate from "./translate";
 
-type i18nContext = {
-  lang: string
-  setLang: (lang: string) => void
-  t: (text: string, number?: number) => string
+import type { TLangs, TTextToTranslate } from "./translate";
+
+export type TTranslate = (text: TTextToTranslate, number?: number) => string;
+
+type Ti18nContext = {
+  lang: TLangs
+  setLang: (lang: TLangs) => void
+  t: TTranslate
 }
 
-export const I18nContext = createContext<i18nContext>({} as i18nContext);
+export const I18nContext = createContext<Ti18nContext>({} as Ti18nContext);
 
 type Props = {
   children: React.ReactNode
 }
 
 export function I18nProvider({ children }: Props) {
-  const [lang, setLang] = useState('ru');
+  const [lang, setLang] = useState<TLangs>('ru');
 
-  const i18n: i18nContext = useMemo(() => ({
+  const i18n: Ti18nContext = useMemo(() => ({
     // Код языка
     lang,
     // Функция для смены языка
     setLang,
     // Функция для локализации текстов с замыканием на код языка
-    t: (text: string, number?: number) => translate(lang, text, number)
+    t: (text: TTextToTranslate, number?: number) => translate(lang, text, number)
   }), [lang]);
 
   return (

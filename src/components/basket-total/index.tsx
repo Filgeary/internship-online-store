@@ -3,11 +3,13 @@ import { memo } from "react";
 
 import numberFormat from "@src/utils/number-format";
 
+import type { TTranslate } from '@src/i18n/context';
+
 import './style.css';
 
 type Props = {
   sum: number
-  t: Function
+  t: TTranslate
 }
 
 function BasketTotal({ sum, t }: Props) {

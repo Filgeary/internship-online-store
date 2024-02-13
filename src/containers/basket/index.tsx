@@ -31,7 +31,7 @@ function Basket({ onClose }: Props) {
 
   const callbacks = {
     removeFromBasket: useCallback(
-      (_id: string | number) => store.actions.basket.removeFromBasket(_id),
+      (_id: string | number) => store.actions.basket.removeFromBasket(String(_id)),
       [store]
     ),
     closeModal: useCallback(() => {
