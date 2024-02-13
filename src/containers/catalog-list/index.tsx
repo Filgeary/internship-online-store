@@ -15,7 +15,7 @@ type Props = {
   isSelectionMode?: boolean;
   onSelectItem?: (id: string | number, checked: boolean) => void;
   selectedItems?: string[];
-  catalogSliceName?: string;
+  catalogSliceName?: 'catalog' | `catalog${string}`;
 };
 
 function CatalogList({
@@ -31,6 +31,8 @@ function CatalogList({
     list: state[catalogSliceName].list,
     page: state[catalogSliceName].params.page,
     limit: state[catalogSliceName].params.limit,
+    sort: state[catalogSliceName].params.sort,
+    query: state[catalogSliceName].params.query,
     count: state[catalogSliceName].count,
     waiting: state[catalogSliceName].waiting,
   }));
@@ -53,7 +55,7 @@ function CatalogList({
       (page: string) => {
         return `?${new URLSearchParams({
           page,
-          limit: select.limit,
+          limit: String(select.limit),
           sort: select.sort,
           query: select.query,
         })}`;

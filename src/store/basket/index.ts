@@ -1,10 +1,19 @@
 import StoreModule from "../module";
 
+import type { IArticle } from "@src/types/IArticle";
+type ExtendedArticle = IArticle & { amount: number };
+
+type InitialState = {
+  list: ExtendedArticle[];
+  sum: number;
+  amount: number;
+};
+
 /**
  * Покупательская корзина
  */
-class BasketState extends StoreModule {
-  initState() {
+class BasketState extends StoreModule<'basket'> {
+  initState(): InitialState {
     return {
       list: [],
       sum: 0,
@@ -12,12 +21,7 @@ class BasketState extends StoreModule {
     };
   }
 
-  /**
-   * Добавление товара в корзину
-   * @param _id {String} Код товара
-   * @param amount {Number} Количество
-   */
-  async addToBasket(_id, amount) {
+  async addToBasket(_id: string, amount: number) {
     if (!amount || !Number.isFinite(amount) || amount <= 0) return;
 
     let sum = 0;
@@ -56,11 +60,7 @@ class BasketState extends StoreModule {
     );
   }
 
-  /**
-   * Удаление товара из корзины
-   * @param _id Код товара
-   */
-  removeFromBasket(_id) {
+  removeFromBasket(_id: string) {
     let sum = 0;
     const list = this.getState().list.filter((item) => {
       if (item._id === _id) return false;

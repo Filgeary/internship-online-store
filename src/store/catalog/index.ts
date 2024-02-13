@@ -1,16 +1,26 @@
 import exclude from "@src/utils/exclude";
 import StoreModule from "../module";
 
+import type { IArticle } from "@src/types/IArticle";
+
+type InitialState = {
+  list: IArticle[],
+  params: {
+    page: number,
+    limit: number,
+    sort: string,
+    query: string,
+    category: string
+  },
+  count: number,
+  waiting: boolean
+}
+
 /**
  * Состояние каталога - параметры фильтра и список товара
  */
-class CatalogState extends StoreModule {
-
-  /**
-   * Начальное состояние
-   * @return {Object}
-   */
-  initState() {
+class CatalogState extends StoreModule<'catalog'> {
+  initState(): InitialState {
     return {
       list: [],
       params: {
@@ -28,30 +38,26 @@ class CatalogState extends StoreModule {
   /**
    * Инициализация параметров.
    * Восстановление из адреса
-   * @param [newParams] {Object} Новые параметры
-   * @return {Promise<void>}
    */
-  async initParams(newParams = {}) {
-    const shouldWriteToBrowserHistory = this.name === 'modalCatalog'
+  async initParams(newParams: InitialState['params'] | {} = {}) {
+    const shouldWriteToBrowserHistory = this.name !== 'catalog'
       ? this.config.shouldWriteToBrowserHistory
       : true;
 
     const urlParams = new URLSearchParams(shouldWriteToBrowserHistory ? window.location.search : '');
-    let validParams = {};
+    let validParams = {} as InitialState['params'];
     if (urlParams.has('page')) validParams.page = Number(urlParams.get('page')) || 1;
     if (urlParams.has('limit')) validParams.limit = Math.min(Number(urlParams.get('limit')) || 10, 50);
-    if (urlParams.has('sort')) validParams.sort = urlParams.get('sort');
-    if (urlParams.has('query')) validParams.query = urlParams.get('query');
-    if (urlParams.has('category')) validParams.category = urlParams.get('category');
+    if (urlParams.has('sort')) validParams.sort = urlParams.get('sort') || '';
+    if (urlParams.has('query')) validParams.query = urlParams.get('query') || '';
+    if (urlParams.has('category')) validParams.category = urlParams.get('category') || '';
     await this.setParams({ ...this.initState().params, ...validParams, ...newParams }, true);
   }
 
   /**
    * Сброс параметров к начальным
-   * @param [newParams] {Object} Новые параметры
-   * @return {Promise<void>}
    */
-  async resetParams(newParams = {}) {
+  async resetParams(newParams: InitialState['params'] | {} = {}) {
     // Итоговые параметры из начальных, из URL и из переданных явно
     const params = { ...this.initState().params, ...newParams };
     // Установка параметров и загрузка данных
@@ -60,12 +66,9 @@ class CatalogState extends StoreModule {
 
   /**
    * Установка параметров и загрузка списка товаров
-   * @param [newParams] {Object} Новые параметры
-   * @param [replaceHistory] {Boolean} Заменить адрес (true) или новая запись в истории браузера (false)
-   * @returns {Promise<void>}
    */
-  async setParams(newParams = {}, replaceHistory = false) {
-    const shouldWriteToBrowserHistory = this.name === 'modalCatalog'
+  async setParams(newParams: InitialState['params'] | {} = {}, replaceHistory = false) {
+    const shouldWriteToBrowserHistory = this.name !== 'catalog'
       ? this.config.shouldWriteToBrowserHistory
       : true;
     const params = { ...this.getState().params, ...newParams };

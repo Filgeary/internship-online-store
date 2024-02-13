@@ -2,9 +2,9 @@ import isPlainObject from '../is-plain-object';
 
 /**
  * Возвращает объект, в котором не будет совпадений со вторым объектом
- * @param objectSrc {Object} Исходный объект
- * @param objectExc {Object} Объект-маска, вырезаемый из objectSrc
- * @returns {Object} Новый объект
+ * @param objectSrc {any} Исходный объект
+ * @param objectExc {any} Объект-маска, вырезаемый из objectSrc
+ * @returns {any} Новый объект
  */
 export default function exclude(objectSrc, objectExc) {
   if (isPlainObject(objectSrc) && isPlainObject(objectExc)) {

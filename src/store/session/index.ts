@@ -1,17 +1,23 @@
-import StoreModule from "../module";
 import simplifyErrors from "@src/utils/simplify-errors";
+import StoreModule from "../module";
+
+import type { IUserSession } from "@src/types/IUserSession";
+
+type InitialState = {
+  user: IUserSession
+  token: string | null
+  errors: any
+  waiting: boolean
+  exists: boolean
+}
 
 /**
  * Сессия
  */
-class SessionState extends StoreModule {
-  /**
-   * Начальное состояние
-   * @return {Object}
-   */
-  initState() {
+class SessionState extends StoreModule<'session'> {
+  initState(): InitialState {
     return {
-      user: {},
+      user: {} as IUserSession,
       token: null,
       errors: null,
       waiting: true,
@@ -19,13 +25,7 @@ class SessionState extends StoreModule {
     };
   }
 
-  /**
-   * Авторизация (вход)
-   * @param data
-   * @param onSuccess
-   * @returns {Promise<void>}
-   */
-  async signIn(data, onSuccess) {
+  async signIn(data: any, onSuccess: () => void) {
     this.setState(this.initState(), 'Авторизация');
     try {
       const res = await this.services.api.request({
@@ -63,10 +63,6 @@ class SessionState extends StoreModule {
     }
   }
 
-  /**
-   * Отмена авторизации (выход)
-   * @returns {Promise<void>}
-   */
   async signOut() {
     try {
       await this.services.api.request({
@@ -80,12 +76,11 @@ class SessionState extends StoreModule {
     } catch (error) {
       console.error(error);
     }
-    this.setState({...this.initState(), waiting: false});
+    this.setState({ ...this.initState(), waiting: false });
   }
 
   /**
    * По токену восстановление сессии
-   * @return {Promise<void>}
    */
   async remind() {
     const token = localStorage.getItem('token');
@@ -93,7 +88,7 @@ class SessionState extends StoreModule {
       // Устанавливаем токен в АПИ
       this.services.api.setHeader(this.config.tokenHeader, token);
       // Проверяем токен выбором своего профиля
-      const res = await this.services.api.request({url: '/api/v1/users/self'});
+      const res = await this.services.api.request({ url: '/api/v1/users/self' });
 
       if (res.data.error) {
         // Удаляем плохой токен
@@ -115,11 +110,8 @@ class SessionState extends StoreModule {
     }
   }
 
-  /**
-   * Сброс ошибок авторизации
-   */
   resetErrors() {
-    this.setState({...this.initState(), errors: null})
+    this.setState({ ...this.initState(), errors: null })
   }
 }
 
