@@ -6,20 +6,20 @@ import { UserProfileType } from "../profile/types";
 /**
  * Сессия
  */
-class SessionState extends StoreModule {
+class SessionState extends StoreModule<'session'> {
 
   waiting: boolean;
   exists: boolean;
   token: string | null;
   errors: SessionErrorType | null;
-  user: UserProfileType | {};
+  user: UserProfileType | null;
   /**
    * Начальное состояние
    * @return {Object}
    */
   initState(): SessionStateType {
     return {
-      user: {},
+      user: null,
       token: null,
       errors: null,
       waiting: true,
@@ -39,6 +39,7 @@ class SessionState extends StoreModule {
       const res = await this.services.api.request({
         url: '/api/v1/users/sign',
         method: 'POST',
+        headers: {},
         body: JSON.stringify(data)
       });
 

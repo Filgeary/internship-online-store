@@ -16,12 +16,13 @@ import { ProfileStateType } from './profile/types.js';
 import SessionState from './session/index.js';
 import { SessionStateType } from './session/types.js';
 
-export type StoreModulesKeys = keyof typeof modules;
-export type StoreModuleType = BasketState | CatalogState | ModalsState | ArticleState | LocaleState | CategoriesState | SessionState | ProfileState
-export type StoreModulesStateTypes = BasketStateType | CatalogStateType | ModalsStateType | ArticleStateType | LocaleStateType | CategoriesStateType | SessionStateType | ProfileStateType
+// Первый этап, ручная кодировка
+export type DeprecatedStoreModulesKeys = keyof typeof modules;
+export type DeprecatedStoreModuleType = BasketState | CatalogState | ModalsState | ArticleState | LocaleState | CategoriesState | SessionState | ProfileState
+export type DeprecatedStoreModulesStateTypes = BasketStateType | CatalogStateType | ModalsStateType | ArticleStateType | LocaleStateType | CategoriesStateType | SessionStateType | ProfileStateType
 
 
-export type StoreActionsType = {
+export type DeprecatedStoreActionsType = {
   basket: BasketState,
   catalog: CatalogState,
   modals: ModalsState,
@@ -31,7 +32,7 @@ export type StoreActionsType = {
   session: SessionState,
   profile: ProfileState,
 }
-export type StoreStateType = {
+export type DeprecatedStoreStateType = {
   basket: BasketStateType,
   catalog: CatalogStateType,
   modals: ModalsStateType,
@@ -42,13 +43,30 @@ export type StoreStateType = {
   profile: ProfileStateType,
 }
 
-export type t = {
-  [key in StoreModulesKeys]: string
+
+//Второй этап - маппинг
+
+export type ModulesType = typeof modules;
+export type ModulesKeys = keyof ModulesType;
+
+export type BaseActions = {
+  [key in ModulesKeys]: InstanceType<ModulesType[key]>
 }
 
-export type StoreStateType2 = {
-  [key in StoreModulesKeys]?: [InstanceType<typeof modules[key]>]
+export type BaseState = {
+  [key in ModulesKeys]: ReturnType<InstanceType<ModulesType[key]>['initState']>
 }
 
+// Третий этап - динамическое расширение и маппинг
+// 1. собираем расширенные ключи
+export type ExtendedModulesKeys<T extends keyof BaseActions> = T | `${T}${number}`
 
+// 2. Actions
+export type StoreActionsType = {
+  [key in ModulesKeys as ExtendedModulesKeys<key>]: BaseActions[key]
+}
 
+// 3. State
+export type StoreStateType = {
+  [key in ModulesKeys as ExtendedModulesKeys<key>]: BaseState[key]
+}

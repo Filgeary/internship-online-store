@@ -4,26 +4,25 @@ import useSelector from "../../hooks/use-selector";
 import useTranslate from "../../hooks/use-translate";
 import Item from "../../components/item";
 import List from "../../components/list";
-import Pagination from "../../components/pagination";
 import Spinner from "../../components/spinner";
 import ItemModalCatalog from "../../components/item-modal-catalog";
-import React from "react";
 import { CatalogArticleType } from '../../store/catalog/types';
+import { ExtendedModulesKeys, ModulesKeys } from "../../store/types";
+import Pagination from "../../components/pagination";
 
-type CatalogListType = {
+type CatalogListType<T> = {
   isModal?: boolean;
-  storeSlice?: string;
+  storeSlice?: ExtendedModulesKeys<T extends ModulesKeys ? T : "catalog">;
   onAdd?: (value: string) => void;
-  selectedArticles: string[];
+  selectedArticles?: string[];
 }
-
 
 function CatalogList({
     storeSlice = 'catalog',
     isModal = false,
     onAdd,
     selectedArticles,
-  }: CatalogListType) {
+  }: CatalogListType<'catalog'>) {
   const store = useStore();
 
   const select = useSelector(state => ({
@@ -39,7 +38,7 @@ function CatalogList({
   const callbacks = {
     // Добавление в корзину
     arcticleCount: useCallback((_id: string, _title: string) => {
-      store.actions.modals.open<number>("addToBasket", {title: _title, count: 1})
+      store.actions.modals.open("addToBasket", {title: _title, count: 1})
         .then( result => {
           if(result) {
             store.actions.basket.addToBasket(_id, result)

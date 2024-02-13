@@ -1,11 +1,14 @@
-import { UserProfileType } from "../profile/types";
 
 export type SessionStateType ={
   waiting: boolean;
   exists: boolean;
   token: string | null;
   errors: SessionErrorType | null;
-  user: UserProfileType | {};
+  user: {
+    profile: {
+      name: string
+    }
+  } | null;
 }
 
 export type SessionErrorType = {

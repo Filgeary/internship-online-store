@@ -1,4 +1,3 @@
-import React from "react";
 import Button from "../../components/button";
 import ModalLayout from "../../components/modal-layout";
 import CatalogFilter from "../../containers/catalog-filter";
@@ -9,7 +8,7 @@ import { memo, useCallback, useState } from "react"
 import { CatalogModalPropsType } from "./types";
 
 
-function CatalogModal({storeSlice, close}: CatalogModalPropsType) {
+function CatalogModal({storeSlice = 'catalog', close}: CatalogModalPropsType<'catalog'>) {
   const store = useStore()
   const [articles, setArticles] = useState<string[]>([]);
 

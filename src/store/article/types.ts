@@ -1,6 +1,6 @@
 export type ArticleStateType = {
   waiting: false,
-  data: ArticleType | {}
+  data: ArticleType | null
 }
 
 export type ArticleType = {

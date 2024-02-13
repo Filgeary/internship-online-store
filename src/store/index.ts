@@ -1,6 +1,7 @@
+import { ConfigStoreType } from '../config.js';
 import Services from '../services.js';
 import * as modules from './exports.js';
-import { StoreActionsType, StoreModulesKeys, StoreStateType } from './types.js';
+import { ExtendedModulesKeys, ModulesKeys, StoreActionsType, StoreStateType } from './types.js';
 
 
 /**
@@ -8,65 +9,42 @@ import { StoreActionsType, StoreModulesKeys, StoreStateType } from './types.js';
  */
 class Store {
   services: Services;
-  config: any;
+  config: ConfigStoreType;
   actions: StoreActionsType;
   state: StoreStateType;
-  listeners: Function[]; //((value: StoreStateType) => void)[]
+  listeners: Function[];
 
   /**
    * @param services {Services}
    * @param config {Object}
    * @param initState {Object}
    */
-  constructor(services: Services, config = {}, initState = {}) {
+  constructor(services: Services, config: ConfigStoreType, initState = {}) {
     this.services = services;
     this.config = config;
     this.listeners = []; // Слушатели изменений состояния
-    //this.state = initState;
-    /** @type {{
-     * basket: BasketState,
-     * catalog: CatalogState,
-     * modals: ModalsState,
-     * article: ArticleState,
-     * locale: LocaleState,
-     * categories: CategoriesState,
-     * session: SessionState,
-     * profile: ProfileState
-     * }} */
-    this.actions = {
-      basket: new modules['basket'](this, 'basket', this.config?.modules['basket'] || {} ),
-      catalog: new modules['catalog'](this, 'catalog', this.config?.modules['catalog'] || {} ),
-      modals: new modules['modals'](this, 'modals', this.config?.modules['modals'] || {} ),
-      article: new modules['article'](this, 'article', this.config?.modules['article'] || {} ),
-      locale: new modules['locale'](this, 'locale', this.config?.modules['locale'] || {} ),
-      categories: new modules['categories'](this, 'categories', this.config?.modules['categories'] || {} ),
-      session: new modules['session'](this, 'session', this.config?.modules['session'] || {} ),
-      profile: new modules['profile'](this, 'profile', this.config?.modules['profile'] || {} ),
-    };
 
-    this.state = {
-      basket: this.actions.basket.initState(),
-      catalog: this.actions.catalog.initState(),
-      modals: this.actions.modals.initState(),
-      article: this.actions.article.initState(),
-      locale: this.actions.locale.initState(),
-      categories: this.actions.categories.initState(),
-      session: this.actions.session.initState(),
-      profile: this.actions.profile.initState(),
+    this.actions = {};
+    this.state = initState;
+
+    for (const name of Object.keys(modules) as ModulesKeys[]) {
+      this.create(name)
+      // this.actions[name] = new modules[name as StoreModulesKeys](this, name as StoreModulesKeys, this.config?.modules[name] || {});
+      // this.state[name] = this.actions[name as StoreModulesKeys].initState();
     }
-
-    // for (const name of Object.keys(modules)) {
-    //   this.actions[name as StoreModulesKeys] = new modules[name as StoreModulesKeys](this, name as StoreModulesKeys, this.config?.modules[name] || {});
-    //   this.state[name as StoreModulesKeys] = this.actions[name as StoreModulesKeys].initState();
-    // }
   }
 
-  createModule(name: string, base: StoreModulesKeys) {
-    this.actions[name] = new modules[base](this, name, this.config?.modules[base] || {} );
-    this.state[name] = this.actions[name].initState();
+  create<Key extends ModulesKeys>(name: Key) {
+    this.actions[name] = new modules[name](this, name, this.config?.modules[name] || {}) as StoreActionsType[Key];
+    this.state[name] = this.actions[name].initState() as StoreStateType[Key];
   }
 
-  deleteModule(name: string) {
+  createModule<Key extends ExtendedModulesKeys<U>, U extends ModulesKeys>(name: Key, base: ModulesKeys) {
+    this.actions[name] = new modules[base](this, name, this.config?.modules[base] || {} ) as StoreActionsType[Key];
+    this.state[name] = this.actions[name].initState() as StoreStateType[Key];
+  }
+
+  deleteModule<Key extends ExtendedModulesKeys<U>, U extends ModulesKeys>(name: Key) {
     delete this.actions[name];
     delete this.state[name];
   }

@@ -1,7 +1,7 @@
 import StoreModule from "../module";
 import { LocaleStateType, Locales } from "./types";
 
-class LocaleState extends StoreModule {
+class LocaleState extends StoreModule<'locale'> {
 
   lang: Locales
 

@@ -1,4 +1,3 @@
-import React from 'react';
 import {ChangeEvent, memo, useCallback, useLayoutEffect, useState} from 'react';
 import {cn as bem} from '@bem-react/classname';
 import debounce from 'lodash.debounce';

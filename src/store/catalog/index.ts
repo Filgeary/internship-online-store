@@ -5,7 +5,7 @@ import { CatalogArticleType, CatalogParamsType, CatalogStateType } from "./types
 /**
  * Состояние каталога - параметры фильтра исписок товара
  */
-class CatalogState extends StoreModule {
+class CatalogState extends StoreModule<'catalog'> {
 
   waiting: boolean;
   count: number;
@@ -37,7 +37,7 @@ class CatalogState extends StoreModule {
    * @param [newParams] {Object} Новые параметры
    * @return {Promise<void>}
    */
-  async initParams(newParams: CatalogParamsType): Promise<void> {
+  async initParams(newParams: CatalogParamsType | {} = {}): Promise<void> {
     const urlParams = new URLSearchParams(window.location.search);
     let validParams: CatalogParamsType;
     if (urlParams.has('page')) validParams.page = Number(urlParams.get('page')) || 1;

@@ -4,7 +4,7 @@ import { BasketItemType, BasketStateType } from "./types";
 /**
  * Покупательская корзина
  */
-class BasketState extends StoreModule {
+class BasketState extends StoreModule<'basket'> {
   list: BasketItemType[];
   sum: number;
   amount: number;

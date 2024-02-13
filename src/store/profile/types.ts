@@ -1,6 +1,6 @@
 export type ProfileStateType = {
   waiting: boolean;
-  data: UserAccountType | {};
+  data: UserAccountType | null;
 }
 
 export type UserAccountType = {

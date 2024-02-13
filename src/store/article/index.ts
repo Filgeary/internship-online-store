@@ -4,14 +4,14 @@ import { ArticleStateType, ArticleType } from "./types";
 /**
  * Детальная ифнормация о товаре для страницы товара
  */
-class ArticleState extends StoreModule {
+class ArticleState extends StoreModule<'article'> {
 
-  data: ArticleType | {};
+  data: ArticleType | null;
   waiting: boolean;
 
   initState(): ArticleStateType {
     return {
-      data: {},
+      data: null,
       waiting: false // признак ожидания загрузки
     }
   }
@@ -24,7 +24,7 @@ class ArticleState extends StoreModule {
   async load(id: string): Promise<void> {
     // Сброс текущего товара и установка признака ожидания загрузки
     this.setState({
-      data: {},
+      data: null,
       waiting: true
     });
 
@@ -45,7 +45,7 @@ class ArticleState extends StoreModule {
       // Ошибка при загрузке
       // @todo В стейт можно положить информацию об ошибке
       this.setState({
-        data: {},
+        data: null,
         waiting: false
       });
     }

@@ -1,7 +1,7 @@
 import StoreModule from "../module";
-import { ModalType, ModalsStateType } from "./types";
+import { ModalType, ModalsKeys, ModalsStateType, ModalsType } from "./types";
 
-class ModalsState extends StoreModule {
+class ModalsState extends StoreModule<'modals'> {
 
   modals: ModalsStateType;
 
@@ -11,13 +11,13 @@ class ModalsState extends StoreModule {
     }
   }
 
-  open<U = any, T = any>(name: string, data?: T): Promise<U> {
+  open<T extends ModalsKeys>(name: T, data?: any): Promise<ModalsType[T]> {
     return new Promise((resolve, reject) => {
       const newModal: ModalType = {
         id: self.crypto.randomUUID(),
         name,
         initialData: data,
-        close: (data: U) => resolve(data),
+        close: (data: ModalsType[T]) => resolve(data),
       }
 
       this.setState({

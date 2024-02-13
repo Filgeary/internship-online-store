@@ -1,22 +1,23 @@
 import Store from ".";
-import { StoreModulesKeys, StoreModulesStateTypes } from "./types";
+import Services from "../services";
+import { ExtendedModulesKeys, ModulesKeys, StoreStateType } from "./types";
 
 /**
  * Базовый класс для модулей хранилища
  * Для группировки действий над внешним состоянием
  */
-class StoreModule {
+class StoreModule<T extends ModulesKeys> {
   store: Store;
-  name: StoreModulesKeys ;
-  config: unknown;
-  services: unknown;
+  name: string;
+  config: any;
+  services: Services;
 
   /**
    * @param store {Store}
    * @param name {String}
    * @param [config] {Object}
    */
-  constructor(store: Store, name: StoreModulesKeys, config = {})  {
+  constructor(store: Store, name: string, config = {})  {
     this.store = store;
     this.name = name;
     this.config = config;
@@ -28,14 +29,14 @@ class StoreModule {
     return {}
   }
 
-  getState() {
-    return this.store.getState()[this.name];
+  getState(): StoreStateType[T] {
+    return this.store.getState()[this.name as ExtendedModulesKeys<T>] as StoreStateType[T];
   }
 
-  setState(newState: StoreModulesStateTypes, description = 'setState') {
+  setState<Key extends ModulesKeys>(newState: StoreStateType[Key], description = 'setState') {
     this.store.setState({
       ...this.store.getState(),
-      [this.name]: newState
+      [this.name as Key]: newState
     }, description)
   }
 

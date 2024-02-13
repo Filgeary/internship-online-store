@@ -1,4 +1,3 @@
-import React from "react";
 import {memo} from "react";
 import {cn as bem} from '@bem-react/classname';
 import { FieldPropsType } from "./types";

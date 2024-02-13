@@ -5,7 +5,7 @@ import { CategoriesStateType, CategoryType } from "./types";
 /**
  * Список категорий
  */
-class CategoriesState extends StoreModule {
+class CategoriesState extends StoreModule<'categories'> {
   waiting: boolean;
   list: CategoryType[]
 

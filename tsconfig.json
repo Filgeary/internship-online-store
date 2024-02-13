@@ -12,7 +12,7 @@
     "noFallthroughCasesInSwitch": true,
     "module": "es6", // esnext
     "target": "es5",
-    "jsx": "react",
+    "jsx": "react-jsx",
     "allowJs": true,
     "moduleResolution": "node",
     "resolveJsonModule": true,

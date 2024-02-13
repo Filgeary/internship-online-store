@@ -1,4 +1,4 @@
-import React, {memo} from "react";
+import {memo} from "react";
 import {cn as bem} from '@bem-react/classname';
 import { PageLayoutType } from "./type";
 import './style.css';

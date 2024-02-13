@@ -1,4 +1,4 @@
-import React, {memo} from "react";
+import {memo} from "react";
 import { ButtonPropsType } from "./types";
 import './style.css';
 

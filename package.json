@@ -37,6 +37,7 @@
     "@babel/preset-react": "^7.22.5",
     "@babel/preset-typescript": "^7.23.3",
     "@types/lodash.debounce": "^4.0.9",
+    "@types/react-dom": "^18.2.19",
     "@types/shallowequal": "^1.1.5",
     "babel-loader": "^9.1.2",
     "cross-env": "^7.0.3",

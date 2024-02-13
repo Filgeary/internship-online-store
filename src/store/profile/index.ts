@@ -4,14 +4,14 @@ import { ProfileStateType, UserAccountType } from "./types";
 /**
  * Детальная информация о пользователе
  */
-class ProfileState extends StoreModule {
+class ProfileState extends StoreModule<'profile'> {
 
   waiting: boolean;
-  data: UserAccountType | {};
+  data: UserAccountType | null;
 
   initState(): ProfileStateType {
     return {
-      data: {},
+      data: null,
       waiting: false // признак ожидания загрузки
     }
   }
@@ -23,7 +23,7 @@ class ProfileState extends StoreModule {
   async load(): Promise<void> {
     // Сброс текущего профиля и установка признака ожидания загрузки
     this.setState({
-      data: {},
+      data: null,
       waiting: true
     });
 
