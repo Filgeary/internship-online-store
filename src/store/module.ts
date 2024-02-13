@@ -1,5 +1,5 @@
 import { TConfig } from '@src/config';
-import { TGlobalState } from './types';
+import { TExtendedKeysModules, TGlobalState, TModules } from './types';
 
 import Services from '@src/services';
 import Store from '.';
@@ -10,9 +10,9 @@ type TStoreName = keyof TGlobalState | keyof TConfig['store']['modules'] | null;
  * Базовый класс для модулей хранилища
  * Для группировки действий над внешним состоянием
  */
-class StoreModule<T extends TStoreName = null> {
-  readonly name: T;
-  readonly config: TConfig['store']['modules'][T] | {};
+class StoreModule<State, Config = object> {
+  readonly name: TExtendedKeysModules;
+  readonly config: Config;
   store: Store;
   services: Services;
 
@@ -21,23 +21,27 @@ class StoreModule<T extends TStoreName = null> {
    * @param name {String}
    * @param [config] {Object}
    */
-  constructor(store: Store, name: T | string, config = {}) {
+  constructor(
+    store: Store,
+    name: TExtendedKeysModules,
+    config: Config | {} = {}
+  ) {
     this.store = store;
-    this.name = name as T;
-    this.config = config;
+    this.name = name;
+    this.config = config as Config;
     /** @type {Services} */
     this.services = store.services;
   }
 
-  initState(): TGlobalState[T] {
-    return {} as TGlobalState[T];
+  initState(): State {
+    return {} as State;
   }
 
-  getState(): TGlobalState[T] {
-    return this.store.getState()[this.name];
+  getState() {
+    return this.store.getState()[this.name] as State;
   }
 
-  setState(newState: TGlobalState[T], description = 'setState') {
+  setState(newState: State, description: string = 'setState') {
     this.store.setState(
       {
         ...this.store.getState(),

@@ -26,7 +26,7 @@ type I18nProviderProps = {
  * @param children
  * @return {JSX.Element}
  */
-export function I18nProvider({ children }: I18nProviderProps) {
+export function I18nProvider({ children }: I18nProviderProps): JSX.Element {
   const [lang, setLang] = useState<TLangs>('ru');
 
   const i18n = useMemo<TI18nContextState>(

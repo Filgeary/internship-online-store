@@ -34,5 +34,10 @@
   "catalogModal.title": "Дополнительный выбор",
   "catalogModal.btnSuccess": "Добавить выбранные товары",
   "catalogModal.appendixItemText": "Будет добавлено: [:count:] шт.",
-  "catalogModal.successText": "Выбранные товары будут добавлены в корзину."
+  "catalogModal.successText": "Выбранные товары будут добавлены в корзину.",
+  "test": {
+    "levelOneTest.testing1": {
+      "levelTwoTest.testing2": "Hello from level two"
+    }
+  }
 }

@@ -32,5 +32,10 @@
   "catalogModal.title": "Additional selection",
   "catalogModal.btnSuccess": "Add selected products",
   "catalogModal.appendixItemText": "Will be added: [:count:] pc.",
-  "catalogModal.successText": "Selected items will be added to cart."
+  "catalogModal.successText": "Selected items will be added to cart.",
+  "test": {
+    "levelOneTest.testing1": {
+      "levelTwoTest.testing2": "Hello from level two"
+    }
+  }
 }

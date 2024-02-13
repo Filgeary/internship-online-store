@@ -2,8 +2,9 @@ import StoreModule from '../module';
 import generateHash from '@src/utils/generate-hash';
 
 import { TMapOfOpened, TModalsState } from './types';
+import { TConfigModules } from '@src/config';
 
-class ModalsState extends StoreModule<'modals'> {
+class ModalsState extends StoreModule<TModalsState, TConfigModules['modals']> {
   initState(): TModalsState {
     return {
       mapOfOpened: {} as TMapOfOpened, // Для быстрого поиска
@@ -89,7 +90,12 @@ class ModalsState extends StoreModule<'modals'> {
    * @param isSuccess {Boolean} Resolve / Reject при закрытии
    * @param fromEnd {Boolean} Начинать поиск с конца
    */
-  closeByName(name: string, data: any, isSuccess = true, fromEnd = true) {
+  closeByName(
+    name: string,
+    data: any,
+    isSuccess: boolean = true,
+    fromEnd: boolean = true
+  ) {
     const newMapOfOpened = { ...this.getState().mapOfOpened };
     const arrOfIds = Object.keys(this.getState().mapOfOpened);
 
@@ -119,7 +125,7 @@ class ModalsState extends StoreModule<'modals'> {
    * @param data {*} Данные, которые отловим в методах промиса
    * @param isSuccess {Boolean} Resolve / Reject при закрытии
    */
-  closeById(id: string | number, data?: any, isSuccess = true) {
+  closeById(id: string | number, data?: any, isSuccess: boolean = true) {
     const isModalExist = this.getState().mapOfOpened[id];
     if (!isModalExist) return;
 

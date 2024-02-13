@@ -1,10 +1,14 @@
+import { TConfigModules } from '@src/config';
 import StoreModule from '../module';
 import { TArticleState } from './types';
 
 /**
  * Детальная ифнормация о товаре для страницы товара
  */
-class ArticleState extends StoreModule<'article'> {
+class ArticleState extends StoreModule<
+  TArticleState,
+  TConfigModules['article']
+> {
   initState(): TArticleState {
     return {
       data: {},

@@ -1,11 +1,15 @@
 import StoreModule from '../module';
 import exclude from '@src/utils/exclude';
 import { TCatalogState } from './types';
+import { TConfigModules } from '@src/config';
 
 /**
  * Состояние каталога - параметры фильтра исписок товара
  */
-class CatalogState extends StoreModule<'catalog'> {
+class CatalogState extends StoreModule<
+  TCatalogState,
+  TConfigModules['catalog']
+> {
   /**
    * Начальное состояние
    * @return {Object}
@@ -31,7 +35,9 @@ class CatalogState extends StoreModule<'catalog'> {
    * @param [newParams] {Object} Новые параметры
    * @return {Promise<void>}
    */
-  async initParams(newParams = {}): Promise<void> {
+  async initParams(
+    newParams: TCatalogState['params'] | {} = {}
+  ): Promise<void> {
     const urlParams = new URLSearchParams(window.location.search);
     const validParams: Record<string, any> = {};
     if (!this.config.ignoreUrlOnInit) {
@@ -55,7 +61,9 @@ class CatalogState extends StoreModule<'catalog'> {
    * @param [newParams] {Object} Новые параметры
    * @return {Promise<void>}
    */
-  async resetParams(newParams = {}): Promise<void> {
+  async resetParams(
+    newParams: TCatalogState['params'] | {} = {}
+  ): Promise<void> {
     // Итоговые параметры из начальных, из URL и из переданных явно
     const params = { ...this.initState().params, ...newParams };
     // Установка параметров и загрузка данных
@@ -68,7 +76,10 @@ class CatalogState extends StoreModule<'catalog'> {
    * @param [replaceHistory] {Boolean} Заменить адрес (true) или новая запись в истории браузера (false)
    * @returns {Promise<void>}
    */
-  async setParams(newParams = {}, replaceHistory = false): Promise<void> {
+  async setParams(
+    newParams: TCatalogState['params'] | {} = {},
+    replaceHistory: boolean = false
+  ): Promise<void> {
     const params = { ...this.getState().params, ...newParams };
 
     // Установка новых параметров и признака загрузки

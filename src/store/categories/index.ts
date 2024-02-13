@@ -1,10 +1,14 @@
+import { TConfigModules } from '@src/config';
 import StoreModule from '../module';
 import { TCategoriesState, TCategory } from './types';
 
 /**
  * Список категорий
  */
-class CategoriesState extends StoreModule<'categories'> {
+class CategoriesState extends StoreModule<
+  TCategoriesState,
+  TConfigModules['categories']
+> {
   /**
    * Начальное состояние
    * @return {Object}

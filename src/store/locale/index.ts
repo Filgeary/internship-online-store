@@ -1,7 +1,8 @@
+import { TConfigModules } from '@src/config';
 import StoreModule from '../module';
 import { TLocaleState } from './types';
 
-class LocaleState extends StoreModule<'locale'> {
+class LocaleState extends StoreModule<TLocaleState, TConfigModules['locale']> {
   initState(): TLocaleState {
     return {
       lang: 'ru',

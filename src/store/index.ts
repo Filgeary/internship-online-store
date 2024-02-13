@@ -2,14 +2,14 @@ import Services from '@src/services';
 import * as modules from './exports';
 
 import {
-  IExtendedModules,
   TDefaultKeysModules,
+  TExtendedKeysModules,
   TGlobalActions,
   TGlobalState,
   TImportModules,
 } from './types';
 
-import { TConfig, TConfigModules } from '@src/config';
+import { TConfig } from '@src/config';
 
 type TListeners = Array<(...args: any[]) => void>;
 
@@ -28,7 +28,7 @@ class Store {
    * @param config {Object}
    * @param initState {Object}
    */
-  constructor(services: Services, config = {}, initState = {}) {
+  constructor(services: Services, config: TConfig | {} = {}, initState = {}) {
     this.services = services;
     this.config = config as TConfig['store'];
     this.listeners = []; // Слушатели изменений состояния
@@ -50,6 +50,10 @@ class Store {
     }
   }
 
+  /**
+   * Инициализация изначального состояния
+   * @param name {String}
+   */
   create<Key extends TDefaultKeysModules>(name: Key) {
     const moduleCreator = modules[name] as TImportModules[Key];
     const module = new moduleCreator(
@@ -67,15 +71,14 @@ class Store {
    * @param base {String}
    */
   make(name: string, base: keyof typeof modules) {
-    const configModule = this.config?.modules[
-      name as keyof IExtendedModules
-    ] as TConfigModules;
+    const configModule =
+      this.config?.modules[name as keyof TConfig['store']['modules']];
 
     this.actions[name] = new modules[base](
       this,
-      name,
+      name as TExtendedKeysModules,
       {
-        ...this.config?.modules[base],
+        ...this.config?.modules[base as keyof TConfig['store']['modules']],
         ...configModule,
       } || {}
     );

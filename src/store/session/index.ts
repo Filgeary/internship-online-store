@@ -1,11 +1,15 @@
 import StoreModule from '../module';
 import simplifyErrors from '@src/utils/simplify-errors';
 import { TSessionState } from './types';
+import { TConfigModules } from '@src/config';
 
 /**
  * Сессия
  */
-class SessionState extends StoreModule<'session'> {
+class SessionState extends StoreModule<
+  TSessionState,
+  TConfigModules['session']
+> {
   /**
    * Начальное состояние
    * @return {Object}

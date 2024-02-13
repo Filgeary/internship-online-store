@@ -19,6 +19,7 @@ const translate: TTranslateFn = (
   if (typeof plural !== 'undefined' && typeof result === 'object') {
     const key = new Intl.PluralRules(lang).select(plural);
     if (key in result) {
+      //@ts-ignore
       result = result[key as keyof TPlurals];
     }
   }
