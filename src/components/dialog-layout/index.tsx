@@ -1,0 +1,71 @@
+import {memo, useEffect, useRef} from "react";
+import PropTypes from "prop-types";
+import {cn as bem} from '@bem-react/classname';
+import { IDialogLayoutProps } from "./types";
+import './style.css';
+
+function DialogLayout(props: IDialogLayoutProps) {
+
+  const cn = bem('DialogLayout');
+
+  // Корректировка центра, если модалка больше окна браузера.
+  const layout = useRef<HTMLDivElement | null>(null);
+  const frame = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    if (layout.current && frame.current) {
+      const resizeObserver = new ResizeObserver(() => {
+        if (!layout.current || !frame.current) return;
+        // Центрирование frame или его прижатие к краю, если размеры больше чем у layout
+        layout.current.style.alignItems = (layout.current.clientHeight < frame.current.clientHeight)
+          ? 'flex-start'
+          : 'center';
+        layout.current.style.justifyContent = (layout.current.clientWidth < frame.current.clientWidth)
+          ? 'flex-start'
+          : 'center';
+      });
+
+      layout.current.style.paddingTop = props.indent > 0 ? `${props.indent * 20}px` : `10px`;
+      layout.current.style.paddingLeft = props.indent > 0 ? `${props.indent * 20}px` : `10px`;
+      // Следим за изменениями размеров layout
+      resizeObserver.observe(layout.current);
+      document.body.style.overflow = 'hidden';
+      return () => {
+        // Сбрасываем, только если больше диалоговых окон не открыто
+        if (!document.querySelector(".DialogLayout") && !document.querySelector(".ModalLayout")) {
+          document.body.style.overflow = 'auto';
+        }
+        resizeObserver.disconnect();
+      }
+    }
+  }, []);
+
+  return (
+    <div className={cn()} onClick={props.onClose} ref={layout}>
+      <div className={cn('frame', { theme: props.theme })} onClick={(e) => e.stopPropagation()} ref={frame}>
+        <div className={cn('head')}>
+          <h1 className={cn('title')}>{props.title}</h1>
+          {/*<button className={cn('close')} onClick={props.onClose}>{props.labelClose}</button>*/}
+        </div>
+        <div className={cn('content', { theme: props.theme })}>
+          {props.children}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+DialogLayout.propTypes = {
+  title: PropTypes.string,
+  onClose: PropTypes.func,
+  children: PropTypes.node,
+  labelClose: PropTypes.string
+};
+
+DialogLayout.defaultProps = {
+  title: 'Диалоговое окно',
+  labelClose: 'Закрыть',
+  onClose: () => {
+  }
+};
+
+export default memo(DialogLayout);

@@ -6,61 +6,266 @@
 
 **Сделано по задаче 3**
 
+- Реализовал интересную штуку. Дженерик тип `RequiredFields<Interface, Fields>`, который берёт интерфейс, и делает все его поля опциональными, кроме тех, которые были переданы. Таким образом, мы можем определить структуру типа `item` в одном месте (все поля обязательные) и затем для разных компонентов оставлять разные поля обязательными (при этом тип этих полей будет браться из исходного `item`). На основе этого дженерик типа был создан ещё один, который можно вызывать так: `RequiredItemFields<'_id' | 'price'>`. Вот пример использования `RequiredFields`:
+
+```ts
+interface Test {
+  _id: string | number;
+  title: string;
+  price: number;
+  other: { a: number; b: string };
+  [prop: string]: any;
+}
+
+type c = RequiredFields<Test, '_id' | 'price'>;
+/* Вывод:
+type c = {
+    [x: string]: any;
+    _id: string | number;
+    price: number;
+    title?: string | undefined;
+    other?: {
+        a: number;
+        b: string;
+    } | undefined;
+}
+*/
+```
+
+  Реализовано это так:
+
+```ts
+interface Test {
+  _id: string | number;
+  title: string;
+  price: number;
+  other: { a: number; b: string };
+  [prop: string]: any;
+}
+
+/**
+ * Возвращает новый интерфейс содержащий только перечисленные ключи из `Interface`.
+ */
+export type ExtractFields<Interface, Fields> = { [Key in Extract<Fields, keyof Interface>]: Interface[Key] };
+
+type a = ExtractFields<Test, '_id' | 'price'>;
+/* Вывод:
+type a = {
+    _id: string | number;
+    price: number;
+}
+*/
+
+/**
+ * Возвращает новый интерфейс с объединением ключей `A` и `B`, причём если часть из них будет совпадать,
+ * то будут использованы ключи из `A`.
+ * Ограничение: `A` не должно содержать чего-то вроде `[prop: string]: any;`,
+ * иначе проверка "есть ли `Key` в `A`?" всегда будет успешной и все ключи из `B` получат тип `any`.
+ * Для `B` такого ограничения нет, потому что всегда сначала будут браться ключи из `A`.
+ */
+export type AddFields<A, B> = {
+  [Key in keyof (A & B)]: Key extends keyof A ? A[Key] : Key extends keyof B ? B[Key] : never;
+//    магия тут ^^^^^^^
+};
+
+/**
+ * Возвращает новый интерфейс на основе переданного, в котором все ключи,
+ * кроме перечисленных ключей, являются опциональными.
+ */
+export type RequiredFields<Interface, Fields> = AddFields<ExtractFields<Interface, Fields>, Partial<Interface>>;
+
+type c = RequiredFields<Test, '_id' | 'price'>;
+/* Вывод:
+type c = {
+    [x: string]: any;
+    _id: string | number;
+    price: number;
+    title?: string | undefined;
+    other?: {
+        a: number;
+        b: string;
+    } | undefined;
+}
+*/
+```
+
+- Решил задачу с подсказками переводов в автодополнении, самое сложное в ней оказалось понять, что нужно добавить опцию `"resolveJsonModule": true` в `tsconfig.json`, без которой ничего не работает.
+
+![Подсказка перевода](img/translateHint-1.png)
+
+  Для типизации `i18n` использовал дженерик функцию `t`, которая может принимать тип текущего языка:
+
+```tsx
+export interface II18n {
+  lang: TLangKeys,
+  setLang: React.Dispatch<React.SetStateAction<TLangKeys>>,
+  t: <Lang extends TLangKeys>(text?: TDictionary[Lang], number?: number) => ReturnType<typeof translate>,
+  //                             код (тип) языка ^^^^
+}
+
+// ...
+
+// Объект контекста
+const i18n = useMemo(() => ({
+    lang,
+    setLang,
+    t: (text: TDictionary[typeof lang], number) => translate(lang, text, number)
+    //                    ^^^^^^^^^^^
+    //                    передаём код (тип) языка
+  } as II18n), [lang]);
+
+```
+
+Сами типы для "добывания" словарей из джейсонов реализованы так:
+
+```ts
+import * as translations from './translations';
+
+// Тип объекта, опционально содержащий формы множественного числа
+type TPlural = Partial<{ [HowMany in Intl.LDMLPluralRule]: string }>
+/* Вывод:
+type TPlural = {
+    zero?: string | undefined;
+    one?: string | undefined;
+    two?: string | undefined;
+    few?: string | undefined;
+    many?: string | undefined;
+    other?: string | undefined;
+}
+*/
+
+// Тип переводов
+type TLangType = typeof translations;
+
+// Ключи типа пареводов: `en | ru`
+export type TLangKeys = keyof TLangType;
+
+// Тип для подсказок автодополнения
+export type TDictionary = {
+  [Property in TLangKeys]: keyof TLangType[Property];
+  //         вот тут магия ^^^^^
+  //         сохраняем имена ключей в качестве типа поля Property
+}
+/* Вывод:
+type TDictionary = {
+    en: "basket.articles" | "title" | "menu.main" | "basket.title" ...;
+    ru: "basket.articles" | "session.signOut" ...;
+}
+*/
+```
+
+  Коме того, написал тип `TDictionaryTree`. Кроме ключей переводов, он содержит вложенные объекты с переводами форм множественного числа. `TDictionaryTree` требуется для типизации функции `translate`:
+
+```ts
+function translate<Lang extends TLangKeys>(lang: Lang, text?: TDictionary[Lang], plural?: number): string {
+  const translationsLang = translations[lang] as TDictionaryTree[Lang];
+  //                                             ^^^^^^^^^^^^^^^ ^^^^
+  // ...
+}
+```
+
+  Тип `TDictionaryTree` реализован так:
+
+```ts
+// Вспомогательный рекурсивный тип
+type TGenTree<T> = { [Property in keyof T]: TGenTree<T[Property]> }
+//                        рекурсивный вызов ^^^^^^^^
+
+// Строим дерево типа
+type TDictionaryTree = TGenTree<TLangType>
+/* Вывод:
+type TDictionaryTree = {
+  en: TGenTree<{
+    "basket.articles": {
+        one: string;
+        other: string;
+    };
+    "title": string;
+    "menu.main": string;
+    "basket.title": string;
+    ...
+  }>;
+  ru: TGenTree<...>;
+}
+*/
+```
+
+  Был ещё альтернативный вариант без рекурсии, но он менее универсальный и более громоздкий:
+
+```ts
+// Другой вариант реализации TDictionaryTree
+type TDictionaryTree = {
+  [Property in TLangKeys]: {
+    [Field in keyof TLangType[Property]]: TLangType[Property][Field] extends string ? string : TPlural;
+  };
+}
+/* Вывод:
+type TDictionaryTree = {
+  en: {
+    "basket.articles": Partial<{
+      zero: string;
+      one: string;
+      two: string;
+      few: string;
+      many: string;
+      other: string;
+    }>;
+    title: string;
+    ...
+  }
+}
+*/
+```
+
+  По задаче `i18n` вроде всё.
+
+- Типизация стора сделана так:
+
+```ts
+type TActionsPartial = { [Property in keyof TModulesType]: InstanceType<TModulesType[Property]             > };
+type TStatePartial   = { [Property in keyof TActions    ]: ReturnType  <TActions    [Property]['initState']> };
+
+// Стейт форков ForkState подключается отдельно, потому что это не часть контента сайта, а часть механизма стора.
+// Добавим его к типам стейта и экшенов как пересечение типов:
+export type TActions = TActionsPartial & { ['forks']: ForkState                          };
+export type TState   = TStatePartial   & { ['forks']: ReturnType<ForkState['initState']> };
+```
+
+Ещё можно получить сразу типы для стора через дженерик (это тоже работает), но запись более громоздкая:
+
+```ts
+// Альтернативный вариант реализации TState
+type TGetState<Type extends Partial<InstanceType<abstract new (...args: any) => any>>> = {
+  [Property in keyof Type]: ReturnType<InstanceType<Type[Property]>['initState']>;
+};
+
+type TStatePartial = TGetState<moduleType>;
+export type TState = TStatePartial & { ['forks']: ReturnType<ForkState['initState']> };
+```
+
 - Типизировал `useSelector` вот так:
 
 ```ts
+// Импортируем тип стора.
+// Интересно, что если мы импортируем вместо него непосредственно тип стейта:
+//   import type TState from '@src/store';
+// то автодополнение не будет работать
+import type Store from '@src/store';
+
 // Селектор
-type TSelectorFunc = (state: Store['state']) => unknown;
+type TSelectorFunc = (state: Store['state']) => Record<string, unknown>
 
 export default function useSelector(selectorFunc: TSelectorFunc) {
   //...
-  return state as Record<string, any>;
+  return state;
 }
 ```
 
-- Типизировать стор получилось, но пока не автоматически:
+  Автодополнение работает (можно брать значения из разных срезов стейта, например `basket` и `article`):
 
-```ts
-// Вот такой вариант работает, но он не автоматический
-type TState = {
-  basket: ReturnType<modules.basket['initState']>;
-  catalog: ReturnType<modules.catalog['initState']>;
-  modals: ReturnType<modules.modals['initState']>;
-  article: ReturnType<modules.article['initState']>;
-  locale: ReturnType<modules.locale['initState']>;
-  categories: ReturnType<modules.categories['initState']>;
-  session: ReturnType<modules.session['initState']>;
-  profile: ReturnType<modules.profile['initState']>;
-  // Стейт форков у меня подключается отдельно
-  forks: ReturnType<ForkState['initState']>;
-}
+![useSelector](img/useSelector-1.webm){width=100% height=100%}
 
-// Дальше попытка это всё автоматизировать
-type moduleType = typeof modules;
-
-// Вот такая строка работает нормально, но в ней жёстко задано 'modules.basket'
-type TTest1 = Record<keyof moduleType, ReturnType<modules.basket['initState']>>
-// Вывод:
-// type TTest1 = {
-//    basket: IBasketInitState;
-//    catalog: IBasketInitState;
-//    modals: IBasketInitState;
-//    ...
-// }
-
-// Попытки автоматизировать это дело уже не работают:
-type TTest2<Type extends Partial<StoreModule>> = {
-    [Property in keyof Type]: ReturnType<Type[Property]['initState']>
-};
-
-type TResult = TTest2<moduleType>
-// Вывод:
-// type TResult = {
-//   basket: any;
-//   catalog: any;
-//   ...
-// }
-```
+- Типизировал все глупые компоненты.
 
 - Подключил `ts|tsx`. Заодно подключил `ESlint`, `Stylelint` и `Prettier`, использовав конфиг который я писал ранее (немного допилил его). Причём только для новых файлов - все существующие файлы были добавлены в исключения. Для того, чтобы создать список исключений, я написал на ноде небольшую утилиту `./generateExcludePatchs.js` (на ноде никогда раньше не писал, поэтому за основу взял рекурсивный обход каталогов из статьи в интернете, ссылка не неё есть в файле скрипта). В качестве результата своей работы утилита создаёт файл `./exclude_paths_generated.txt`.
 Работает следующим образом:
@@ -134,13 +339,14 @@ function Button({ isLoading, value, size, height, ...props }: IButtonProps) {
 ```ts
 export interface IButtonProps {
   value?: string;                                // Опционально, потому что используем defaultProps в ArticleCard
-  onClick?: MouseEventHandler<HTMLInputElement>; // Опционально, потому что используем defaultProps в ArticleCard
+  onClick?: (event?: React.MouseEvent) => void; // Опционально, потому что используем defaultProps в ArticleCard
   isLoading?: boolean;
   size?: string;
   height?: string;
   props?: Record<string, unknown>; // Мы не знаем какие ещё пропсы будут переданы,
                                    // может быть `disabled={true}` например.
                                    // Всё это будет собрано в объект (если есть что собирать).
+  [propName: string]: unknown;     // Нужно чтобы небыло ошибок ts до того, как пропсы будут собраны в объект `props`
 }
 ```
 
@@ -164,6 +370,7 @@ export interface IInputProps {
   stretch?: boolean;
   minValue?: number;
   maxValue?: number;
+  defaultValue?: string;
   minDefaultValue?: number;
   maxDefaultValue?: number;
 }

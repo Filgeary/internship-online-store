@@ -4,14 +4,17 @@
     "jsx": "react-jsx",
     "outDir": "./dist",
     "allowJs": true,
-    "noImplicitAny": false,
+    "noImplicitAny": true,
     "removeComments": false,
     "sourceMap": true,
+    "resolveJsonModule": true,
     "paths": {
+      "@custom-types/*": ["./custom-types/*"],
       "@src/*": ["./src/*"]
     }
   },
   "include": [
+    "custom-types/**/*.ts",
     "src/**/*.ts",
     "src/**/*.tsx"
   ],

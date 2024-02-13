@@ -18,6 +18,7 @@ let config = {
     extensions: ['.js', '.jsx', '.ts', '.tsx', '...'], // расширения по умолчанию если не указаны в import
     modules: ['./', 'node_modules'], // Где искать файлы подключаемых модулей (пакетов)
     alias: {
+      '@custom-types': path.resolve(__dirname, './custom-types'),
       '@src': path.resolve(__dirname, './src'),
     },
   },

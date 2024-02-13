@@ -1,4 +1,8 @@
 {
+  "basket.articles": {
+    "one": "article",
+    "other": "articles"
+  },
   "title": "Shop",
   "menu.main": "Main",
   "basket.title": "Cart",
@@ -9,10 +13,6 @@
   "basket.total": "Total",
   "basket.unit": "pcs",
   "basket.delete": "Delete",
-  "basket.articles": {
-    "one": "article",
-    "other": "articles"
-  },
   "article.add": "Add",
   "filter.reset": "Reset",
   "auth.title": "Sign In",

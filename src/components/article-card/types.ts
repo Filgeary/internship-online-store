@@ -6,6 +6,7 @@ export interface IArticleCardProps {
     category: Record<string, any>;
     edition: string | number;
     price: number;
+    [prop: string]: any;
   };
   onAdd?: (event?: any) => void;
   t?: (text?: string) => string;

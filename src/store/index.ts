@@ -1,47 +1,25 @@
 import * as modules from './exports.js';
 import ForkState from './fork';
 import { theme } from './log-theme.js';
-import StoreModule from './module.js';
 
-// Вот такой вариант работает, но он не автоматический
-type TState = {
-  basket: ReturnType<modules.basket['initState']>;
-  catalog: ReturnType<modules.catalog['initState']>;
-  modals: ReturnType<modules.modals['initState']>;
-  article: ReturnType<modules.article['initState']>;
-  locale: ReturnType<modules.locale['initState']>;
-  categories: ReturnType<modules.categories['initState']>;
-  session: ReturnType<modules.session['initState']>;
-  profile: ReturnType<modules.profile['initState']>;
-  // Стейт форков у меня подключается отдельно
-  forks: ReturnType<ForkState['initState']>;
-}
+export type TModulesType = typeof modules;
 
-// Дальше попытка это всё автоматизировать
-type moduleType = typeof modules;
+type TActionsPartial = { [Property in keyof TModulesType]: InstanceType<TModulesType[Property]             > };
+type TStatePartial   = { [Property in keyof TActions    ]: ReturnType  <TActions    [Property]['initState']> };
 
-// Вот такая строка работает нормально, но в ней жёстко задано 'modules.basket'
-type TTest1 = Record<keyof moduleType, ReturnType<modules.basket['initState']>>
-// Вывод:
-// type TTest1 = {
-//    basket: IBasketInitState;
-//    catalog: IBasketInitState;
-//    modals: IBasketInitState;
-//    ...
-// }
+// Стейт форков ForkState подключается отдельно, потому что это не часть контента сайта, а часть механизма стора.
+// Добавим его к типам стейта и экшенов как пересечение типов:
+export type TActions = TActionsPartial & { ['forks']: ForkState                          };
+export type TState   = TStatePartial   & { ['forks']: ReturnType<ForkState['initState']> };
 
-// Попытки автоматизировать это дело уже не работают:
-type TTest2<Type extends Partial<StoreModule>> = {
-    [Property in keyof Type]: ReturnType<Type[Property]['initState']>
-};
+/* Ещё можно получить сразу типы для стора через дженерик (это тоже работает), но запись более громоздкая
 
-type TResult = TTest2<moduleType>
-// Вывод:
-// type TResult = {
-//   basket: any;
-//   catalog: any;
-//   ...
-// }
+    type TGetState<Type extends Partial<InstanceType<abstract new (...args: any) => any>>> = {
+      [Property in keyof Type]: ReturnType<InstanceType<Type[Property]>['initState']>;
+    };
+
+    type TStatePartial = TGetState<moduleType>;
+*/
 
 /**
  * Хранилище состояния приложения
@@ -52,7 +30,7 @@ class Store {
   //services;
   //config;
   //forks;
-  //actions;
+  actions: TActions;
   [field: string]: any;
 
   /**
@@ -76,16 +54,19 @@ class Store {
      * session: SessionState,
      * profile: ProfileState
      * }} */
-    this.actions = {};
-    for (const name of Object.keys(modules)) {
-      this.actions[name] = new modules[name](this, name, this.config?.modules[name] || {});
-      this.state[name] = this.actions[name].initState();
-    }
+    this.actions = {} as TActions;
+    for (const name of Object.keys(modules)) this.createModule(name as keyof TModulesType);
 
     // Позволяет отделять оригиналы от форков, реагировать на удаление форка и содержит информацию для отладки.
     // Добавляем отдельно, потому что это не часть контента сайта, а часть механизма стора
     this.actions.forks = new ForkState(this, 'forks', this.config?.modules.forks || {});
     this.state.forks = this.actions.forks.initState();
+  }
+
+  createModule<Key extends keyof TModulesType>(name: Key) {
+    let module = modules[name] as TModulesType[Key];
+    this.actions[name] = new module(this, name, this.config?.modules[name] || {} as any) as TActions[Key];
+    this.state[name] = this.actions[name].initState() as TState[Key];
   }
 
   /**

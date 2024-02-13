@@ -1,10 +1,14 @@
 import {useEffect, useLayoutEffect, useMemo, useState} from "react";
 import shallowequal from 'shallowequal';
 import useStore from "./use-store";
-import Store from '@src/store';
+// Импортируем тип стора.
+// Интересно, что если мы импортируем вместо него непосредственно тип стейта:
+//   import type TState from '@src/store';
+// то автодополнение не будет работать
+import type Store from '@src/store';
 
 // Селектор
-type TSelectorFunc = (state: Store['state']) => unknown;
+type TSelectorFunc = (state: Store['state']) => Record<string, unknown>;
 
 /**
  * Хук для выборки данных из store и отслеживания их изменения
@@ -27,5 +31,5 @@ export default function useSelector(selectorFunc: TSelectorFunc) {
   // Отписка от store при демонтировании компонента
   useLayoutEffect(() => unsubscribe, [unsubscribe]);
 
-  return state as Record<string, any>;
+  return state;
 }

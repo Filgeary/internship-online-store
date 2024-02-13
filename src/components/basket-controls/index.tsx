@@ -1,0 +1,29 @@
+import {memo} from "react";
+import PropTypes from 'prop-types';
+import {cn as bem} from '@bem-react/classname';
+import numberFormat from "@src/utils/number-format";
+import Button from "../button";
+import { IBasketControlsProps } from "./types";
+import './style.css';
+
+function BasketControls(props: IBasketControlsProps) {
+  const cn = bem('BasketControls');
+  const btnText = props.sum ? 'Выбрать ещё товары' : 'Выбрать товары';
+  return (
+    <div className={cn()}>
+      <Button className={cn('addMore')} onClick={props.onAddMore} value={btnText} />
+    </div>
+  );
+}
+
+BasketControls.propTypes = {
+  //sum: PropTypes.number,
+  //t: PropTypes.func
+};
+
+BasketControls.defaultProps = {
+  //sum: 0,
+  //t: (text) => text
+}
+
+export default memo(BasketControls);

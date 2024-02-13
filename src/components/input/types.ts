@@ -16,6 +16,7 @@ export interface IInputProps {
   stretch?: boolean;
   minValue?: number;
   maxValue?: number;
+  defaultValue?: string;
   minDefaultValue?: number;
   maxDefaultValue?: number;
 }
