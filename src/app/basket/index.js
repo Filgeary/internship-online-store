@@ -32,7 +32,6 @@ function Basket({ closeModal }) {
     openCatalogModal: useCallback(() => {
       store.actions.modals.open("catalogModal").then((result) => {
         if (Array.isArray(result)) {
-          console.log(result);
           store.actions.basket.addToBasketItemsId(result);
         }
       });

@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 
 /**
+ * @deprecated
  * Хук для отслеживаний результатов модалок. 
  * Автоматически очищает результат модалки после выполнения пользовательской функции onResultFunc(result).
  * Возвращает результат если он не равен undefined

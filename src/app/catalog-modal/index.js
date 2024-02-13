@@ -1,4 +1,4 @@
-import { memo, useCallback, useState } from "react";
+import { memo, useCallback, useMemo, useState } from "react";
 import useTranslate from "@src/hooks/use-translate";
 import ModalLayout from "@src/components/modal-layout";
 import CatalogFilter from "@src/containers/catalog-filter";
@@ -8,20 +8,19 @@ import CatalogModalList from "@src/containers/catalog-modal-list";
 import PropTypes from "prop-types";
 import SideLayout from "@src/components/side-layout";
 import useNewState from "@src/hooks/use-new-state";
+import useStoreState from "@src/hooks/use-store-state";
 
 function CatalogModal({ closeModal }) {
   const store = useStore();
   const [selectedItems, setSelectedItems] = useState([]);
-  const [stateName, isStateCreated] = useNewState("catalog-modal", "catalog", "catalog-modal")
+  const stateName = useStoreState("catalog", "catalogModal");
 
   useInit(async () => {
-    if (isStateCreated) {
-      await Promise.all([
-        store.actions[stateName].initParams(),
-        store.actions.categories.load(),
-      ]);
-    }
-  }, [stateName, isStateCreated]);
+    await Promise.all([
+      store.actions[stateName].initParams(),
+      store.actions.categories.load(),
+    ]);
+  }, [stateName]);
 
   const { t } = useTranslate();
 
@@ -44,19 +43,22 @@ function CatalogModal({ closeModal }) {
     ),
   };
 
+  const options = {
+    modalTitle: useMemo(() => {
+      let str = t("catalog-modal.title");
+      const itemsCount = selectedItems.length;
+      if (itemsCount > 0) {
+        str += ` - ${t(
+          "catalog-modal.selected"
+        ).toLowerCase()}: ${itemsCount} ${t("basket.articles", itemsCount)}`;
+      }
+      return str;
+    }, [selectedItems, t]),
+  };
+
   return (
     <ModalLayout
-      title={
-        t("catalog-modal.title") +
-        " " +
-        (selectedItems.length > 0
-          ? `- ${t("catalog-modal.selected").toLowerCase()}:
-            ${selectedItems.length} ${t(
-              "basket.articles",
-              selectedItems.length
-            )}`
-          : "")
-      }
+      title={options.modalTitle}
       labelClose={t("modal.close")}
       onClose={closeModal}
       footer={
@@ -70,16 +72,12 @@ function CatalogModal({ closeModal }) {
         </SideLayout>
       }
     >
-      {isStateCreated && (
-        <>
-          <CatalogFilter stateName={stateName} />
-          <CatalogModalList
-            stateName={stateName}
-            onSelectItem={callbacks.onSelectItem}
-            selectedItems={selectedItems}
-          />
-        </>
-      )}
+      <CatalogFilter stateName={stateName} />
+      <CatalogModalList
+        stateName={stateName}
+        onSelectItem={callbacks.onSelectItem}
+        selectedItems={selectedItems}
+      />
     </ModalLayout>
   );
 }

@@ -6,7 +6,7 @@ const path = require("path");
 
 let config = {
   context: path.join(__dirname, '/src'), // Директория с исходным кодом приложения
-  entry: 'index.js', // Главный файл приложения
+  entry: 'index.tsx', // Главный файл приложения
   output: {
     path: path.join(__dirname, 'dist'), // Куда делать оброку
     filename: '[name].js', // Шаблон для названия файлов
@@ -14,7 +14,7 @@ let config = {
   },
   mode: process.env.NODE_ENV,
   resolve: {
-    extensions: ['.js', '.jsx'], // расширения по умолчанию если не указаны в import
+    extensions: ['.tsx', '.ts', '.js', '.jsx'], // расширения по умолчанию если не указаны в import
     modules: ['./', 'node_modules'], // Где искать файлы подключаемых модулей (пакетов)
     alias: {
       '@src': path.resolve(__dirname, './src'),
@@ -24,7 +24,7 @@ let config = {
     rules: [
       // Транспиляция JS/JSX
       {
-        test: /\.jsx?$/,
+        test: /\.(j|t)sx?$/,
         exclude: /node_modules/,
         use: [{loader: 'babel-loader'}],
       },
@@ -48,6 +48,11 @@ let config = {
         test: /\.(svg|png|swf|jpg|otf|eot|ttf|woff|woff2)(\?.*)?$/,
         type: 'asset',
       },
+      // {
+      //   test: /\.tsx?$/,
+      //   use: 'ts-loader',
+      //   exclude: /node_modules/,
+      // },
     ]
   },
   plugins: [
