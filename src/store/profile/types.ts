@@ -11,7 +11,7 @@ interface Iprofile {
     surname: string
 }
 
-interface IUser {
+export interface IUser {
     dateCreate: string
     dateUpdate: string
     email: string
@@ -28,8 +28,13 @@ interface IUser {
    _type: string
 }
 
+export interface IProfileInitState {
+    data: IUser | Object
+    waiting: boolean
+  }
+
 export interface IApiResponseUser {
     data: {
-        result:  IUser[]
+        result:  IUser
     }
 }

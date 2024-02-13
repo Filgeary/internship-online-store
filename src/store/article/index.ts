@@ -1,11 +1,12 @@
-import StoreModule from "../module";
+import StoreModule from "../module"
+import type { ResponseData, InitialStateArticle } from "./types"
 
 /**
  * Детальная ифнормация о товаре для страницы товара
  */
-class ArticleState extends StoreModule {
+class ArticleState extends StoreModule<"article"> {
 
-  initState(): { data: any; waiting: boolean } {
+  initState(): InitialStateArticle {
     return {
       data: {},
       waiting: false // признак ожидания загрузки
@@ -24,7 +25,7 @@ class ArticleState extends StoreModule {
       waiting: true
     });
     try {
-      const res = await this.services.api.request({
+      const res = await this.services.api.request<ResponseData>({
         url: `/api/v1/articles/${id}?fields=*,madeIn(title,code),category(title)`
       });
 

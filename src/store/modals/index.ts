@@ -1,12 +1,12 @@
 import StoreModule from "../module"
 
-export interface ICategoriesInitState {
+export interface IModalsInitState {
   name: string | null
 }
 
-class ModalsState extends StoreModule {
+class ModalsState extends StoreModule<"modals"> {
 
-  initState() {
+  initState(): IModalsInitState {
     return {
       name: null
     }

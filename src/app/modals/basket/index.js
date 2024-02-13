@@ -65,11 +65,10 @@ function Basket() {
                   labelDelete={t('basket.delete')}
       />
     ), [callbacks.removeFromBasket, t]),
-  };
-  console.log('statusCatalogModal', statusCatalogModal)
+  }
+
   useEffect(() => {
     if(statusCatalogModal) {
-      console.log('сработал useEffect и statusCatalogModal ===', statusCatalogModal)
       // Добавление выбранных товаров из модального окна
        store.actions.basket.addingSelectedProducts()
     }

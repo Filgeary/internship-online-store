@@ -21,7 +21,6 @@ function Navigation() {
   }));
 
   const id = generateUniqueId()
-  console.log('generateUniqueId', generateUniqueId())
 
   const callbacks = {
     // Открытие модалки корзины

@@ -3,8 +3,8 @@ import {cn as bem} from '@bem-react/classname'
 import './style.css'
 
 interface IPageLayoutProps {
-  head: React.ReactNode
-  footer: React.ReactNode
+  head?: React.ReactNode
+  footer?: React.ReactNode
   children: React.ReactNode
 }
 

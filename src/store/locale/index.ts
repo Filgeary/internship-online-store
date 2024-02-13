@@ -4,7 +4,7 @@ export interface ILocaleInitState {
   lang: string
 }
 
-class LocaleState extends StoreModule {
+class LocaleState extends StoreModule<"locale"> {
 
   initState() {
     return {

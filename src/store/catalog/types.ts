@@ -35,6 +35,6 @@ export interface IApiResponseCatalog {
             count: number
         }
       }
-      headers: Record<string, string>
+      headers: any
       status: number
 }

@@ -23,6 +23,6 @@ export interface IinitState {
     data: {
       result: IResult
     }
-    headers: Record<string, string>
+    headers: any
     status: number
   }

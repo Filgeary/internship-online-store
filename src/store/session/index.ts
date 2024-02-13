@@ -1,15 +1,18 @@
-import StoreModule from "../module";
-import simplifyErrors from "@src/utils/simplify-errors";
+import StoreModule from "../module"
+import simplifyErrors from "@src/utils/simplify-errors"
+import { ISessionInitState, IResponseDataSession, IResponseSessionRemind} from "./types"
+import { IConfig } from "@src/config"
 
 /**
  * Сессия
  */
-class SessionState extends StoreModule {
+class SessionState extends StoreModule<"session"> {
+  config!: IConfig["store"]["modules"]["session"]
   /**
    * Начальное состояние
    * @return {Object}
    */
-  initState() {
+  initState(): ISessionInitState {
     return {
       user: {},
       token: null,
@@ -18,17 +21,17 @@ class SessionState extends StoreModule {
       exists: false
     };
   }
-
+  
   /**
    * Авторизация (вход)
    * @param data
    * @param onSuccess
    * @returns {Promise<void>}
    */
-  async signIn(data, onSuccess) {
+  async signIn(data: {login: string, password: string}, onSuccess: () => void) {
     this.setState(this.initState(), 'Авторизация');
     try {
-      const res = await this.services.api.request({
+      const res = await this.services.api.request<IResponseDataSession>({
         url: '/api/v1/users/sign',
         method: 'POST',
         body: JSON.stringify(data)
@@ -37,17 +40,17 @@ class SessionState extends StoreModule {
       if (!res.data.error) {
         this.setState({
           ...this.getState(),
-          token: res.data.result.token,
-          user: res.data.result.user,
+          token: res.data.result!.token,
+          user: res.data.result!.user,
           exists: true,
           waiting: false
         }, 'Успешная авторизация');
 
         // Запоминаем токен, чтобы потом автоматически аутентифицировать юзера
-        window.localStorage.setItem('token', res.data.result.token);
+        window.localStorage.setItem('token', res.data.result!.token);
 
         // Устанавливаем токен в АПИ
-        this.services.api.setHeader(this.config.tokenHeader, res.data.result.token);
+        this.services.api.setHeader(this.config.tokenHeader, res.data.result!.token);
 
         if (onSuccess) onSuccess();
       } else {
@@ -93,7 +96,7 @@ class SessionState extends StoreModule {
       // Устанавливаем токен в АПИ
       this.services.api.setHeader(this.config.tokenHeader, token);
       // Проверяем токен выбором своего профиля
-      const res = await this.services.api.request({url: '/api/v1/users/self'});
+      const res = await this.services.api.request<IResponseSessionRemind>({url: '/api/v1/users/self'});
 
       if (res.data.error) {
         // Удаляем плохой токен
@@ -104,7 +107,7 @@ class SessionState extends StoreModule {
         }, 'Сессии нет');
       } else {
         this.setState({
-          ...this.getState(), token: token, user: res.data.result, exists: true, waiting: false
+          ...this.getState(), token: token, user: res.data.result!, exists: true, waiting: false
         }, 'Успешно вспомнили сессию');
       }
     } else {

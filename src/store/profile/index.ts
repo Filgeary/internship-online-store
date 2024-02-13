@@ -1,12 +1,12 @@
 import StoreModule from "../module"
-import { IApiResponseUser } from "./types"
+import { IApiResponseUser, IProfileInitState } from "./types"
 
 /**
  * Детальная информация о пользователе
  */
-class ProfileState extends StoreModule {
+class ProfileState extends StoreModule<"profile"> {
 
-  initState() {
+  initState(): IProfileInitState {
     return {
       data: {},
       waiting: false // признак ожидания загрузки

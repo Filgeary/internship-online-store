@@ -5,11 +5,12 @@ import './style.css'
 
 interface IInputProps {
   value: string
-  name: string
-  type: string
+  name?: string
+  type?: string
   placeholder?: string
   onChange: (value: string, name?: string) => void
   theme?: string
+  delay?: number
 }
 
 const Input: FC<IInputProps> = (props) => {

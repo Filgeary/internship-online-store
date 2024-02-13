@@ -1,14 +1,15 @@
-import {memo, useCallback, useEffect, useState, useRef} from "react";
-import useStore from "@src/hooks/use-store";
-import useSelector from "@src/hooks/use-selector";
-import useTranslate from "@src/hooks/use-translate";
-import Item from "@src/components/item";
-import List from "@src/components/list";
-import Pagination from "@src/components/pagination";
-import Spinner from "@src/components/spinner";
-import modalsActions from '@src/store-redux/modals/actions';
+import {memo, useCallback, useEffect, useState, useRef} from "react"
+import useStore from "@src/hooks/use-store"
+import useSelector from "@src/hooks/use-selector"
+import useTranslate from "@src/hooks/use-translate"
+import Item from "@src/components/item"
+import List from "@src/components/list"
+import Pagination from "@src/components/pagination"
+import Spinner from "@src/components/spinner"
+import modalsActions from '@src/store-redux/modals/actions'
 import generateUniqueId from "@src/utils/unicque_id"
-import { useDispatch } from "react-redux";
+import { useDispatch } from "react-redux"
+import { StoreState } from "@src/store/types"
 
 function CatalogList({stateName}) {
   const store = useStore();
@@ -16,7 +17,7 @@ function CatalogList({stateName}) {
   const selectRef = useRef();
   const [chosenProductId, setChosenProductId] = useState(null)
 
-  const select = useSelector(state => ({
+  const select = useSelector((state) => ({
     list: state[stateName].list,
     page: state[stateName].params.page,
     limit: state[stateName].params.limit,
@@ -71,7 +72,6 @@ function CatalogList({stateName}) {
 
   useEffect(() => {
     if(stateName === 'catalog_modal') selectRef.current = select.selected
-    console.log('сработал useEffect и selectRef.current ===', selectRef.current)
   }, [select.selected])
 
   const renders = {

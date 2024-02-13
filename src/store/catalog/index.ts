@@ -5,7 +5,7 @@ import { IIinitCatalogState, IValidParams, ISelected, IApiResponseCatalog, IPara
 /**
  * Состояние каталога - параметры фильтра исписок товара
  */
-class CatalogState extends StoreModule {
+class CatalogState extends StoreModule<"catalog"> {
   /**
    * Начальное состояние
    * @return {Object}
@@ -73,6 +73,7 @@ class CatalogState extends StoreModule {
     selected: ISelected[] = []
   ): Promise<void> {
     const params: IParams = { ...this.getState().params, ...newParams }
+    console.log('newParams', newParams)
 
     // Установка новых параметров и признака загрузки
     this.setState(

@@ -7,27 +7,28 @@ import Input from "@src/components/input"
 import SideLayout from "@src/components/side-layout"
 import treeToList from "@src/utils/tree-to-list"
 import listToTree from "@src/utils/list-to-tree"
+import { StoreState } from "@src/store/types"
 
-function CatalogFilter() {
+function CatalogFilterForModal() {
 
   const store = useStore();
 
-  const select = useSelector(state => ({
-    sort: state.catalog.params.sort,
-    query: state.catalog.params.query,
-    category: state.catalog.params.category,
+  const select = useSelector((state: StoreState) => ({
+    sort: state.catalog_modal.params.sort,
+    query: state.catalog_modal.params.query,
+    category: state.catalog_modal.params.category,
     categories: state.categories.list,
   }));
 
   const callbacks = {
     // Сортировка
-    onSort: useCallback(sort => store.actions.catalog.setParams({sort}, false, true), [store]),
+    onSort: useCallback((sort: string | number) => store.actions.catalog_modal.setParams({sort}), [store]),
     // Поиск
-    onSearch: useCallback(query => store.actions.catalog.setParams({query, page: 1}, false, true), [store]),
+    onSearch: useCallback((query: string) => store.actions.catalog_modal.setParams({query, page: 1}), [store]),
     // Сброс
-    onReset: useCallback(() => store.actions.catalog.resetParams(), [store]),
+    onReset: useCallback(() => store.actions.catalog_modal.resetParams(), [store]),
     // Фильтр по категории
-    onCategory: useCallback(category => store.actions.catalog.setParams({category, page: 1}, false, true), [store]),
+    onCategory: useCallback((category: string | number) => store.actions.catalog_modal.setParams({category, page: 1}), [store]),
   };
 
   const options = {
@@ -39,7 +40,7 @@ function CatalogFilter() {
     ]), []),
     categories: useMemo(() => ([
       {value: '', title: 'Все'},
-      ...treeToList(listToTree(select.categories), (item, level) => (
+      ...treeToList(listToTree(select.categories), (item: {_id: string, title: string}, level: number) => (
         {value: item._id, title: '- '.repeat(level) + item.title}
       ))
     ]), [select.categories]),
@@ -58,4 +59,4 @@ function CatalogFilter() {
   )
 }
 
-export default memo(CatalogFilter);
+export default memo(CatalogFilterForModal);

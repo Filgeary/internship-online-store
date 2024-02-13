@@ -4,7 +4,7 @@ import { IBasketItem, ISelectedItem, IinitState, IApiResponse } from "./types"
 /**
  * Покупательская корзина
  */
-class BasketState extends StoreModule {
+class BasketState extends StoreModule<"basket"> {
   initState(): IinitState {
     return {
       list: [],
@@ -140,7 +140,7 @@ class BasketState extends StoreModule {
     const firstSelected = selected.shift()
 
     // Добавляем товар в корзину
-    await this.addToBasket(firstSelected.id, firstSelected.quantity)
+    if(firstSelected) await this.addToBasket(firstSelected.id, firstSelected.quantity)
 
     // Рекурсивно вызываем эту же функцию для оставшихся объектов
     await this.addingSelectedProducts()

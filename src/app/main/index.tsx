@@ -1,5 +1,5 @@
 import {memo} from 'react'
-import useStore from "@src/hooks/use-store"
+import useStore from "@src/hooks/use-store" 
 import useTranslate from "@src/hooks/use-translate"
 import useInit from "@src/hooks/use-init"
 import Navigation from "@src/containers/navigation"
@@ -16,7 +16,6 @@ function Main() {
   const store = useStore();
 
   useInit(async () => {
-    store.make('catalog2', 'catalog')
     await Promise.all([
       store.actions.catalog.initParams(),
       store.actions.categories.load(),
