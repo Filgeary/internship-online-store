@@ -14,11 +14,19 @@ export type TTreeBuilder<Property> = {
 
 type TTree = TTreeBuilder<TLangsStruct['translations']>;
 
-// translate('en', 'article.add->disabled->purpleTheme');
+// Утилита для преобразования всех ключей в Union-тип
+type TFlattenKeys<T> = T extends object
+  ? { [K in keyof T]: K | TFlattenKeys<T[K]> }[keyof T]
+  : never;
+
+// Все ключи объекта как Union-тип
+export type TAllFlattenKeys = TFlattenKeys<
+  typeof langs.translations.en | typeof langs.translations.ru
+>;
 
 export type TTranslateFn = (
   lang: TLangs,
-  text: TAllLangsPick,
+  text: TAllLangsPick | Array<TAllFlattenKeys>,
   plural: number
 ) => string;
 export type TUserTranslateFn = (text: TAllLangsPick, plural?: number) => string;

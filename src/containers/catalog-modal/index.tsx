@@ -75,7 +75,11 @@ function CatalogModal() {
 
   // const closeBasketModal = () => store.actions.modals.closeByName('basket');
   // const closeBasketModalStart = () => store.actions.modals.closeByName('basket', null, true, false);
-  // const openAnotherCatalogModal = () => store.actions.modals.open('catalogModal').then((items) => alert(JSON.stringify(items))).catch(() => {});
+  const openAnotherCatalogModal = () =>
+    store.actions.modals
+      .open('catalogModal')
+      .then((items) => alert(JSON.stringify(items)))
+      .catch(() => {});
 
   return (
     <Modal onClose={callbacks.closeModal} title={t('catalogModal.title')}>
@@ -102,10 +106,12 @@ function CatalogModal() {
           {t('catalogModal.btnSuccess')}
         </button>
 
-        {/* <button onClick={callbacks.closeParent}>Закрыть родительскую модалку</button>
-        <button onClick={closeBasketModal}>Закрыть модалку корзины (последнюю)</button>
-        <button onClick={closeBasketModalStart}>Закрыть модалку корзины (первую)</button>
-        <button onClick={openAnotherCatalogModal}>Открыть ещё одну модалку каталога</button> */}
+        {/* <button onClick={callbacks.closeParent}>Закрыть родительскую модалку</button> */}
+        {/* <button onClick={closeBasketModal}>Закрыть модалку корзины (последнюю)</button> */}
+        {/* <button onClick={closeBasketModalStart}>Закрыть модалку корзины (первую)</button> */}
+        <button onClick={openAnotherCatalogModal}>
+          Открыть ещё одну модалку каталога
+        </button>
       </Entities>
     </Modal>
   );

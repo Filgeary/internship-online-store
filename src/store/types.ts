@@ -8,17 +8,21 @@ export interface IExtendedModules extends TModules {
 }
 
 export type TExtendedKeysModules = keyof IExtendedModules;
-// export type TExtendedModules<T extends keyof IExtendedModules> =
-//   | T
-//   | `${T}-${number}`;
+export type TExtendedModules<T extends keyof IExtendedModules> =
+  | T
+  | `${T}-${number}`;
 
 export type TImportModules = IExtendedModules;
 export type TKeyModules = keyof TImportModules;
 
 export type TGlobalState = {
-  [key in TExtendedKeysModules]: ReturnType<TGlobalActions[key]['initState']>;
+  [key in TExtendedKeysModules as TExtendedModules<key>]: ReturnType<
+    TGlobalActions[key]['initState']
+  >;
 };
 
 export type TGlobalActions = {
-  [key in TExtendedKeysModules]: InstanceType<TImportModules[key]>;
+  [key in TExtendedKeysModules as TExtendedModules<key>]: InstanceType<
+    TImportModules[key]
+  >;
 };
