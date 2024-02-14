@@ -16,7 +16,7 @@ interface IArticleItemBasket extends IArticle {
 }
 
 type Props = {
-  onClose: () => void;
+  onClose: Function
 };
 
 function Basket({ onClose }: Props) {

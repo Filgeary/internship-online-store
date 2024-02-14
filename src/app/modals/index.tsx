@@ -19,7 +19,10 @@ const Modals = () => {
     modals: state.modals.data,
   }));
 
-  const handleCloseModal = (id) => (data, modalID = id) => store.actions.modals.close(modalID, data);
+  const handleCloseModal =
+    (id: string | number) =>
+      (data: any, modalID = id) =>
+        store.actions.modals.close(modalID, data);
 
   return (
     <>

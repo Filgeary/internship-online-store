@@ -9,13 +9,17 @@ import type { IArticle } from "@src/types/IArticle";
 import './style.css';
 
 type Props = {
-  article: IArticle
+  article: IArticle | null
   onAdd: (id: string) => void
   t: TTranslate
 }
 
 function ArticleCard({ article, onAdd, t }: Props) {
   const cn = bem('ArticleCard');
+
+  if (!article) {
+    return null;
+  }
 
   return (
     <div className={cn()}>

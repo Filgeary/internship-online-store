@@ -1,9 +1,11 @@
 import codeGenerator from "@src/utils/code-generator";
 import StoreModule from "../module";
 
+import type { TModalsNames } from "@src/types";
+
 type InitialModalsState = {
   data: {
-    name: string;
+    name: TModalsNames;
     cb: Function;
     id: string | number;
   }[];
@@ -22,7 +24,7 @@ class ModalsState extends StoreModule<InitialModalsState> {
     };
   }
 
-  open(name: string, cb: Function) {
+  open(name: TModalsNames, cb: Function) {
     const id = this.generateID();
 
     this.setState(

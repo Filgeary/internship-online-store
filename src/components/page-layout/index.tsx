@@ -5,8 +5,8 @@ import { memo } from "react";
 import './style.css';
 
 type Props = {
-  head: React.ReactNode
-  footer: React.ReactNode
+  head?: React.ReactNode
+  footer?: React.ReactNode
 } & PropsWithChildren
 
 function PageLayout({ head, footer, children }: Props) {

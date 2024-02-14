@@ -5,7 +5,7 @@ import { memo } from "react";
 import './style.css';
 
 type Props = {
-  data: IUserProfile
+  data: IUserProfile | null;
 }
 
 function ProfileCard({ data }: Props) {

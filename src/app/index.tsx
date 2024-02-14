@@ -9,10 +9,6 @@ import Main from "./main";
 import Modals from "./modals";
 import Profile from "./profile";
 
-/**
- * Приложение
- * @returns {React.ReactElement}
- */
 function App() {
   const store = useStore();
 

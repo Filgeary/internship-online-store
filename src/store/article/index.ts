@@ -3,7 +3,7 @@ import StoreModule from "../module";
 import type { IArticle } from "@src/types/IArticle";
 
 type InitialArticleState = {
-  data: IArticle | {};
+  data: IArticle | null;
   waiting: boolean;
 }
 
@@ -13,7 +13,7 @@ type InitialArticleState = {
 class ArticleState extends StoreModule<InitialArticleState> {
   initState(): InitialArticleState {
     return {
-      data: {},
+      data: null,
       waiting: false
     }
   }
@@ -21,7 +21,7 @@ class ArticleState extends StoreModule<InitialArticleState> {
   async load(id: string) {
     // Сброс текущего товара и установка признака ожидания загрузки
     this.setState({
-      data: {},
+      data: null,
       waiting: true
     });
 
@@ -40,7 +40,7 @@ class ArticleState extends StoreModule<InitialArticleState> {
       // Ошибка при загрузке
       // @todo В стейт можно положить информацию об ошибке
       this.setState({
-        data: {},
+        data: null,
         waiting: false
       });
     }

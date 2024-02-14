@@ -3,7 +3,7 @@ import StoreModule from "../module";
 import type { IUserProfile } from "@src/types/IUserProfile";
 
 type InitialProfileState = {
-  data: IUserProfile | {};
+  data: IUserProfile | null;
   waiting: boolean;
 }
 
@@ -13,7 +13,7 @@ type InitialProfileState = {
 class ProfileState extends StoreModule<InitialProfileState> {
   initState(): InitialProfileState {
     return {
-      data: {} as IUserProfile,
+      data: null,
       waiting: false
     }
   }
@@ -24,7 +24,7 @@ class ProfileState extends StoreModule<InitialProfileState> {
   async load() {
     // Сброс текущего профиля и установка признака ожидания загрузки
     this.setState({
-      data: {},
+      data: null,
       waiting: true
     });
 
