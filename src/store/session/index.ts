@@ -1,10 +1,11 @@
+import { isErrorResponse, isSuccessResponse } from "@src/api";
 import simplifyErrors from "@src/utils/simplify-errors";
 import StoreModule from "../module";
 
 import type { IUserSession } from "@src/types/IUserSession";
 
 type InitialSessionState = {
-  user: IUserSession
+  user: IUserSession | IUserSession['user'] | null
   token: string | null
   errors: any
   waiting: boolean
@@ -21,7 +22,7 @@ type SessionConfig = {
 class SessionState extends StoreModule<InitialSessionState, SessionConfig> {
   initState(): InitialSessionState {
     return {
-      user: {} as IUserSession,
+      user: null,
       token: null,
       errors: null,
       waiting: true,
@@ -36,13 +37,13 @@ class SessionState extends StoreModule<InitialSessionState, SessionConfig> {
   async signIn(data: any, onSuccess: () => void) {
     this.setState(this.initState(), 'Авторизация');
     try {
-      const res = await this.services.api.request({
+      const res = await this.services.api.request<IUserSession>({
         url: '/api/v1/users/sign',
         method: 'POST',
         body: JSON.stringify(data)
       });
 
-      if (!res.data.error) {
+      if (isSuccessResponse(res.data)) { // TODO: show type guards
         this.setState({
           ...this.getState(),
           token: res.data.result.token,
@@ -92,13 +93,14 @@ class SessionState extends StoreModule<InitialSessionState, SessionConfig> {
    */
   async remind() {
     const token = localStorage.getItem('token');
+
     if (token) {
       // Устанавливаем токен в АПИ
       this.services.api.setHeader(this.config.tokenHeader, token);
       // Проверяем токен выбором своего профиля
-      const res = await this.services.api.request({ url: '/api/v1/users/self' });
+      const res = await this.services.api.request<IUserSession>({ url: '/api/v1/users/self' });
 
-      if (res.data.error) {
+      if (isErrorResponse(res.data)) { // TODO: show type guards
         // Удаляем плохой токен
         window.localStorage.removeItem('token');
         this.services.api.setHeader(this.config.tokenHeader, null);
