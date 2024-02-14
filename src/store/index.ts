@@ -63,7 +63,7 @@ class Store {
       } || {}
     ) as TActions[T];
     this.actions[name] = newModule;
-    this.state[name] = this.actions[name].initState() as TState[T];
+    this.state[name] = this.actions[name]!.initState() as TState[T];
   }
 
   /**

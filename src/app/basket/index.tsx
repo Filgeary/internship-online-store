@@ -30,10 +30,10 @@ function Basket() {
       store.actions.modals?.close(modalId!)
     }, [store, modalId]),
     addToBasket: useCallback(async ()=> {
-        store.make("catalogModal", "catalog");
-        store.actions.modals?.open("catalogModal").then((selectedItems) => {
+        store.make("catalog_modal", "catalog");
+        store.actions.modals?.open("catalog_modal").then((selectedItems) => {
           store.actions.basket?.addManyToBasket(selectedItems as string[]);
-          store.delete("catalogModal");
+          store.delete("catalog_modal");
         });
     }, [store])
   }

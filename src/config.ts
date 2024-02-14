@@ -16,7 +16,7 @@ const config: Config = {
         tokenHeader: "X-Token",
       },
       //Настройки для копируемого состояния каталога
-      catalogModal: {
+      catalog_modal: {
         //Не добавлять параметры из/в адресную строку
         ignoreURL: true,
       },

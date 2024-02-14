@@ -7,4 +7,4 @@ export interface InitialStateModals {
   lastOpenModalId: number;
 }
 
-export type ModalsName = "basket" | "count" | "catalogModal"
+export type ModalsName = "basket" | "count" | "catalog_modal"

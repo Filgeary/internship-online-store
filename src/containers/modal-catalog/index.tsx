@@ -14,22 +14,22 @@ function ModalCatalog() {
   const { t } = useTranslate();
   const modalId = useModalId();
 
-  const storeName = "catalogModal";
-  const selectedItems = useSelector((state) => state[storeName].selected);
+  const storeName = "catalog_modal";
+  const selectedItems = useSelector((state) => state[storeName]?.selected);
 
   useInit(() => {
-    store.actions[storeName].initParams();
+    store.actions[storeName]?.initParams();
   }, [])
 
   const callbacks = {
     onClose: useCallback(() => {
       store.actions.modals.close(modalId!);
-      store.actions[storeName].resetSelectedItems();
+      store.actions[storeName]?.resetSelectedItems();
       store.delete(storeName);
     }, [store, modalId]),
     onAddToBasket: useCallback(() => {
       store.actions.modals.close(modalId!, selectedItems);
-      store.actions[storeName].resetSelectedItems();
+      store.actions[storeName]?.resetSelectedItems();
     }, [store, selectedItems, modalId]),
   }
 

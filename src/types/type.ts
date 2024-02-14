@@ -11,7 +11,7 @@ export type Actions = {
   [key in keyModules]: InstanceType<importModules[key]>;
 };
 
-type CopiedStores<T extends keyModules> = T | `${T}${string}`;
+type CopiedStores<T extends keyModules> = T | `${T}_${string}`;
 
 export type TActions = {
   [Key in keyModules as CopiedStores<Key>]: Actions[Key];
@@ -20,11 +20,13 @@ export type TActions = {
 export type KeysCopiedStores = keyof TActions;
 
 export type TState = {
-  [Key in keyModules as CopiedStores<Key>]: StoreState[Key];
+  [Key in keyModules as CopiedStores<Key>]: ReturnType<
+    TActions[Key]["initState"]
+  >;
 };
 
 export type ConfigModules = {
-  [Key in keyModules as CopiedStores<Key>]: ReturnType<TActions[Key]["initConfig"]>;
+  [Key in keyModules as CopiedStores<Key>]?: ReturnType<TActions[Key]["initConfig"]>;
 };
 
 export type ConfigStore = {
