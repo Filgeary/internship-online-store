@@ -9,13 +9,26 @@ import CatalogList from '@src/containers/catalog-list';
 import LocaleSelect from '@src/containers/locale-select';
 import TopHead from '@src/containers/top-head';
 import Catalog from '@src/containers/catalog';
+import useStore from '@src/hooks/use-store';
+import useInit from '@src/hooks/use-init';
 
 function Main() {
+  const store = useStore();
   const { t } = useTranslate();
 
   const options = {
     stateName: 'catalog',
   };
+
+  useInit(async () => {
+    // store.make('separateCatalog', 'catalog');
+
+    await Promise.all([
+      // store.actions.separateCatalog.initParams(),
+      store.actions.catalog.initParams(),
+      store.actions.categories.load(),
+    ]);
+  });
 
   return (
     <PageLayout>

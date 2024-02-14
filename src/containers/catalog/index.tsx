@@ -19,23 +19,27 @@ export const useCatalog = () => {
 
 type CatalogProps = {
   children?: React.ReactNode;
-  stateName: 'catalog' | 'separateCatalog';
+  stateName: string;
 };
 
-function Catalog({ children, ...props }: CatalogProps) {
+function Catalog({ children, stateName }: CatalogProps) {
+  // if (!stateName) return <></>;
+
   const store = useStore();
 
+  console.log('@', stateName);
+
   const select = useAppSelector((state) => ({
-    list: state[props.stateName].list,
-    page: state[props.stateName].params.page,
-    limit: state[props.stateName].params.limit,
-    count: state[props.stateName].count,
-    waiting: state[props.stateName].waiting,
+    list: state[stateName].list,
+    page: state[stateName].params.page,
+    limit: state[stateName].params.limit,
+    count: state[stateName].count,
+    waiting: state[stateName].waiting,
     activeItemBasket: state.basket.active,
 
-    sort: state[props.stateName].params.sort,
-    query: state[props.stateName].params.query,
-    category: state[props.stateName].params.category,
+    sort: state[stateName].params.sort,
+    query: state[stateName].params.query,
+    category: state[stateName].params.category,
     categories: state.categories.list,
   }));
 
@@ -47,11 +51,10 @@ function Catalog({ children, ...props }: CatalogProps) {
     ),
     // Пагинация
     onPaginate: useCallback(
-      (page: number) =>
-        store.actions[props.stateName].setParams({ page }, false),
+      (page: number) => store.actions[stateName].setParams({ page }, false),
       [store]
     ),
-    // генератор ссылки для пагинатора
+    // Генератор ссылки для пагинатора
     makePaginatorLink: useCallback(
       (page: string) => {
         return `?${new URLSearchParams({ page, limit: select.limit, sort: select.sort, query: select.query } as Record<string, any>)}`;
@@ -77,25 +80,21 @@ function Catalog({ children, ...props }: CatalogProps) {
     ),
     // Сортировка
     onSort: useCallback(
-      (sort: string) =>
-        store.actions[props.stateName].setParams({ sort }, false),
+      (sort: string) => store.actions[stateName].setParams({ sort }, false),
       [store]
     ),
     // Поиск
     onSearch: useCallback(
       (query: string) =>
-        store.actions[props.stateName].setParams({ query, page: 1 }, false),
+        store.actions[stateName].setParams({ query, page: 1 }, false),
       [store]
     ),
     // Сброс
-    onReset: useCallback(
-      () => store.actions[props.stateName].resetParams(),
-      [store]
-    ),
+    onReset: useCallback(() => store.actions[stateName].resetParams(), [store]),
     // Фильтр по категории
     onCategory: useCallback(
       (category: string) =>
-        store.actions[props.stateName].setParams({ category, page: 1 }, false),
+        store.actions[stateName].setParams({ category, page: 1 }, false),
       [store]
     ),
   };

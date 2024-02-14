@@ -23,11 +23,6 @@ class Store {
   state: TGlobalState & Record<string, any>;
   actions: TGlobalActions & Record<string, any>;
 
-  /**
-   * @param services {Services}
-   * @param config {Object}
-   * @param initState {Object}
-   */
   constructor(services: Services, config: TConfig | {} = {}, initState = {}) {
     this.services = services;
     this.config = config as TConfig['store'];
@@ -69,10 +64,12 @@ class Store {
    * Создать копию, на основе существующего состояния
    * @param name {String}
    * @param base {String}
+   * @param configByName {String} Какой из конфигов по имени использовать
    */
-  make(name: string, base: keyof typeof modules) {
+  createStore(name: string, base: keyof typeof modules, configByName?: string) {
+    const configName = configByName || name;
     const configModule =
-      this.config?.modules[name as keyof TConfig['store']['modules']];
+      this.config?.modules[configName as keyof TConfig['store']['modules']];
 
     this.actions[name] = new modules[base](
       this,
@@ -83,6 +80,14 @@ class Store {
       } || {}
     );
     this.state[name] = this.actions[name].initState();
+  }
+
+  /**
+   * Удалить стор по имени
+   */
+  deleteStore(name: string) {
+    delete this.actions[name];
+    delete this.state[name];
   }
 
   /**

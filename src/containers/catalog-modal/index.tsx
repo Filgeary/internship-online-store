@@ -17,13 +17,21 @@ function CatalogModal() {
   const [updatedItems, setUpdatedItems] = useState<
     Record<string | number, number>
   >({});
+  const [catalogName, setCatalogName] = useState('');
   const [isSuccess, setIsSuccess] = useState(false);
 
   const modalId = useModalId();
   const closeParentFn = useCloseParentFn(modalId);
 
   useEffect(() => {
-    store.actions.separateCatalog.initParams();
+    const name = `catalog-${self.crypto.randomUUID()}`;
+
+    setCatalogName(name);
+
+    store.createStore(name, 'catalog', 'separateCatalog');
+    store.actions[name].initParams();
+
+    return () => store.deleteStore(name);
   }, []);
 
   const callbacks = {
@@ -83,16 +91,18 @@ function CatalogModal() {
 
   return (
     <Modal onClose={callbacks.closeModal} title={t('catalogModal.title')}>
-      <Catalog stateName='separateCatalog'>
-        <CatalogFilter />
+      {catalogName && (
+        <Catalog stateName={catalogName}>
+          <CatalogFilter />
 
-        <CatalogListAppend
-          countOfItems={updatedItems}
-          onItemClick={callbacks.update}
-          onItemDelete={callbacks.delete}
-          appendixOfItem={renders.appendixText}
-        />
-      </Catalog>
+          <CatalogListAppend
+            countOfItems={updatedItems}
+            onItemClick={callbacks.update}
+            onItemDelete={callbacks.delete}
+            appendixOfItem={renders.appendixText}
+          />
+        </Catalog>
+      )}
 
       <Entities>
         {isSuccess && (
