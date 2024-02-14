@@ -16,30 +16,24 @@ function Basket() {
   const modalId = useModalId();
 
   const select = useSelector((state) => ({
-    list: state.basket.list,
-    amount: state.basket.amount,
-    sum: state.basket.sum,
-    waiting: state.basket.waiting
+    list: state.basket?.list,
+    amount: state.basket?.amount,
+    sum: state.basket?.sum,
+    waiting: state.basket?.waiting,
   }));
-
-  const options = {
-    modalName: "catalogModal",
-    storeName: "copyCatalog",
-    baseStore: "catalog"
-  }
 
   const callbacks = {
     // Удаление из корзины
-    removeFromBasket: useCallback((_id: string) => store.actions.basket.removeFromBasket(_id), [store]),
+    removeFromBasket: useCallback((_id: string) => store.actions.basket?.removeFromBasket(_id), [store]),
     // Закрытие любой модалки
     closeModal: useCallback(() => {
-      store.actions.modals.close(modalId!)
+      store.actions.modals?.close(modalId!)
     }, [store, modalId]),
     addToBasket: useCallback(async ()=> {
-        store.make(options.storeName, options.baseStore);
-        store.actions.modals.open(options.modalName).then((selectedItems) => {
-          store.actions.basket.addManyToBasket(selectedItems as string[]);
-          store.delete(options.storeName);
+        store.make("catalogModal", "catalog");
+        store.actions.modals?.open("catalogModal").then((selectedItems) => {
+          store.actions.basket?.addManyToBasket(selectedItems as string[]);
+          store.delete("catalogModal");
         });
     }, [store])
   }

@@ -2,20 +2,22 @@
   "title": "Магазин",
   "menu.main": "Главная",
   "basket.title": "Корзина",
-  "basket.open": "Перейти",
-  "basket.close": "Закрыть",
-  "basket.inBasket": "В корзине",
-  "basket.empty": "пусто",
-  "basket.total": "Итого",
-  "basket.unit": "шт",
-  "basket.delete": "Удалить",
-  "basket.articles": {
-    "one": "товар",
-    "few": "товара",
-    "many": "товаров",
-    "other": "товара"
+  "basket": {
+    "open": "Перейти",
+    "close": "Закрыть",
+    "inBasket": "В корзине",
+    "empty": "пусто",
+    "total": "Итого",
+    "unit": "шт",
+    "delete": "Удалить",
+    "articles": {
+      "one": "товар",
+      "few": "товара",
+      "many": "товаров",
+      "other": "товара"
+    },
+    "choice": "Выбрать еще товар"
   },
-  "basket.choice": "Выбрать еще товар",
   "article.add": "Добавить",
   "filter.reset": "Сбросить",
   "auth.title": "Вход",

@@ -20,7 +20,7 @@ function Article() {
   const params = useParams();
 
   useInit(() => {
-    store.actions.article.load(params.id!);
+    store.actions.article?.load(params.id!);
   }, [params.id]);
 
   const select = useSelector((state) => ({

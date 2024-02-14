@@ -31,7 +31,7 @@ function TopHead() {
 
   return (
     <SideLayout side="end" padding="small">
-      {select.exists ? <Link to="/profile">{select.user.profile.name}</Link> : ''}
+      {select.exists ? <Link to="/profile">{select.user.profile?.name}</Link> : ''}
       {select.exists
         ? <button onClick={callbacks.onSignOut}>{t('session.signOut')}</button>
         : <button onClick={callbacks.onSignIn}>{t('session.signIn')}</button>

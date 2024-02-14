@@ -1,11 +1,11 @@
 import StoreModule from "../module";
 import exclude from "@src/utils/exclude";
-import type { InitialStateCatalog, Params, ResponseCatalog } from "./type";
+import type { InitConfigCatalog, InitialStateCatalog, Params, ResponseCatalog } from "./type";
 
 /**
  * Состояние каталога - параметры фильтра исписок товара
  */
-class CatalogState extends StoreModule<"catalog"> {
+class CatalogState extends StoreModule<InitialStateCatalog, InitConfigCatalog> {
   /**
    * Начальное состояние
    * @return {Object}
@@ -24,6 +24,10 @@ class CatalogState extends StoreModule<"catalog"> {
       selected: [],
       waiting: false,
     };
+  }
+
+  initConfig(): InitConfigCatalog {
+    return {} as InitConfigCatalog;
   }
 
   /**
@@ -72,7 +76,10 @@ class CatalogState extends StoreModule<"catalog"> {
    * @param [replaceHistory] {Boolean} Заменить адрес (true) или новая запись в истории браузера (false)
    * @returns {Promise<void>}
    */
-  async setParams(newParams: Partial<Params> = {}, replaceHistory: boolean = false): Promise<void> {
+  async setParams(
+    newParams: Partial<Params> = {},
+    replaceHistory: boolean = false
+  ): Promise<void> {
     const params = { ...this.getState().params, ...newParams };
 
     // Установка новых параметров и признака загрузки

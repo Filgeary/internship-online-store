@@ -1,17 +1,17 @@
-import type { Config } from "@src/config";
 import Services from "@src/services";
 import type { RequestArgs, ResponseApi } from "./type";
+import type { ConfigApi } from "@src/types/type";
 
 class APIService {
   services: Services;
-  config: Config["api"];
+  config: ConfigApi;
   defaultHeaders: Record<string, string>;
 
   /**
    * @param services {Services} Менеджер сервисов
    * @param config {Object}
    */
-  constructor(services: Services, config: Config["api"] = {} as Config["api"]) {
+  constructor(services: Services, config: ConfigApi = {} as ConfigApi) {
     this.services = services;
     this.config = config;
     this.defaultHeaders = {

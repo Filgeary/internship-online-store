@@ -1,10 +1,11 @@
+import { Config } from "./types/type";
+
 const isProduction = process.env.NODE_ENV === 'production';
 
-export type Config = typeof config;
 /**
  * Настройки сервисов
  */
-const config = {
+const config: Config = {
   store: {
     // Логировать установку состояния?
     log: !isProduction,
@@ -15,7 +16,7 @@ const config = {
         tokenHeader: "X-Token",
       },
       //Настройки для копируемого состояния каталога
-      copyCatalog: {
+      catalogModal: {
         //Не добавлять параметры из/в адресную строку
         ignoreURL: true,
       },

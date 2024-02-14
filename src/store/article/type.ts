@@ -25,7 +25,7 @@ export interface Article {
 }
 
 export interface InitialStateArticle {
-  data: Article | {},
+  data: Article,
   waiting: boolean
 }
 

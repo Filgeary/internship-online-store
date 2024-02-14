@@ -22,3 +22,7 @@ export interface ResponseCatalog {
     items: Article[]
   }
 }
+
+export type InitConfigCatalog = {
+  ignoreURL: boolean;
+};

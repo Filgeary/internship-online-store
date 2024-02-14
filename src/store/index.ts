@@ -1,22 +1,21 @@
 import * as modules from './exports.ts';
-import type { Config } from '@src/config.ts';
 import Services from '@src/services.ts';
-import type { Actions, AllStoreNames, StoreState, importModules, keyModules } from './type.ts';
+import type { ConfigStore, KeysCopiedStores, TActions, TState, importModules, keyModules } from '../types/type.ts';
 
 /**
  * Хранилище состояния приложения
  */
 class Store {
   services: Services;
-  config: Config["store"];
-  listeners: Function[];
-  actions: Actions;
-  state: StoreState;
+  config: ConfigStore;
+  listeners: ((state: TState) => void)[];
+  actions: TActions;
+  state: TState;
 
   constructor(
     services: Services,
-    config = {} as Config["store"],
-    initState = {} as StoreState
+    config = {} as ConfigStore,
+    initState: TState = {} as TState
   ) {
     this.services = services;
     this.config = config;
@@ -32,44 +31,45 @@ class Store {
      * session: SessionState,
      * profile: ProfileState
      * }} */
-    this.actions = {} as Actions;
+    this.actions = {} as TActions;
     const keys = Object.keys(modules) as keyModules[];
     for (const name of keys) {
       this.create(name);
     }
-    console.log(this.actions);
   }
 
   create<Key extends keyModules>(name: Key) {
     const module = modules[name] as importModules[Key];
-    const action = new module(
+    const newModule = new module(
       this,
       name,
       this.config?.modules[name] || {}
-    ) as Actions[Key];
-    this.actions[name] = action;
-    this.state[name] = this.actions[name].initState() as StoreState[Key];
+    ) as TActions[Key];
+    this.actions[name] = newModule;
+    this.state[name] = this.actions[name].initState() as TState[Key];
   }
 
   /**
    * Создание копии стейта
    */
-  make(name: string, base: string) {
-    this.actions[name] = new modules[base](
+  make<T extends KeysCopiedStores, K extends keyModules>(name: T, base: K) {
+    const module = modules[base] as importModules[K];
+    const newModule = new module(
       this,
       name,
       {
         ...this.config?.modules[base],
         ...this.config?.modules[name],
       } || {}
-    );
-    this.state[name] = this.actions[name].initState();
+    ) as TActions[T];
+    this.actions[name] = newModule;
+    this.state[name] = this.actions[name].initState() as TState[T];
   }
 
   /**
    * Удаление копии стейта
    */
-  delete(name: string) {
+  delete<T extends KeysCopiedStores>(name: T) {
     delete this.actions[name];
     delete this.state[name];
   }
@@ -78,7 +78,7 @@ class Store {
    * @param listener {Function}
    * @returns {Function} Функция отписки
    */
-  subscribe(listener: Function): Function {
+  subscribe(listener: (state: TState) => void): () => void {
     this.listeners.push(listener);
     // Возвращается функция для удаления добавленного слушателя
     return () => {
@@ -99,15 +99,15 @@ class Store {
    * profile: Object,
    * }}
    */
-  getState(): StoreState {
-    return this.state as StoreState;
+  getState(): TState {
+    return this.state;
   }
 
   /**
    * Установка состояния
    * @param newState {Object}
    */
-  setState(newState: StoreState, description = "setState") {
+  setState(newState: TState, description = "setState") {
     if (this.config.log) {
       console.group(
         `%c${"store.setState"} %c${description}`,

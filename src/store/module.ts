@@ -1,17 +1,15 @@
-import type { Config } from "@src/config";
 import Store from ".";
 import Services from "@src/services";
-import type { StoreState } from "./type";
+import { KeysCopiedStores } from "../types/type";
 /**
  * Базовый класс для модулей хранилища
  * Для группировки действий над внешним состоянием
  */
-export type StoreNames = keyof StoreState | keyof Config["store"]["modules"];
 
-class StoreModule<T extends StoreNames> {
+class StoreModule<State, Config = object> {
   store: Store;
-  name: string;
-  config: Config["store"]["modules"][T];
+  name: KeysCopiedStores;
+  config: Config;
   services: Services;
 
   /**
@@ -19,27 +17,27 @@ class StoreModule<T extends StoreNames> {
    * @param name {String}
    * @param [config] {Object}
    */
-  constructor(
-    store: Store,
-    name: string,
-    config: Config["store"]["modules"][T] = {} as Config["store"]["modules"][T]
-  ) {
+  constructor(store: Store, name: KeysCopiedStores, config: Config | {} = {}) {
     this.store = store;
     this.name = name;
-    this.config = config as Config["store"]["modules"][T];
+    this.config = config as Config;
     /** @type {Services} */
     this.services = store.services;
   }
 
-  initState(): StoreState[T] {
-    return {} as StoreState[T];
+  initState(): State {
+    return {} as State;
   }
 
-  getState(): StoreState[T] {
-    return this.store.getState()[this.name as T];
+  initConfig(): Config {
+    return {} as Config;
   }
 
-  setState(newState: StoreState[T], description = "setState") {
+  getState(): State {
+    return this.store.getState()[this.name] as State;
+  }
+
+  setState(newState: State, description = "setState") {
     this.store.setState(
       {
         ...this.store.getState(),

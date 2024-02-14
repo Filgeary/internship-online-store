@@ -14,7 +14,7 @@ function ModalCatalog() {
   const { t } = useTranslate();
   const modalId = useModalId();
 
-  const storeName = "copyCatalog";
+  const storeName = "catalogModal";
   const selectedItems = useSelector((state) => state[storeName].selected);
 
   useInit(() => {

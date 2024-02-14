@@ -45,3 +45,7 @@ export type ResponseDataSessionRemind = ResponseDataSessionRemindSuccess &
   ResponseDataSessionError;
 
 export type ResponseDataSession = ResponseDataSessionSuccess & ResponseDataSessionError;
+
+export type InitConfigSession = {
+  tokenHeader: "X-Token";
+};

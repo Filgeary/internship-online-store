@@ -1,25 +1,25 @@
 import {useLayoutEffect, useMemo, useState} from "react";
 import shallowequal from 'shallowequal';
 import useStore from "./use-store";
-import { StoreState } from "@src/store/type";
+import { StoreState, TState } from "@src/types/type";
 
 /**
  * Хук для выборки данных из store и отслеживания их изменения
  * @param selectorFunc {Function}
  * @return {*}
  */
-export default function useSelector(
-  selectorFunc: (arg: StoreState) => any
-): any {
+export default function useSelector<T>(
+  selectorFunc: (arg: TState) => T
+): T {
   const store = useStore();
 
-  const [state, setState] = useState(() => selectorFunc(store.getState()));
+  const [state, setState] = useState<T>(() => selectorFunc(store.getState()));
 
-  const unsubscribe: any = useMemo(() => {
+  const unsubscribe = useMemo(() => {
     // Подписка. Возврат функции для отписки
     return store.subscribe(() => {
       const newState = selectorFunc(store.getState());
-      setState((prevState: any) =>
+      setState((prevState) =>
         shallowequal(prevState, newState) ? prevState : newState
       );
     });

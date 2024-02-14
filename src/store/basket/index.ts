@@ -5,7 +5,7 @@ import type { InitialStateBasket } from "./type";
 /**
  * Покупательская корзина
  */
-class BasketState extends StoreModule<"basket"> {
+class BasketState extends StoreModule<InitialStateBasket> {
   initState(): InitialStateBasket {
     return {
       list: [],
@@ -39,7 +39,7 @@ class BasketState extends StoreModule<"basket"> {
         url: `/api/v1/articles/${_id}`,
       });
 
-      if(res.status === 200) {
+      if (res.status === 200) {
         const item = res.data.result;
 
         list.push({ ...item, amount: count }); // list уже новый, в него можно пушить.

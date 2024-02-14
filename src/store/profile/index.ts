@@ -4,13 +4,12 @@ import type { InitialStateProfile, ResponseProfile } from "./type";
 /**
  * Детальная информация о пользователе
  */
-class ProfileState extends StoreModule<"profile"> {
-
+class ProfileState extends StoreModule<InitialStateProfile> {
   initState(): InitialStateProfile {
     return {
       data: {},
-      waiting: false // признак ожидания загрузки
-    }
+      waiting: false, // признак ожидания загрузки
+    };
   }
 
   /**
@@ -21,17 +20,22 @@ class ProfileState extends StoreModule<"profile"> {
     // Сброс текущего профиля и установка признака ожидания загрузки
     this.setState({
       data: {},
-      waiting: true
+      waiting: true,
     });
 
-    const res = await this.services.api.request<ResponseProfile>({url: `/api/v1/users/self`});
+    const res = await this.services.api.request<ResponseProfile>({
+      url: `/api/v1/users/self`,
+    });
 
-    if(res.status === 200) {
+    if (res.status === 200) {
       // Профиль загружен успешно
-      this.setState({
-        data: res.data.result,
-        waiting: false
-      }, 'Загружен профиль из АПИ');
+      this.setState(
+        {
+          data: res.data.result,
+          waiting: false,
+        },
+        "Загружен профиль из АПИ"
+      );
     }
   }
 }

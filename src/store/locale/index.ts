@@ -1,11 +1,10 @@
 import StoreModule from "../module";
 import { InitialStateLocale } from "./type";
 
-class LocaleState extends StoreModule<"locale"> {
-
+class LocaleState extends StoreModule<InitialStateLocale> {
   initState(): InitialStateLocale {
     return {
-      lang: 'ru'
+      lang: "ru",
     };
   }
 
@@ -14,7 +13,7 @@ class LocaleState extends StoreModule<"locale"> {
    * @param lang
    */
   setLang(lang: "ru" | "en") {
-    this.setState({lang}, 'Установлена локаль');
+    this.setState({ lang }, "Установлена локаль");
   }
 }
 

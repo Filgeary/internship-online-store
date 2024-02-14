@@ -1,9 +1,10 @@
 import {PropsWithChildren, createContext, useMemo, useState} from "react";
-import translate, { Text } from "./translate";
+import translate from "./translate";
+import { Lang, Text } from "./type";
 
 export interface Translate {
-  lang: string;
-  setLang: React.Dispatch<React.SetStateAction<string>>;
+  lang: Lang;
+  setLang: React.Dispatch<React.SetStateAction<Lang>>;
   t: (text: Text, number?: number) => string;
 }
 
@@ -18,7 +19,7 @@ export const I18nContext: React.Context<Translate> = createContext<Translate>({l
  * @return {JSX.Element}
  */
 export function I18nProvider({ children }: PropsWithChildren<{}>): JSX.Element {
-  const [lang, setLang] = useState("ru");
+  const [lang, setLang] = useState<Lang>("ru");
 
   const i18n = useMemo(
     () => ({

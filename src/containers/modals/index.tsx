@@ -1,13 +1,14 @@
-import { memo, Fragment } from "react";
+import { Fragment } from "react";
 import useSelector from "@src/hooks/use-selector";
 import Basket from "../../app/basket";
 import CountItemModal from "@src/containers/count-item-modal";
 import ModalCatalog from "../modal-catalog";
+import { ModalsName } from "@src/store/modals/type";
 
 function Modals() {
   const activeModals = useSelector((state) => state.modals.list);
 
-  const modals = (name: string) => {
+  const modals = (name: ModalsName) => {
     switch (name) {
       case "basket":
         return <Basket />;
