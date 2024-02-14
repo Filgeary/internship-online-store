@@ -21,10 +21,7 @@ function Main() {
   };
 
   useInit(async () => {
-    // store.make('separateCatalog', 'catalog');
-
     await Promise.all([
-      // store.actions.separateCatalog.initParams(),
       store.actions.catalog.initParams(),
       store.actions.categories.load(),
     ]);

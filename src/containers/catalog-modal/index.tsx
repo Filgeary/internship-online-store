@@ -92,7 +92,7 @@ function CatalogModal() {
   return (
     <Modal onClose={callbacks.closeModal} title={t('catalogModal.title')}>
       {catalogName && (
-        <Catalog stateName={catalogName}>
+        <Catalog stateName={catalogName as `catalog-${string}`}>
           <CatalogFilter />
 
           <CatalogListAppend

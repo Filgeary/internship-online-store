@@ -19,15 +19,11 @@ export const useCatalog = () => {
 
 type CatalogProps = {
   children?: React.ReactNode;
-  stateName: string;
+  stateName: 'catalog' | `catalog-${string}`;
 };
 
 function Catalog({ children, stateName }: CatalogProps) {
-  // if (!stateName) return <></>;
-
   const store = useStore();
-
-  console.log('@', stateName);
 
   const select = useAppSelector((state) => ({
     list: state[stateName].list,

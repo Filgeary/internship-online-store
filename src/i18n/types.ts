@@ -26,7 +26,7 @@ export type TAllFlattenKeys = TFlattenKeys<
 
 export type TTranslateFn = (
   lang: TLangs,
-  text: TAllLangsPick | Array<TAllFlattenKeys>,
-  plural: number
+  text: TAllLangsPick | Array<TAllFlattenKeys> | string[] | string,
+  plural?: number
 ) => string;
 export type TUserTranslateFn = (text: TAllLangsPick, plural?: number) => string;
