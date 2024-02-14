@@ -3,7 +3,7 @@ import StoreModule from "../module";
 import * as modals from "@src/app/export-modals";
 import { ModalKeys, IModalsInitState } from "./types";
 
-class ModalsState extends StoreModule<"modals", IModalsInitState> {
+class ModalsState extends StoreModule<IModalsInitState> {
   _codeGenerator = codeGenerator();
 
   initState(): IModalsInitState {

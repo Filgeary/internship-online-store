@@ -1,11 +1,12 @@
 import StoreModule from "../module";
 import exclude from "@src/utils/exclude";
 import { ICatalogInitState, ICatalogResponseApi, ICatalogStateValidParams } from "./types";
+import { ConfigStoreModules } from "@src/types";
 
 /**
  * Состояние каталога - параметры фильтра исписок товара
  */
-class CatalogState extends StoreModule<"catalog" | "catalogModal", ICatalogInitState> {
+class CatalogState extends StoreModule<ICatalogInitState, ConfigStoreModules["catalog" | "catalogModal"]> {
 
   /**
    * Начальное состояние
@@ -44,6 +45,7 @@ class CatalogState extends StoreModule<"catalog" | "catalogModal", ICatalogInitS
    * @return {Promise<void>}
    */
   async initParams(newParams = {}) {
+    console.log(this.name);
     let validParams = {} as ICatalogStateValidParams;
     if (this.config.readParams !== false) {
       const urlParams = new URLSearchParams(window.location.search);
@@ -53,6 +55,7 @@ class CatalogState extends StoreModule<"catalog" | "catalogModal", ICatalogInitS
       if (urlParams.has('query')) validParams.query = urlParams.get('query');
       if (urlParams.has('category')) validParams.category = urlParams.get('category');
     }
+    console.log({...this.initState().params, ...validParams, ...newParams});
     await this.setParams({...this.initState().params, ...validParams, ...newParams}, true);
   }
 

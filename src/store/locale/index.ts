@@ -5,7 +5,7 @@ interface ILocaleInitState {
   lang: TranslationsKeys
 }
 
-class LocaleState extends StoreModule<"locale", ILocaleInitState> {
+class LocaleState extends StoreModule<ILocaleInitState> {
 
   initState(): ILocaleInitState {
     return {

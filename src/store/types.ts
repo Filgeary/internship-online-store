@@ -22,7 +22,7 @@ export type StoreModules = {
 }
 
 export type StoreBasicInitStates = {
-    [K in BasicStoreModuleKeys]: ReturnType<InstanceType<importModules[K]>["initState"]>
+    [K in BasicStoreModuleKeys]: ReturnType<BasicStoreModules[K]["initState"]>
 }
 export type StoreInitStates = {
     [Key in BasicStoreModuleKeys as StoreModuleNameTemplate<Key>]: StoreBasicInitStates[Key]

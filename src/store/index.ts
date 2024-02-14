@@ -43,7 +43,7 @@ class Store {
 
   // Создание state
   #create<Key extends StoreModuleKeys>(baseName: BasicStoreModuleKeys & Key, configName: StoreConfigModulesKeys = baseName, name: Key = baseName) {
-    this.actions[name] = new modules[baseName](this, baseName, this.config?.modules?.[configName] || {}) as StoreModules[Key];
+    this.actions[name] = new modules[baseName](this, name, this.config?.modules?.[configName] || {}) as StoreModules[Key];
     this.state[name] = this.actions[baseName].initState() as StoreInitStates[Key];
   }
 

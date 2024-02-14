@@ -4,7 +4,7 @@ import { IArticleInitState, IArticleStateResponse } from "./types";
 /**
  * Детальная ифнормация о товаре для страницы товара
  */
-class ArticleState extends StoreModule<"article", IArticleInitState> {
+class ArticleState extends StoreModule<IArticleInitState> {
 
   initState(): IArticleInitState {
     return {

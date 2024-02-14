@@ -1,11 +1,12 @@
 import StoreModule from "../module";
 import simplifyErrors from "@src/utils/simplify-errors";
 import { ISessionInitState, ISessionResponseRemind, ISessionResponseSignIn, ISessionSignInData } from "./types";
+import { ConfigStoreModules } from "@src/types";
 
 /**
  * Сессия
  */
-class SessionState extends StoreModule<"session", ISessionInitState> {
+class SessionState extends StoreModule<ISessionInitState, ConfigStoreModules["session"]> {
   /**
    * Начальное состояние
    * @return {Object}

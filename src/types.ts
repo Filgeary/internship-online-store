@@ -12,7 +12,7 @@ export type ConfigStoreModules = {
     readParams: boolean;
     saveParams: boolean;
   };
-} & Record<BasicStoreModuleKeys, {}>;
+} & Record<BasicStoreModuleKeys, object>;
 
 export interface StoreConfig {
   log: boolean;

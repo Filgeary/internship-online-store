@@ -5,7 +5,7 @@ import { ICategoriesInitState, ICategoriesResponse } from "./types";
 /**
  * Список категорий
  */
-class CategoriesState extends StoreModule<"categories", ICategoriesInitState> {
+class CategoriesState extends StoreModule<ICategoriesInitState> {
 
   /**
    * Начальное состояние
