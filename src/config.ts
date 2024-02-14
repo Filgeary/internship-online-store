@@ -1,19 +1,11 @@
-import type { TKeyOfModules } from "./store";
+import type { TConfig } from "./store";
 
 const isProduction = process.env.NODE_ENV === "production";
-
-export type TConfig = typeof config
-
-type MappedKeyOfModules = {
-  [key in TKeyOfModules]: {
-    [key: string]: any;
-  }
-}
 
 /**
  * Настройки сервисов
  */
-const config = {
+const config: TConfig = {
   store: {
     // Логировать установку состояния?
     log: !isProduction,
@@ -32,7 +24,7 @@ const config = {
       profile: {},
       categories: {},
       locale: {},
-    } satisfies MappedKeyOfModules,
+    },
   },
   api: {
     baseUrl: "",

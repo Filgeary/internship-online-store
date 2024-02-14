@@ -1,11 +1,11 @@
 import StoreModule from "../module";
 
-type InitialState = {
+type InitialLocaleState = {
   lang: string
 }
 
-class LocaleState extends StoreModule<'locale'> {
-  initState(): InitialState {
+class LocaleState extends StoreModule<InitialLocaleState> {
+  initState(): InitialLocaleState {
     return {
       lang: 'ru'
     };

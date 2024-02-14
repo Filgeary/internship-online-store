@@ -3,7 +3,7 @@ import StoreModule from "../module";
 
 import type { IArticle } from "@src/types/IArticle";
 
-type InitialState = {
+type InitialCatalogState = {
   list: IArticle[],
   params: {
     page: number,
@@ -16,11 +16,15 @@ type InitialState = {
   waiting: boolean
 }
 
+type CatalogConfig = {
+  shouldWriteToBrowserHistory: boolean,
+}
+
 /**
  * Состояние каталога - параметры фильтра и список товара
  */
-class CatalogState extends StoreModule<'catalog'> {
-  initState(): InitialState {
+class CatalogState extends StoreModule<InitialCatalogState, CatalogConfig> {
+  initState(): InitialCatalogState {
     return {
       list: [],
       params: {
@@ -35,17 +39,21 @@ class CatalogState extends StoreModule<'catalog'> {
     }
   }
 
+  initConfig(): CatalogConfig {
+    return {} as CatalogConfig
+  }
+
   /**
    * Инициализация параметров.
    * Восстановление из адреса
    */
-  async initParams(newParams: InitialState['params'] | {} = {}) {
+  async initParams(newParams: InitialCatalogState['params'] | {} = {}) {
     const shouldWriteToBrowserHistory = this.name !== 'catalog'
       ? this.config.shouldWriteToBrowserHistory
       : true;
 
     const urlParams = new URLSearchParams(shouldWriteToBrowserHistory ? window.location.search : '');
-    let validParams = {} as InitialState['params'];
+    let validParams = {} as InitialCatalogState['params'];
     if (urlParams.has('page')) validParams.page = Number(urlParams.get('page')) || 1;
     if (urlParams.has('limit')) validParams.limit = Math.min(Number(urlParams.get('limit')) || 10, 50);
     if (urlParams.has('sort')) validParams.sort = urlParams.get('sort') || '';
@@ -57,7 +65,7 @@ class CatalogState extends StoreModule<'catalog'> {
   /**
    * Сброс параметров к начальным
    */
-  async resetParams(newParams: InitialState['params'] | {} = {}) {
+  async resetParams(newParams: InitialCatalogState['params'] | {} = {}) {
     // Итоговые параметры из начальных, из URL и из переданных явно
     const params = { ...this.initState().params, ...newParams };
     // Установка параметров и загрузка данных
@@ -67,7 +75,7 @@ class CatalogState extends StoreModule<'catalog'> {
   /**
    * Установка параметров и загрузка списка товаров
    */
-  async setParams(newParams: InitialState['params'] | {} = {}, replaceHistory = false) {
+  async setParams(newParams: InitialCatalogState['params'] | {} = {}, replaceHistory = false) {
     const shouldWriteToBrowserHistory = this.name !== 'catalog'
       ? this.config.shouldWriteToBrowserHistory
       : true;

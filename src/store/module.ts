@@ -1,33 +1,36 @@
-import type { TConfig } from "@src/config";
 import type { TServices } from "@src/services";
-import type { TKeyOfModules, TState, TStore } from ".";
+import type { TKeyOfModules, TStore } from ".";
 
 /**
  * Базовый класс для модулей хранилища
  * Для группировки действий над внешним состоянием
  */
-class StoreModule<T extends TKeyOfModules> {
+class StoreModule<State, Config = object> {
   store: TStore;
   name: TKeyOfModules;
-  config: TConfig['store']['modules'][T];
+  config: Config;
   services: TServices
 
-  constructor(store: TStore, name: TKeyOfModules, config: TConfig['store']['modules'][T] | {} = {}) {
+  constructor(store: TStore, name: TKeyOfModules, config: Config | {} = {}) {
     this.store = store;
     this.name = name;
-    this.config = config as TConfig['store']['modules'][T];
+    this.config = config as Config;
     this.services = store.services;
   }
 
-  initState() {
-    return {}
+  initConfig(): Config {
+    return {} as Config
+  }
+
+  initState(): State {
+    return {} as State
   }
 
   getState() {
-    return this.store.getState()[this.name] as TState[T];
+    return this.store.getState()[this.name] as State;
   }
 
-  setState(newState: TState[T], description = 'setState') {
+  setState(newState: State, description = 'setState') {
     this.store.setState({
       ...this.store.getState(),
       [this.name]: newState

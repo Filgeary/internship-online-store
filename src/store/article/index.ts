@@ -2,7 +2,7 @@ import StoreModule from "../module";
 
 import type { IArticle } from "@src/types/IArticle";
 
-type InitialState = {
+type InitialArticleState = {
   data: IArticle | {};
   waiting: boolean;
 }
@@ -10,8 +10,8 @@ type InitialState = {
 /**
  * Детальная информация о товаре для страницы товара
  */
-class ArticleState extends StoreModule<'article'> {
-  initState(): InitialState {
+class ArticleState extends StoreModule<InitialArticleState> {
+  initState(): InitialArticleState {
     return {
       data: {},
       waiting: false

@@ -1,6 +1,6 @@
 import StoreModule from "../module";
 
-type InitialState = {
+type InitialCategoriesState = {
   list: any[];
   waiting: boolean;
 }
@@ -8,8 +8,8 @@ type InitialState = {
 /**
  * Список категорий
  */
-class CategoriesState extends StoreModule<'categories'> {
-  initState(): InitialState {
+class CategoriesState extends StoreModule<InitialCategoriesState> {
+  initState(): InitialCategoriesState {
     return {
       list: [],
       waiting: false

@@ -2,45 +2,45 @@ import APIService from "./api";
 import Store from "./store";
 import createStoreRedux from "./store-redux";
 
-import type { TConfig } from "./config";
+import type { TConfig } from "./store";
 
 export type TServices = Services;
 
 class Services {
   config: TConfig;
-  _api: APIService | null;
-  _store: Store | null;
-  _redux: any;
+  #api: APIService | null;
+  #store: Store | null;
+  #redux: any;
 
   constructor(config: TConfig) {
     this.config = config;
-    this._api = null;
-    this._store = null;
-    this._redux = null;
+    this.#api = null;
+    this.#store = null;
+    this.#redux = null;
   }
 
   get api() {
-    if (!this._api) {
-      this._api = new APIService(this, this.config.api);
+    if (!this.#api) {
+      this.#api = new APIService(this, this.config.api);
     }
-    return this._api;
+    return this.#api;
   }
 
   get store() {
-    if (!this._store) {
-      this._store = new Store(this, this.config.store);
+    if (!this.#store) {
+      this.#store = new Store(this, this.config.store);
     }
-    return this._store;
+    return this.#store;
   }
 
   /**
    * Redux store
    */
   get redux() {
-    if (!this._redux) {
-      this._redux = createStoreRedux(this, this.config.redux);
+    if (!this.#redux) {
+      this.#redux = createStoreRedux(this, this.config.redux);
     }
-    return this._redux;
+    return this.#redux;
   }
 }
 

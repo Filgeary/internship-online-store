@@ -3,7 +3,7 @@ import StoreModule from "../module";
 import type { IArticle } from "@src/types/IArticle";
 type ExtendedArticle = IArticle & { amount: number };
 
-type InitialState = {
+type InitialBasketState = {
   list: ExtendedArticle[];
   sum: number;
   amount: number;
@@ -12,8 +12,8 @@ type InitialState = {
 /**
  * Покупательская корзина
  */
-class BasketState extends StoreModule<'basket'> {
-  initState(): InitialState {
+class BasketState extends StoreModule<InitialBasketState> {
+  initState(): InitialBasketState {
     return {
       list: [],
       sum: 0,

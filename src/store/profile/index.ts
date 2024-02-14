@@ -2,7 +2,7 @@ import StoreModule from "../module";
 
 import type { IUserProfile } from "@src/types/IUserProfile";
 
-type InitialState = {
+type InitialProfileState = {
   data: IUserProfile | {};
   waiting: boolean;
 }
@@ -10,8 +10,8 @@ type InitialState = {
 /**
  * Детальная информация о пользователе
  */
-class ProfileState extends StoreModule<'profile'> {
-  initState(): InitialState {
+class ProfileState extends StoreModule<InitialProfileState> {
+  initState(): InitialProfileState {
     return {
       data: {} as IUserProfile,
       waiting: false

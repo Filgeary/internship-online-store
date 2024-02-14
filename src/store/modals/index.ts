@@ -1,7 +1,7 @@
 import codeGenerator from "@src/utils/code-generator";
 import StoreModule from "../module";
 
-type InitialState = {
+type InitialModalsState = {
   data: {
     name: string;
     cb: Function;
@@ -9,14 +9,14 @@ type InitialState = {
   }[];
 };
 
-class ModalsState extends StoreModule<'modals'> {
+class ModalsState extends StoreModule<InitialModalsState> {
   codeGenerator = codeGenerator();
 
   generateID() {
     return this.codeGenerator();
   }
 
-  initState(): InitialState {
+  initState(): InitialModalsState {
     return {
       data: [],
     };

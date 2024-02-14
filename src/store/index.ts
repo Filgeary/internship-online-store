@@ -1,8 +1,6 @@
 import * as modules from "./exports";
 
-import type { TConfig } from "@src/config";
 import type { TServices } from "@src/services";
-import type { ValueOf } from "type-fest";
 
 export type TTypeOfModules = typeof modules;
 export type TKeyOfModules = keyof TTypeOfModules;
@@ -14,10 +12,40 @@ export type TStore = Store
 type TActions = {
   [name in TKeyOfModules as TExtendedKeyOfModules<name>]: InstanceType<TTypeOfModules[name]>
 }
-type ValueOfTActions = ValueOf<TActions>;
 
 export type TState = {
   [name in TKeyOfModules as TExtendedKeyOfModules<name>]: ReturnType<TActions[name]["initState"]>
+}
+
+export type TAllConfigs = {
+  [name in TKeyOfModules]: ReturnType<TActions[name]["initConfig"]>
+}
+
+type TKeyOfServices = keyof Omit<TServices, 'config'>
+
+// TODO: what is the best way to type TConfig?
+export type TConfig = {
+  [Prop in TKeyOfServices]: Prop extends 'redux'
+  ? {}
+  : Prop extends 'api'
+  ? { baseUrl: string }
+  : Prop extends 'store'
+  ? {
+    log: boolean
+    modules: TAllConfigs
+  }
+  : never
+}
+
+export type TConfig2 = {
+  redux: Record<string, any>,
+  api: {
+    baseUrl: string
+  },
+  store: {
+    log: boolean,
+    modules: TAllConfigs
+  }
 }
 
 /**

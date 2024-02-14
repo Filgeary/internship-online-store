@@ -3,7 +3,7 @@ import StoreModule from "../module";
 
 import type { IUserSession } from "@src/types/IUserSession";
 
-type InitialState = {
+type InitialSessionState = {
   user: IUserSession
   token: string | null
   errors: any
@@ -11,11 +11,15 @@ type InitialState = {
   exists: boolean
 }
 
+type SessionConfig = {
+  tokenHeader: string
+}
+
 /**
  * Сессия
  */
-class SessionState extends StoreModule<'session'> {
-  initState(): InitialState {
+class SessionState extends StoreModule<InitialSessionState, SessionConfig> {
+  initState(): InitialSessionState {
     return {
       user: {} as IUserSession,
       token: null,
@@ -23,6 +27,10 @@ class SessionState extends StoreModule<'session'> {
       waiting: true,
       exists: false
     };
+  }
+
+  initConfig(): SessionConfig {
+    return {} as SessionConfig;
   }
 
   async signIn(data: any, onSuccess: () => void) {
