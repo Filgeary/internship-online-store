@@ -15,7 +15,7 @@ type Props = {
   isSelectionMode?: boolean;
   onSelectItem?: (id: string | number, checked: boolean) => void;
   selectedItems?: string[];
-  catalogSliceName?: 'catalog' | `catalog${string}`;
+  catalogSliceName?: 'catalog' | `catalog${number}`;
 };
 
 function CatalogList({
@@ -38,19 +38,16 @@ function CatalogList({
   }));
 
   const callbacks = {
-    // Добавление в корзину
     addToBasket: useCallback(
       (_id: string, amount: number) => {
         store.actions.basket.addToBasket(_id, amount);
       },
       [store]
     ),
-    // Пагинация
     onPaginate: useCallback(
       (page: string | number) => store.actions[catalogSliceName].setParams({ page }),
       [store]
     ),
-    // генератор ссылки для пагинатора
     makePaginatorLink: useCallback(
       (page: string) => {
         return `?${new URLSearchParams({
