@@ -8,11 +8,10 @@ import SideLayout from "@src/components/side-layout";
 import treeToList from "@src/utils/tree-to-list";
 import listToTree from "@src/utils/list-to-tree";
 import PropTypes from "prop-types";
-import { ICopiedModuleName } from "@src/store/types";
+import type { IQueryParams } from "@src/store/catalog/types";
+import type { CatalogFilterProps } from "./types";
 
-function CatalogFilter(props: {
-  catalogModuleName: ICopiedModuleName<'catalog'> | 'catalog',
-}) {
+function CatalogFilter(props: CatalogFilterProps) {
 
   const store = useStore();
   const {t} = useTranslate();
@@ -26,13 +25,13 @@ function CatalogFilter(props: {
 
   const callbacks = {
     // Сортировка
-    onSort: useCallback(sort => store.actions[props.catalogModuleName].setParams({sort}), [store]),
+    onSort: useCallback((sort: IQueryParams['sort']) => {store.actions[props.catalogModuleName].setParams({sort})}, [store]),
     // Поиск
-    onSearch: useCallback(query => store.actions[props.catalogModuleName].setParams({query, page: 1}), [store]),
+    onSearch: useCallback((query: string) => store.actions[props.catalogModuleName].setParams({query, page: 1}), [store]),
     // Сброс
     onReset: useCallback(() => store.actions[props.catalogModuleName].resetParams(), [store]),
     // Фильтр по категории
-    onCategory: useCallback(category => store.actions[props.catalogModuleName].setParams({category, page: 1}), [store]),
+    onCategory: useCallback((category: IQueryParams['category']) => store.actions[props.catalogModuleName].setParams({category, page: 1}), [store]),
   };
 
   const options = {

@@ -1,11 +1,11 @@
 import StoreModule from "../module";
-import type { Article, IArticleState } from "./types";
+import type { ArticleResponse, ArticleState } from "./types";
 
 /**
  * Детальная ифнормация о товаре для страницы товара
  */
-class ArticleState extends StoreModule<IArticleState> {
-  initState(): IArticleState {
+class ArticleModule extends StoreModule<'article'> {
+  initState(): ArticleState {
     return {
       data: {},
       waiting: false // признак ожидания загрузки
@@ -25,7 +25,7 @@ class ArticleState extends StoreModule<IArticleState> {
     });
 
     try {
-      const res = await this.services.api.request<Article>({
+      const res = await this.services.api.request<ArticleResponse>({
         url: `/api/v1/articles/${_id}?fields=*,madeIn(title,code),category(title)`
       });
 
@@ -46,4 +46,4 @@ class ArticleState extends StoreModule<IArticleState> {
   }
 }
 
-export default ArticleState;
+export default ArticleModule;

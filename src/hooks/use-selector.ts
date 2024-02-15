@@ -1,11 +1,11 @@
 import {useLayoutEffect, useMemo, useState} from "react";
 import shallowequal from 'shallowequal';
 import useStore from "./use-store";
-import type { IStoreState } from "@src/store/types";
+import type Store from "@src/store";
 
 interface UseSelector {
   <Selected extends object>(
-    selectorFunc: (state: IStoreState) => Selected
+    selectorFunc: (state: ReturnType<Store['getState']>) => Selected
   ): Selected;
 }
 // /**
@@ -28,7 +28,6 @@ const useSelector: UseSelector = function(selectorFunc) {
   }, []); // Нет зависимостей - исполнится один раз
 
   // Отписка от store при демонтировании компонента
-  // @ts-ignore
   useLayoutEffect(() => unsubscribe, [unsubscribe]);
 
   return state;

@@ -3,6 +3,7 @@ export enum Locales {
   ru = 'ru'
 }
 
-export interface ILocaleState {
+export interface LocaleState {
   readonly lang: Locales
 }
+export type LocaleConfig = {}

@@ -7,8 +7,9 @@ import useStore from '@src/hooks/use-store';
 import useInit from '@src/hooks/use-init';
 import CatalogListSelect from '@src/containers/catalog-list-select';
 import useUnmount from '@src/hooks/use-unmount';
+import { type SelectItemsModalProps } from './types';
 
-function SelectItemsModal(props) {
+function SelectItemsModal(props: SelectItemsModalProps) {
 
   const store = useStore();
   const {t, lang} = useTranslate();

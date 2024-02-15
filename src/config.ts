@@ -1,24 +1,13 @@
-import { AvaliableLang, LangCodes, LangTitles } from "./i18n/types";
+import type { ApiConfig } from "./api/types";
+import { type I18nConfig, LangCodes, LangTitles } from "./i18n/types";
+import type { StoreConfig } from "./store/types";
 
 const isProduction = process.env.NODE_ENV === 'production';
 
 export type Config = {
-  store: {
-    log: Boolean,
-    modules: {
-      session: {
-        tokenHeader: string
-      }
-    }
-  },
-  api: {
-    baseUrl: String,
-    langHeader: String
-  },
-  i18n: {
-    avaliableLangs: AvaliableLang[],
-    defaultLang: LangCodes
-  }
+  store: StoreConfig,
+  api: ApiConfig,
+  i18n: I18nConfig,
 }
 
 /**
@@ -33,7 +22,16 @@ const config: Config = {
       session: {
         // Названия токена в АПИ
         tokenHeader: 'X-Token'
-      }
+      },
+      catalog: {
+        urlEditing: true
+      },
+      article: undefined,
+      basket: undefined,
+      categories: undefined,
+      locale: undefined,
+      modals: undefined,
+      profile: undefined
     }
   },
   api: {

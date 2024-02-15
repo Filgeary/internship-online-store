@@ -1,12 +1,10 @@
-export interface IProfile {
-  readonly email: String,
-  readonly profile: {
-    readonly name: string,
-    readonly phome: string,
-  }
-}
+import type { ProfileData } from "@src/types"
 
-export interface IProfileState {
-  readonly data: Partial<IProfile>,
+export type ProfileDataResponse = Pick<ProfileData, 'email' | 'profile'>
+
+export interface ProfileState {
+  readonly data: Partial<ProfileData>,
   readonly waiting: boolean,
 }
+
+export type ProfileConfig = {}

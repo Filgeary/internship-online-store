@@ -1,20 +1,18 @@
 import StoreModule from "../module";
 import simplifyErrors from "@src/utils/simplify-errors";
-import { ISessionState, IUser, RemindResponse } from "./types";
-
+import { SessionState, IUser, RemindResponse } from "./types";
 /**
  * Сессия
  */
-class SessionState extends StoreModule<ISessionState> {
+class SessionModule extends StoreModule<'session'> {
   /**
    * Начальное состояние
    * @return {Object}
    */
-  initState(): ISessionState {
+  initState(): SessionState {
     return {
       user: {},
       token: null,
-      errors: null,
       waiting: true,
       exists: false
     };
@@ -121,8 +119,8 @@ class SessionState extends StoreModule<ISessionState> {
    * Сброс ошибок авторизации
    */
   resetErrors() {
-    this.setState({...this.initState(), errors: null})
+    this.setState({...this.initState(), errors: undefined})
   }
 }
 
-export default SessionState;
+export default SessionModule;

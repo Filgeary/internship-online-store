@@ -1,14 +1,14 @@
 import Services from '@src/services';
 import * as translations from './translations';
-import { LangCodes, AvaliableLang, TranslateKey } from './types';
+import { LangCodes, AvaliableLang, TranslateKey, StringTranslateKey, ObjectTranslateKey, PluralObjects, LangCode } from './types';
 import type { Config } from '@src/config';
 
 class I18nService {
 
   private services: Services
-  private config: Config['i18n']
+  readonly config: Config['i18n']
   private listeners: Function[]
-  private lang: LangCodes
+  private lang: LangCode
   private avaliableLangs: AvaliableLang[]
 
 
@@ -23,27 +23,25 @@ class I18nService {
     this.listeners = []
     this.avaliableLangs = config.avaliableLangs
     this.services.api.setHeader(
-      //@ts-ignore
       this.services.api.config.langHeader,
       this.lang
     )
   }
 
-  public subscribe(listener: (lang: LangCodes) => void): Function {
+  public subscribe(listener: (lang: LangCodes) => void): () => void {
     this.listeners.push(listener);
     return () => {
       this.listeners = this.listeners.filter(item => item !== listener);
     }
   }
 
-  public getLang(): LangCodes {
+  public getLang(): LangCode {
     return this.lang
   }
 
-  public setLang(lang: LangCodes): void {
+  public setLang(lang: LangCode): void {
     if (this.avaliableLangs.find(l => l.value === lang)) this.lang = lang
     this.services.api.setHeader(
-      //@ts-ignore
       this.services.api.config.langHeader,
       this.lang
     )
@@ -54,32 +52,65 @@ class I18nService {
     return this.avaliableLangs
   }
   
-  
 /**
  * Перевод фразы по словарю
- * @param text {String} Текст для перевода
- * @param lang {String | undefined} Код языка
- * @param [plural] {Number} Число для плюрализации
+ * @param textKey {TranslateKey} Текст для перевода
+ * @param plural {Number} Число для плюрализации
  * @returns {String} Переведенный текст
  */
-  public translate(text: TranslateKey, plural?: number, lang?: LangCodes): undefined | string {
-    let result = translations[lang || this.lang] && (text in translations[lang || this.lang])
-      ? (translations[lang || this.lang][text])
-      : text;
-
-    if (typeof result === 'object') {
-      if (typeof plural !== 'undefined') {
-        const key = new Intl.PluralRules(lang || this.lang).select(plural);
-        if (key in result) {
-          return result[key];
+  public translate(textKey: StringTranslateKey): string;
+  public translate(textKey: ObjectTranslateKey, plural: number): string;
+  public translate(textKey: TranslateKey, plural?: number | undefined): string {
+    let result: string
+    if (isStringTranslateKey(textKey)) {
+      result = translations[this.lang]?.[textKey] || textKey
+    } else if (isObjectTranslateKey(textKey)) {
+      if (isUndefined(plural)) {
+        result = textKey
+        console.error(`For the pluralization object in the dictionary, it is required to provide a plural`)
+      } else {
+        const object = translations[this.lang]?.[textKey] || textKey
+        const key = new Intl.PluralRules(this.lang).select(plural) as keyof PluralObjects[LangCode];
+        if (key in object) {
+          result = (object as PluralObjects[LangCode])[key];
         } else {
-          return undefined
+          result = textKey
+          console.error(`The pluralization object in the dictionary does not contain a key for the transmitted form: ${key}, plural object is: ${JSON.stringify(object)}`)
         }
       }
     } else {
-      return result;
+      result = textKey
+      console.error('The passed key does not exist in the dictionary or provided in unvalid format')
     }
+    return result
   }
 }
 
 export default I18nService;
+
+function isObjectTranslateKey(text: TranslateKey)
+  : text is ObjectTranslateKey {
+    let result = true
+    for (let lang of Object.values(LangCodes)) {
+      if ((typeof translations[lang][text]) !== 'object') {
+        result = false
+      }
+    }
+    return result
+  }
+
+function isStringTranslateKey(text: TranslateKey)
+: text is StringTranslateKey {
+  let result = true
+  for (let lang of Object.values(LangCodes)) {
+    if ((typeof translations[lang][text]) !== 'string') {
+      result = false
+    }
+  }
+  return result
+}
+
+function isUndefined(value: undefined | number)
+: value is undefined {
+  return (typeof value) === 'undefined'
+}

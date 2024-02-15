@@ -1,6 +1,8 @@
 import {useEffect, useMemo, useState} from 'react';
 import useServices from './use-services';
-import type { LangCodes, TranslateKey } from '@src/i18n/types';
+import type { LangCode, LangCodes, ObjectTranslateKey, StringTranslateKey, TranslateKey } from '@src/i18n/types';
+import I18nService from '@src/i18n';
+
 
 /**
  * Хук возвращает функцию для локализации текстов, код языка и функцию его смены
@@ -9,9 +11,19 @@ export default function useTranslate() {
   const i18n = useServices().i18n
   const [lang, setLocalLang] = useState(() => i18n.getLang())
 
-  const t: (text: TranslateKey, number?: number) => ReturnType<typeof i18n.translate>
-    = (text, number) => i18n.translate(text, number)
-  const setLang = (lang: LangCodes) => i18n.setLang(lang)
+  // function t(textKey: StringTranslateKey): ReturnType<I18nService['translate']>;
+  // function t(textKey: ObjectTranslateKey, plural: number): ReturnType<I18nService['translate']>;
+  // function t(textKey: TranslateKey, plural?: number | undefined): ReturnType<I18nService['translate']> {
+  //   return i18n.translate(textKey, plural)
+  // }
+
+  // function t(...args: Parameters<I18nService['translate']>): ReturnType<I18nService['translate']> {
+  //   return i18n.translate(...args)
+  // }
+
+  const t = i18n.translate.bind(i18n)
+
+  const setLang = (lang: LangCode) => i18n.setLang(lang)
   const avaliableLangs = useMemo(() => i18n.getAvaliableLags(), [])
 
   const unsubscribe = useMemo(() => {
@@ -20,7 +32,6 @@ export default function useTranslate() {
     });
   }, []); 
 
-  //@ts-ignore
   useEffect(() => unsubscribe, [unsubscribe]);
 
   return {t, lang, setLang, avaliableLangs}

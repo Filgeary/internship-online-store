@@ -3,3 +3,12 @@ declare module 'shallowequal' {
   const shallowequal: Shallowequal
   export default shallowequal
 }
+
+declare module 'lodash.debounce' {
+  type Debounce = (
+    callback: Function,
+    time: number
+  ) => Function
+  const debounce: Debounce
+  export default debounce
+}

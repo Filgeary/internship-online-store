@@ -1,21 +1,16 @@
-export interface Article {
-  readonly _id: string,
-  readonly title: string,
-  readonly description: string,
-  readonly price: number,
-  readonly madeIn: {
-    readonly title: string,
-    readonly code: string,
-    readonly_id: string
-  },
-  readonly edition: number,
-  readonly category: {
-    readonly title: string,
-    readonly _id: string
-  }
-}
+import type { Article } from "@src/types"
 
-export interface IArticleState {
+export interface ArticleState {
   readonly data: Partial<Article>
   readonly waiting: boolean
 }
+
+export type ArticleResponse = Pick<
+  Article,
+  '_id' | 'category' | 
+  'description' | 'edition' | 
+  'madeIn' | 'price' | 
+  'title'
+>
+
+export type ArticleConfig = {}

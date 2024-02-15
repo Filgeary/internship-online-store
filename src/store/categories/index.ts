@@ -1,15 +1,15 @@
 import StoreModule from "../module";
-import type { ICategoriesState, ICategoryResponse } from "./types";
+import type { CategoriesState, ICategoryResponse } from "./types";
 
 /**
  * Список категорий
  */
-class CategoriesState extends StoreModule<ICategoriesState> {    
+class CategoriesModule extends StoreModule<'categories'> {    
   /**
    * Начальное состояние
    * @return {Object}
    */
-  initState(): ICategoriesState {
+  initState(): CategoriesState {
     return {
       list: [],
       waiting: false
@@ -36,4 +36,4 @@ class CategoriesState extends StoreModule<ICategoriesState> {
 
 }
 
-export default CategoriesState;
+export default CategoriesModule;

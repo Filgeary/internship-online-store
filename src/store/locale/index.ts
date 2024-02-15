@@ -1,8 +1,8 @@
 import StoreModule from "../module";
-import { Locales, type ILocaleState } from "./types";
+import { Locales, type LocaleState } from "./types";
 
-class LocaleState extends StoreModule<ILocaleState> {
-  initState(): ILocaleState {
+class LocaleModule extends StoreModule<'locale'> {
+  initState(): LocaleState {
     return {
       lang: Locales.ru
     };
@@ -17,4 +17,4 @@ class LocaleState extends StoreModule<ILocaleState> {
   }
 }
 
-export default LocaleState;
+export default LocaleModule;

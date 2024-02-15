@@ -1,11 +1,12 @@
+import { BasketItem } from "@src/types";
 import StoreModule from "../module";
-import type { IBasketItem, IBasketState, IItemReponse } from "./types";
+import type { BasketState, ItemResponse } from "./types";
 
 /**
  * Покупательская корзина
  */
-class BasketState extends StoreModule<IBasketState> {
-  initState(): IBasketState {
+class BasketModule extends StoreModule<'basket'> {
+  initState(): BasketState {
     return {
       list: [],
       sum: 0,
@@ -22,7 +23,7 @@ class BasketState extends StoreModule<IBasketState> {
     this.initState()
     // Ищем товар в корзине, чтобы увеличить его количество
     let exist = false;
-    const list = this.getState().list.map((item: IBasketItem) => {
+    const list = this.getState().list.map((item: BasketItem) => {
       let result = item;
       if (item._id === _id) {
         exist = true; // Запомним, что был найден в корзине
@@ -34,7 +35,7 @@ class BasketState extends StoreModule<IBasketState> {
 
     if (!exist) {
       // Поиск товара в каталоге, чтобы его добавить в корзину.
-      const res = await this.services.api.request<IItemReponse>({url: `/api/v1/articles/${_id}`});
+      const res = await this.services.api.request<ItemResponse>({url: `/api/v1/articles/${_id}`});
       const item = res.data.result;
 
       list.push({...item, amount}); // list уже новый, в него можно пушить.
@@ -76,7 +77,7 @@ class BasketState extends StoreModule<IBasketState> {
       const notExisted = ids.filter(id => !existed.includes(id))
       if (notExisted.length) {
         // Поиск товара в каталоге, чтобы его добавить в корзину.
-        const promises = notExisted.map(id => this.services.api.request<IItemReponse>({url: `/api/v1/articles/${id}`}))
+        const promises = notExisted.map(id => this.services.api.request<ItemResponse>({url: `/api/v1/articles/${id}`}))
         const items = (await Promise.all(promises)).map(
           (res) => res.data.result
         )
@@ -115,15 +116,15 @@ class BasketState extends StoreModule<IBasketState> {
 
   async translateItems(): Promise<void>{
     const state = this.getState()
-    const ids = state.list.map((item: IBasketItem) => item._id)
+    const ids = state.list.map((item: BasketItem) => item._id)
     const promises = ids.map(
-      (_id: string) => this.services.api.request<IItemReponse>({url: `/api/v1/articles/${_id}`})
+      (_id: string) => this.services.api.request<ItemResponse>({url: `/api/v1/articles/${_id}`})
     )
     const titles = (await Promise.all(promises)).map(
       (res) => res.data.result.title
     )
     const list = state.list.map(
-      (item: IBasketItem, i: number) =>( {...item, title: titles[i]})
+      (item: BasketItem, i: number) =>( {...item, title: titles[i]})
     )
     this.setState({
       ...state,
@@ -132,4 +133,4 @@ class BasketState extends StoreModule<IBasketState> {
   }
 }
 
-export default BasketState;
+export default BasketModule;

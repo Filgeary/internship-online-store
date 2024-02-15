@@ -6,7 +6,8 @@ import isPlainObject from '../is-plain-object';
  * @param objectExc {Object} Объект-маска, вырезаемый из objectSrc
  * @returns {Object} Новый объект
  */
-export default function exclude(objectSrc, objectExc) {
+
+export default function exclude (objectSrc, objectExc) {
   if (isPlainObject(objectSrc) && isPlainObject(objectExc)) {
     const result = {};
     const keys = Object.keys(objectSrc);

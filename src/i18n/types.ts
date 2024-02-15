@@ -1,25 +1,48 @@
-import type {default as en} from './translations/en.json';
-import type {default as ru} from './translations/ru.json';
-
-export type TranslateKey = keyof typeof en & keyof typeof ru
+import type I18nService from '.'
+import * as translations from './translations'
 
 export enum LangCodes {
   ru = 'ru',
-  en = 'en'
+  en = 'en',
+  //При добавлении нового языка передается его код
 } 
+
 export enum LangTitles {
   ru = 'Русккий',
-  en = 'English'
+  en = 'English',
+  //При добавлении нового языка передается его название
 }
 
-type LangRu = {
-  value: LangCodes.ru,
-  title: LangTitles.ru,
+type Translations = typeof translations
+//Код языка
+export type LangCode = keyof Translations
+//Ключи для перевода
+export type TranslateKey = keyof Translations[LangCode]
+
+//Хелпер для получения типов с ключами, по которым возвращаются переводы
+type StringTranslations<T> = { [P in keyof T as T[P] extends string ? P : never]: T[P] }
+//Хелпер для получения типов с ключами, по которым возвращаются объекты плюрализации
+type ObjectTranslations<T> = { [P in keyof T as T[P] extends object ? P : never]: T[P] }
+
+//Ключи, по которым возвращается перевод
+export type StringTranslateKey = keyof StringTranslations<Translations[LangCode]>
+//Ключи, по которым возвращается объект плюрализации
+export type ObjectTranslateKey = keyof ObjectTranslations<Translations[LangCode]>
+
+//Объекты плюрализации по языкам
+export type PluralObjects = {
+  [K in keyof Translations]: Translations[K][ObjectTranslateKey]
 }
 
-type LangEn = {
-  value: LangCodes.en,
-  title: LangTitles.en,
+//Доступные языки
+export type AvaliableLang = {
+  value: LangCodes,
+  title: LangTitles
 }
 
-export type AvaliableLang = LangRu | LangEn
+export type I18nConfig = {
+  avaliableLangs: AvaliableLang[],
+  defaultLang: LangCodes
+}
+
+export type TranslateFn = I18nService['translate']

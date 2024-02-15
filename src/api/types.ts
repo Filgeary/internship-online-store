@@ -6,3 +6,8 @@ export interface Response<T> {
   status: number,
   headers: Headers,
 }
+
+export type ApiConfig = {
+  baseUrl: string,
+  langHeader: string
+}

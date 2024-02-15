@@ -1,11 +1,11 @@
 import StoreModule from "../module";
-import { IProfile, IProfileState } from "./types";
+import type { ProfileDataResponse, ProfileState } from "./types";
 
 /**
  * Детальная информация о пользователе
  */
-class ProfileState extends StoreModule<IProfileState> {
-  initState(): IProfileState {
+class ProfileModule extends StoreModule<'profile'> {
+  initState(): ProfileState {
     return {
       data: {},
       waiting: false // признак ожидания загрузки
@@ -23,7 +23,7 @@ class ProfileState extends StoreModule<IProfileState> {
       waiting: true
     });
 
-    const {data} = await this.services.api.request<IProfile>({url: `/api/v1/users/self`});
+    const {data} = await this.services.api.request<ProfileDataResponse>({url: `/api/v1/users/self`});
 
     // Профиль загружен успешно
     this.setState({
@@ -33,4 +33,4 @@ class ProfileState extends StoreModule<IProfileState> {
   }
 }
 
-export default ProfileState;
+export default ProfileModule;

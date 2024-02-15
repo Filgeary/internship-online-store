@@ -8,10 +8,11 @@ import ModalLayout from "@src/components/modal-layout";
 import BasketTotal from "@src/components/basket-total";
 import PropTypes from "prop-types";
 import BasketButton from '@src/components/basket-button';
-import useServices from '@src/hooks/use-services';
 import useInit from '@src/hooks/use-init';
+import type { BasketProps } from './types';
+import type { BasketItem } from '@src/types';
 
-function Basket(props) {
+function Basket(props: BasketProps) {
 
   const store = useStore();
   const {t, lang} = useTranslate();
@@ -30,12 +31,12 @@ function Basket(props) {
 
   const callbacks = {
     // Удаление из корзины
-    removeFromBasket: useCallback(_id => store.actions.basket.removeFromBasket(_id), [store]),
+    removeFromBasket: useCallback((_id: string) => store.actions.basket.removeFromBasket(_id), [store]),
     // Закрытие любой модалки
     closeModal: useCallback(() => {
       store.actions.modals.close(props.id);
     }, [store, props.id]),
-    selectMoreItems: useCallback(() => new Promise<string[]>(
+    selectMoreItems: useCallback(() => new Promise<string[] | undefined>(
       (res) => store.actions.modals.open({
         type: store.actions.modals.types.selectItems,
         resolve: res,
@@ -51,7 +52,7 @@ function Basket(props) {
   }
 
   const renders = {
-    itemBasket: useCallback((item) => (
+    itemBasket: useCallback((item: BasketItem) => (
       <ItemBasket item={item}
                   link={`/articles/${item._id}`}
                   onRemove={callbacks.removeFromBasket}

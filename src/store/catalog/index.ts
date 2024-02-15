@@ -1,25 +1,17 @@
 import StoreModule from "../module";
 import exclude from "@src/utils/exclude";
 import { ESort}  from "./types";
-import type { IArticleResponse, ICatalogState, IQueryParams } from "./types";
-import type Store from "..";
+import type { CatalogItemResponse, CatalogState, IQueryParams, Sort } from "./types";
 
 /**
  * Состояние каталога - параметры фильтра исписок товара
  */
-class CatalogState extends StoreModule<ICatalogState> {
-  constructor(...params: [Store, string, any]) {
-    super(...params)
-    if (typeof params[2].urlEditing === 'undefined') {
-      this.config.urlEditing = true 
-    }
-  }
-
+class CatalogModule extends StoreModule<'catalog'> {
   // /**
   //  * Начальное состояние
   //  * @return {Object}
   //  */
-  initState() {
+  initState(): CatalogState {
     return {
       list: [],
       params: {
@@ -46,7 +38,7 @@ class CatalogState extends StoreModule<ICatalogState> {
       let validParams: Partial<IQueryParams> = {};
       if (urlParams.has('page')) validParams.page = Number(urlParams.get('page')) || 1;
       if (urlParams.has('limit')) validParams.limit = Math.min(Number(urlParams.get('limit')) || 10, 50);
-      if (urlParams.has('sort')) validParams.sort = String(urlParams.get('sort')) as ESort;
+      if (urlParams.has('sort')) validParams.sort = String(urlParams.get('sort')) as Sort;
       if (urlParams.has('query')) validParams.query = String(urlParams.get('query'));
       if (urlParams.has('category')) validParams.category = String(urlParams.get('category'));
       await this.setParams({...this.initState().params, ...validParams, ...newParams}, true);
@@ -85,7 +77,7 @@ class CatalogState extends StoreModule<ICatalogState> {
 
     if (this.config.urlEditing) {
       // Сохранить параметры в адрес страницы
-      let urlSearch = new URLSearchParams(exclude(params, this.initState().params)).toString();
+      let urlSearch = new URLSearchParams(exclude(params, this.initState().params) as Record<string, string>).toString();
       const url = window.location.pathname + (urlSearch ? `?${urlSearch}`: '') + window.location.hash;
       if (replaceHistory) {
         window.history.replaceState({}, '', url);
@@ -105,9 +97,9 @@ class CatalogState extends StoreModule<ICatalogState> {
       skip: 0,
       'search[query]': '',
       'search[category]': ''
-    });
+    }) as Record<string, string>;
 
-    const res = await this.services.api.request<{items: IArticleResponse[], count: number}>({url: `/api/v1/articles?${new URLSearchParams(apiParams)}`});
+    const res = await this.services.api.request<{items: CatalogItemResponse[], count: number}>({url: `/api/v1/articles?${new URLSearchParams(apiParams)}`});
     this.setState({
       ...this.getState(),
       list: res.data.result.items,
@@ -117,4 +109,4 @@ class CatalogState extends StoreModule<ICatalogState> {
   }
 }
 
-export default CatalogState;
+export default CatalogModule;

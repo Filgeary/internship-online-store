@@ -1,99 +1,89 @@
 import type { article, basket, catalog, categories, locale, modals, profile, session } from "./exports";
-import type { IArticleState } from "./article/types";
-import type { IBasketState } from "./basket/types";
-import type { ICatalogState } from "./catalog/types";
-import type { ICategoriesState } from "./categories/types";
-import type { ILocaleState } from "./locale/types";
-import type { IModalState } from "./modals/types";
-import type { IProfileState } from "./profile/types";
-import type { ISessionState } from "./session/types";
+import type { ArticleConfig, ArticleState } from "./article/types";
+import type { BasketConfig, BasketState } from "./basket/types";
+import type { CatalogConfig, CatalogState } from "./catalog/types";
+import type { CategoriesConfig, CategoriesState } from "./categories/types";
+import type { LocaleConfig, LocaleState } from "./locale/types";
+import type { ModalsConfig, ModalsState } from "./modals/types";
+import type { ProfileConfig, ProfileState } from "./profile/types";
+import type { SessionConfig, SessionState } from "./session/types";
+import type * as modules from "./exports"; 
 
-type IBasicModules = {
-  readonly article: article,
-  readonly basket: basket,
-  readonly catalog: catalog,
-  readonly categories: categories,
-  readonly locale: locale,
-  readonly modals: modals,
-  readonly profile: profile,
-  readonly session: session,
+type Modules = typeof modules
+
+type BasicState = {
+  article: ArticleState,
+  basket: BasketState,
+  catalog: CatalogState,
+  categories: CategoriesState,
+  locale: LocaleState,
+  modals: ModalsState,
+  profile: ProfileState,
+  session: SessionState,
+  //При создании нового модуля передается тип его состояния
 }
 
-type IBasicActions = {
-  readonly [K in keyof IBasicModules]: IBasicModules[K];
+type Configs = {
+  article: ArticleConfig,
+  basket: BasketConfig,
+  catalog: CatalogConfig,
+  categories: CategoriesConfig,
+  locale: LocaleConfig,
+  modals: ModalsConfig,
+  profile: ProfileConfig,
+  session: SessionConfig,
+  //При создании нового модуля передается тип его конфига
 }
 
-export type IBasicModuleName = keyof IBasicActions 
+// Тип имени базовых модулей стора
+export type BasicModuleName = keyof Modules
+// Тип имени скопированных модулей стора
+export type CopiedModuleName<T extends BasicModuleName> = `${T}_${number}`
+// Тип имени всех модулей стора
+export type ModuleName = BasicModuleName | CopiedModuleName<BasicModuleName>
 
-export type ICopiedModuleName<T extends IBasicModuleName> = 
-  T |`${T}${number}`
 
-type ICopiedModules = {
-  [key: ICopiedModuleName<'article'>]: article
-  [key: ICopiedModuleName<'basket'>]: basket,
-  [key: ICopiedModuleName<'catalog'>]: catalog,
-  [key: ICopiedModuleName<'categories'>]: categories,
-  [key: ICopiedModuleName<'locale'>]: locale,
-  [key: ICopiedModuleName<'modals'>]: modals,
-  [key: ICopiedModuleName<'profile'>]: profile,
-  [key: ICopiedModuleName<'session'>]: session,
+// Тип базовых модулей стора
+export type Module = InstanceType<Modules[keyof Modules]>
+
+// Тип-хелпер для получения тип имени базового стора на основе типа имени скопированного
+export type ExtractBaseName<T extends string> = 
+  T extends `${infer F}_${number}` 
+    ? F 
+    : T extends BasicModuleName
+      ? T
+      : never
+
+// Тип всех экшенов модулей стора
+export type Actions = {
+  [K in ModuleName]: InstanceType<Modules[ExtractBaseName<K>]>
 }
 
-type SX = {
-  [X in IBasicModuleName as ICopiedModuleName<X>]: IBasicActions[X]
-}
-  
-type j = Omit<SX>
-
-let s: SX;
-s.article123.load
-
-type ICopiedActions = {
-  [K in keyof ICopiedModules]: ICopiedModules[K];
+// Тип всех стейтов модулей стора
+export type State = {
+  [K in ModuleName]: BasicState[ExtractBaseName<K>]
 }
 
-export type IActions = IBasicActions & ICopiedActions
+// Тип конфига модулей стора
+type ModulesConfig = IsObjectWithEmptyObjects<{
+  [K in BasicModuleName]: Configs[K]
+}>
 
-
-type IBasicStoreState = {
-  readonly article: IArticleState,
-  readonly basket: IBasketState,
-  readonly catalog: ICatalogState,
-  readonly categories: ICategoriesState,
-  readonly locale: ILocaleState,
-  readonly modals: IModalState,
-  readonly profile: IProfileState,
-  readonly session: ISessionState,
+//Тип конфига стора
+export type StoreConfig = {
+  modules: ModulesConfig,
+  log: boolean
 }
 
-type ICopiedStoreState = {
-  [key: ICopiedModuleName<'article'>]: IArticleState
-  [key: ICopiedModuleName<'basket'>]: IBasketState,
-  [key: ICopiedModuleName<'catalog'>]: ICatalogState,
-  [key: ICopiedModuleName<'categories'>]: ICategoriesState,
-  [key: ICopiedModuleName<'locale'>]: ILocaleState,
-  [key: ICopiedModuleName<'modals'>]: IModalState,
-  [key: ICopiedModuleName<'profile'>]: IProfileState,
-  [key: ICopiedModuleName<'session'>]: ISessionState,
+/* Поверка на пустой объект
+ * Пустой объект -> undefined
+ * Объект с полями -> тип объекта
+*/ 
+type IsEmpty<Obj extends object> = keyof Obj extends undefined ? undefined : Obj
+
+
+//TODO обдумать название типа
+type IsObjectWithEmptyObjects<Obj extends object> = {
+  [K in keyof Obj]: Obj[K] extends object ? IsEmpty<Obj[K]> : undefined
 }
 
-export type IStoreState = IBasicStoreState & ICopiedStoreState
-
-export type IModuleState<T> =
-  T extends IArticleState
-    ? IArticleState 
-    : T extends IBasketState
-    ? IBasketState 
-    : T extends ICatalogState
-    ? ICatalogState 
-    : T extends ICategoriesState
-    ? ICategoriesState
-    : T extends ILocaleState
-    ? ILocaleState
-    : T extends IModalState
-    ? IModalState 
-    : T extends IProfileState
-    ? IProfileState
-    : T extends ISessionState
-    ? ISessionState 
-    : never

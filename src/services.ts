@@ -1,4 +1,5 @@
 import APIService from "./api";
+import { Config } from "./config";
 import I18nService from "./i18n";
 import Store from "./store";
 
@@ -7,9 +8,9 @@ class Services {
   private _api: APIService
   private _store: Store
   private _i18n: I18nService
-  private config: any
+  private config: Config
 
-  constructor(config: any) {
+  constructor(config: Config) {
     this.config = config;
   }
 

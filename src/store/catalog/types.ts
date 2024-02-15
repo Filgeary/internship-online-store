@@ -1,3 +1,5 @@
+import type { CatalogItem } from "@src/types"
+
 export enum ESort { 
   order = 'order',
   titleRu = 'title.ru',
@@ -5,18 +7,12 @@ export enum ESort {
   edition = 'edition' 
 }
 
-export interface IArticleResponse {
-  readonly price: number
-  readonly title: string
-  readonly _id: string
-}
-
-export interface ICatalogItem extends IArticleResponse {}
+export type Sort = keyof typeof ESort
 
 export interface IQueryParams {
   page: number,
   limit: number,
-  sort: ESort,
+  sort: Sort,
   query: string,
   category: string
 }
@@ -25,11 +21,15 @@ type IReadonlyQueryParams = {
   readonly [K in keyof IQueryParams]: IQueryParams[K]
 }
 
+export type CatalogItemResponse = Pick<CatalogItem, '_id' | 'price' | 'title'>
 
-
-export interface ICatalogState {
-  readonly list: ICatalogItem[],
+export interface CatalogState {
+  readonly list: CatalogItem[],
   readonly params: IReadonlyQueryParams,
   readonly count: number,
   readonly waiting: boolean
+}
+
+export type CatalogConfig = {
+  urlEditing: boolean
 }

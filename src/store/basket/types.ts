@@ -1,15 +1,11 @@
-export interface IItemReponse {
-  readonly price: number, 
-  readonly title: string,
-  readonly _id: string,
-}
+import { BasketItem } from "@src/types"
 
-export interface IBasketItem extends IItemReponse {
-  readonly amount: number, 
-}
+export type ItemResponse = Pick<BasketItem, '_id' | 'price' | 'title'>
 
-export interface IBasketState {
-  readonly list: IBasketItem[],
+export interface BasketState {
+  readonly list: BasketItem[],
   readonly sum: number,
   readonly amount: number
 }
+
+export type BasketConfig = {}

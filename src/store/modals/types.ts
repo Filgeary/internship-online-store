@@ -1,18 +1,50 @@
 //@todo разбить модалки на типы
 
-export enum EModalTypes {
+export enum ModalCodes {
   basket = 'basket',
   amount = 'amount',
   selectItems = 'selectItems',
+  // При добавлении новой модалки передается её код
 }
 
-export interface IModal {
-  readonly type: EModalTypes,
-  readonly extraData?: object,
-  readonly resolve?: Function,
-  readonly _id: number
+interface Modal {
+  _id: `${ModalCodes}_${number}`
+  type: ModalCodes,
 }
 
-export interface IModalState {
-  readonly stack: IModal[]
+interface BasketModal extends Modal {
+  type: ModalCodes.basket,
+  extraData?: never,
+  resolve?: never
 }
+
+interface AmountModal extends Modal {
+  type: ModalCodes.amount,
+  extraData: {
+    getTitle: () => Promise<string>,
+  },
+  resolve: (amount: number | undefined) => void
+}
+
+interface SelectItemsModal extends Modal {
+  type: ModalCodes.selectItems,
+  extraData: {
+    getTitle: () => string,
+    getLabelSubmit: () => string
+  },
+  resolve: (ids: string[] | undefined) => void
+}
+
+
+// При добавлении новой модалки передается её интерфейс
+export type Modals = {
+  basket: BasketModal,
+  amount: AmountModal,
+  selectItems: SelectItemsModal
+}
+
+export interface ModalsState {
+  readonly stack: Modals[keyof Modals][]
+}
+
+export type ModalsConfig = {}

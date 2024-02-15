@@ -1,20 +1,19 @@
 import codeGenerator from '@src/utils/code-generator.js';
 import * as modules from './exports';
 import type Services from '@src/services';
-import type { IActions, IBasicModuleName, ICopiedModuleName, IStoreState } from './types';
-import type { Config } from '@src/config';
+import type { BasicModuleName, State, Actions, CopiedModuleName, StoreConfig, ModuleName } from './types';
 
 /**
  * Хранилище состояния приложения
  */
 class Store {
 
-  protected state: IStoreState
+  protected state: State
   public services: Services
   protected listeners: Function[]
-  protected config: Config['store']
+  protected config: StoreConfig
   protected generateId: Function
-  public actions: IActions
+  public actions: Actions
 
 
   /**
@@ -22,19 +21,30 @@ class Store {
    * @param config {Object}
    * @param initState {Object}
    */
-  // @ts-ignore
-  constructor(services: Services, config: Config['store'], initState: IStoreState = {}) {
+  constructor(services: Services, config: StoreConfig, initState?: Partial<State>) {
     this.services = services;
     this.config = config;
     this.listeners = []; // Слушатели изменений состояния
-    //@ts-ignore
-    this.state = initState;
     this.generateId = codeGenerator(1)
-    // @ts-ignore
-    this.actions = {};
-    for (const name of Object.keys(modules)) {
-      this.actions[name] = new modules[name](this, name, this.config?.modules[name] || {});
-      this.state[name] = this.actions[name].initState();
+    //@ts-ignore
+    this.actions = {}
+    //@ts-ignore
+    this.state = initState || {}
+    const modulesKeys = Object.keys(modules) as BasicModuleName[]  
+    const create = <Name extends BasicModuleName>(name: Name) => {
+      this.actions[name] = new (modules[name])(
+        this, 
+        name, 
+        this.config.modules[name]
+      ) as Actions[Name]
+      if (initState?.[name]) {
+        this.state[name] = initState[name]!
+      } else {
+        this.state[name] = this.actions[name].initState() as State[Name];
+      }
+    }
+    for (const name of modulesKeys) {
+      create(name as BasicModuleName)
     }
   }
 
@@ -43,7 +53,7 @@ class Store {
    * @param listener {Function}
    * @returns {Function} Функция отписки
    */
-  public subscribe(listener: Function): Function {
+  public subscribe(listener: Function): () => void {
     this.listeners.push(listener);
     // Возвращается функция для удаления добавленного слушателя
     return () => {
@@ -64,7 +74,7 @@ class Store {
    * profile: Object,
    * }}
    */
-  public getState(): IStoreState {
+  public getState(): State {
     return this.state;
   }
 
@@ -72,7 +82,7 @@ class Store {
    * Установка состояния
    * @param newState {Object}
    */
-  public setState(newState: IStoreState, description: string = 'setState') {
+  public setState(newState: State, description: string = 'setState') {
     if (this.config.log) {
       console.group(
         `%c${'store.setState'} %c${description}`,
@@ -92,24 +102,22 @@ class Store {
     for (const listener of this.listeners) listener(this.getState());
   }
 
-  public makeModule<T extends IBasicModuleName>(BasicModuleName: T, options: any): ICopiedModuleName<T>{
-    const newSliceName = `${BasicModuleName}-${this.generateId()}` as ICopiedModuleName<T>;
-    //@ts-ignore
-    this.actions[newSliceName] = new modules[BasicModuleName](
+  public makeModule<T extends BasicModuleName>(basicModuleName: T, moduleConfig?: Partial<StoreConfig['modules'][T]>): CopiedModuleName<T>{
+    const newModuleName = `${basicModuleName}_${this.generateId()}` as CopiedModuleName<T>;
+    this.actions[newModuleName] = new modules[basicModuleName](
       this, 
-      newSliceName, 
+      newModuleName, 
       {
-        //@ts-ignore
-        ...this.config?.modules[BasicModuleName],  
-        urlEditing: options.urlEditing || false
+        ...this.config?.modules[basicModuleName],  
+        ...moduleConfig
       } || {}
-    );
-    //@ts-ignore
-    this.state[newSliceName] = this.actions[newSliceName].initState();
-    return newSliceName 
+    ) as Actions[`${T}_${number}`];
+
+    this.state[newModuleName] = this.actions[newModuleName].initState() as State[`${T}_${number}`];
+    return newModuleName 
   }
 
-  public deleteModule(moduleName: ICopiedModuleName<IBasicModuleName>): void {
+  public deleteModule(moduleName: CopiedModuleName<BasicModuleName>): void {
     delete this.actions[moduleName]
     delete this.state[moduleName]
   }

@@ -8,7 +8,9 @@ export interface ICategoryResponse {
 
 export interface ICategory extends ICategoryResponse {}
 
-export interface ICategoriesState {
+export interface CategoriesState {
   readonly list: ICategory[],
   readonly waiting: boolean
 }
+
+export type CategoriesConfig = {}

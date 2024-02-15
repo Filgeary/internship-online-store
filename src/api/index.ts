@@ -8,7 +8,7 @@ class APIService {
    * @param services {Services} Менеджер сервисов
    * @param config {Object}
    */
-  private config: Config['api']
+  readonly config: Config['api']
   private defaultHeaders: Record<string, string>
   public services: Services
 
@@ -28,7 +28,9 @@ class APIService {
    * @param options
    * @returns {Promise<{}>}
    */
-  public async request<T>({url, method = 'GET', headers = {}, ...options}): Promise<Response<T>> {
+  public async request<T>(
+    {url, method = 'GET', headers = {}, ...options}: {url: string} & Partial<RequestInit>
+  ): Promise<Response<T>> {
     if (!url.match(/^(http|\/\/)/)) url = this.config.baseUrl + url;
     const res = await fetch(url, {
       method,
