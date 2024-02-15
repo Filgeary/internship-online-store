@@ -33,9 +33,7 @@ function AllModals({ toDisableFocus }: AllModalsProps) {
   return (
     <>
       {modalsIds.map((id) => (
-        <React.Fragment key={id}>
-          {modalsReducer(activeModals[id].name)}
-        </React.Fragment>
+        <React.Fragment key={id}>{modalsReducer(activeModals[id].name)}</React.Fragment>
       ))}
     </>
   );

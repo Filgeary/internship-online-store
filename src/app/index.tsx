@@ -13,7 +13,6 @@ import AllModals from '@src/containers/all-modals';
 
 /**
  * Приложение
- * @returns {React.ReactElement}
  */
 function App() {
   const store = useStore();

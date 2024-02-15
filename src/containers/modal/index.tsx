@@ -41,7 +41,9 @@ function Modal({ children, ...props }: ModalProps) {
   useOnClickOutside(modalRef, closeHandler);
 
   useEffect(() => {
-    modalRef.current?.focus();
+    if (!modalRef.current.contains(document.activeElement)) {
+      modalRef.current?.focus();
+    }
   }, [select.modals]);
 
   return (

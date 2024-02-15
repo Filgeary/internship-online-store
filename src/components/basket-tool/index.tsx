@@ -3,7 +3,7 @@ import { cn as bem } from '@bem-react/classname';
 import numberFormat from '@src/utils/number-format';
 import './style.css';
 
-import { TUserTranslateFn } from '@src/i18n/types';
+import { TAllLangsPick, TUserTranslateFn } from '@src/i18n/types';
 
 type BasketToolProps = {
   onOpen: () => void;
@@ -12,16 +12,20 @@ type BasketToolProps = {
   amount?: number;
 };
 
-const defaultProps: BasketToolProps = {
-  onOpen: () => {},
-  sum: 0,
-  amount: 0,
-  t: (text: string) => text,
-};
+// https://github.com/facebook/react/pull/16210
 
-BasketTool.defaultProps = defaultProps;
+// const defaultProps: BasketToolProps = {
+//   onOpen: () => {},
+//   sum: 0,
+//   amount: 0,
+//   t: (text: TAllLangsPick) => text,
+// };
 
-function BasketTool({ sum, amount, onOpen, t }: BasketToolProps) {
+// BasketTool.defaultProps = defaultProps;
+
+function BasketTool(props: BasketToolProps) {
+  const { sum = 0, amount = 0, onOpen = () => {}, t = (text: TAllLangsPick) => text } = props;
+
   const cn = bem('BasketTool');
   return (
     <div className={cn()}>

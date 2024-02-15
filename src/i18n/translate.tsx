@@ -1,6 +1,6 @@
 import { translations } from './translations';
 
-import { TAllFlattenKeys, TAllLangsPick, TTranslateFn } from './types';
+import { TAllFlattenKeys, TAllLangsPick, TTextArrows, TTranslateFn } from './types';
 
 /**
  * Перевод фразу по словарю
@@ -9,19 +9,11 @@ import { TAllFlattenKeys, TAllLangsPick, TTranslateFn } from './types';
  * @param [plural] {Number} Число для плюрализации
  * @returns {String} Переведенный текст
  */
-const translate: TTranslateFn = (
-  lang: TLangs,
-  text: TAllLangsPick | Array<TAllFlattenKeys> | string[] | string,
-  plural?: number
-): string => {
-  let result:
-    | string[]
-    | string
-    | Record<TAllFlattenKeys | keyof TPlurals | string, any> = Array.isArray(
-    text
-  )
-    ? text
-    : (text = text.split('->'));
+const translate: TTranslateFn = (lang, text, plural): string => {
+  let result: string[] | string | Record<TAllFlattenKeys | keyof TPlurals | string, any> =
+    Array.isArray(text)
+      ? text
+      : (text = text.split('->') as TAllLangsPick | Array<TAllFlattenKeys>);
 
   // В любом случае получим массив, но если передали только верхний ключ - будет лишь 1 элемент
   if (result.length > 1) {
@@ -44,20 +36,20 @@ const translate: TTranslateFn = (
   return (typeof result === 'object' ? text : result) as string;
 };
 
-// const res1 = translate('ru', 'auth.login');
-// const res2 = translate('ru', [
-//   'one',
-//   'levelOneTest.testing1',
-//   'levelTwoTest.testing2',
-// ]);
-// const res3 = translate(
-//   'ru',
-//   'test->levelOneTest.testing1->levelTwoTest.testing2' as string
-// );
+// Примеры использования функции translate
+// Верхний ключ
+const res1 = translate('ru', 'auth.login');
+translate('ru', 'article.add');
 
-// console.log(res1);
-// console.log(res2);
-// console.log(res3);
+// Вложенные ключи в виде массива
+const res2 = translate('ru', ['one', 'levelOneTest.testing1', 'levelTwoTest.testing2']);
+
+// PHP-way для доступа к вложенным свойствам
+const res3 = translate('ru', 'test->levelOneTest.testing1->levelTwoTest.testing2' as TTextArrows);
+
+console.log(res1);
+console.log(res2);
+console.log(res3);
 
 type TPlurals =
   | {

@@ -3,6 +3,5 @@ import Services from './services';
 
 /**
  * Контекст для Services
- * @type {React.Context<Services>}
  */
 export const ServicesContext = React.createContext<Services>(null);

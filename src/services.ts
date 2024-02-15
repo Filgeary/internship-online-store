@@ -18,7 +18,7 @@ class Services {
    * Сервис АПИ
    * @returns {APIService}
    */
-  get api() {
+  get api(): APIService {
     if (!this._api) {
       this._api = new APIService(this, this.config.api);
     }
@@ -29,7 +29,7 @@ class Services {
    * Сервис Store
    * @returns {Store}
    */
-  get store() {
+  get store(): Store {
     if (!this._store) {
       this._store = new Store(this, this.config.store);
     }

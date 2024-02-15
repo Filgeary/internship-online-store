@@ -14,9 +14,7 @@ import Catalog from '../catalog';
 
 function CatalogModal() {
   const store = useStore();
-  const [updatedItems, setUpdatedItems] = useState<
-    Record<string | number, number>
-  >({});
+  const [updatedItems, setUpdatedItems] = useState<Record<string | number, number>>({});
   const [catalogName, setCatalogName] = useState('');
   const [isSuccess, setIsSuccess] = useState(false);
 
@@ -24,7 +22,7 @@ function CatalogModal() {
   const closeParentFn = useCloseParentFn(modalId);
 
   useEffect(() => {
-    const name = `catalog-${self.crypto.randomUUID()}`;
+    const name = `catalog-${window.crypto.randomUUID()}`;
 
     setCatalogName(name);
 
@@ -105,23 +103,16 @@ function CatalogModal() {
       )}
 
       <Entities>
-        {isSuccess && (
-          <SuccessBlock>{t('catalogModal.successText')}</SuccessBlock>
-        )}
+        {isSuccess && <SuccessBlock>{t('catalogModal.successText')}</SuccessBlock>}
 
-        <button
-          disabled={options.isBtnDisabled}
-          onClick={callbacks.setSuccessToAdd}
-        >
+        <button disabled={options.isBtnDisabled} onClick={callbacks.setSuccessToAdd}>
           {t('catalogModal.btnSuccess')}
         </button>
 
         {/* <button onClick={callbacks.closeParent}>Закрыть родительскую модалку</button> */}
         {/* <button onClick={closeBasketModal}>Закрыть модалку корзины (последнюю)</button> */}
         {/* <button onClick={closeBasketModalStart}>Закрыть модалку корзины (первую)</button> */}
-        <button onClick={openAnotherCatalogModal}>
-          Открыть ещё одну модалку каталога
-        </button>
+        <button onClick={openAnotherCatalogModal}>Открыть ещё одну модалку каталога</button>
       </Entities>
     </Modal>
   );

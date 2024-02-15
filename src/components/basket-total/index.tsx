@@ -2,21 +2,21 @@ import { memo } from 'react';
 import { cn as bem } from '@bem-react/classname';
 import numberFormat from '@src/utils/number-format';
 import './style.css';
-import { TUserTranslateFn } from '@src/i18n/types';
+import { TAllLangsPick, TUserTranslateFn } from '@src/i18n/types';
 
 type BasketTotalProps = {
   sum?: number;
   t: TUserTranslateFn;
 };
 
-const defaultProps: BasketTotalProps = {
-  sum: 0,
-  t: (text: string) => text,
-};
+// const defaultProps: BasketTotalProps = {
+//   sum: 0,
+//   t: (text: TAllLangsPick) => text,
+// };
 
-BasketTotal.defaultProps = defaultProps;
+// BasketTotal.defaultProps = defaultProps;
 
-function BasketTotal({ sum, t }: BasketTotalProps) {
+function BasketTotal({ sum = 0, t = (text: TAllLangsPick) => text }: BasketTotalProps) {
   const cn = bem('BasketTotal');
   return (
     <div className={cn()}>

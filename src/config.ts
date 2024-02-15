@@ -41,7 +41,6 @@ const config = {
 };
 
 export type TConfig = typeof config;
-export type TConfigModules = typeof modules &
-  Partial<Record<keyof TGlobalState, object>>;
+export type TConfigModules = typeof modules & Partial<Record<keyof TGlobalState, object>>;
 
 export default config;

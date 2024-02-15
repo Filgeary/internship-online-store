@@ -6,12 +6,6 @@ type ListProps = {
   renderItem: (item: TItem) => React.ReactNode;
 };
 
-const defaultProps: Omit<ListProps, 'list'> = {
-  renderItem: () => <></>,
-};
-
-List.defaultProps = defaultProps;
-
 function List({ list, renderItem }: ListProps) {
   return (
     <div className='List'>

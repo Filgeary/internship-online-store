@@ -16,7 +16,5 @@ export type TGlobalState = {
 };
 
 export type TGlobalActions = {
-  [key in TExtendedKeysModules as TExtendedModules<key>]: InstanceType<
-    TImportModules[key]
-  >;
+  [key in TExtendedKeysModules as TExtendedModules<key>]: InstanceType<TImportModules[key]>;
 };

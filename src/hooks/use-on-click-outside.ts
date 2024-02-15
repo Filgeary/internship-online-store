@@ -1,9 +1,6 @@
 import React, { useEffect } from 'react';
 
-function useOnClickOutside(
-  ref: React.RefObject<any>,
-  ...handlers: (() => void)[]
-) {
+function useOnClickOutside(ref: React.RefObject<any>, ...handlers: (() => void)[]) {
   useEffect(() => {
     const runHandlers = () => handlers.forEach((handler) => handler());
 

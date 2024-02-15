@@ -9,7 +9,7 @@ import {
   TImportModules,
 } from './types';
 
-import { TConfig } from '@src/config';
+import { TConfig, TConfigModules } from '@src/config';
 
 type TListeners = Array<(...args: any[]) => void>;
 
@@ -51,11 +51,7 @@ class Store {
    */
   create<Key extends TDefaultKeysModules>(name: Key) {
     const moduleCreator = modules[name] as TImportModules[Key];
-    const module = new moduleCreator(
-      this,
-      name,
-      {} as any
-    ) as TGlobalActions[Key];
+    const module = new moduleCreator(this, name, {} as any) as TGlobalActions[Key];
     this.actions[name] = module;
     this.state[name] = this.actions[name].initState() as TGlobalState[Key];
   }
@@ -66,10 +62,9 @@ class Store {
    * @param base {String}
    * @param configByName {String} Какой из конфигов по имени использовать
    */
-  createStore(name: string, base: keyof typeof modules, configByName?: string) {
+  createStore(name: string, base: keyof typeof modules, configByName?: keyof TConfigModules) {
     const configName = configByName || name;
-    const configModule =
-      this.config?.modules[configName as keyof TConfig['store']['modules']];
+    const configModule = this.config?.modules[configName as keyof TConfig['store']['modules']];
 
     this.actions[name] = new modules[base](
       this,

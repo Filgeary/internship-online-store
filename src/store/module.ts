@@ -1,10 +1,9 @@
-import { TConfig } from '@src/config';
-import { TExtendedKeysModules, TGlobalState, TModules } from './types';
+import { TExtendedKeysModules } from './types';
 
 import Services from '@src/services';
 import Store from '.';
 
-type TStoreName = keyof TGlobalState | keyof TConfig['store']['modules'] | null;
+// type TStoreName = keyof TGlobalState | keyof TConfig['store']['modules'] | null;
 
 /**
  * Базовый класс для модулей хранилища
@@ -21,11 +20,7 @@ class StoreModule<State, Config = object> {
    * @param name {String}
    * @param [config] {Object}
    */
-  constructor(
-    store: Store,
-    name: TExtendedKeysModules,
-    config: Config | {} = {}
-  ) {
+  constructor(store: Store, name: TExtendedKeysModules, config: Config | {} = {}) {
     this.store = store;
     this.name = name;
     this.config = config as Config;
