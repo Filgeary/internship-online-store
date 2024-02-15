@@ -6,10 +6,8 @@
     "allowJs": true, //
     "skipLibCheck": true, //
     "esModuleInterop": true, //
-    // "allowSyntheticDefaultImports": true, //
     "allowImportingTsExtensions": true, //
     "strict": true, //
-    //"forceConsistentCasingInFileNames": true, //
     "noFallthroughCasesInSwitch": true, //
     "module": "esnext", //
     "moduleResolution": "Node", //

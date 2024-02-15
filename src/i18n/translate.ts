@@ -18,7 +18,9 @@ export default function translate(
     translations[lang] && text in translations[lang]
       ? translations[lang][text]
       : text;
-
+  if (typeof result === "string") {
+    return result;
+  }
   if (typeof plural !== "undefined" && typeof result === "object") {
     const key = new Intl.PluralRules(lang).select(plural);
     if (key in result) {

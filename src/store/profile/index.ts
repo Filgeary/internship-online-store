@@ -14,7 +14,7 @@ export type TProfileState  = {
 /**
  * Детальная информация о пользователе
  */
-class ProfileState extends StoreModule {
+class ProfileState extends StoreModule<TProfileState> {
   initState(): TProfileState {
     return {
       data: {},

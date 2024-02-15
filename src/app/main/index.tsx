@@ -17,7 +17,7 @@ function Main() {
     async () => {
       /*  store.make('Modal', 'catalog') */
 
-      store.make("catalogModal" as any, "catalog");
+      //store.make("catalogModal" as any, "catalog");
       await Promise.all([
         store.actions.catalog.initParams(),
         store.actions.categories.load(),

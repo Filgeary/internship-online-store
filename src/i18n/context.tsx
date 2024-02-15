@@ -23,7 +23,7 @@ export const I18nContext: React.Context<TI18nContext> =
 export function I18nProvider({ children }: {children:React.ReactNode}): JSX.Element {
   const [lang, setLang] = useState<TLang>("ru");
 
-  const i18n = useMemo(
+  const i18n = useMemo<TI18nContext>(
     () => ({
       // Код локали
       lang,

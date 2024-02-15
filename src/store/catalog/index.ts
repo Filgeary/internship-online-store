@@ -5,7 +5,7 @@ import { TCatalogState, TItem, TParams } from "./types";
 /**
  * Состояние каталога - параметры фильтра исписок товара
  */
-class CatalogState extends StoreModule {
+class CatalogState extends StoreModule<TCatalogState > {
   /**
    * Начальное состояние
    * @return {Object}

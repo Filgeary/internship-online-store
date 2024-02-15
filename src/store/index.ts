@@ -1,7 +1,7 @@
 import Services from "@src/services.ts";
 import * as modules from "./exports.ts";
 import { TConfig } from "@src/config.ts";
-import { TActions, TAddCloneModule, TDefaultModules, TKeyModules, TStoreState } from "./types.ts";
+import { TActions,  TKey,  TKeyModules, TNewStoreState, TStoreActions, TStoreState } from "./types.ts";
 
 /* 
 create<Key extends keyModules>(name: Key) {
@@ -49,47 +49,26 @@ class Store {
      * profile: ProfileState
      * }} */
     this.actions = {} as TActions;
-    for (const name of Object.keys(modules) as TDefaultModules[]) {
+    for (const name of Object.keys(modules) as TKeyModules[]) {
       this.create(name);
     }
   }
 
-  create<Key extends TDefaultModules>(name: Key) {
-    const moduleCreator = modules[name] as TAddCloneModule[Key];
-    const module = new moduleCreator(
-      this,
-      name,
-      {} as any
-    ) as TActions[Key];
-    this.actions[name] = module;
-    this.state[name] = this.actions[name].initState() as TStoreState[Key];
+  create<Key extends TKeyModules>(name: Key) {
+    this.actions[name] = new modules[name](this, name, {} as any) as TStoreActions[Key];
+    this.state[name] = this.actions[name].initState() as TNewStoreState[Key];
+  }
+ 
+  make<Key extends TKey<U>, U extends TKeyModules>(name: Key, base: TKeyModules) {
+    this.actions[name] = new modules[base](this, name,  {} as any ) as TStoreActions[Key];
+    this.state[name] = this.actions[name].initState() as TNewStoreState[Key];
   }
 
-  /* 
-  make<Key extends TKeyModules>(name: Key, base: Key) {
-    let newName = `${base}${name}`;
-    this.actions[name] = `${base}${name}` as TActions[Key];
-    this.actions[name] = new modules[base](
-      this,
-      newName,
-      {} as any
-    ) as TActions[Key];
-    this.state[name] = this.actions[name].initState() as TStoreState[Key];
-  } 
-  */
-
-  make<Key extends TDefaultModules>(name: Key, base: Key) {
-    this.actions[name] = new modules[base](
-      this,
-      name,
-      {} as any
-    ) as TActions[Key];
-    this.state[name] = this.actions[name].initState() as TStoreState[Key];
+  clear<Key extends TKey<U>, U extends TKeyModules>(name: Key) {
+    delete this.actions[name];
+    delete this.state[name];
   }
 
-  clear<Key extends TKeyModules>(name: Key) {
-    this.state[name] = this.actions[name].initState() as TStoreState[Key];
-  }
   /**
    * Подписка слушателя на изменения состояния
    * @param listener {Function}

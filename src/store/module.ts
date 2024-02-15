@@ -1,17 +1,14 @@
-import type { TConfig } from "@src/config";
 import Store from ".";
 import Services from "@src/services";
-import type { TStoreState } from "./types";
 
 /*
  * Базовый класс для модулей хранилища
  * Для группировки действий над внешним состоянием
  */
-export type TStoreName = keyof TStoreState | keyof TConfig["store"]["modules"];
 
-class StoreModule {
-  readonly name: string;
-  readonly config: TConfig | {};
+class StoreModule<State, Config = {}> {
+  name: string;
+  config: Config;
   store: Store;
   services: Services;
 
@@ -20,20 +17,20 @@ class StoreModule {
    * @param name {String}
    * @param [config] {Object}
    */
-  constructor(store: Store, name: string, config: {}) {
+  constructor(store: Store, name: string, config: Config | {}) {
     this.store = store;
     this.name = name;
-    this.config = config;
+    this.config = config as Config;
     /** @type {Services} */
     this.services = store.services;
   }
 
-  initState() {
-    return {};
+  initState(): State {
+    return {} as State;
   }
 
-  getState() {
-    return this.store.getState()[this.name];
+  getState(): State {
+    return this.store.getState()[this.name] as State;
   }
 
   setState(newState: {}, description = "setState") {

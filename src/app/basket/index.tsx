@@ -48,6 +48,7 @@ function Basket() {
     }, [store]),
     // Открытие модалки добавления еще товаров
     openModal: useCallback(() => {
+      store.make("catalogModal" as any, "catalog");
       dispatch(modalsActions.open("catalog"));
     }, [store]),
   };

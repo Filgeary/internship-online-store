@@ -12,7 +12,7 @@ export type TCategoriesState = {
 /**
  * Список категорий
  */
-class CategoriesState extends StoreModule {
+class CategoriesState extends StoreModule<TCategoriesState> {
   /**
    * Начальное состояние
    * @return {Object}

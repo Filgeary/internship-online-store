@@ -10,10 +10,13 @@ type TSessionState = {
   exists?: boolean;
 };
 
+type TConfigSession = {
+  tokenHeader: string;
+};
 /**
  * Сессия
  */
-class SessionState extends StoreModule {
+class SessionState extends StoreModule<TSessionState, TConfigSession> {
   config!: TConfig["store"]["modules"]["session"];
   /**
    * Начальное состояние
