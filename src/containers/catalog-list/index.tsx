@@ -13,7 +13,7 @@ import type { IArticle } from "@src/types/IArticle";
 
 type Props = {
   isSelectionMode?: boolean;
-  onSelectItem?: (id: string | number, checked: boolean) => void;
+  onSelectItem?: (id: string, checked: boolean) => void;
   selectedItems?: string[];
   catalogSliceName?: 'catalog' | `catalog${number}`;
 };

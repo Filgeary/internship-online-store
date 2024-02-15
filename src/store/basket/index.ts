@@ -1,6 +1,8 @@
+import { isSuccessResponse } from "@src/api";
 import StoreModule from "../module";
 
 import type { IArticle } from "@src/types/IArticle";
+
 type ExtendedArticle = IArticle & { amount: number };
 
 type InitialBasketState = {
@@ -39,14 +41,16 @@ class BasketState extends StoreModule<InitialBasketState> {
 
     if (!exist) {
       // Поиск товара в каталоге, чтобы его добавить в корзину.
-      const res = await this.services.api.request({
+      const res = await this.services.api.request<IArticle>({
         url: `/api/v1/articles/${_id}`,
       });
-      const item = res.data.result;
 
-      list.push({ ...item, amount: Number(amount) }); // list уже новый, в него можно пушить.
-      // Добавляем к сумме.
-      sum += item.price * amount;
+      if (isSuccessResponse(res.data)) {
+        const item = res.data.result;
+        list.push({ ...item, amount: Number(amount) }); // list уже новый, в него можно пушить.
+        // Добавляем к сумме.
+        sum += item.price * amount;
+      }
     }
 
     this.setState(

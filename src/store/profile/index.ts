@@ -1,3 +1,4 @@
+import { isSuccessResponse } from "@src/api";
 import StoreModule from "../module";
 
 import type { IUserProfile } from "@src/types/IUserProfile";
@@ -28,13 +29,15 @@ class ProfileState extends StoreModule<InitialProfileState> {
       waiting: true
     });
 
-    const { data } = await this.services.api.request({ url: `/api/v1/users/self` });
+    const { data } = await this.services.api.request<IUserProfile>({ url: `/api/v1/users/self` });
 
-    // Профиль загружен успешно
-    this.setState({
-      data: data.result,
-      waiting: false
-    }, 'Загружен профиль из АПИ');
+    if (isSuccessResponse(data)) {
+      // Профиль загружен успешно
+      this.setState({
+        data: data.result,
+        waiting: false
+      }, 'Загружен профиль из АПИ');
+    }
   }
 }
 

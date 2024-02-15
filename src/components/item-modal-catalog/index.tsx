@@ -9,7 +9,7 @@ import "./style.css";
 type Props = {
   item: IArticle;
   isSelected: boolean;
-  onSelectItem: (id: string | number, checked: boolean) => void;
+  onSelectItem: (id: string, checked: boolean) => void;
   onAdd: (id: string | number) => void;
   labelCurr?: string;
   labelAdd?: string;

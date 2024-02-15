@@ -16,8 +16,8 @@ function Main() {
   const { t } = useTranslate();
 
   useInit(async () => {
-    if (!store.hasSlice("catalogModal")) {
-      store.createSlice("catalogModal", "catalog");
+    if (!store.hasSlice("catalog2")) {
+      store.createSlice("catalog2", "catalog");
     }
 
     await Promise.all([

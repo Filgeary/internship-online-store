@@ -8,7 +8,7 @@ type Props = {
     title: string
   }[],
   value: string | number,
-  onChange: (value: string) => void
+  onChange: (value: any) => void
 }
 
 function Select({

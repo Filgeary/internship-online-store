@@ -1,4 +1,7 @@
+import { isSuccessResponse } from "@src/api";
 import StoreModule from "../module";
+
+import type { ICategories } from "@src/types/ICategory";
 
 type InitialCategoriesState = {
   list: any[];
@@ -22,16 +25,18 @@ class CategoriesState extends StoreModule<InitialCategoriesState> {
   async load() {
     this.setState({ ...this.getState(), waiting: true }, 'Ожидание загрузки категорий');
 
-    const res = await this.services.api.request({
+    const res = await this.services.api.request<ICategories>({
       url: `/api/v1/categories?fields=_id,title,parent(_id)&limit=*`
     });
 
-    // Товар загружен успешно
-    this.setState({
-      ...this.getState(),
-      list: res.data.result.items,
-      waiting: false
-    }, 'Категории загружены');
+    if (isSuccessResponse(res.data)) {
+      // Товар загружен успешно
+      this.setState({
+        ...this.getState(),
+        list: res.data.result.items,
+        waiting: false
+      }, 'Категории загружены');
+    }
   }
 
 }

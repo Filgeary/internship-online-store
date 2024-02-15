@@ -10,7 +10,7 @@ import listToTree from "@src/utils/list-to-tree";
 import treeToList from "@src/utils/tree-to-list";
 
 type Props = {
-  catalogSliceName?: 'catalog' | `catalog${string}`;
+  catalogSliceName?: 'catalog' | `catalog${number}`;
 };
 
 function CatalogFilter({ catalogSliceName = "catalog" }: Props) {

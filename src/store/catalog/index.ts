@@ -1,7 +1,8 @@
+import { isSuccessResponse } from "@src/api";
 import exclude from "@src/utils/exclude";
 import StoreModule from "../module";
 
-import type { IArticle } from "@src/types/IArticle";
+import type { IArticle, IArticles } from "@src/types/IArticle";
 
 type InitialCatalogState = {
   list: IArticle[],
@@ -117,13 +118,18 @@ class CatalogState extends StoreModule<InitialCatalogState, CatalogConfig> {
       'search[category]': ''
     });
 
-    const res = await this.services.api.request({ url: `/api/v1/articles?${new URLSearchParams(apiParams)}` });
-    this.setState({
-      ...this.getState(),
-      list: res.data.result.items,
-      count: res.data.result.count,
-      waiting: false
-    }, 'Загружен список товаров из АПИ');
+    const res = await this.services.api.request<IArticles>({
+      url: `/api/v1/articles?${new URLSearchParams(apiParams)}`
+    });
+
+    if (isSuccessResponse(res.data)) {
+      this.setState({
+        ...this.getState(),
+        list: res.data.result.items,
+        count: res.data.result.count,
+        waiting: false
+      }, 'Загружен список товаров из АПИ');
+    }
   }
 }
 

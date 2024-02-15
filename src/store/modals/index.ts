@@ -6,8 +6,8 @@ import type { TModalsNames } from "@src/types";
 type InitialModalsState = {
   data: {
     name: TModalsNames;
-    cb: Function;
     id: string | number;
+    cb?: Function;
   }[];
 };
 
@@ -24,7 +24,7 @@ class ModalsState extends StoreModule<InitialModalsState> {
     };
   }
 
-  open(name: TModalsNames, cb: Function) {
+  open(name: TModalsNames, cb?: Function) {
     const id = this.generateID();
 
     this.setState(
@@ -36,11 +36,11 @@ class ModalsState extends StoreModule<InitialModalsState> {
     );
   }
 
-  close(modalID: string | number, data: any) {
+  close(modalID: string | number, dataParams?: any) {
     const { name, cb } = this.getState().data.find(({ id }) => id === modalID) || {};
 
     if (cb) {
-      if (data) cb(data);
+      if (dataParams) cb(dataParams);
       else cb();
     }
 

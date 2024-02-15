@@ -17,7 +17,7 @@ const ModalCatalog = ({ onClose }: Props) => {
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
 
   useEffect(() => {
-    const init = async () => await store.actions["modalCatalog"].initParams();
+    const init = async () => await store.actions["catalog2"].initParams();
     init();
   }, []);
 
@@ -56,9 +56,9 @@ const ModalCatalog = ({ onClose }: Props) => {
         </button>
       </SideLayout>
 
-      <CatalogFilter catalogSliceName="modalCatalog" />
+      <CatalogFilter catalogSliceName="catalog2" />
       <CatalogList
-        catalogSliceName="modalCatalog"
+        catalogSliceName="catalog2"
         isSelectionMode={true}
         onSelectItem={callbacks.handleSelectItem}
         selectedItems={selectedItems}

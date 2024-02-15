@@ -2,10 +2,11 @@ import { isErrorResponse, isSuccessResponse } from "@src/api";
 import simplifyErrors from "@src/utils/simplify-errors";
 import StoreModule from "../module";
 
+import { IUserProfile } from "@src/types/IUserProfile";
 import type { IUserSession } from "@src/types/IUserSession";
 
 type InitialSessionState = {
-  user: IUserSession | IUserSession['user'] | null
+  user: IUserSession['user'] | null
   token: string | null
   errors: any
   waiting: boolean
@@ -98,7 +99,7 @@ class SessionState extends StoreModule<InitialSessionState, SessionConfig> {
       // Устанавливаем токен в АПИ
       this.services.api.setHeader(this.config.tokenHeader, token);
       // Проверяем токен выбором своего профиля
-      const res = await this.services.api.request<IUserSession>({ url: '/api/v1/users/self' });
+      const res = await this.services.api.request<IUserProfile>({ url: '/api/v1/users/self' });
 
       if (isErrorResponse(res.data)) { // TODO: show type guards
         // Удаляем плохой токен

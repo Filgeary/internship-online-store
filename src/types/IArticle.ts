@@ -1,3 +1,8 @@
+export interface IArticles {
+  items: IArticle[]
+  count: number
+}
+
 export interface IArticle {
   _id: string
   _type: string

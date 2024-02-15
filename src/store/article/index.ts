@@ -1,3 +1,4 @@
+import { isSuccessResponse } from "@src/api";
 import StoreModule from "../module";
 
 import type { IArticle } from "@src/types/IArticle";
@@ -26,15 +27,17 @@ class ArticleState extends StoreModule<InitialArticleState> {
     });
 
     try {
-      const res = await this.services.api.request({
+      const res = await this.services.api.request<IArticle>({
         url: `/api/v1/articles/${id}?fields=*,madeIn(title,code),category(title)`
       });
 
-      // Товар загружен успешно
-      this.setState({
-        data: res.data.result,
-        waiting: false
-      }, 'Загружен товар из АПИ');
+      if (isSuccessResponse(res.data)) {
+        // Товар загружен успешно
+        this.setState({
+          data: res.data.result,
+          waiting: false
+        }, 'Загружен товар из АПИ');
+      }
 
     } catch (e) {
       // Ошибка при загрузке
