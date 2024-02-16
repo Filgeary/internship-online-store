@@ -6,10 +6,7 @@ import { TConfigModules } from '@src/config';
 /**
  * Состояние каталога - параметры фильтра исписок товара
  */
-class CatalogState extends StoreModule<
-  TCatalogState,
-  TConfigModules['catalog']
-> {
+class CatalogState extends StoreModule<TCatalogState, TConfigModules['catalog']> {
   /**
    * Начальное состояние
    * @return {Object}
@@ -35,25 +32,18 @@ class CatalogState extends StoreModule<
    * @param [newParams] {Object} Новые параметры
    * @return {Promise<void>}
    */
-  async initParams(
-    newParams: TCatalogState['params'] | {} = {}
-  ): Promise<void> {
+  async initParams(newParams: TCatalogState['params'] | {} = {}): Promise<void> {
     const urlParams = new URLSearchParams(window.location.search);
     const validParams: Record<string, any> = {};
     if (!this.config.ignoreUrlOnInit) {
-      if (urlParams.has('page'))
-        validParams.page = Number(urlParams.get('page')) || 1;
+      if (urlParams.has('page')) validParams.page = Number(urlParams.get('page')) || 1;
       if (urlParams.has('limit'))
         validParams.limit = Math.min(Number(urlParams.get('limit')) || 10, 50);
       if (urlParams.has('sort')) validParams.sort = urlParams.get('sort');
       if (urlParams.has('query')) validParams.query = urlParams.get('query');
-      if (urlParams.has('category'))
-        validParams.category = urlParams.get('category');
+      if (urlParams.has('category')) validParams.category = urlParams.get('category');
     }
-    await this.setParams(
-      { ...this.initState().params, ...validParams, ...newParams },
-      true
-    );
+    await this.setParams({ ...this.initState().params, ...validParams, ...newParams }, true);
   }
 
   /**
@@ -61,9 +51,7 @@ class CatalogState extends StoreModule<
    * @param [newParams] {Object} Новые параметры
    * @return {Promise<void>}
    */
-  async resetParams(
-    newParams: TCatalogState['params'] | {} = {}
-  ): Promise<void> {
+  async resetParams(newParams: TCatalogState['params'] | {} = {}): Promise<void> {
     // Итоговые параметры из начальных, из URL и из переданных явно
     const params = { ...this.initState().params, ...newParams };
     // Установка параметров и загрузка данных
@@ -93,13 +81,9 @@ class CatalogState extends StoreModule<
     );
 
     // Сохранить параметры в адрес страницы
-    const urlSearch = new URLSearchParams(
-      exclude(params, this.initState().params)
-    ).toString();
+    const urlSearch = new URLSearchParams(exclude(params, this.initState().params)).toString();
     const url =
-      window.location.pathname +
-      (urlSearch ? `?${urlSearch}` : '') +
-      window.location.hash;
+      window.location.pathname + (urlSearch ? `?${urlSearch}` : '') + window.location.hash;
 
     if (!this.config.ignoreUrl) {
       if (replaceHistory) {

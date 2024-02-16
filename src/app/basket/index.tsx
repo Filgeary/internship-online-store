@@ -30,9 +30,7 @@ function Basket() {
     // Открыть модалку каталога
     openCatalogModal: useCallback(() => {
       const promiseOfModal =
-        store.actions.modals.open<Record<string | number, number>>(
-          'catalogModal'
-        );
+        store.actions.modals.open<Record<string | number, number>>('catalogModal');
 
       if (!promiseOfModal) return;
 
@@ -71,9 +69,7 @@ function Basket() {
       </Spinner>
 
       <BasketFooter>
-        <button onClick={callbacks.openCatalogModal}>
-          {t('basket.catalogModalOpen')}
-        </button>
+        <button onClick={callbacks.openCatalogModal}>{t('basket.catalogModalOpen')}</button>
         {/* <button onClick={openAnotherBasket}>
           Открыть ещё корзину
         </button> */}

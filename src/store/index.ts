@@ -9,7 +9,7 @@ import {
   TImportModules,
 } from './types';
 
-import { TConfig, TConfigModules } from '@src/config';
+import { TConfig, TConfigModules, TConfigModulesKeys } from '@src/config';
 
 type TListeners = Array<(...args: any[]) => void>;
 
@@ -51,7 +51,11 @@ class Store {
    */
   create<Key extends TDefaultKeysModules>(name: Key) {
     const moduleCreator = modules[name] as TImportModules[Key];
-    const module = new moduleCreator(this, name, {} as any) as TGlobalActions[Key];
+    const module = new moduleCreator(
+      this,
+      name,
+      this.config.modules[name as TConfigModulesKeys]
+    ) as TGlobalActions[Key];
     this.actions[name] = module;
     this.state[name] = this.actions[name].initState() as TGlobalState[Key];
   }
@@ -70,7 +74,7 @@ class Store {
       this,
       name as TExtendedKeysModules,
       {
-        ...this.config?.modules[base as keyof TConfig['store']['modules']],
+        ...this.config?.modules[base as TConfigModulesKeys],
         ...configModule,
       } || {}
     );

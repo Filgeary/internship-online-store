@@ -6,7 +6,6 @@ import { TGlobalState } from '@src/store/types';
 
 type TypedUseSelectorHook<TState> = {
   <TSelected>(selector: (state: TState) => TSelected): TSelected;
-  <Selected>(selector: (state: TState) => Selected): Selected;
 };
 
 /**
@@ -19,17 +18,13 @@ export default function useSelector<TState, Selected>(
 ): Selected {
   const store = useStore();
 
-  const [state, setState] = useState(() =>
-    selectorFunc(store.getState() as TState)
-  );
+  const [state, setState] = useState(() => selectorFunc(store.getState() as TState));
 
   const unsubscribe = useMemo(() => {
     // Подписка. Возврат функции для отписки
     return store.subscribe(() => {
       const newState = selectorFunc(store.getState() as TState);
-      setState((prevState: Selected) =>
-        shallowequal(prevState, newState) ? prevState : newState
-      );
+      setState((prevState: Selected) => (shallowequal(prevState, newState) ? prevState : newState));
     });
   }, []); // Нет зависимостей - исполнится один раз
 
