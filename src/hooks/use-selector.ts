@@ -1,7 +1,7 @@
 import { useLayoutEffect, useMemo, useState } from "react";
 import shallowequal from "shallowequal";
 import useStore from "./use-store";
-import { TStoreState } from "@src/store/types";
+import { TNewStoreState } from "@src/store/types";
 
 
 /**
@@ -9,18 +9,18 @@ import { TStoreState } from "@src/store/types";
  * @param selectorFunc {Function}
  * @return {*}
  */
-export default function useSelector(
-  selectorFunc: (arg: TStoreState) => any
-): any {
+export default function useSelector<T>(
+  selectorFunc: (arg: TNewStoreState) => T
+): T {
   const store = useStore();
 
-  const [state, setState] = useState(() => selectorFunc(store.getState()));
+  const [state, setState] = useState<T>(() => selectorFunc(store.getState()));
 
-  const unsubscribe: any = useMemo(() => {
+  const unsubscribe:any = useMemo(() => {
     // Подписка. Возврат функции для отписки
     return store.subscribe(() => {
-      const newState = selectorFunc(store.getState());
-      setState((prevState: any) =>
+      const newState:T = selectorFunc(store.getState());
+      setState((prevState) =>
         shallowequal(prevState, newState) ? prevState : newState
       );
     });

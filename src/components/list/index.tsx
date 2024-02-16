@@ -1,9 +1,11 @@
 import { memo } from "react";
 import "./style.css";
+import { TArticle } from "@src/store/article/types";
+import { TBasketArticle } from "@src/store/basket/types";
 
 type TListProps = {
-  list: [{ _id: string | number }];
-  renderItem: (item: { _id: string | number }) => React.ReactNode;
+  list: TArticle[] | TBasketArticle[];
+  renderItem: (item: TArticle) => React.ReactNode;
 };
 
 function List({ list, renderItem }: TListProps) {

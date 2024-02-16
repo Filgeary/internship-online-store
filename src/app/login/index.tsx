@@ -66,7 +66,7 @@ function Login() {
       <SideLayout padding="medium">
         <form onSubmit={callbacks.onSubmit}>
           <h2>{t("auth.title")}</h2>
-          <Field label={t("auth.login")} error={select.errors?.login}>
+          <Field label={t("auth.login")} error={select.errors?.login} >
             <Input
               name="login"
               value={data.login}

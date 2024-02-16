@@ -4,32 +4,30 @@ import numberFormat from "@src/utils/number-format";
 import "./style.css";
 import { Link } from "react-router-dom";
 import useSelector from "@src/hooks/use-selector";
+import { TArticle } from "@src/store/article/types";
+import { TItem } from "@src/store/catalog/types";
+import { TKey, TKeyModules } from "@src/store/types";
 
 
-type TItemProps = {
-  item: {
-    _id: string | number;
-    title: string;
-    price: number;
-  };
+type TItemProps<T> = {
+  item: TArticle;
   link: string;
   onAdd: (id: string | number) => void;
   labelCurr: string;
   labelAdd: string;
   catalog?: boolean;
-  onSelect: (item: {
-    _id: string | number;
-    title: string;
-    price: number;
-  }) => void;
+  onSelect: (item:TArticle) => void;
+  storeName:TKey<T extends TKeyModules ? T : "catalog">
 };
 
-function Item(props: TItemProps) {
+function Item(props: TItemProps<''>) {
   const cn = bem("Item");
 
-  const selected = useSelector(
-    (state) =>
-      (props.catalog && state.catalogModal.selectedItems) || []
+  const selected : TItem[] = useSelector(
+    (state) => (props.catalog && state[props.storeName].selectedItems) || []
+  );
+  const select = selected.find(
+    (el) => el.id == props.item._id
   );
   const callbacks = {
     onAdd: () => props.onAdd(props.item._id),
@@ -37,9 +35,7 @@ function Item(props: TItemProps) {
       props.onSelect(props.item);
     },
   };
-  const select = selected.find(
-    (el: { id: string | number }) => el.id == props.item._id
-  );
+ 
 
   return (
     <div

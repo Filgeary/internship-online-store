@@ -8,9 +8,9 @@ export type TItem = {
 export type TParams = {
   page: number;
   limit: number;
-  sort: string|null;
-  query: string|null;
-  category: string|null;
+  sort: string | null;
+  query: string | null;
+  category: string | null | undefined;
 };
 
 export type TCatalogState = {

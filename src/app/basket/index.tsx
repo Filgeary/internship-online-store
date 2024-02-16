@@ -12,8 +12,10 @@ import { useSelector as useSelectorRedux } from "react-redux";
 import useInit from "@src/hooks/use-init";
 import { TArticleState } from "@src/store/article/types";
 import { TReducer } from "@src/store-redux/modals/reducer";
+import { TCloseModal } from "@src/containers/modals";
 
-function Basket() {
+
+function Basket(props: TCloseModal) {
   const store = useStore();
   const dispatch = useDispatch();
   const { t } = useTranslate();
@@ -42,13 +44,12 @@ function Basket() {
       [store]
     ),
     // Закрытие модалки корзины
-    closeModal: useCallback(() => {
-      //store.actions.modals.close();
-      dispatch(modalsActions.close("basket", null));
-    }, [store]),
+    closeModal: () => {
+      props.closeModal("basket", null);
+    },
     // Открытие модалки добавления еще товаров
     openModal: useCallback(() => {
-      store.make("catalogModal" as any, "catalog");
+      store.make("Modal" as any, "catalog");
       dispatch(modalsActions.open("catalog"));
     }, [store]),
   };

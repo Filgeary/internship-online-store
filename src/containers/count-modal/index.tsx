@@ -2,21 +2,23 @@ import CountForm from "@src/components/count-form";
 import ModalLayout from "@src/components/modal-layout";
 import useStore from "@src/hooks/use-store";
 import useTranslate from "@src/hooks/use-translate";
-import React, { memo, useCallback } from "react";
-import PropTypes from "prop-types";
+import { memo, useCallback } from "react";
+import { TCloseModal } from "../modals";
 
-const CountModal = (props) => {
+
+const CountModal = (props: TCloseModal) => {
   const { t } = useTranslate();
   const store = useStore();
 
   const callbacks = {
     // Закрытие модалки каталога
-    closeModal: (count) => {
-      props.closeModal("counter", count);
+    closeModal: (count: number) => {
+      props.closeModal("counter", count || null);
     },
+
     // Событие формы
     onSubmit: useCallback(
-      (count) => {
+      (count: number) => {
         callbacks.closeModal(count);
       },
       [store]
@@ -41,12 +43,8 @@ const CountModal = (props) => {
   );
 };
 
-CountModal.propTypes = {
-  closeModal: PropTypes.func,
-};
-
-CountModal.defaultProps = {
+/* CountModal.defaultProps = {
   closeModal: () => {},
-};
+}; */
 
 export default memo(CountModal);

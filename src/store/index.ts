@@ -1,18 +1,13 @@
 import Services from "@src/services.ts";
 import * as modules from "./exports.ts";
 import { TConfig } from "@src/config.ts";
-import { TActions,  TKey,  TKeyModules, TNewStoreState, TStoreActions, TStoreState } from "./types.ts";
-
-/* 
-create<Key extends keyModules>(name: Key) {
-    let b = modules[name] as importModules[Key];
-    let a = new b(this, name,import { TConfig } from '@src/config';
- {} as any) as Actions[Key];import { TStoreState } from '@src/store/types';
-
-    this.actions[name] = a;
-    this.state[name] = this.actions[name].initState() as StoreState[Key];
-  }
-   */
+import {
+  TActions,
+  TKey,
+  TKeyModules,
+  TNewStoreState,
+  TStoreActions,
+} from "./types.ts";
 
 /**
  * Хранилище состояния приложения
@@ -21,7 +16,7 @@ class Store {
   services: Services;
   config: TConfig["store"];
   listeners: Function[];
-  state : TStoreState & Record<string, any>;
+  state: TNewStoreState & Record<string, any>;
   actions: TActions & Record<string, any>;
 
   /**
@@ -29,15 +24,11 @@ class Store {
    * @param config {Object}
    * @param initState {Object}
    */
-  constructor(
-    services: Services,
-    config = {} ,
-    initState = {} 
-  ) {
+  constructor(services: Services, config = {}, initState = {}) {
     this.services = services;
-    this.config = config as TConfig['store'];
+    this.config = config as TConfig["store"];
     this.listeners = []; // Слушатели изменений состояния
-    this.state = initState as TStoreState;
+    this.state = initState as TNewStoreState;
     /** @type {{
      * basket: BasketState,
      * catalog: CatalogState,
@@ -55,13 +46,29 @@ class Store {
   }
 
   create<Key extends TKeyModules>(name: Key) {
-    this.actions[name] = new modules[name](this, name, {} as any) as TStoreActions[Key];
+    this.actions[name] = new modules[name](
+      this,
+      name,
+      {} as any
+    ) as TStoreActions[Key];
     this.state[name] = this.actions[name].initState() as TNewStoreState[Key];
   }
- 
-  make<Key extends TKey<U>, U extends TKeyModules>(name: Key, base: TKeyModules) {
-    this.actions[name] = new modules[base](this, name,  {} as any ) as TStoreActions[Key];
-    this.state[name] = this.actions[name].initState() as TNewStoreState[Key];
+
+  make<Key extends TKey<U>, U extends TKeyModules>(
+    name: Key,
+    base: TKeyModules
+  ) {
+    const newName = `${base}${name}`;
+
+    this.actions[newName] = new modules[base](
+      this,
+      newName,
+      {} as any
+    ) as TStoreActions[Key];
+    this.state[newName] = this.actions[
+      newName
+    ].initState() as TNewStoreState[Key];
+    console.log(this.state);
   }
 
   clear<Key extends TKey<U>, U extends TKeyModules>(name: Key) {
@@ -99,8 +106,8 @@ class Store {
    * }}
    */
   getState() {
-    return this.state as any
-  } 
+    return this.state as any;
+  }
 
   /**
    * Установка состояния
@@ -117,7 +124,7 @@ class Store {
       console.log(`%c${"next:"}`, `color: ${"#2fa827"}`, newState);
       console.groupEnd();
     }
-    this.state = newState as TStoreState;
+    this.state = newState as TNewStoreState;
     // Вызываем всех слушателей
     for (const listener of this.listeners) listener(this.state);
   }

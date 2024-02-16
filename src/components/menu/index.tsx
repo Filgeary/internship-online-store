@@ -3,16 +3,17 @@ import { cn as bem } from "@bem-react/classname";
 import { Link } from "react-router-dom";
 import "./style.css";
 
+type TNavigateItem = {
+  key: number;
+  link: string;
+  title: string;
+};
+
 type TMenuProps = {
-  items: [
-    {
-      key: number;
-      link: string;
-      title: string;
-    }
-  ];
+  items: TNavigateItem[];
   onNavigate: (item: { key: number; link: string; title: string }) => void;
 };
+
 function Menu({ items, onNavigate }: TMenuProps) {
   const cn = bem("Menu");
   return (

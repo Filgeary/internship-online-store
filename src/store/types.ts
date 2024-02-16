@@ -15,7 +15,7 @@ export type TStoreState = {
 
 ///////////////////////
 
-export type TKey<T extends TKeyModules> = T | `${T}-${string}`;
+export type TKey<T extends TKeyModules> = T | `${T&string}`;
 
 ///////////////////////
 

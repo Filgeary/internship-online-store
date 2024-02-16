@@ -5,7 +5,11 @@ import simplifyErrors from "@src/utils/simplify-errors";
 type TSessionState = {
   user?: { userName: string } | {};
   token?: string | null;
-  errors?: string[] | null;
+  errors?: {
+    other: string[];
+    password: string[];
+    login: string[];
+  } | null;
   waiting?: boolean;
   exists?: boolean;
 };

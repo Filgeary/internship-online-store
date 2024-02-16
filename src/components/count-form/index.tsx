@@ -4,7 +4,7 @@ import "./style.css";
 
 type TCountFormProps = {
   onSubmit: (number: number) => void;
-  closeModal: () => void;
+  closeModal: any;
   basketUnit: string;
   title: string;
   ok: string;

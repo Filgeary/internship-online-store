@@ -2,12 +2,13 @@ import { memo } from "react";
 import { cn as bem } from "@bem-react/classname";
 import numberFormat from "@src/utils/number-format";
 import "./style.css";
+import { TDictionaryKeys } from "@src/i18n/translations";
 
 type TBasketToolProps = {
   sum: number;
   amount: number;
   onOpen: () => void;
-  t: (text: string, number?: number) => string;
+  t: (text: TDictionaryKeys, number?: number) => string;
 }
 
 function BasketTool ({ sum, amount, onOpen, t }:TBasketToolProps)  {

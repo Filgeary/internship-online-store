@@ -13,7 +13,7 @@ import useInit from "@src/hooks/use-init";
 function Navigation() {
   const store = useStore();
   const dispatch = useDispatch();
-  const activeModal = useSelectorRedux((state) => state.modals);
+  const activeModal = useSelectorRedux((state: any) => state.modals);
   const select = useSelector((state) => ({
     amount: state.basket.amount,
     sum: state.basket.sum,
@@ -25,10 +25,7 @@ function Navigation() {
     if (typeof activeModal.data === "number") {
       store.actions.basket.addToBasket(select.active, activeModal.data);
       dispatch(modalsActions.reset());
-    } /* else if (Array.isArray(activeModal.data)) {
-      store.actions.basket.multiAddToBasket(select.active, activeModal.data);
-      dispatch(modalsActions.reset());
-    }  */
+    }
   }, [activeModal.data]);
 
   const callbacks = {
@@ -40,7 +37,7 @@ function Navigation() {
 
     // Обработка перехода на главную
     onNavigate: useCallback(
-      (item) => {
+      (item: any) => {
         if (item.key === 1) store.actions.catalog.resetParams();
       },
       [store]

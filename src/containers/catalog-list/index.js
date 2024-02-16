@@ -18,6 +18,8 @@ function CatalogList(props) {
     list: state[props.storeName].list,
     page: state[props.storeName].params.page,
     limit: state[props.storeName].params.limit,
+    sort: state[props.storeName].params.sort,
+    query: state[props.storeName].params.query,
     count: state[props.storeName].count,
     waiting: state[props.storeName].waiting,
   }));
@@ -72,6 +74,7 @@ function CatalogList(props) {
           labelAdd={t("article.add")}
           catalog={activeModal.catalog}
           onSelect={callbacks.selectItem}
+          storeName={props.storeName}
         />
       ),
       [callbacks.addToBasket, t]

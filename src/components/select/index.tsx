@@ -1,13 +1,14 @@
 import { memo } from "react";
 import "./style.css";
+import { TLang } from "@src/i18n/translate";
 
 type TSelectProps = {
   options: { value: string | number; title: string }[];
   value?: any;
-  onChange: (value: string | number) => void;
+  onChange: (lang: TLang) => void;
 };
 function Select(props: TSelectProps) {
-  const onSelect = (e: { target: { value: string | number } }) => {
+  const onSelect = (e: any) => {
     props.onChange(e.target.value);
   };
 

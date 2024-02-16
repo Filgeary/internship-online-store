@@ -16,7 +16,7 @@ const CatalogModal = (props) => {
     async () => {
       await Promise.all([store.actions.catalogModal.initParams()]);
     },
-    [],
+    [store],
     true
   );
 

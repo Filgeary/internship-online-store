@@ -11,19 +11,20 @@ import debounce from "lodash.debounce";
 import "./style.css";
 
 type TInputProps = {
-  value: string|undefined;
+  value: any ;
   name?: string;
   type?: string;
   placeholder?: string;
   onChange: (value: string, name?: string) => void;
   theme?: string;
+  delay?: number;
 };
 function Input(props: TInputProps) {
   // Внутренний стейт для быстрого отображения ввода
   const [value, setValue] = useState(props.value);
 
   const onChangeDebounce = useCallback(
-    debounce((value:string) => props.onChange(value, props.name), 600),
+    debounce((value: string) => props.onChange(value, props.name), 600),
     [props.onChange, props.name]
   );
 

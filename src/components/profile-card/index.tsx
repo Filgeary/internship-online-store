@@ -1,19 +1,10 @@
 import { memo } from "react";
 import { cn as bem } from "@bem-react/classname";
 import "./style.css";
+import { TUser } from "@src/store/profile/types";
 
-type TProfileCardProps = {
-    data: {
-      profile: {
-        name: string
-        phone: string
-      }
-      email: string
-    }
-  }
-  
 
-function ProfileCard ({ data }:TProfileCardProps) {
+function ProfileCard ({ data = {} as TUser}) {
   const cn = bem("ProfileCard");
 
   return (

@@ -4,7 +4,7 @@ import "./style.css";
 
 type TModalLayoutProps = {
   title: string;
-  onClose: () => void;
+  onClose: any
   children?: React.ReactNode;
   labelClose: string;
   key?: boolean;
