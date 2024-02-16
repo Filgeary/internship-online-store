@@ -9,9 +9,7 @@ export const useCatalog = () => {
   const ctx = useContext(CatalogContext);
 
   if (!ctx) {
-    throw new Error(
-      'Компоненты каталога должны быть обёрнуты в компонент <Catalog />.'
-    );
+    throw new Error('Компоненты каталога должны быть обёрнуты в компонент <Catalog />.');
   }
 
   return ctx;
@@ -36,7 +34,10 @@ function Catalog({ children, stateName }: CatalogProps) {
     sort: state[stateName].params.sort,
     query: state[stateName].params.query,
     category: state[stateName].params.category,
+    country: state[stateName].params.country,
+
     categories: state.categories.list,
+    countries: state.countries.list,
   }));
 
   const callbacks = {
@@ -81,24 +82,22 @@ function Catalog({ children, stateName }: CatalogProps) {
     ),
     // Поиск
     onSearch: useCallback(
-      (query: string) =>
-        store.actions[stateName].setParams({ query, page: 1 }, false),
+      (query: string) => store.actions[stateName].setParams({ query, page: 1 }, false),
       [store]
     ),
     // Сброс
     onReset: useCallback(() => store.actions[stateName].resetParams(), [store]),
     // Фильтр по категории
     onCategory: useCallback(
-      (category: string) =>
-        store.actions[stateName].setParams({ category, page: 1 }, false),
+      (category: string) => store.actions[stateName].setParams({ category, page: 1 }, false),
       [store]
     ),
+    // Выбор страны
+    onCountrySelected: useCallback(() => {}, [store]),
   };
 
   return (
-    <CatalogContext.Provider value={{ select, callbacks }}>
-      {children}
-    </CatalogContext.Provider>
+    <CatalogContext.Provider value={{ select, callbacks }}>{children}</CatalogContext.Provider>
   );
 }
 

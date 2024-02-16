@@ -9,6 +9,7 @@ import treeToList from '@src/utils/tree-to-list';
 import listToTree from '@src/utils/list-to-tree';
 
 import { useCatalog } from '../catalog';
+import SelectCustom from '@src/components/select-custom';
 
 function CatalogFilter() {
   const { callbacks, select } = useCatalog();
@@ -26,16 +27,14 @@ function CatalogFilter() {
     categories: useMemo(
       () => [
         { value: '', title: 'Все' },
-        ...treeToList(
-          listToTree(select.categories),
-          (item: TItem, level: number) => ({
-            value: item._id,
-            title: '- '.repeat(level) + item.title,
-          })
-        ),
+        ...treeToList(listToTree(select.categories), (item: TItem, level: number) => ({
+          value: item._id,
+          title: '- '.repeat(level) + item.title,
+        })),
       ],
       [select.categories]
     ),
+    countries: useMemo(() => [], [select.countries]),
   };
 
   const { t } = useTranslate();
@@ -47,16 +46,21 @@ function CatalogFilter() {
         value={select.category}
         onChange={callbacks.onCategory}
       />
-      <Select
-        options={options.sort}
-        value={select.sort}
-        onChange={callbacks.onSort}
-      />
+      <Select options={options.sort} value={select.sort} onChange={callbacks.onSort} />
       <Input
         value={select.query}
         onChange={callbacks.onSearch}
         placeholder={'Поиск'}
         delay={1000}
+      />
+      {/* Выбор страны */}
+      <SelectCustom
+        displayStringForOption={(item) => item.title}
+        onSelected={(item) => console.log('Пользователь выбрал:', item)}
+        defaultVal='Все'
+        // value={select.country}
+        // onSelected={callbacks.onCountrySelected}
+        options={select.countries}
       />
       <button onClick={callbacks.onReset}>{t('filter.reset')}</button>
     </SideLayout>

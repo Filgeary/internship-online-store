@@ -20,6 +20,7 @@ class CatalogState extends StoreModule<TCatalogState, TConfigModules['catalog']>
         sort: 'order',
         query: '',
         category: '',
+        country: '',
       },
       count: 0,
       waiting: false,
@@ -42,6 +43,7 @@ class CatalogState extends StoreModule<TCatalogState, TConfigModules['catalog']>
       if (urlParams.has('sort')) validParams.sort = urlParams.get('sort');
       if (urlParams.has('query')) validParams.query = urlParams.get('query');
       if (urlParams.has('category')) validParams.category = urlParams.get('category');
+      if (urlParams.has('country')) validParams.country = urlParams.get('country');
     }
     await this.setParams({ ...this.initState().params, ...validParams, ...newParams }, true);
   }

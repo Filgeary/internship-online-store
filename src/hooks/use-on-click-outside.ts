@@ -5,7 +5,12 @@ function useOnClickOutside(ref: React.RefObject<any>, ...handlers: (() => void)[
     const runHandlers = () => handlers.forEach((handler) => handler());
 
     const listener = (e: Event) => {
-      if (e.currentTarget === e.target) {
+      // if (e.currentTarget === e.target) {
+      //   runHandlers();
+      // }
+
+      //@ts-ignore
+      if (!ref.current.contains(e.target)) {
         runHandlers();
       }
     };
@@ -18,12 +23,12 @@ function useOnClickOutside(ref: React.RefObject<any>, ...handlers: (() => void)[
       }
     };
 
-    ref.current.addEventListener('pointerdown', listener);
-    ref.current.addEventListener('keydown', keyListener);
+    document.addEventListener('pointerdown', listener);
+    document.addEventListener('keydown', keyListener);
 
     return () => {
-      ref.current?.removeEventListener('pointerdown', listener);
-      ref.current?.addEventListener('keydown', keyListener);
+      document.removeEventListener('pointerdown', listener);
+      document.addEventListener('keydown', keyListener);
     };
   }, [ref, handlers]);
 }
