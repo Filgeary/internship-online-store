@@ -1,12 +1,19 @@
+import { TConfig } from "@src/config";
+import type Services from "@src/services";
+import { IRequestProps } from "./types";
+
 class APIService {
+  services: Services;
+  config: TConfig;
+  defaultHeaders: HeadersInit;
 
   /**
    * @param services {Services} Менеджер сервисов
    * @param config {Object}
    */
-  constructor(services, config = {}) {
+  constructor(services: Services, config = {}) {
     this.services = services;
-    this.config = config
+    this.config = config;
     this.defaultHeaders = {
       'Content-Type': 'application/json',
     }
@@ -20,7 +27,7 @@ class APIService {
    * @param options
    * @returns {Promise<{}>}
    */
-  async request({url, method = 'GET', headers = {}, ...options}) {
+  async request({url, method = 'GET', headers = {}, ...options}: IRequestProps) {
     if (!url.match(/^(http|\/\/)/)) url = this.config.baseUrl + url;
     const res = await fetch(url, {
       method,
@@ -35,7 +42,7 @@ class APIService {
    * @param name {String} Название заголовка
    * @param value {String|null} Значение заголовка
    */
-  setHeader(name, value = null) {
+  setHeader(name: keyof HeadersInit, value = null) {
     if (value) {
       this.defaultHeaders[name] = value;
     } else if (this.defaultHeaders[name]) {

@@ -6,7 +6,7 @@ import './style.css';
 function Select(props: ISelectProps) {
 
   const onSelect= (event: React.ChangeEvent<HTMLSelectElement>) => {
-    props.onChange(event.target.value);
+    props.onChange?.(event.target.value);
   };
 
   return (

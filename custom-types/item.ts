@@ -8,4 +8,4 @@ export interface IItem {
   [prop: string]: any;
 }
 
-export type RequiredItemFields<Fields> = RequiredFields<IItem, Fields>;
+export type RequiredItemFields<Keys extends keyof IItem> = RequiredFields<IItem, Keys>;

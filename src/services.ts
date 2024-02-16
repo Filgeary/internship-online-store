@@ -1,10 +1,15 @@
 import APIService from "./api";
 import Store from "./store";
 import createStoreRedux from "./store-redux";
+import { type TConfig } from "./config";
 
 class Services {
+  config: TConfig;
+  private _api?: APIService;
+  private _store?: Store;
+  private _redux?: ReturnType<typeof createStoreRedux>
 
-  constructor(config) {
+  constructor(config: TConfig) {
     this.config = config;
   }
 

@@ -6,6 +6,39 @@
 
 **Сделано по задаче 3**
 
+- Решение задачи с преобразованием древовидного объекта в плоский словарь находится в файле: `src/i18n/experiment.ts`
+
+![Подсказка перевода](img/translateHint-2.png)
+
+- Типизировал классы `Store`, `Services`, `APIService`, `StoreModule` и переменную, в которой хранится `config`.
+- Написал интересные дженерик типы, которые позволяют вытащить ключи и значения(!) из `enum`:
+
+```ts
+enum EContext {
+  addToBasket = 'add-to-basket',
+  addToSelected = 'add-to-selected',
+  addMoreToBasket = 'add-more-to-basket',
+}
+
+type EnumsKeys<E> = keyof { -readonly [Key in keyof E]: any };
+type EnumsValues<E> = keyof { [Key in E[keyof E] as `${Key & string}`]: any };
+
+type TKeys = EnumsKeys<typeof EContext>;
+// type TKeys = "addToBasket" | "addToSelected" | "addMoreToBasket"
+
+type TVal = EnumsValues<typeof EContext>; // Удивительно, но это работает
+// type TVal = "add-to-basket" | "add-to-selected" | "add-more-to-basket"
+```
+
+- В дженерик типе `AddFields` переименовал `(A & B)` -> `(ObjA & ObjB)`, чтобы понятнее было с первого взгляда, а сам `AddFields` переименован в `Merge` (потому что по сути, он сливает два интерфейса в один). И немного упростил и улучшил сами типы. Теперь финальный тип выглядит так:
+```ts
+export type RequiredFields<Interface, Keys extends keyof Interface> =
+  Merge<
+    Required<Pick<Interface, Keys>>, // Обязательные поля
+    Partial<Interface>               // Опциональные поля
+  >;
+```
+- Исправил `useSelector` и мелкие ошибки с типизацией глупых компонентов.
 - Реализовал интересную штуку. Дженерик тип `RequiredFields<Interface, Fields>`, который берёт интерфейс, и делает все его поля опциональными, кроме тех, которые были переданы. Таким образом, мы можем определить структуру типа `item` в одном месте (все поля обязательные) и затем для разных компонентов оставлять разные поля обязательными (при этом тип этих полей будет браться из исходного `item`). На основе этого дженерик типа был создан ещё один, который можно вызывать так: `RequiredItemFields<'_id' | 'price'>`. Вот пример использования `RequiredFields`:
 
 ```ts
@@ -16,63 +49,6 @@ interface Test {
   other: { a: number; b: string };
   [prop: string]: any;
 }
-
-type c = RequiredFields<Test, '_id' | 'price'>;
-/* Вывод:
-type c = {
-    [x: string]: any;
-    _id: string | number;
-    price: number;
-    title?: string | undefined;
-    other?: {
-        a: number;
-        b: string;
-    } | undefined;
-}
-*/
-```
-
-  Реализовано это так:
-
-```ts
-interface Test {
-  _id: string | number;
-  title: string;
-  price: number;
-  other: { a: number; b: string };
-  [prop: string]: any;
-}
-
-/**
- * Возвращает новый интерфейс содержащий только перечисленные ключи из `Interface`.
- */
-export type ExtractFields<Interface, Fields> = { [Key in Extract<Fields, keyof Interface>]: Interface[Key] };
-
-type a = ExtractFields<Test, '_id' | 'price'>;
-/* Вывод:
-type a = {
-    _id: string | number;
-    price: number;
-}
-*/
-
-/**
- * Возвращает новый интерфейс с объединением ключей `A` и `B`, причём если часть из них будет совпадать,
- * то будут использованы ключи из `A`.
- * Ограничение: `A` не должно содержать чего-то вроде `[prop: string]: any;`,
- * иначе проверка "есть ли `Key` в `A`?" всегда будет успешной и все ключи из `B` получат тип `any`.
- * Для `B` такого ограничения нет, потому что всегда сначала будут браться ключи из `A`.
- */
-export type AddFields<A, B> = {
-  [Key in keyof (A & B)]: Key extends keyof A ? A[Key] : Key extends keyof B ? B[Key] : never;
-//    магия тут ^^^^^^^
-};
-
-/**
- * Возвращает новый интерфейс на основе переданного, в котором все ключи,
- * кроме перечисленных ключей, являются опциональными.
- */
-export type RequiredFields<Interface, Fields> = AddFields<ExtractFields<Interface, Fields>, Partial<Interface>>;
 
 type c = RequiredFields<Test, '_id' | 'price'>;
 /* Вывод:
@@ -219,46 +195,15 @@ type TDictionaryTree = {
 
   По задаче `i18n` вроде всё.
 
-- Типизация стора сделана так:
-
-```ts
-type TActionsPartial = { [Property in keyof TModulesType]: InstanceType<TModulesType[Property]             > };
-type TStatePartial   = { [Property in keyof TActions    ]: ReturnType  <TActions    [Property]['initState']> };
-
-// Стейт форков ForkState подключается отдельно, потому что это не часть контента сайта, а часть механизма стора.
-// Добавим его к типам стейта и экшенов как пересечение типов:
-export type TActions = TActionsPartial & { ['forks']: ForkState                          };
-export type TState   = TStatePartial   & { ['forks']: ReturnType<ForkState['initState']> };
-```
-
-Ещё можно получить сразу типы для стора через дженерик (это тоже работает), но запись более громоздкая:
-
-```ts
-// Альтернативный вариант реализации TState
-type TGetState<Type extends Partial<InstanceType<abstract new (...args: any) => any>>> = {
-  [Property in keyof Type]: ReturnType<InstanceType<Type[Property]>['initState']>;
-};
-
-type TStatePartial = TGetState<moduleType>;
-export type TState = TStatePartial & { ['forks']: ReturnType<ForkState['initState']> };
-```
-
 - Типизировал `useSelector` вот так:
 
 ```ts
-// Импортируем тип стора.
-// Интересно, что если мы импортируем вместо него непосредственно тип стейта:
-//   import type TState from '@src/store';
-// то автодополнение не будет работать
-import type Store from '@src/store';
+// Тут была ошибка с импортом, которую заметил не сразу: я забыл поставить фигурные скобки `{ ... }`
+// и вместо типа стейта импортился тип класса стора по дефолтному экспорту.
+import { type TState } from '@src/store';
 
-// Селектор
-type TSelectorFunc = (state: Store['state']) => Record<string, unknown>
-
-export default function useSelector(selectorFunc: TSelectorFunc) {
-  //...
-  return state;
-}
+// Исправлено на дженерик вместо unknown
+export default function useSelector<T>(selectorFunc: (state: TState) => T) { ... }
 ```
 
   Автодополнение работает (можно брать значения из разных срезов стейта, например `basket` и `article`):

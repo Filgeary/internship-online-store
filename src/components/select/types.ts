@@ -4,5 +4,5 @@ export interface ISelectProps {
     value: string | number;
     title: string;
   }>;
-  onChange: (value?: string) => void;
+  onChange?: (value?: string) => void;
 }

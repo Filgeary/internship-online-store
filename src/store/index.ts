@@ -1,25 +1,37 @@
+import Services from '@src/services';
 import * as modules from './exports.js';
 import ForkState from './fork';
-import { theme } from './log-theme.js';
+import { theme } from './log-theme';
+import { type TContext } from '@custom-types/context';
+import { TConfig } from '@src/config.js';
 
 export type TModulesType = typeof modules;
+export type TModulesNamesPartial = keyof typeof modules;
 
-type TActionsPartial = { [Property in keyof TModulesType]: InstanceType<TModulesType[Property]             > };
-type TStatePartial   = { [Property in keyof TActions    ]: ReturnType  <TActions    [Property]['initState']> };
+/**
+ * Имена всех модулей включая возможно созданные на основе контекстов
+ */
+export type TModulesNames = TModulesNamesPartial | 'forks' | TContext;
 
-// Стейт форков ForkState подключается отдельно, потому что это не часть контента сайта, а часть механизма стора.
-// Добавим его к типам стейта и экшенов как пересечение типов:
-export type TActions = TActionsPartial & { ['forks']: ForkState                          };
-export type TState   = TStatePartial   & { ['forks']: ReturnType<ForkState['initState']> };
+type TActionsPartial = { [Key in TModulesNamesPartial]: InstanceType<TModulesType[Key]> };
+type TStatePartial = { [Key in keyof TActionsPartial]: ReturnType<TActionsPartial[Key]['initState']> };
 
-/* Ещё можно получить сразу типы для стора через дженерик (это тоже работает), но запись более громоздкая
+export type TActions = TActionsPartial
+  & { ['forks']: ForkState } // Стейт форков ForkState подключается отдельно, потому что это не часть контента сайта, а часть механизма стора.
+  & { [Key in TContext]: InstanceType<TModulesType[TModulesNamesPartial]> }; // Модули, которые могут быть созданы методом `.fork()`
 
-    type TGetState<Type extends Partial<InstanceType<abstract new (...args: any) => any>>> = {
-      [Property in keyof Type]: ReturnType<InstanceType<Type[Property]>['initState']>;
-    };
+export type TState = TStatePartial
+  & { ['forks']: ReturnType<ForkState['initState']> } // Стейт форков ForkState подключается отдельно, потому что это не часть контента сайта, а часть механизма стора.
+  & { [Key in TContext]: InstanceType<TModulesType[TModulesNamesPartial]> }; // Модули, которые могут быть созданы методом `.fork()`
 
-    type TStatePartial = TGetState<moduleType>;
-*/
+/**
+ * Информация о существующих в данный момент форках стейта и их начальных настройках.
+ */
+type TForkData= {
+  name: TModulesNames;
+  parent: TModulesNamesPartial;
+  options: Record<string, any>
+}
 
 /**
  * Хранилище состояния приложения
@@ -27,23 +39,22 @@ export type TState   = TStatePartial   & { ['forks']: ReturnType<ForkState['init
 class Store {
   listeners: ((arg?: typeof this.state) => void)[];
   state: TState;
-  //services;
-  //config;
-  //forks;
+  services: Services;
+  config: TConfig;
+  forks: TForkData[];
   actions: TActions;
-  [field: string]: any;
 
   /**
    * @param services {Services}
    * @param config {Object}
    * @param initState {Object}
    */
-  constructor(services, config = {}, initState = {}) {
+  constructor(services: Services, config = {}, initState: TState = {} as TState) {
     this.services = services;
     this.config = config;
     this.forks = [];
     this.listeners = []; // Слушатели изменений состояния
-    this.state = initState as typeof this.state;
+    this.state = initState;
     /** @type {{
      * basket: BasketState,
      * catalog: CatalogState,
@@ -59,13 +70,13 @@ class Store {
 
     // Позволяет отделять оригиналы от форков, реагировать на удаление форка и содержит информацию для отладки.
     // Добавляем отдельно, потому что это не часть контента сайта, а часть механизма стора
-    this.actions.forks = new ForkState(this, 'forks', this.config?.modules.forks || {});
+    this.actions.forks = new ForkState(this, 'forks' as TModulesNames, this.config?.modules.forks || {});
     this.state.forks = this.actions.forks.initState();
   }
 
   createModule<Key extends keyof TModulesType>(name: Key) {
     let module = modules[name] as TModulesType[Key];
-    this.actions[name] = new module(this, name, this.config?.modules[name] || {} as any) as TActions[Key];
+    this.actions[name] = new module(this, name as TModulesNames, this.config?.modules[name] || {} as any) as TActions[Key];
     this.state[name] = this.actions[name].initState() as TState[Key];
   }
 
@@ -75,7 +86,7 @@ class Store {
    * @param parent {String}
    * @param opt {Object} - {_id, configName, initStateName, initState}
    */
-  fork(name, parent, opt: Record<string, any> = {}) {
+  fork<Name extends TModulesNames>(name: Name, parent: TModulesNamesPartial, opt: Record<string, any> = {}) {
     opt.configName ??= parent;
     opt.initStateName ??= name;
     opt.initState ??= null;
@@ -87,10 +98,10 @@ class Store {
     const isForkExist = Boolean(this.state[name]);
     if (isForkExist) throw Error(`Попытка fork('${name}, ${parent}'), '${name}' уже существует!`);
     // Клонируем экшены
-    this.actions[name] = new modules[parent](this, name, this.config?.modules[opt.configName] || {});
+    this.actions[name] = new modules[parent](this, name, this.config?.modules[opt.configName] || {}) as TActions[Name];
     // Создаем новый стейт
     const newState = { ...this.state };
-    newState[name] = opt.initState ?? this.actions[opt.initStateName].initState();
+    newState[name] = opt.initState as TState[Name] ?? (this.actions[(opt.initStateName as keyof TActions)]).initState() as TState[Name];
     // Обновляем форки
     newState.forks = { ...newState.forks };
     newState.forks.list = [...newState.forks.list, { name, parent, options: opt }];
@@ -102,7 +113,7 @@ class Store {
    * Удаляет форк среза стора
    * @param name {String}
    */
-  removeFork(name) {
+  removeFork(name: TModulesNames) {
     // Форк должен существовать
     const isForkExist = Boolean(this.state[name]);
     if (!isForkExist) throw Error(`Попытка removeFork('${name}'), '${name}' и так не существует!`);
@@ -127,7 +138,7 @@ class Store {
    * @param listener {Function}
    * @returns {Function} Функция отписки
    */
-  subscribe(listener) {
+  subscribe(listener: (arg?: typeof this.state) => void) {
     this.listeners.push(listener);
     // Возвращается функция для удаления добавленного слушателя
     return () => {
@@ -156,7 +167,7 @@ class Store {
    * Установка состояния
    * @param newState {Object}
    */
-  setState(newState, description = 'setState') {
+  setState(newState: TState, description = 'setState') {
     // Добавил поддержку тёмной темы, а то ничего не видно было
     if (this.config.log) {
       console.group(
