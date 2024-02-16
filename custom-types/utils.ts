@@ -56,6 +56,7 @@ export type ValueOf<T> = T[keyof T];
 export type EnumKeys<E> = keyof { -readonly [Key in keyof E]: any };
 
 /**
- * Возвращает значения перечисления
+ * Возвращает значения перечисления.
+ * Ограничение: работает только для значений являющихся строками
  */
 export type EnumValues<E> = keyof { [Key in E[keyof E] as `${Key & string}`]: any };

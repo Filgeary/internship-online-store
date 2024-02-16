@@ -8,6 +8,7 @@ import shallowequal from "shallowequal";
 import AddProductCard from "@src/components/add-product-card";
 import modalsActions from '@src/store-redux/modals/actions';
 import useDialog from "@src/hooks/use-dialog";
+import { EContext } from "@custom-types/context";
 
 function AddProduct(props) {
   const store = useStore();
@@ -40,8 +41,8 @@ function AddProduct(props) {
   const context = useMemo(() => ({
     title: (() => {
       switch (props.context) {
-        case 'add-to-basket'  : return 'Добавить в корзину';
-        case 'add-to-selected': return 'Дополнительные опции товара';
+        case EContext.addToBasket: return 'Добавить в корзину';
+        case EContext.addToSelected: return 'Дополнительные опции товара';
         default: return '';
       }
     })(),

@@ -37,7 +37,7 @@ type ValueOf<T> = T[keyof T];
  * исключаются из результата: `"zero" | "one" | "two" | "few" | "many" | "other"`
  */
 export type TGenDictionary<T, Parents extends string = ''> = ValueOf<{
-  [Key in keyof T]: Key extends TPlural
+  [Key in keyof T]: Key extends TPlural //                   ^^^^^^^ поднимаем результат наверх
     ? never // Если это один из типов TPlural, то исключаем его из результата
     : T[Key] extends object // Если это объект, то (используя `|`) объединяем следующие типы:
       ?
