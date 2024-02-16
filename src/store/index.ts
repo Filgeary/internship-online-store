@@ -65,13 +65,13 @@ class Store {
       newName,
       {} as any
     ) as TStoreActions[Key];
+
     this.state[newName] = this.actions[
       newName
     ].initState() as TNewStoreState[Key];
-    console.log(this.state);
   }
 
-  clear<Key extends TKey<U>, U extends TKeyModules>(name: Key) {
+  clear(name: string) {
     delete this.actions[name];
     delete this.state[name];
   }

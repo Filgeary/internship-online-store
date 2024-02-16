@@ -38,7 +38,7 @@ function Pagination(props: TPaginationProps) {
 
   const onClickHandler =
     (number: number | null) => (e: { preventDefault: () => void }) => {
-      if (props.onChange) {
+      if (props.onChange && number) {
         e.preventDefault();
         props.onChange(number);
       }

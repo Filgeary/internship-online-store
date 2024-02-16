@@ -33,7 +33,7 @@ class StoreModule<State, Config = {}> {
     return this.store.getState()[this.name] as State;
   }
 
-  setState(newState: {}, description = "setState") {
+  setState(newState: State, description = "setState") {
     this.store.setState(
       {
         ...this.store.getState(),

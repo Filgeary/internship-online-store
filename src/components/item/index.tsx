@@ -13,7 +13,7 @@ type TItemProps<T> = {
   item: TArticle;
   link: string;
   onAdd: (id: string | number) => void;
-  labelCurr: string;
+  labelCurr?: string;
   labelAdd: string;
   catalog?: boolean;
   onSelect: (item:TArticle) => void;

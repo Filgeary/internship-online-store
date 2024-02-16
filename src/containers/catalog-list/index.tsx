@@ -9,11 +9,19 @@ import Spinner from "@src/components/spinner";
 import { useDispatch } from "react-redux";
 import modalsActions from "@src/store-redux/modals/actions";
 import { useSelector as useSelectorRedux } from "react-redux";
-import PropTypes from "prop-types";
+import { TArticle } from "@src/store/article/types";
 
-function CatalogList(props) {
+
+export type TCatalogList = {
+  onSelect: (item: TArticle) => void;
+  storeName: "catalog";
+};
+
+function CatalogList(props: TCatalogList) {
   const store = useStore();
   const dispatch = useDispatch();
+  const activeModal = useSelectorRedux((state: any) => state.modals);
+
   const select = useSelector((state) => ({
     list: state[props.storeName].list,
     page: state[props.storeName].params.page,
@@ -24,17 +32,15 @@ function CatalogList(props) {
     waiting: state[props.storeName].waiting,
   }));
 
-  const activeModal = useSelectorRedux((state) => state.modals);
-
   const callbacks = {
     // Выделение товара
-    selectItem: (item) => {
+    selectItem: (item: TArticle) => {
       props.onSelect(item);
     },
 
     // Открытие модалки ввода количества товара
     openCountModal: useCallback(
-      (_id) => {
+      (_id: string | number) => {
         store.actions.basket.addToActive(_id);
         dispatch(modalsActions.open("counter"));
       },
@@ -44,19 +50,20 @@ function CatalogList(props) {
     // addToBasket: useCallback(_id => store.actions.basket.addToBasket(_id), [store]),
     // Пагинация
     onPaginate: useCallback(
-      (page) => store.actions[props.storeName].setParams({ page }),
+      (page: number | null) =>
+        store.actions[props.storeName].setParams({ page }),
       [store]
     ),
     // генератор ссылки для пагинатора
 
     makePaginatorLink: useCallback(
-      (page) => {
+      (page: number) => {
         return `?${new URLSearchParams({
           page,
           limit: select.limit,
           sort: select.sort,
           query: select.query,
-        })}`;
+        } as {})}`;
       },
       [select.limit, select.sort, select.query]
     ),
@@ -66,7 +73,7 @@ function CatalogList(props) {
 
   const renders = {
     item: useCallback(
-      (item) => (
+      (item: TArticle) => (
         <Item
           item={item}
           onAdd={callbacks.openCountModal}
@@ -77,10 +84,9 @@ function CatalogList(props) {
           storeName={props.storeName}
         />
       ),
-      [callbacks.addToBasket, t]
+      [t]
     ),
   };
-
 
   return (
     <Spinner active={select.waiting}>
@@ -96,11 +102,6 @@ function CatalogList(props) {
     </Spinner>
   );
 }
-
-CatalogList.propTypes = {
-  onSelect: PropTypes.func,
-  storeName: PropTypes.string,
-};
 
 CatalogList.defaultProps = {
   onSelect: () => {},

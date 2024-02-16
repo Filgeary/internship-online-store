@@ -7,9 +7,13 @@ import Input from "@src/components/input";
 import SideLayout from "@src/components/side-layout";
 import treeToList from "@src/utils/tree-to-list";
 import listToTree from "@src/utils/list-to-tree";
-import PropTypes from "prop-types";
+import { TKey } from "@src/store/types";
 
-function CatalogFilter(props) {
+export type TCatalogFilter = {
+  storeName: 'catalog' ;
+};
+
+function CatalogFilter(props: TCatalogFilter) {
   const store = useStore();
 
   const select = useSelector((state) => ({
@@ -22,22 +26,19 @@ function CatalogFilter(props) {
   const callbacks = {
     // Сортировка
     onSort: useCallback(
-      (sort) => store.actions[props.storeName].setParams({ sort }),
+      (sort: string) => store.actions[props.storeName].setParams({ sort }),
       [store]
     ),
     // Поиск
     onSearch: useCallback(
-      (query) => store.actions[props.storeName].setParams({ query, page: 1 }),
+      (query: string) => store.actions[props.storeName].setParams({ query, page: 1 }),
       [store]
     ),
     // Сброс
-    onReset: useCallback(
-      () => store.actions[props.storeName].resetParams(),
-      [store]
-    ),
+    onReset: useCallback(() => store.actions[props.storeName].resetParams(), [store]),
     // Фильтр по категории
     onCategory: useCallback(
-      (category) =>
+      (category: string) =>
         store.actions[props.storeName].setParams({ category, page: 1 }),
       [store]
     ),
@@ -56,10 +57,13 @@ function CatalogFilter(props) {
     categories: useMemo(
       () => [
         { value: "", title: "Все" },
-        ...treeToList(listToTree(select.categories), (item, level) => ({
-          value: item._id,
-          title: "- ".repeat(level) + item.title,
-        })),
+        ...treeToList(
+          listToTree(select.categories),
+          (item: any, level: number) => ({
+            value: item._id,
+            title: "- ".repeat(level) + item.title,
+          })
+        ),
       ],
       [select.categories]
     ),
@@ -89,10 +93,6 @@ function CatalogFilter(props) {
     </SideLayout>
   );
 }
-
-CatalogFilter.propTypes = {
-  storeName: PropTypes.string,
-};
 
 CatalogFilter.defaultProps = {
   storeName: "catalog",

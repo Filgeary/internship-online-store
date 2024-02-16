@@ -1,20 +1,27 @@
-import React, { memo, useCallback, useState } from "react";
+import { memo, useCallback, useState } from "react";
 import ModalLayout from "@src/components/modal-layout";
 import CatalogFilter from "@src/containers/catalog-filter";
 import CatalogList from "@src/containers/catalog-list";
 import useTranslate from "@src/hooks/use-translate";
-import PropTypes from "prop-types";
 import Controls from "@src/components/controls";
 import useInit from "@src/hooks/use-init";
 import useStore from "@src/hooks/use-store";
+import { TArticle } from "@src/store/article/types";
+import { TItem } from "@src/store/catalog/types";
 
-const CatalogModal = (props) => {
+export type TCatalogModal = {
+  closeModal: (name: string, data: {} | number | null) => void;
+};
+
+const CatalogModal = (props:TCatalogModal) => {
   const { t } = useTranslate();
   const store = useStore();
-  const [selectItem, setSelectItem] = useState([]);
+  const [selectItem, setSelectItem] = useState<TArticle[]>([]);
   useInit(
     async () => {
-      await Promise.all([store.actions.catalogModal.initParams()]);
+      await Promise.all([store.actions.catalogModal.initParams(),
+        store.actions.catalogModal.resetParams(),
+      ]);
     },
     [store],
     true
@@ -22,13 +29,13 @@ const CatalogModal = (props) => {
 
   const callbacks = {
     // Закрытие модалки каталога
-    closeModal: (e) => {
+    closeModal: () => {
       props.closeModal("catalog", null);
       store.actions.catalogModal.resetSelectItem();
       store.clear("catalogModal");
     },
     // Добавление в корзину нескольких товаров
-    addToBasketSelectedItems: (e) => {
+    addToBasketSelectedItems: () => {
       props.closeModal("catalog", selectItem);
       setSelectItem([]);
       store.actions.catalogModal.resetSelectItem();
@@ -36,17 +43,18 @@ const CatalogModal = (props) => {
     },
     // Выделение items
     onSelectItem: useCallback(
-      (item) => {
+      (item:TArticle) => {
         store.actions.catalogModal.selectItem(item._id);
         setSelectItem((prevState) => {
+          
           let exist = false;
-          prevState.map((el) => {
+          prevState.map((el:TArticle) => {        
             if (el._id === item._id) {
               exist = true;
             }
           });
           if (exist) {
-            return prevState.filter((el) => el._id !== item._id);
+            return prevState.filter((el:TArticle) => el._id !== item._id);
           } else {
             return [...prevState, { ...item, selected: true }];
           }
@@ -62,10 +70,10 @@ const CatalogModal = (props) => {
       onClose={callbacks.closeModal}
       code={true}
     >
-      <CatalogFilter storeName={"catalogModal"} />
+      <CatalogFilter storeName={"catalogModal" as any} />
       <CatalogList
         onSelect={callbacks.onSelectItem}
-        storeName={"catalogModal"}
+        storeName={"catalogModal" as any} 
       />
       <Controls
         onAdd={callbacks.addToBasketSelectedItems}
@@ -73,10 +81,6 @@ const CatalogModal = (props) => {
       />
     </ModalLayout>
   );
-};
-
-CatalogModal.propTypes = {
-  closeModal: PropTypes.func,
 };
 
 CatalogModal.defaultProps = {

@@ -5,6 +5,7 @@ export default {
    * @return {Function}
    */
   load: (id: string): Function => {
+    
     return async (
       dispatch: (arg0: { type: string; payload?: { data: any } }) => void,
       getState: any,
