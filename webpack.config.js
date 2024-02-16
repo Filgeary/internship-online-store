@@ -2,7 +2,7 @@ process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
-const path = require("path");
+const path = require('path');
 
 let config = {
   context: path.join(__dirname, '/src'), // Директория с исходным кодом приложения
@@ -34,7 +34,7 @@ let config = {
         use: [
           { loader: MiniCssExtractPlugin.loader, options: {} },
           { loader: 'css-loader', options: { url: true, import: true } },
-        ]
+        ],
       },
       {
         test: /\.less$/,
@@ -48,7 +48,7 @@ let config = {
         test: /\.(svg|png|swf|jpg|otf|eot|ttf|woff|woff2)(\?.*)?$/,
         type: 'asset',
       },
-    ]
+    ],
   },
   plugins: [
     new MiniCssExtractPlugin(), // Плагин для вытаскивания собранных стилей в отдельный файл
@@ -64,7 +64,7 @@ let config = {
       },
     }),
   ],
-}
+};
 
 if (process.env.NODE_ENV === 'development') {
   config.devtool = 'inline-source-map';
@@ -77,8 +77,8 @@ if (process.env.NODE_ENV === 'development') {
         target: 'http://example.front.ylab.io',
         secure: false,
         changeOrigin: true,
-      }
-    }
+      },
+    },
   };
 }
 

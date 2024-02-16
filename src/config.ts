@@ -1,6 +1,6 @@
-import type { TConfig } from "./store";
+import type { TConfig } from './store';
 
-const isProduction = process.env.NODE_ENV === "production";
+const isProduction = process.env.NODE_ENV === 'production';
 
 /**
  * Настройки сервисов
@@ -13,7 +13,7 @@ const config: TConfig = {
     modules: {
       session: {
         // Названия токена в АПИ
-        tokenHeader: "X-Token",
+        tokenHeader: 'X-Token',
       },
       catalog: {
         shouldWriteToBrowserHistory: false,
@@ -27,7 +27,7 @@ const config: TConfig = {
     },
   },
   api: {
-    baseUrl: "",
+    baseUrl: '',
   },
   redux: {},
 };

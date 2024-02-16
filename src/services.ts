@@ -1,8 +1,8 @@
-import APIService from "./api";
-import Store from "./store";
-import createStoreRedux from "./store-redux";
+import APIService from './api';
+import Store from './store';
+import createStoreRedux from './store-redux';
 
-import type { TConfig } from "./store";
+import type { TConfig } from './store';
 
 export type TServices = Services;
 

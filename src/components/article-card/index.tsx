@@ -1,18 +1,18 @@
 import { cn as bem } from '@bem-react/classname';
-import { memo } from "react";
+import { memo } from 'react';
 
-import numberFormat from "@src/utils/number-format";
+import numberFormat from '@src/utils/number-format';
 
 import type { TTranslate } from '@src/i18n/context';
-import type { IArticle } from "@src/types/IArticle";
+import type { IArticle } from '@src/types/IArticle';
 
 import './style.css';
 
 type Props = {
-  article: IArticle | null
-  onAdd: (id: string) => void
-  t: TTranslate
-}
+  article: IArticle | null;
+  onAdd: (id: string) => void;
+  t: TTranslate;
+};
 
 function ArticleCard({ article, onAdd, t }: Props) {
   const cn = bem('ArticleCard');
@@ -26,7 +26,9 @@ function ArticleCard({ article, onAdd, t }: Props) {
       <div className={cn('description')}>{article.description}</div>
       <div className={cn('prop')}>
         <div className={cn('label')}>Страна производитель:</div>
-        <div className={cn('value')}>{article.madeIn?.title} ({article.madeIn?.code})</div>
+        <div className={cn('value')}>
+          {article.madeIn?.title} ({article.madeIn?.code})
+        </div>
       </div>
       <div className={cn('prop')}>
         <div className={cn('label')}>Категория:</div>

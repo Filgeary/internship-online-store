@@ -1,13 +1,13 @@
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes } from 'react-router-dom';
 
-import Protected from "@src/containers/protected";
-import useInit from "@src/hooks/use-init";
-import useStore from "@src/hooks/use-store";
-import Article from "./article";
-import Login from "./login";
-import Main from "./main";
-import Modals from "./modals";
-import Profile from "./profile";
+import Protected from '@src/containers/protected';
+import useInit from '@src/hooks/use-init';
+import useStore from '@src/hooks/use-store';
+import Article from './article';
+import Login from './login';
+import Main from './main';
+import Modals from './modals';
+import Profile from './profile';
 
 function App() {
   const store = useStore();
@@ -19,13 +19,22 @@ function App() {
   return (
     <>
       <Routes>
-        <Route path={""} element={<Main />} />
-        <Route path={"/articles/:id"} element={<Article />} />
-        <Route path={"/login"} element={<Login />} />
         <Route
-          path={"/profile"}
+          path={''}
+          element={<Main />}
+        />
+        <Route
+          path={'/articles/:id'}
+          element={<Article />}
+        />
+        <Route
+          path={'/login'}
+          element={<Login />}
+        />
+        <Route
+          path={'/profile'}
           element={
-            <Protected redirect="/login">
+            <Protected redirect='/login'>
               <Profile />
             </Protected>
           }

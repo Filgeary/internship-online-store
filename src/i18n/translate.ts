@@ -1,15 +1,13 @@
 import * as translations from './translations';
 
-export type TTextToTranslate = keyof typeof translations['en'];
+export type TTextToTranslate = keyof (typeof translations)['en'];
 export type TLangs = 'en' | 'ru';
 
 /**
  * Перевод фразы по словарю
  */
 export default function translate(lang: TLangs, text: TTextToTranslate, numberToPlural?: number) {
-  let result = translations[lang] && (text in translations[lang])
-    ? translations[lang][text]
-    : text;
+  let result = translations[lang] && text in translations[lang] ? translations[lang][text] : text;
 
   if (typeof result === 'string') {
     return result;

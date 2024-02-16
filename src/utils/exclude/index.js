@@ -12,8 +12,8 @@ export default function exclude(objectSrc, objectExc) {
     const keys = Object.keys(objectSrc);
     for (const key of keys) {
       if (objectSrc[key] !== objectExc[key]) {
-        const value = exclude(objectSrc[key], objectExc[key])
-        if (typeof value !== "undefined") {
+        const value = exclude(objectSrc[key], objectExc[key]);
+        if (typeof value !== 'undefined') {
           result[key] = value;
         }
       }

@@ -1,8 +1,8 @@
-import { cn as bem } from "@bem-react/classname";
-import debounce from "lodash.debounce";
-import React, { memo, useCallback, useLayoutEffect, useState } from "react";
+import { cn as bem } from '@bem-react/classname';
+import debounce from 'lodash.debounce';
+import React, { memo, useCallback, useLayoutEffect, useState } from 'react';
 
-import "./style.css";
+import './style.css';
 
 type Props = {
   value: string;
@@ -15,12 +15,12 @@ type Props = {
 };
 
 function Input(props: Props) {
-  const cn = bem("Input");
+  const cn = bem('Input');
   const [internalInputValue, setInternalInputValue] = useState(props.value);
 
   const onChangeDebounce = useCallback(
-    debounce((value) => props.onChange(value, props.name), props.delay || 500),
-    [props.onChange, props.name]
+    debounce(value => props.onChange(value, props.name), props.delay || 500),
+    [props.onChange, props.name],
   );
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -33,9 +33,9 @@ function Input(props: Props) {
 
   return (
     <input
-      className={cn({ theme: props.theme || "" })}
+      className={cn({ theme: props.theme || '' })}
       value={internalInputValue}
-      type={props.type || "text"}
+      type={props.type || 'text'}
       placeholder={props.placeholder}
       onChange={handleChange}
     />

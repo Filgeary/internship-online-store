@@ -11,18 +11,18 @@
   margin: 20px 0;
   display: flex;
   justify-content: flex-start;
-  font-size: 18px
+  font-size: 18px;
 }
 
-.ArticleCard-prop_size_big{
+.ArticleCard-prop_size_big {
   font-size: 24px;
   font-weight: bold;
 }
 
-.ArticleCard-label{
+.ArticleCard-label {
   padding-right: 10px;
 }
 
-.ArticleCard-value{
+.ArticleCard-value {
   font-weight: bold;
 }

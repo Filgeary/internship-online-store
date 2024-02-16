@@ -1,4 +1,4 @@
-.Pagination{
+.Pagination {
   display: flex;
   list-style: none;
   justify-content: flex-end;
@@ -7,7 +7,7 @@
   margin: 0;
 }
 
-.Pagination-item{
+.Pagination-item {
   display: block;
   padding: 2px 4px 2px 2px;
   margin: 0;
@@ -21,28 +21,26 @@
 
 .Pagination-item a,
 .Pagination-item a:hover,
-.Pagination-item a:active{
+.Pagination-item a:active {
   text-decoration: none;
   color: black;
 }
 
-.Pagination-item:hover{
-  background: #E1E1E1;
+.Pagination-item:hover {
+  background: #e1e1e1;
 }
 
 .Pagination-item_active,
 .Pagination-item_active:hover,
 .Pagination-item_active a,
-.Pagination-item_active a:hover{
-  background: #0087E9;
+.Pagination-item_active a:hover {
+  background: #0087e9;
   color: #fff;
 }
 
 .Pagination-item_split,
-.Pagination-item_split:hover{
+.Pagination-item_split:hover {
   background: transparent;
   cursor: default;
-  color: #CCCCCC;
+  color: #cccccc;
 }
-
-

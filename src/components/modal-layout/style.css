@@ -1,4 +1,4 @@
-body:has(.ModalLayout){
+body:has(.ModalLayout) {
   overflow: hidden;
 }
 
@@ -9,7 +9,7 @@ body:has(.ModalLayout){
   width: 100%;
   height: 100%;
   overflow-x: auto;
-  background: rgba(0,0,0,0.7);
+  background: rgba(0, 0, 0, 0.7);
   z-index: 9999;
   padding: 10px;
   min-height: 100%;
@@ -40,11 +40,11 @@ body:has(.ModalLayout){
   padding: 0 30px 0 20px;
 }
 
-.ModalLayout-close{
+.ModalLayout-close {
   align-self: center;
 }
 
-.ModalLayout-title{
+.ModalLayout-title {
   margin: 0;
   padding: 20px 0 10px;
 }

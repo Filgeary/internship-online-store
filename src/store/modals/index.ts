@@ -1,7 +1,7 @@
-import codeGenerator from "@src/utils/code-generator";
-import StoreModule from "../module";
+import codeGenerator from '@src/utils/code-generator';
+import StoreModule from '../module';
 
-import type { TModalsNames } from "@src/types";
+import type { TModalsNames } from '@src/types';
 
 type InitialModalsState = {
   data: {
@@ -32,7 +32,7 @@ class ModalsState extends StoreModule<InitialModalsState> {
         ...this.getState(),
         data: [...this.getState().data, { name, cb, id }],
       },
-      `Открытие модалки ${name} с ID ${id}`
+      `Открытие модалки ${name} с ID ${id}`,
     );
   }
 
@@ -49,7 +49,7 @@ class ModalsState extends StoreModule<InitialModalsState> {
         ...this.getState(),
         data: this.getState().data.filter(({ id }) => id !== modalID),
       },
-      `Закрытие модалки ${name} с ID ${modalID}`
+      `Закрытие модалки ${name} с ID ${modalID}`,
     );
   }
 }

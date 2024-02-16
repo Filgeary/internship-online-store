@@ -10,16 +10,9 @@ type Props = {
   limit?: number;
   count?: number;
   indent?: number;
-}
+};
 
-function Pagination({
-  onChange,
-  makeLink,
-  page = 1,
-  limit = 10,
-  count = 1000,
-  indent = 1
-}: Props) {
+function Pagination({ onChange, makeLink, page = 1, limit = 10, count = 1000, indent = 1 }: Props) {
   const cn = bem('Pagination');
 
   // Количество страниц
@@ -49,25 +42,21 @@ function Pagination({
       e.preventDefault();
       onChange(number);
     }
-  }
+  };
 
   return (
     <ul className={cn()}>
       {items.map((number, index) => (
-        <li key={index}
+        <li
+          key={index}
           className={cn('item', { active: number === page, split: !number })}
-          onClick={handleClick(number ?? 0)}>
-          {number
-            ? (makeLink
-              ? <a href={makeLink(String(number))}>{number}</a>
-              : number
-            )
-            : '...'
-          }
+          onClick={handleClick(number ?? 0)}
+        >
+          {number ? makeLink ? <a href={makeLink(String(number))}>{number}</a> : number : '...'}
         </li>
       ))}
     </ul>
-  )
+  );
 }
 
 export default memo(Pagination);

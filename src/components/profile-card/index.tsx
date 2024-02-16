@@ -1,12 +1,12 @@
 import { cn as bem } from '@bem-react/classname';
 import type { IUserProfile } from '@src/types/IUserProfile';
-import { memo } from "react";
+import { memo } from 'react';
 
 import './style.css';
 
 type Props = {
   data: IUserProfile | null;
-}
+};
 
 function ProfileCard({ data }: Props) {
   const cn = bem('ProfileCard');
@@ -31,7 +31,7 @@ function ProfileCard({ data }: Props) {
         <div className={cn('value')}>{data.email}</div>
       </div>
     </div>
-  )
+  );
 }
 
 export default memo(ProfileCard);

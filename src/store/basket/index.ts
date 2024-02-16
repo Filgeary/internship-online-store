@@ -1,7 +1,7 @@
-import { isSuccessResponse } from "@src/api";
-import StoreModule from "../module";
+import { isSuccessResponse } from '@src/api';
+import StoreModule from '../module';
 
-import type { IArticle } from "@src/types/IArticle";
+import type { IArticle } from '@src/types/IArticle';
 
 type ExtendedArticle = IArticle & { amount: number };
 
@@ -29,7 +29,7 @@ class BasketState extends StoreModule<InitialBasketState> {
     let sum = 0;
     // Ищем товар в корзине, чтобы увеличить его количество
     let exist = false;
-    const list = this.getState().list.map((item) => {
+    const list = this.getState().list.map(item => {
       let result = item;
       if (item._id === _id) {
         exist = true; // Запомним, что был найден в корзине
@@ -60,13 +60,13 @@ class BasketState extends StoreModule<InitialBasketState> {
         sum,
         amount: list.length,
       },
-      "Добавление в корзину"
+      'Добавление в корзину',
     );
   }
 
   removeFromBasket(_id: string) {
     let sum = 0;
-    const list = this.getState().list.filter((item) => {
+    const list = this.getState().list.filter(item => {
       if (item._id === _id) return false;
       sum += item.price * item.amount;
       return true;
@@ -79,7 +79,7 @@ class BasketState extends StoreModule<InitialBasketState> {
         sum,
         amount: list.length,
       },
-      "Удаление из корзины"
+      'Удаление из корзины',
     );
   }
 }

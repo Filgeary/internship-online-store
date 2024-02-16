@@ -1,18 +1,18 @@
-import React, { memo, useCallback, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import React, { memo, useCallback, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
-import Field from "@src/components/field";
-import Head from "@src/components/head";
-import Input from "@src/components/input";
-import PageLayout from "@src/components/page-layout";
-import SideLayout from "@src/components/side-layout";
-import LocaleSelect from "@src/containers/locale-select";
-import Navigation from "@src/containers/navigation";
-import TopHead from "@src/containers/top-head";
-import useInit from "@src/hooks/use-init";
-import useSelector from "@src/hooks/use-selector";
-import useStore from "@src/hooks/use-store";
-import useTranslate from "@src/hooks/use-translate";
+import Field from '@src/components/field';
+import Head from '@src/components/head';
+import Input from '@src/components/input';
+import PageLayout from '@src/components/page-layout';
+import SideLayout from '@src/components/side-layout';
+import LocaleSelect from '@src/containers/locale-select';
+import Navigation from '@src/containers/navigation';
+import TopHead from '@src/containers/top-head';
+import useInit from '@src/hooks/use-init';
+import useSelector from '@src/hooks/use-selector';
+import useStore from '@src/hooks/use-store';
+import useTranslate from '@src/hooks/use-translate';
 
 function Login() {
   const store = useStore();
@@ -22,16 +22,16 @@ function Login() {
 
   useInit(() => {
     store.actions.session.resetErrors();
-  })
+  });
 
   const select = useSelector(state => ({
     waiting: state.session.waiting,
-    errors: state.session.errors
+    errors: state.session.errors,
   }));
 
   const [data, setData] = useState({
     login: '',
-    password: ''
+    password: '',
   });
 
   const callbacks = {
@@ -41,17 +41,20 @@ function Login() {
     }, []),
 
     // Отправка данных формы для авторизации
-    onSubmit: useCallback((e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-      store.actions.session.signIn(data, () => {
-        // Возврат на страницу, с которой пришли
-        const back = location.state?.back && location.state?.back !== location.pathname
-          ? location.state?.back
-          : '/';
-        navigate(back);
-      });
-
-    }, [data, location.state])
+    onSubmit: useCallback(
+      (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        store.actions.session.signIn(data, () => {
+          // Возврат на страницу, с которой пришли
+          const back =
+            location.state?.back && location.state?.back !== location.pathname
+              ? location.state?.back
+              : '/';
+          navigate(back);
+        });
+      },
+      [data, location.state],
+    ),
   };
 
   return (
@@ -64,16 +67,30 @@ function Login() {
       <SideLayout padding='medium'>
         <form onSubmit={callbacks.onSubmit}>
           <h2>{t('auth.title')}</h2>
-          <Field label={t('auth.login')} error={select.errors?.login}>
-            <Input name="login" value={data.login} onChange={callbacks.onChange} />
+          <Field
+            label={t('auth.login')}
+            error={select.errors?.login}
+          >
+            <Input
+              name='login'
+              value={data.login}
+              onChange={callbacks.onChange}
+            />
           </Field>
-          <Field label={t('auth.password')} error={select.errors?.password}>
-            <Input name="password" type="password" value={data.password}
-              onChange={callbacks.onChange} />
+          <Field
+            label={t('auth.password')}
+            error={select.errors?.password}
+          >
+            <Input
+              name='password'
+              type='password'
+              value={data.password}
+              onChange={callbacks.onChange}
+            />
           </Field>
           <Field error={select.errors?.other} />
           <Field>
-            <button type="submit">{t('auth.signIn')}</button>
+            <button type='submit'>{t('auth.signIn')}</button>
           </Field>
         </form>
       </SideLayout>

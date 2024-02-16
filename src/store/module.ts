@@ -1,5 +1,5 @@
-import type { TServices } from "@src/services";
-import type { TKeyOfModules, TStore } from ".";
+import type { TServices } from '@src/services';
+import type { TKeyOfModules, TStore } from '.';
 
 /**
  * Базовый класс для модулей хранилища
@@ -9,7 +9,7 @@ class StoreModule<State, Config = object> {
   store: TStore;
   name: TKeyOfModules;
   config: Config;
-  services: TServices
+  services: TServices;
 
   constructor(store: TStore, name: TKeyOfModules, config: Config | {} = {}) {
     this.store = store;
@@ -19,11 +19,11 @@ class StoreModule<State, Config = object> {
   }
 
   initConfig(): Config {
-    return {} as Config
+    return {} as Config;
   }
 
   initState(): State {
-    return {} as State
+    return {} as State;
   }
 
   getState() {
@@ -31,12 +31,14 @@ class StoreModule<State, Config = object> {
   }
 
   setState(newState: State, description = 'setState') {
-    this.store.setState({
-      ...this.store.getState(),
-      [this.name]: newState
-    }, description)
+    this.store.setState(
+      {
+        ...this.store.getState(),
+        [this.name]: newState,
+      },
+      description,
+    );
   }
-
 }
 
 export default StoreModule;

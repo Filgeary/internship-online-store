@@ -1,10 +1,10 @@
-import { memo, useCallback } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { memo, useCallback } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
-import SideLayout from "@src/components/side-layout";
-import useSelector from "@src/hooks/use-selector";
-import useStore from "@src/hooks/use-store";
-import useTranslate from "@src/hooks/use-translate";
+import SideLayout from '@src/components/side-layout';
+import useSelector from '@src/hooks/use-selector';
+import useStore from '@src/hooks/use-store';
+import useTranslate from '@src/hooks/use-translate';
 
 function TopHead() {
   const store = useStore();
@@ -14,7 +14,7 @@ function TopHead() {
 
   const select = useSelector(state => ({
     user: state.session.user,
-    exists: state.session.exists
+    exists: state.session.exists,
   }));
 
   const callbacks = {
@@ -27,15 +27,19 @@ function TopHead() {
     onSignOut: useCallback(() => {
       store.actions.session.signOut();
     }, []),
-  }
+  };
 
   return (
-    <SideLayout side="end" padding="small">
-      {select.exists ? <Link to="/profile">{select.user?.profile.name}</Link> : ''}
-      {select.exists
-        ? <button onClick={callbacks.onSignOut}>{t('session.signOut')}</button>
-        : <button onClick={callbacks.onSignIn}>{t('session.signIn')}</button>
-      }
+    <SideLayout
+      side='end'
+      padding='small'
+    >
+      {select.exists ? <Link to='/profile'>{select.user?.profile.name}</Link> : ''}
+      {select.exists ? (
+        <button onClick={callbacks.onSignOut}>{t('session.signOut')}</button>
+      ) : (
+        <button onClick={callbacks.onSignIn}>{t('session.signIn')}</button>
+      )}
     </SideLayout>
   );
 }

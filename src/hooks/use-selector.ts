@@ -1,8 +1,8 @@
-import { useLayoutEffect, useMemo, useState } from "react";
+import { useLayoutEffect, useMemo, useState } from 'react';
 import shallowequal from 'shallowequal';
-import useStore from "./use-store";
+import useStore from './use-store';
 
-import type { TRootState } from "@src/store";
+import type { TRootState } from '@src/store';
 
 export default function useSelector<T>(selectorFunc: (state: TRootState) => T): T {
   const store = useStore();
@@ -13,7 +13,7 @@ export default function useSelector<T>(selectorFunc: (state: TRootState) => T): 
     // Подписка. Возврат функции для отписки
     return store.subscribe(() => {
       const newState = selectorFunc(store.getState());
-      setState(prevState => shallowequal(prevState, newState) ? prevState : newState);
+      setState(prevState => (shallowequal(prevState, newState) ? prevState : newState));
     });
   }, []); // Нет зависимостей - исполнится один раз
 

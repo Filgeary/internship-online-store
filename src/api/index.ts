@@ -1,6 +1,6 @@
-import type { TServices } from "@src/services";
-import type { TConfig } from "@src/store";
-import type { TErrorResponse, TResponse } from "@src/types";
+import type { TServices } from '@src/services';
+import type { TConfig } from '@src/store';
+import type { TErrorResponse, TResponse } from '@src/types';
 
 // TODO: show type guards
 export function isSuccessResponse<T>(res: TResponse<T> | TErrorResponse): res is TResponse<T> {
@@ -21,17 +21,23 @@ class APIService {
     this.config = config as TConfig['api'];
     this.defaultHeaders = {
       'Content-Type': 'application/json',
-    }
+    };
   }
 
   /**
    * HTTP запрос
    */
-  async request<T>({ url, method = 'GET', headers = {}, body, ...options }: {
-    url: string,
-    method?: RequestInit['method'],
-    headers?: HeadersInit,
-    body?: BodyInit,
+  async request<T>({
+    url,
+    method = 'GET',
+    headers = {},
+    body,
+    ...options
+  }: {
+    url: string;
+    method?: RequestInit['method'];
+    headers?: HeadersInit;
+    body?: BodyInit;
   }) {
     if (!url.match(/^(http|\/\/)/)) url = this.config.baseUrl + url;
 
@@ -43,9 +49,9 @@ class APIService {
     });
 
     return {
-      data: await res.json() as TResponse<T> | TErrorResponse,
+      data: (await res.json()) as TResponse<T> | TErrorResponse,
       status: res.status,
-      headers: res.headers
+      headers: res.headers,
     };
   }
 

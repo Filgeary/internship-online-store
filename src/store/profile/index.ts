@@ -1,12 +1,12 @@
-import { isSuccessResponse } from "@src/api";
-import StoreModule from "../module";
+import { isSuccessResponse } from '@src/api';
+import StoreModule from '../module';
 
-import type { IUserProfile } from "@src/types/IUserProfile";
+import type { IUserProfile } from '@src/types/IUserProfile';
 
 type InitialProfileState = {
   data: IUserProfile | null;
   waiting: boolean;
-}
+};
 
 /**
  * Детальная информация о пользователе
@@ -15,8 +15,8 @@ class ProfileState extends StoreModule<InitialProfileState> {
   initState(): InitialProfileState {
     return {
       data: null,
-      waiting: false
-    }
+      waiting: false,
+    };
   }
 
   /**
@@ -26,17 +26,20 @@ class ProfileState extends StoreModule<InitialProfileState> {
     // Сброс текущего профиля и установка признака ожидания загрузки
     this.setState({
       data: null,
-      waiting: true
+      waiting: true,
     });
 
     const { data } = await this.services.api.request<IUserProfile>({ url: `/api/v1/users/self` });
 
     if (isSuccessResponse(data)) {
       // Профиль загружен успешно
-      this.setState({
-        data: data.result,
-        waiting: false
-      }, 'Загружен профиль из АПИ');
+      this.setState(
+        {
+          data: data.result,
+          waiting: false,
+        },
+        'Загружен профиль из АПИ',
+      );
     }
   }
 }

@@ -1,23 +1,23 @@
-import { memo, useCallback, useMemo } from "react";
+import { memo, useCallback, useMemo } from 'react';
 
-import Input from "@src/components/input";
-import Select from "@src/components/select";
-import SideLayout from "@src/components/side-layout";
-import useSelector from "@src/hooks/use-selector";
-import useStore from "@src/hooks/use-store";
-import useTranslate from "@src/hooks/use-translate";
-import listToTree from "@src/utils/list-to-tree";
-import treeToList from "@src/utils/tree-to-list";
+import Input from '@src/components/input';
+import Select from '@src/components/select';
+import SideLayout from '@src/components/side-layout';
+import useSelector from '@src/hooks/use-selector';
+import useStore from '@src/hooks/use-store';
+import useTranslate from '@src/hooks/use-translate';
+import listToTree from '@src/utils/list-to-tree';
+import treeToList from '@src/utils/tree-to-list';
 
 type Props = {
   catalogSliceName?: 'catalog' | `catalog${number}`;
 };
 
-function CatalogFilter({ catalogSliceName = "catalog" }: Props) {
+function CatalogFilter({ catalogSliceName = 'catalog' }: Props) {
   const store = useStore();
   const { t } = useTranslate();
 
-  const select = useSelector((state) => ({
+  const select = useSelector(state => ({
     sort: state[catalogSliceName].params.sort,
     query: state[catalogSliceName].params.query,
     category: state[catalogSliceName].params.category,
@@ -28,50 +28,46 @@ function CatalogFilter({ catalogSliceName = "catalog" }: Props) {
     // Сортировка
     onSort: useCallback(
       (sort: string) => store.actions[catalogSliceName].setParams({ sort }),
-      [store]
+      [store],
     ),
     // Поиск
     onSearch: useCallback(
       (query: string) => store.actions[catalogSliceName].setParams({ query, page: 1 }),
-      [store]
+      [store],
     ),
     // Сброс
-    onReset: useCallback(
-      () => store.actions[catalogSliceName].resetParams(),
-      [store]
-    ),
+    onReset: useCallback(() => store.actions[catalogSliceName].resetParams(), [store]),
     // Фильтр по категории
     onCategory: useCallback(
-      (category: string) =>
-        store.actions[catalogSliceName].setParams({ category, page: 1 }),
-      [store]
+      (category: string) => store.actions[catalogSliceName].setParams({ category, page: 1 }),
+      [store],
     ),
   };
 
   const options = {
     sort: useMemo(
       () => [
-        { value: "order", title: "По порядку" },
-        { value: "title.ru", title: "По именованию" },
-        { value: "-price", title: "Сначала дорогие" },
-        { value: "edition", title: "Древние" },
+        { value: 'order', title: 'По порядку' },
+        { value: 'title.ru', title: 'По именованию' },
+        { value: '-price', title: 'Сначала дорогие' },
+        { value: 'edition', title: 'Древние' },
       ],
-      []
+      [],
     ),
     categories: useMemo(
       () => [
-        { value: "", title: "Все" },
+        { value: '', title: 'Все' },
         ...treeToList(listToTree(select.categories), (item: any, level: number) => ({
           value: item._id,
-          title: "- ".repeat(level) + item.title,
+          title: '- '.repeat(level) + item.title,
         })),
       ],
-      [select.categories]
+      [select.categories],
     ),
   };
 
   return (
-    <SideLayout padding="medium">
+    <SideLayout padding='medium'>
       <Select
         options={options.categories}
         value={select.category}
@@ -83,13 +79,13 @@ function CatalogFilter({ catalogSliceName = "catalog" }: Props) {
         onChange={callbacks.onSort}
       />
       <Input
-        name="query"
+        name='query'
         value={select.query}
         onChange={callbacks.onSearch}
-        placeholder={"Поиск"}
+        placeholder={'Поиск'}
         delay={1000}
       />
-      <button onClick={callbacks.onReset}>{t("filter.reset")}</button>
+      <button onClick={callbacks.onReset}>{t('filter.reset')}</button>
     </SideLayout>
   );
 }

@@ -1,13 +1,13 @@
-import StoreModule from "../module";
+import StoreModule from '../module';
 
 type InitialLocaleState = {
-  lang: string
-}
+  lang: string;
+};
 
 class LocaleState extends StoreModule<InitialLocaleState> {
   initState(): InitialLocaleState {
     return {
-      lang: 'ru'
+      lang: 'ru',
     };
   }
 

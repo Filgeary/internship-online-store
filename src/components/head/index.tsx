@@ -1,11 +1,11 @@
-import { memo } from "react";
+import { memo } from 'react';
 
 import './style.css';
 
 type Props = {
-  title: React.ReactNode
-  children?: React.ReactNode
-}
+  title: React.ReactNode;
+  children?: React.ReactNode;
+};
 
 function Head({ title, children }: Props) {
   return (
@@ -15,7 +15,7 @@ function Head({ title, children }: Props) {
       </div>
       <div className='Head-place'>{children}</div>
     </div>
-  )
+  );
 }
 
 export default memo(Head);

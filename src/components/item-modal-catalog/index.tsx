@@ -1,10 +1,10 @@
-import { cn as bem } from "@bem-react/classname";
-import { memo } from "react";
+import { cn as bem } from '@bem-react/classname';
+import { memo } from 'react';
 
-import type { IArticle } from "@src/types/IArticle";
-import numberFormat from "@src/utils/number-format";
+import type { IArticle } from '@src/types/IArticle';
+import numberFormat from '@src/utils/number-format';
 
-import "./style.css";
+import './style.css';
 
 type Props = {
   item: IArticle;
@@ -20,10 +20,10 @@ const ItemModalCatalog = ({
   isSelected,
   onSelectItem,
   onAdd,
-  labelCurr = "₽",
-  labelAdd = "Добавить"
+  labelCurr = '₽',
+  labelAdd = 'Добавить',
 }: Props) => {
-  const cn = bem("ItemModalCatalog");
+  const cn = bem('ItemModalCatalog');
 
   const callbacks = {
     onAdd: () => onAdd(item._id),
@@ -32,18 +32,16 @@ const ItemModalCatalog = ({
   return (
     <div className={cn({ selected: isSelected })}>
       <input
-        type="checkbox"
-        name="selectedItem"
-        id={"selectedItem" + item._id}
-        className={cn("checkbox")}
+        type='checkbox'
+        name='selectedItem'
+        id={'selectedItem' + item._id}
+        className={cn('checkbox')}
         checked={isSelected}
-        onChange={(evt) =>
-          onSelectItem(item._id, evt.target.checked)
-        }
+        onChange={evt => onSelectItem(item._id, evt.target.checked)}
       />
-      <div className={cn("title")}>{item.title}</div>
-      <div className={cn("actions")}>
-        <div className={cn("price")}>
+      <div className={cn('title')}>{item.title}</div>
+      <div className={cn('actions')}>
+        <div className={cn('price')}>
           {numberFormat(item.price)} {labelCurr}
         </div>
         <button onClick={callbacks.onAdd}>{labelAdd}</button>

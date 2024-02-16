@@ -1,15 +1,15 @@
-import { memo, useCallback } from "react";
+import { memo, useCallback } from 'react';
 
-import Item from "@src/components/item";
-import ItemModalCatalog from "@src/components/item-modal-catalog";
-import List from "@src/components/list";
-import Pagination from "@src/components/pagination";
-import Spinner from "@src/components/spinner";
-import useSelector from "@src/hooks/use-selector";
-import useStore from "@src/hooks/use-store";
-import useTranslate from "@src/hooks/use-translate";
+import Item from '@src/components/item';
+import ItemModalCatalog from '@src/components/item-modal-catalog';
+import List from '@src/components/list';
+import Pagination from '@src/components/pagination';
+import Spinner from '@src/components/spinner';
+import useSelector from '@src/hooks/use-selector';
+import useStore from '@src/hooks/use-store';
+import useTranslate from '@src/hooks/use-translate';
 
-import type { IArticle } from "@src/types/IArticle";
+import type { IArticle } from '@src/types/IArticle';
 
 type Props = {
   isSelectionMode?: boolean;
@@ -22,12 +22,12 @@ function CatalogList({
   isSelectionMode,
   onSelectItem,
   selectedItems,
-  catalogSliceName = "catalog",
+  catalogSliceName = 'catalog',
 }: Props) {
   const store = useStore();
   const { t } = useTranslate();
 
-  const select = useSelector((state) => ({
+  const select = useSelector(state => ({
     list: state[catalogSliceName].list,
     page: state[catalogSliceName].params.page,
     limit: state[catalogSliceName].params.limit,
@@ -42,11 +42,11 @@ function CatalogList({
       (_id: string, amount: number) => {
         store.actions.basket.addToBasket(_id, amount);
       },
-      [store]
+      [store],
     ),
     onPaginate: useCallback(
       (page: string | number) => store.actions[catalogSliceName].setParams({ page }),
-      [store]
+      [store],
     ),
     makePaginatorLink: useCallback(
       (page: string) => {
@@ -57,18 +57,15 @@ function CatalogList({
           query: select.query,
         })}`;
       },
-      [select.limit, select.sort, select.query]
+      [select.limit, select.sort, select.query],
     ),
   };
 
   const openDialogAmount = useCallback(
     (_id: string | number) => {
-      store.actions.modals.open(
-        "dialogAmount",
-        callbacks.addToBasket.bind(null, String(_id))
-      );
+      store.actions.modals.open('dialogAmount', callbacks.addToBasket.bind(null, String(_id)));
     },
-    [store]
+    [store],
   );
 
   const renders = {
@@ -78,22 +75,22 @@ function CatalogList({
           item={item}
           onAdd={openDialogAmount}
           link={`/articles/${item._id}`}
-          labelAdd={t("article.add")}
+          labelAdd={t('article.add')}
         />
       ),
-      [openDialogAmount, t]
+      [openDialogAmount, t],
     ),
     itemModalCatalog: useCallback(
       (item: IArticle) => (
         <ItemModalCatalog
           item={item}
           onAdd={openDialogAmount}
-          onSelectItem={onSelectItem ?? (() => { })}
+          onSelectItem={onSelectItem ?? (() => {})}
           isSelected={Boolean(selectedItems?.includes(item._id))}
-          labelAdd={t("article.add")}
+          labelAdd={t('article.add')}
         />
       ),
-      [openDialogAmount, t, onSelectItem, selectedItems]
+      [openDialogAmount, t, onSelectItem, selectedItems],
     ),
   };
 

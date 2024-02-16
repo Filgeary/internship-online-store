@@ -1,12 +1,12 @@
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter } from 'react-router-dom';
 
 import App from './app';
-import config from "./config";
-import { ServicesContext } from "./context";
-import { I18nProvider } from "./i18n/context";
-import Services from "./services";
+import config from './config';
+import { ServicesContext } from './context';
+import { I18nProvider } from './i18n/context';
+import Services from './services';
 
 const services = new Services(config);
 
@@ -22,5 +22,5 @@ root.render(
         </BrowserRouter>
       </I18nProvider>
     </ServicesContext.Provider>
-  </Provider>
+  </Provider>,
 );

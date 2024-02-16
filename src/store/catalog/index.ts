@@ -1,25 +1,25 @@
-import { isSuccessResponse } from "@src/api";
-import exclude from "@src/utils/exclude";
-import StoreModule from "../module";
+import { isSuccessResponse } from '@src/api';
+import exclude from '@src/utils/exclude';
+import StoreModule from '../module';
 
-import type { IArticle, IArticles } from "@src/types/IArticle";
+import type { IArticle, IArticles } from '@src/types/IArticle';
 
 type InitialCatalogState = {
-  list: IArticle[],
+  list: IArticle[];
   params: {
-    page: number,
-    limit: number,
-    sort: string,
-    query: string,
-    category: string
-  },
-  count: number,
-  waiting: boolean
-}
+    page: number;
+    limit: number;
+    sort: string;
+    query: string;
+    category: string;
+  };
+  count: number;
+  waiting: boolean;
+};
 
 type CatalogConfig = {
-  shouldWriteToBrowserHistory: boolean,
-}
+  shouldWriteToBrowserHistory: boolean;
+};
 
 /**
  * Состояние каталога - параметры фильтра и список товара
@@ -33,15 +33,15 @@ class CatalogState extends StoreModule<InitialCatalogState, CatalogConfig> {
         limit: 10,
         sort: 'order',
         query: '',
-        category: ''
+        category: '',
       },
       count: 0,
-      waiting: false
-    }
+      waiting: false,
+    };
   }
 
   initConfig(): CatalogConfig {
-    return {} as CatalogConfig
+    return {} as CatalogConfig;
   }
 
   /**
@@ -49,14 +49,16 @@ class CatalogState extends StoreModule<InitialCatalogState, CatalogConfig> {
    * Восстановление из адреса
    */
   async initParams(newParams: InitialCatalogState['params'] | {} = {}) {
-    const shouldWriteToBrowserHistory = this.name !== 'catalog'
-      ? this.config.shouldWriteToBrowserHistory
-      : true;
+    const shouldWriteToBrowserHistory =
+      this.name !== 'catalog' ? this.config.shouldWriteToBrowserHistory : true;
 
-    const urlParams = new URLSearchParams(shouldWriteToBrowserHistory ? window.location.search : '');
+    const urlParams = new URLSearchParams(
+      shouldWriteToBrowserHistory ? window.location.search : '',
+    );
     let validParams = {} as InitialCatalogState['params'];
     if (urlParams.has('page')) validParams.page = Number(urlParams.get('page')) || 1;
-    if (urlParams.has('limit')) validParams.limit = Math.min(Number(urlParams.get('limit')) || 10, 50);
+    if (urlParams.has('limit'))
+      validParams.limit = Math.min(Number(urlParams.get('limit')) || 10, 50);
     if (urlParams.has('sort')) validParams.sort = urlParams.get('sort') || '';
     if (urlParams.has('query')) validParams.query = urlParams.get('query') || '';
     if (urlParams.has('category')) validParams.category = urlParams.get('category') || '';
@@ -77,17 +79,19 @@ class CatalogState extends StoreModule<InitialCatalogState, CatalogConfig> {
    * Установка параметров и загрузка списка товаров
    */
   async setParams(newParams: InitialCatalogState['params'] | {} = {}, replaceHistory = false) {
-    const shouldWriteToBrowserHistory = this.name !== 'catalog'
-      ? this.config.shouldWriteToBrowserHistory
-      : true;
+    const shouldWriteToBrowserHistory =
+      this.name !== 'catalog' ? this.config.shouldWriteToBrowserHistory : true;
     const params = { ...this.getState().params, ...newParams };
 
     // Установка новых параметров и признака загрузки
-    this.setState({
-      ...this.getState(),
-      params,
-      waiting: true
-    }, 'Установлены параметры каталога');
+    this.setState(
+      {
+        ...this.getState(),
+        params,
+        waiting: true,
+      },
+      'Установлены параметры каталога',
+    );
 
     // Сохранить параметры в адрес страницы
     let urlSearch = new URLSearchParams(exclude(params, this.initState().params)).toString();
@@ -105,30 +109,36 @@ class CatalogState extends StoreModule<InitialCatalogState, CatalogConfig> {
       url = `?${urlSearch}`;
     }
 
-    const apiParams = exclude({
-      limit: params.limit,
-      skip: (params.page - 1) * params.limit,
-      fields: 'items(*),count',
-      sort: params.sort,
-      'search[query]': params.query,
-      'search[category]': params.category
-    }, {
-      skip: 0,
-      'search[query]': '',
-      'search[category]': ''
-    });
+    const apiParams = exclude(
+      {
+        limit: params.limit,
+        skip: (params.page - 1) * params.limit,
+        fields: 'items(*),count',
+        sort: params.sort,
+        'search[query]': params.query,
+        'search[category]': params.category,
+      },
+      {
+        skip: 0,
+        'search[query]': '',
+        'search[category]': '',
+      },
+    );
 
     const res = await this.services.api.request<IArticles>({
-      url: `/api/v1/articles?${new URLSearchParams(apiParams)}`
+      url: `/api/v1/articles?${new URLSearchParams(apiParams)}`,
     });
 
     if (isSuccessResponse(res.data)) {
-      this.setState({
-        ...this.getState(),
-        list: res.data.result.items,
-        count: res.data.result.count,
-        waiting: false
-      }, 'Загружен список товаров из АПИ');
+      this.setState(
+        {
+          ...this.getState(),
+          list: res.data.result.items,
+          count: res.data.result.count,
+          waiting: false,
+        },
+        'Загружен список товаров из АПИ',
+      );
     }
   }
 }
