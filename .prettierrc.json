@@ -1,0 +1,22 @@
+{
+  "printWidth": 100,
+  "tabWidth": 2,
+  "useTabs": false,
+  "semi": true,
+  "singleQuote": true,
+  "trailingComma": "all",
+  "arrowParens": "avoid",
+  "bracketSpacing": true,
+  "bracketSameLine": false,
+  "jsxSingleQuote": true,
+  "proseWrap": "preserve",
+  "singleAttributePerLine": true,
+  "overrides": [
+    {
+      "files": ["*.html"],
+      "options": {
+        "singleAttributePerLine": false
+      }
+    }
+  ]
+}
