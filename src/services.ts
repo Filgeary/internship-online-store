@@ -1,14 +1,15 @@
 import APIService from "./api";
+import { Config } from "./config";
 import Store from "./store";
 import createStoreRedux from "./store-redux";
 
 class Services {
-  config: any;
+  config: Config;
   _api: any;
   _store: any;
   _redux: any;
 
-  constructor(config) {
+  constructor(config: Config) {
     this.config = config;
   }
 

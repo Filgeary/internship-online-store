@@ -43,7 +43,7 @@ function Article() {
   const callbacks = {
     // Добавление в корзину
     addToBasket: useCallback(
-      (_id) => store.actions.basket.addToBasket(_id),
+      (_id: string) => store.actions.basket.addToBasket(_id),
       [store]
     ),
   };

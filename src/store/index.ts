@@ -1,24 +1,4 @@
-import { IArticleState } from "./article/types";
-import { IBasketState } from "./basket/types";
-import { ICatalogState } from "./catalog/types";
-import { ICategoriesState } from "./categories/types";
 import * as modules from "./exports";
-import { ILocaleState } from "./locale/types";
-import { IModalsState } from "./modals/types";
-import { IProfileState } from "./profile/types";
-import { ISessionState } from "./session/types";
-
-export interface IState {
-  basket: IBasketState;
-  catalog: ICatalogState;
-  catalog2: ICatalogState;
-  modals: IModalsState;
-  article: IArticleState;
-  locale: ILocaleState;
-  categories: ICategoriesState;
-  session: ISessionState;
-  profile: IProfileState;
-}
 
 /**
  * Хранилище состояния приложения

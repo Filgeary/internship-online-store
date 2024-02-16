@@ -1,3 +1,4 @@
+import { Api, Config } from "./../config";
 interface Request {
   url: string;
   method: "GET" | "POST" | "DELETE" | "PUT";
@@ -13,9 +14,9 @@ interface Response<T> {
 class APIService {
   defaultHeaders: Record<string, string>;
   services: any;
-  config: any;
+  config: Api;
 
-  constructor(services, config = {}) {
+  constructor(services: Config, config: Api = {} as Api) {
     this.services = services;
     this.config = config;
     this.defaultHeaders = {
@@ -43,7 +44,7 @@ class APIService {
    * @param name {String} Название заголовка
    * @param value {String|null} Значение заголовка
    */
-  setHeader(name, value = null) {
+  setHeader(name: string, value: string | null = null) {
     if (value) {
       this.defaultHeaders[name] = value;
     } else if (this.defaultHeaders[name]) {
