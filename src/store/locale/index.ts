@@ -1,12 +1,12 @@
 import StoreModule from "../module"
 
 export interface ILocaleInitState {
-  lang: string
+  lang: 'ru' | 'en'
 }
 
-class LocaleState extends StoreModule<"locale"> {
+class LocaleState extends StoreModule<ILocaleInitState> {
 
-  initState() {
+  initState(): ILocaleInitState {
     return {
       lang: 'ru'
     };
@@ -16,7 +16,7 @@ class LocaleState extends StoreModule<"locale"> {
    * Установка кода языка (локали)
    * @param lang
    */
-  setLang(lang: string) {
+  setLang(lang: 'ru' | 'en') {
     this.setState({lang}, 'Установлена локаль');
   }
 }

@@ -27,18 +27,18 @@ export interface IResult {
   selectedGoods: boolean
 }
 
-export type importModules = typeof modules
-export type keyModules = keyof importModules
+export type ImportModules = typeof modules
+export type IKeysModules = keyof ImportModules
+
+export type IExtendedModules<T extends keyof ImportModules> = T | `${T}-${string}`
 
 export type StoreState = {
-  [key in keyModules]: ReturnType<Actions[key]["initState"]>
+  [key in IKeysModules as IExtendedModules<key>]: ReturnType<Actions[key]['initState']>
 }
 
 export type Actions = {
-  [key in keyModules]: InstanceType<importModules[key]>
+  [key in IKeysModules as IExtendedModules<key>]: InstanceType<ImportModules[key]>
 }
 
-type AutocompleteName<T extends string> = T | Omit<string, T>
-export type AllStoreNames = AutocompleteName<keyModules>
 
 

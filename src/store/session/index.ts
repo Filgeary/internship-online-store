@@ -6,7 +6,7 @@ import { IConfig } from "@src/config"
 /**
  * Сессия
  */
-class SessionState extends StoreModule<"session"> {
+class SessionState extends StoreModule<ISessionInitState> {
   config!: IConfig["store"]["modules"]["session"]
   /**
    * Начальное состояние

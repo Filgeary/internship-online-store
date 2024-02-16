@@ -9,4 +9,3 @@ export type ITranslateFn = (
   text: IAllLangs,
   plural?: number
 ) => string
-

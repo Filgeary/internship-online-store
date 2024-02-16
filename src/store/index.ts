@@ -1,7 +1,7 @@
 import * as modules from './exports'
 import { IConfig } from '../config'
 import Services from '../services' 
-import type { Actions, StoreState, importModules, keyModules } from './types.ts';
+import type { Actions, StoreState, ImportModules, IKeysModules } from './types.ts';
 
 /**
  * Хранилище состояния приложения
@@ -9,19 +9,20 @@ import type { Actions, StoreState, importModules, keyModules } from './types.ts'
 class Store {
   services: Services;
   config: IConfig["store"];
-  listeners: Function[];
-  actions: Actions;
-  state: StoreState;
+  listeners: Array<((...arg: any[]) => void)>;
+  actions: Actions & Record<string, any>;
+  state: StoreState  & Record<string, any>;
 
   constructor(
     services: Services,
-    config = {} as IConfig["store"],
+    // config = {} as IConfig["store"],
+    config: IConfig | {} = {},
     initState = {} as StoreState
   ) {
     this.services = services;
-    this.config = config;
+    this.config = config as IConfig["store"];
     this.listeners = []; // Слушатели изменений состояния
-    this.state = initState;
+    this.state = initState as StoreState;
     /** @type {{
      * basket: BasketState,
      * catalog: CatalogState,
@@ -34,14 +35,14 @@ class Store {
      * catalog-modal: CatalogModalState
      * }} */
     this.actions = {} as Actions;
-    const keys = Object.keys(modules) as keyModules[];
+    const keys = Object.keys(modules) as IKeysModules[];
     for (const name of keys) {
       this.create(name);
     }
   }
 
-  create<Key extends keyModules>(name: Key) {
-    const b = modules[name] as importModules[Key];
+  create<Key extends IKeysModules>(name: Key) {
+    const b = modules[name] as ImportModules[Key];
     const a = new b(this, name, {} as any) as Actions[Key];
     this.actions[name] = a;
     this.state[name] = this.actions[name].initState() as StoreState[Key];
@@ -50,7 +51,7 @@ class Store {
   /**
    * Удаление копии стейта
    */
-  delete<Key extends keyModules>(name: Key) {
+  delete<Key extends IKeysModules>(name: Key) {
     delete this.actions[name];
     delete this.state[name];
   }
@@ -59,7 +60,7 @@ class Store {
    * @param listener {Function}
    * @returns {Function} Функция отписки
    */
-  subscribe(listener: Function): Function {
+  subscribe(listener: () => void): () => void {
     this.listeners.push(listener);
     // Возвращается функция для удаления добавленного слушателя
     return () => {

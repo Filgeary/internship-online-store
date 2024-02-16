@@ -4,7 +4,7 @@ import { IApiResponseUser, IProfileInitState } from "./types"
 /**
  * Детальная информация о пользователе
  */
-class ProfileState extends StoreModule<"profile"> {
+class ProfileState extends StoreModule<IProfileInitState > {
 
   initState(): IProfileInitState {
     return {

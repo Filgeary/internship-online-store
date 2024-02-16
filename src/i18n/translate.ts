@@ -1,4 +1,4 @@
-import * as translations from './translations';
+import * as translations from './translations'
 import { ITranslateFn, ILangs, IAllLangs } from "./types"
 
 /**
@@ -11,12 +11,13 @@ import { ITranslateFn, ILangs, IAllLangs } from "./types"
 const translate: ITranslateFn = (lang: ILangs, text: IAllLangs, plural?: number): string => {
   let result = translations[lang] && (text in translations[lang])
     ? translations[lang][text]
-    : text;
+    : text
 
   if (typeof plural !== 'undefined' && typeof result === 'object'){
-    const key = new Intl.PluralRules(lang).select(plural);
+    const key = new Intl.PluralRules(lang).select(plural)
+    
     if (key in result) {
-      result = result[key as keyof typeof result];
+      result = result[key as keyof typeof result]
     }
   }
 

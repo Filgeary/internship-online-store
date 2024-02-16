@@ -19,7 +19,9 @@
   },
   "homepage": "https://github.com/ylabio/react-webinar-3#readme",
   "dependencies": {
+    "-": "^0.0.1",
     "@bem-react/classname": "^1.6.0",
+    "@total-typescript/ts-reset": "^0.5.1",
     "lodash.debounce": "^4.0.8",
     "lodash.throttle": "^4.1.1",
     "prop-types": "^15.8.1",

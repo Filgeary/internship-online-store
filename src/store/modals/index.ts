@@ -4,7 +4,7 @@ export interface IModalsInitState {
   name: string | null
 }
 
-class ModalsState extends StoreModule<"modals"> {
+class ModalsState extends StoreModule<IModalsInitState> {
 
   initState(): IModalsInitState {
     return {

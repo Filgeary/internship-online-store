@@ -4,7 +4,7 @@ import { IBasketItem, ISelectedItem, IinitState, IApiResponse } from "./types"
 /**
  * Покупательская корзина
  */
-class BasketState extends StoreModule<"basket"> {
+class BasketState extends StoreModule<IinitState> {
   initState(): IinitState {
     return {
       list: [],

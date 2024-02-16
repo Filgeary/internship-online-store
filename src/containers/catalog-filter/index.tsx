@@ -18,7 +18,7 @@ function CatalogFilter() {
     query: state.catalog.params.query,
     category: state.catalog.params.category,
     categories: state.categories.list,
-  }));
+  }))
 
   const callbacks = {
     // Сортировка

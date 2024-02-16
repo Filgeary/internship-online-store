@@ -1,19 +1,19 @@
 import { IConfig } from "../config.js"
 import Store from "./index.js" 
 import Services from "../services.js"
-import type { StoreState } from "./types.js"
+import type { StoreState, IKeysModules } from "./types.js"
 
 
 /**
  * Базовый класс для модулей хранилища
  * Для группировки действий над внешним состоянием
  */
-export type StoreNames = keyof StoreState | keyof IConfig["store"]["modules"];
+// export type StoreNames = keyof StoreState | keyof IConfig["store"]["modules"];
 
-class StoreModule<T extends StoreNames> {
+class StoreModule<State, Config = object> {
   store: Store
-  name: string
-  config: IConfig | {}
+  name: IKeysModules
+  config: Config
   services: Services
 
   /**
@@ -23,25 +23,25 @@ class StoreModule<T extends StoreNames> {
    */
   constructor(
     store: Store,
-    name: string,
-    config: {} 
+    name: IKeysModules,
+    config: Config | {} = {} 
   ) {
     this.store = store
     this.name = name
-    this.config = config 
+    this.config = config as Config 
     /** @type {Services} */
     this.services = store.services
   }
 
-  initState(): StoreState[StoreNames] {
-    return {} as StoreState[StoreNames];
+  initState(): State {
+    return {} as State;
   }
 
-  getState(): StoreState[T] {
-    return this.store.getState()[this.name as T];
+  getState() {
+    return this.store.getState()[this.name] as State;
   }
 
-  setState(newState: StoreState[T], description = "setState") {
+  setState(newState: State, description: string = "setState") {
     this.store.setState(
       {
         ...this.store.getState(),
