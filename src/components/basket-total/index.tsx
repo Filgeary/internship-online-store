@@ -31,10 +31,10 @@ function BasketTotal({ sum, t, open }: TBasketTotalProps) {
   );
 }
 
-/* BasketTotal.defaultProps = {
+ BasketTotal.defaultProps = {
   sum: 0,
   t: (text: any) => text,
   open: () => {},
-}; */
+}; 
 
 export default memo(BasketTotal);

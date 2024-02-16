@@ -3,7 +3,7 @@ import { TConfig } from "@src/config";
 
 type TRequest = {
   url: string;
-  method?: string;
+  method?: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
   headers?: Record<string, string>;
   timeout?: number;
 } & Partial<any>;
@@ -25,7 +25,7 @@ class APIService {
    * @param services {Services} Менеджер сервисов
    * @param config {Object}
    */
-  constructor(services: Services, config: object = {}) {
+  constructor(services: Services, config: TConfig["api"]) {
     this.services = services;
     this.config = config as TConfig["api"];
     this.defaultHeaders = {

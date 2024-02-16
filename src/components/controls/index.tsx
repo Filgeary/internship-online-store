@@ -14,9 +14,9 @@ function Controls({ onAdd, title }: TControlsProps) {
   );
 }
 
-/* Controls.defaultProps = {
+ Controls.defaultProps = {
   onAdd: () => {},
   title: "Добавить",
 };
- */
+
 export default memo(Controls);

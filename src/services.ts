@@ -5,11 +5,11 @@ import createStoreRedux from "./store-redux";
 
 class Services {
   config: TConfig;
-  private _api: any;
-  private _store: any;
-  private _redux: any;
-  
-  constructor(config:TConfig) {
+  _api: APIService | null = null;
+  _store: Store | null = null;
+  _redux: any;
+
+  constructor(config: TConfig) {
     this.config = config;
   }
 

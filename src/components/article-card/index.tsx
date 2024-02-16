@@ -41,10 +41,10 @@ function ArticleCard({ article, onAdd, t }: TArticleCardProps) {
 }
 
 
-/* ArticleCard.defaultProps = {
+ ArticleCard.defaultProps = {
   onAdd: () => {},
   t: (text: any) => text
-} */
+} 
 
 
 export default memo(ArticleCard);

@@ -23,8 +23,8 @@ function Select(props: TSelectProps) {
   );
 }
 
-/* Select.defaultProps = {
+ Select.defaultProps = {
   onChange: () => {},
-}; */
+}; 
 
 export default memo(Select);

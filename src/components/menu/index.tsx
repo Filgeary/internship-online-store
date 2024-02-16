@@ -29,9 +29,9 @@ function Menu({ items, onNavigate }: TMenuProps) {
   );
 }
 
-/* Menu.defaultProps = {
+Menu.defaultProps = {
   items: [],
   onNavigate: () => {},
-}; */
+}; 
 
 export default memo(Menu);

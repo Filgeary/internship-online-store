@@ -20,8 +20,8 @@ function List({ list, renderItem }: TListProps) {
   );
 }
 
-/* List.defaultProps = {
+ List.defaultProps = {
   renderItem: (item: any) => {},
-} */
+} 
 
 export default memo(List);

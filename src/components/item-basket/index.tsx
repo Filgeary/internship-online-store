@@ -53,11 +53,11 @@ function ItemBasket(props: TItemBasketProps) {
   );
 }
 
-/* ItemBasket.defaultProps = {
+ ItemBasket.defaultProps = {
   onRemove: () => {},
   labelCurr: "₽",
   labelUnit: "шт",
   labelDelete: "Удалить",
-}; */
+}; 
 
 export default memo(ItemBasket);

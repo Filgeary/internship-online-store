@@ -26,11 +26,11 @@ function BasketTool ({ sum, amount, onOpen, t }:TBasketToolProps)  {
   );
 };
 
-/* BasketTool.defaultProps = {
+ BasketTool.defaultProps = {
   onOpen: () => {},
   sum: 0,
   amount: 0,
   t: (text: any) => text
-} */
+} 
 
 export default memo(BasketTool);

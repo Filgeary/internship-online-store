@@ -67,11 +67,11 @@ function Item(props: TItemProps<''>) {
   );
 }
 
-/* Item.defaultProps = {
+Item.defaultProps = {
   onAdd: () => {},
   labelCurr: "₽",
   labelAdd: "Добавить",
   onSelect: () => {},
-}; */
+}; 
 
 export default memo(Item);

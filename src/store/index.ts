@@ -1,6 +1,6 @@
 import Services from "@src/services.ts";
 import * as modules from "./exports.ts";
-import { TConfig } from "@src/config.ts";
+import { TConfig, TConfigStore } from "@src/config.ts";
 import {
   TActions,
   TKey,
@@ -14,7 +14,7 @@ import {
  */
 class Store {
   services: Services;
-  config: TConfig["store"];
+  config: TConfigStore["store"];
   listeners: Function[];
   state: TNewStoreState & Record<string, any>;
   actions: TActions & Record<string, any>;
@@ -26,7 +26,7 @@ class Store {
    */
   constructor(services: Services, config = {}, initState = {}) {
     this.services = services;
-    this.config = config as TConfig["store"];
+    this.config = config as TConfigStore["store"];
     this.listeners = []; // Слушатели изменений состояния
     this.state = initState as TNewStoreState;
     /** @type {{
@@ -49,7 +49,7 @@ class Store {
     this.actions[name] = new modules[name](
       this,
       name,
-      {} as any
+      this.config.modules[name] as TConfigStore['store']
     ) as TStoreActions[Key];
     this.state[name] = this.actions[name].initState() as TNewStoreState[Key];
   }
@@ -63,7 +63,7 @@ class Store {
     this.actions[newName] = new modules[base](
       this,
       newName,
-      {} as any
+      this.config.modules[name] as TConfigStore['store']
     ) as TStoreActions[Key];
 
     this.state[newName] = this.actions[

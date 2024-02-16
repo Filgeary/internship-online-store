@@ -54,10 +54,10 @@ function ModalLayout(props: TModalLayoutProps) {
   );
 }
 
-/* ModalLayout.defaultProps = {
+ModalLayout.defaultProps = {
   title: "Модалка",
   labelClose: "Закрыть",
   onClose: () => {},
-}; */
+}; 
 
 export default memo(ModalLayout);

@@ -59,13 +59,13 @@ function CountForm(props: TCountFormProps) {
   );
 }
 
-/* CountForm.defaultProps = {
+ CountForm.defaultProps = {
   onSubmit: () => {},
   closeModal: () => {},
   basketUnit: "шт",
   title: "Введите количество товара",
   ok: "Ок",
   cancel: "Отмена",
-}; */
+}; 
 
 export default memo(CountForm);

@@ -51,10 +51,10 @@ function Input(props: TInputProps) {
   );
 }
 
-/* Input.defaultProps = {
+ Input.defaultProps = {
   onChange: () => {},
   type: "text",
   theme: "",
-}; */
+};
 
 export default memo(Input);
