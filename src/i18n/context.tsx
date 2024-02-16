@@ -1,8 +1,8 @@
 import React, {createContext, useMemo, useState} from "react";
-import translate, {Lang} from "./translate";
-import {TranslationKeys} from "@src/i18n/translations";
+import translate from "./translate";
+import {KeysTranslationsAll, Lang} from "@src/i18n/translations";
 
-export type TranslateFunction = (key: TranslationKeys, number?: number) => string;
+export type TranslateFunction = (key: KeysTranslationsAll, number?: number) => string;
 
 // Интерфейс экспортируемого контекста
 export interface I18nContextType {
@@ -14,7 +14,7 @@ export interface I18nContextType {
 /**
  * @type {React.Context<{}>}
  */
-export const I18nContext = createContext<I18nContextType>({} as I18nContextType);
+export const I18nContext: React.Context<I18nContextType> = createContext<I18nContextType>({} as I18nContextType);
 
 /**
  * Обертка над провайдером контекста, чтобы управлять изменениями в контексте

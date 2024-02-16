@@ -1,11 +1,11 @@
-interface Issue {
+export interface IIssue {
   accept?: boolean,
   message: string,
   path: string[],
   rule?: string,
 }
 
-type Issues = Issue[];
+type Issues = IIssue[];
 
 export default function simplifyErrors(issues: Issues = []): Record<string, string[]> {
   const result: Record<string, string[]> = {};

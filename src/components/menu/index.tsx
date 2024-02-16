@@ -3,22 +3,6 @@ import {cn as bem} from "@bem-react/classname";
 import {Link} from "react-router-dom";
 import './style.css';
 
-/*
-Menu.propTypes = {
-  items: PropTypes.arrayOf(PropTypes.shape({
-    key: PropTypes.number,
-    link: PropTypes.string,
-    title: PropTypes.string,
-  })),
-  onNavigate: PropTypes.func
-}
-
-Menu.defaultProps = {
-  items: [],
-  onNavigate: () => {}
-}
- */
-
 interface Item {
   key: string | number,
   title: string,

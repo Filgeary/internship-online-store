@@ -1,10 +1,10 @@
 import React, {memo} from "react";
 import './style.css';
-import {ArticleInterface} from "../../../types/ArticleInterface";
+import {IArticle} from "../../../types/IArticle";
 
 interface Props {
-  list: ArticleInterface[],
-  renderItem: (item: ArticleInterface) => React.ReactNode
+  list: IArticle[],
+  renderItem: (item: IArticle) => React.ReactNode
 }
 
 const List: React.FC<Props> = ({list, renderItem}) => {

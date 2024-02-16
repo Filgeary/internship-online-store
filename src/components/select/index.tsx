@@ -2,12 +2,12 @@ import React, {memo} from "react";
 import './style.css';
 
 export interface Option {
-  value: string,
+  value: string | number,
   title: string
 }
 
 interface Props {
-  onChange: (value: string) => void,
+  onChange: (value: any) => void,
   value: string,
   options: Option[]
 }

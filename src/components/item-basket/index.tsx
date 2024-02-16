@@ -3,11 +3,11 @@ import numberFormat from "@src/utils/number-format";
 import {cn as bem} from "@bem-react/classname";
 import {Link} from "react-router-dom";
 import './style.css';
-import {ArticleInterface} from "../../../types/ArticleInterface";
+import {IArticle} from "../../../types/IArticle";
 
 
 interface Props {
-  item: ArticleInterface,
+  item: IArticle,
   link: string,
   onLink: (value: any) => void,
   onRemove: (_id: string | number) => void,

@@ -1,4 +1,4 @@
-import {Locale} from '../../types/Locale';
+export type Locale = 'ru-RU' | 'en-EN';
 
 type Variants = {
   [key: string]: string;

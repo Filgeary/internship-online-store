@@ -6,11 +6,11 @@ import Item from "@src/components/item";
 import List from "@src/components/list";
 import Pagination from "@src/components/pagination";
 import Spinner from "@src/components/spinner";
-import PropTypes from "prop-types";
-import {ArticleInterface} from "../../../types/ArticleInterface";
+import {IArticle} from "../../../types/IArticle";
+import {ExtendedModulesKey} from "@src/store/types";
 
 interface Props {
-  stateName?: string,
+  stateName?: ExtendedModulesKey<'catalog'>,
 }
 
 const CatalogList: React.FC<Props> = ({stateName = 'catalog'}) => {
@@ -19,7 +19,7 @@ const CatalogList: React.FC<Props> = ({stateName = 'catalog'}) => {
 
   const {t} = useTranslate();
 
-  const select = useSelector((state: any) => ({
+  const select = useSelector(state => ({
     list: state[stateName].list,
     params: state[stateName].params,
     count: state[stateName].count,
@@ -27,21 +27,22 @@ const CatalogList: React.FC<Props> = ({stateName = 'catalog'}) => {
   }));
 
   const callbacks = {
-    addToBasket: useCallback(async (item: ArticleInterface) => {
-      const result = await store.actions.modals.open('adding', {...item})
+    addToBasket: useCallback(async (item: IArticle) => {
+      const result: number = await store.actions.modals.open('adding', {...item}) as number
       if (result > 0) {
-        store.actions.basket.addToBasket(item._id, result)
+        await store.actions.basket.addToBasket(item._id, result)
       }
     }, []),
     // Пагинация
     onPaginate: useCallback((page: number) => {
+      // @ts-ignore
       store.actions[stateName].setParams({page})
     }, [store]),
     // генератор ссылки для пагинатора
     makePaginatorLink: useCallback((page: number) => {
       return `?${new URLSearchParams({
         page: String(page),
-        limit: select.params.limit,
+        limit: String(select.params.limit),
         sort: select.params.sort,
         query: select.params.query
       })}`;
@@ -49,7 +50,7 @@ const CatalogList: React.FC<Props> = ({stateName = 'catalog'}) => {
   }
 
   const renders = {
-    item: useCallback((item: ArticleInterface) =>
+    item: useCallback((item: IArticle) =>
         <Item item={item} onAdd={callbacks.addToBasket}
               link={`/articles/${item._id}`} labelAdd={t('article.add')}/>,
       [callbacks.addToBasket, t]),
@@ -63,14 +64,6 @@ const CatalogList: React.FC<Props> = ({stateName = 'catalog'}) => {
                   onChange={callbacks.onPaginate} makeLink={callbacks.makePaginatorLink}/>
     </Spinner>
   );
-}
-
-CatalogList.prototype = {
-  stateName: PropTypes.string
-}
-
-CatalogList.defaultProps = {
-  stateName: 'catalog'
 }
 
 export default memo(CatalogList);

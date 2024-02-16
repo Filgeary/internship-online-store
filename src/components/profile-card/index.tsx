@@ -1,20 +1,9 @@
 import React, {memo} from "react";
 import {cn as bem} from '@bem-react/classname';
 import './style.css';
+import {IUser} from "../../../types/User";
 
-interface Data {
-    email: string,
-    profile: {
-        name: string,
-        phone: string
-    }
-}
-
-interface Props {
-    data: Data
-}
-
-const ProfileCard: React.FC<Props> = ({data}) => {
+const ProfileCard: React.FC<{data: IUser}> = ({data}) => {
   const cn = bem('ProfileCard');
 
   return (
@@ -22,15 +11,15 @@ const ProfileCard: React.FC<Props> = ({data}) => {
       <h3 className={cn('title')}>Профиль</h3>
       <div className={cn('prop')}>
         <div className={cn('label')}>Имя:</div>
-        <div className={cn('value')}>{data?.profile?.name}</div>
+        <div className={cn('value')}>{data.profile.name}</div>
       </div>
       <div className={cn('prop')}>
         <div className={cn('label')}>Телефон:</div>
-        <div className={cn('value')}>{data?.profile?.phone}</div>
+        <div className={cn('value')}>{data.profile?.phone}</div>
       </div>
       <div className={cn('prop')}>
         <div className={cn('label')}>email:</div>
-        <div className={cn('value')}>{data?.email}</div>
+        <div className={cn('value')}>{data.email}</div>
       </div>
     </div>
   )

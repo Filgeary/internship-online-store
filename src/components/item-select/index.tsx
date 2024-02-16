@@ -3,10 +3,10 @@ import {cn as bem} from "@bem-react/classname";
 import numberFormat from "@src/utils/number-format";
 import './style.css';
 import InputNumber from "@src/components/input-number";
-import {ArticleInterface} from "../../../types/ArticleInterface";
+import {IArticle} from "../../../types/IArticle";
 
 interface Props {
-  item: ArticleInterface,
+  item: IArticle,
   onSelect: (_id: number | string, quantity: number, select: boolean) => void,
   labelCurr?: string,
   labelAdd: string,

@@ -9,7 +9,7 @@ interface Props {
 
 function Protected({children, redirect}: Props): React.ReactNode {
 
-  const select = useSelector((state: any) => ({
+  const select = useSelector(state => ({
     exists: state.session.exists,
     waiting: state.session.waiting
   }));

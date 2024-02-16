@@ -1,4 +1,4 @@
-import React, {memo, useCallback, useState} from 'react';
+import React, {memo, useCallback, useEffect, useState} from 'react';
 import CatalogFilter from "@src/containers/catalog-filter";
 import ModalLayout from "@src/components/modal-layout";
 import useTranslate from "@src/hooks/use-translate";
@@ -19,7 +19,7 @@ function ModalList({onClose}: { onClose: onCloseModal }) {
   const store = useStore();
 
   // Состояние загрузки
-  const [waiting, setWaiting] = useState(false)
+  const [waiting, setWaiting] = useState(true)
   // Лист выбранных товаров
   const [selectedList, setSelectedList] = useState({})
 
@@ -33,25 +33,28 @@ function ModalList({onClose}: { onClose: onCloseModal }) {
     }, [selectedList])
   }
 
-  useInit(async () => {
-    setWaiting(true)
+  useEffect(() => {
+    store.makeCopy('catalog-modal', 'catalog', {entryURLParams: false})
     // Загружаем список в любом случае, но конкретно в созданную стора
-    await Promise.all([
-      store.actions['modal-catalog'].setParams({}, false),
+    Promise.all([
+      store.actions['catalog-modal'].setParams({}, false),
       store.actions.categories.load()
     ])
     setWaiting(false)
+    return () => {
+      store.deleteCopy('catalog-modal')
+    }
   }, [])
 
   return (
       <ModalLayout title={t('modalList.title')} onClose={callbacks.closeModal}>
         <Spinner active={waiting}>
-
-          <CatalogFilter stateName={'modal-catalog'}/>
-          <CatalogListSelected stateName={'modal-catalog'} selectedList={selectedList}
-                               onUpdateSelectedList={setSelectedList}/>
-          <Controls title={'Ok'} onAdd={() => callbacks.handleSubmit()}/>
-
+          {!waiting && <>
+            <CatalogFilter stateName={'catalog-modal'}/>
+            <CatalogListSelected stateName={'catalog-modal'} selectedList={selectedList}
+                                 onUpdateSelectedList={setSelectedList}/>
+            <Controls title={'Ok'} onAdd={() => callbacks.handleSubmit()}/>
+          </>}
         </Spinner>
 
       </ModalLayout>

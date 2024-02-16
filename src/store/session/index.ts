@@ -1,17 +1,28 @@
 import StoreModule from "../module";
-import simplifyErrors from "@src/utils/simplify-errors";
+import simplifyErrors, {IIssue} from "@src/utils/simplify-errors";
+import {Config, CurrentModuleConfig} from "@src/config";
+import Store from "@src/store";
+import {IUser} from "../../../types/User";
+import {TSessionData} from "../../../types/Response";
+import {AllModules} from "@src/store/types";
+import Services from "@src/services";
+
+type TSessionConfig = CurrentModuleConfig['session']
 
 /**
  * Сессия
  */
-class SessionState extends StoreModule {
-  /**
-   * Начальное состояние
-   * @return {Object}
-   */
-  initState() {
+class SessionState extends StoreModule<'session', TSessionConfig> {
+  /**Начальное состояние*/
+  initState(): {
+    user: IUser,
+    token: null | string,
+    errors: null | Record<string, string[]>,
+    waiting: boolean,
+    exists: boolean
+  } {
     return {
-      user: {},
+      user: {} as IUser,
       token: null,
       errors: null,
       waiting: true,
@@ -25,12 +36,14 @@ class SessionState extends StoreModule {
    * @param onSuccess
    * @returns {Promise<void>}
    */
-  async signIn(data, onSuccess) {
+  async signIn(data: {login: string, password: string}, onSuccess: () => void): Promise<void> {
     this.setState(this.initState(), 'Авторизация');
+
     try {
-      const res = await this.services.api.request({
+      const res: TSessionData = await this.services.api.request({
         url: '/api/v1/users/sign',
         method: 'POST',
+        //@ts-ignore
         body: JSON.stringify(data)
       });
 
@@ -40,6 +53,7 @@ class SessionState extends StoreModule {
           token: res.data.result.token,
           user: res.data.result.user,
           exists: true,
+          errors: null,
           waiting: false
         }, 'Успешная авторизация');
 
@@ -67,7 +81,7 @@ class SessionState extends StoreModule {
    * Отмена авторизации (выход)
    * @returns {Promise<void>}
    */
-  async signOut() {
+  async signOut(): Promise<void> {
     try {
       await this.services.api.request({
         url: '/api/v1/users/sign',
@@ -87,7 +101,7 @@ class SessionState extends StoreModule {
    * По токену восстановление сессии
    * @return {Promise<void>}
    */
-  async remind() {
+  async remind(): Promise<void> {
     const token = localStorage.getItem('token');
     if (token) {
       // Устанавливаем токен в АПИ

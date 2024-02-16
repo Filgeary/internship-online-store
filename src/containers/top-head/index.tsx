@@ -7,12 +7,12 @@ import useStore from "@src/hooks/use-store";
 
 function TopHead() {
 
-  const {t}: any = useTranslate();
+  const {t} = useTranslate();
   const navigate = useNavigate();
   const location = useLocation();
   const store = useStore();
 
-  const select = useSelector((state: any) => ({
+  const select = useSelector(state => ({
     user: state.session.user,
     exists: state.session.exists
   }));

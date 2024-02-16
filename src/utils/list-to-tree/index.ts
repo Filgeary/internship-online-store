@@ -8,10 +8,6 @@ export interface Tree {
     children: Tree[];
 }
 
-export interface List {
-
-}
-
 interface Trees {
   [key: string]: Tree
 }

@@ -7,28 +7,29 @@ import Input from "@src/components/input";
 import SideLayout from "@src/components/side-layout";
 import treeToList from "@src/utils/tree-to-list";
 import listToTree from "@src/utils/list-to-tree";
-import PropTypes from "prop-types";
+import {ExtendedModulesAllKey, ExtendedModulesKey} from "@src/store/types";
+import {Params, TSort} from "@src/store/catalog";
 
 interface Props {
-  stateName?: string,
+  stateName?: ExtendedModulesKey<'catalog'>,
 }
 
 const CatalogFilter: React.FC<Props> = ({stateName = 'catalog'}) => {
 
   const store = useStore();
 
-  const select = useSelector((state: any) => ({
+  const select = useSelector((state) => ({
     params: state[stateName].params,
     categories: state.categories.list,
   }));
 
   const callbacks = {
     // Сортировка
-    onSort: useCallback((sort: any) => {
+    onSort: useCallback((sort: TSort) => {
       store.actions[stateName].setParams({sort})
     }, []),
     // Поиск
-    onSearch: useCallback((query: any, name: 'filter') => {
+    onSearch: useCallback((query: string, name: 'filter') => {
       store.actions[stateName].setParams({query, page: 1})
     }, []),
     // Сброс
@@ -36,7 +37,7 @@ const CatalogFilter: React.FC<Props> = ({stateName = 'catalog'}) => {
       store.actions[stateName].resetParams()
     }, []),
     // Фильтр по категории
-    onCategory: useCallback((category: any) => {
+    onCategory: useCallback((category: string) => {
       store.actions[stateName].setParams({category, page: 1})
     }, []),
   };
@@ -51,7 +52,7 @@ const CatalogFilter: React.FC<Props> = ({stateName = 'catalog'}) => {
     ]), []),
     categories: useMemo(() => ([
       {value: '', title: 'Все'},
-      ...treeToList<Option>(listToTree(select.categories), (item: any, level: any) => (
+      ...treeToList<Option>(listToTree(select.categories), (item, level) => (
         {value: item._id, title: '- '.repeat(level) + item.title}
       ))
     ]), [select.categories]),
@@ -69,14 +70,5 @@ const CatalogFilter: React.FC<Props> = ({stateName = 'catalog'}) => {
     </SideLayout>
   )
 }
-
-CatalogFilter.prototype = {
-  stateName: PropTypes.string
-}
-
-CatalogFilter.defaultProps = {
-  stateName: 'catalog'
-}
-
 
 export default memo(CatalogFilter);

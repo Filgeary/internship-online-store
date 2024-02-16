@@ -1,7 +1,7 @@
 import isPlainObject from '../is-plain-object';
 
 type MyObject = {
-  [key: string]: any; // Замените `any` на более конкретный тип, если это возможно
+  [key: string]: any;
 };
 
 
@@ -11,7 +11,7 @@ type MyObject = {
  * @param objectExc {Object} Объект-маска, вырезаемый из objectSrc
  * @returns {Object} Новый объект
  */
-export default function exclude(objectSrc: MyObject, objectExc: MyObject): MyObject | void {
+export default function exclude(objectSrc: MyObject, objectExc: MyObject): Record<string, string> {
   if (isPlainObject(objectSrc) && isPlainObject(objectExc)) {
     const result = {} as MyObject;
     const keys = Object.keys(objectSrc);
@@ -23,8 +23,8 @@ export default function exclude(objectSrc: MyObject, objectExc: MyObject): MyObj
         }
       }
     }
-    return Object.keys(result).length ? result : undefined;
+    return Object.keys(result).length ? result : {} as Record<string, string>;
   } else {
-    return objectSrc;
+    return objectSrc as Record<string, string>;
   }
 }

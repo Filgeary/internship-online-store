@@ -1,16 +1,34 @@
 import StoreModule from "../module";
 import exclude from "@src/utils/exclude";
+import Store from "@src/store";
+import {CurrentModuleConfig} from "@src/config";
+import {AllModules} from "@src/store/types";
+
+export type TSort = 'order' | 'title.ru' | '-price' | 'edition'
+export interface Params {
+  page: number,
+  limit: number,
+  sort: TSort,
+  query: string,
+  category: string
+}
+
+type TCatalogConfig = CurrentModuleConfig['catalog']
 
 /**
- * Состояние каталога - параметры фильтра исписок товара
+ * Состояние каталога - параметры фильтра и список товара
  */
-class CatalogState extends StoreModule {
-
+class CatalogState extends StoreModule<'catalog', TCatalogConfig> {
   /**
    * Начальное состояние
    * @return {Object}
    */
-  initState() {
+  initState():{
+    list: any[],
+    params: Params,
+    count: number,
+    waiting: boolean,
+  } {
     return {
       list: [],
       params: {
@@ -31,14 +49,14 @@ class CatalogState extends StoreModule {
    * @param [newParams] {Object} Новые параметры
    * @return {Promise<void>}
    */
-  async initParams(newParams = {}) {
+  async initParams(newParams: Params = {} as Params): Promise<void> {
     const urlParams = new URLSearchParams(window.location.search);
-    let validParams = {};
+    let validParams = {} as Params;
     if (urlParams.has('page')) validParams.page = Number(urlParams.get('page')) || 1;
     if (urlParams.has('limit')) validParams.limit = Math.min(Number(urlParams.get('limit')) || 10, 50);
-    if (urlParams.has('sort')) validParams.sort = urlParams.get('sort');
-    if (urlParams.has('query')) validParams.query = urlParams.get('query');
-    if (urlParams.has('category')) validParams.category = urlParams.get('category');
+    if (urlParams.has('sort')) validParams.sort = urlParams.get('sort') as TSort;
+    if (urlParams.has('query')) validParams.query = urlParams.get('query') as string;
+    if (urlParams.has('category')) validParams.category = urlParams.get('category') as string;
     await this.setParams({...this.initState().params, ...validParams, ...newParams}, true);
   }
 
@@ -47,7 +65,7 @@ class CatalogState extends StoreModule {
    * @param [newParams] {Object} Новые параметры
    * @return {Promise<void>}
    */
-  async resetParams(newParams = {}) {
+  async resetParams(newParams: Params = {} as Params): Promise<void> {
     // Итоговые параметры из начальных, из URL и из переданных явно
     const params = {...this.initState().params, ...newParams};
     // Установка параметров и загрузка данных
@@ -60,7 +78,7 @@ class CatalogState extends StoreModule {
    * @param [replaceHistory] {Boolean} Заменить адрес (true) или новая запись в истории браузера (false)4
    * @returns {Promise<void>}
    */
-  async setParams(newParams = {}, replaceHistory = false) {
+  async setParams(newParams: Partial<Params> = {} as Partial<Params>, replaceHistory: boolean = false): Promise<void> {
     const params = {...this.getState().params, ...newParams};
 
     // Установка новых параметров и признака загрузки
@@ -82,7 +100,7 @@ class CatalogState extends StoreModule {
       }
     }
 
-    const apiParams = exclude({
+    const apiParams: Record<string, string> = exclude({
       limit: params.limit,
       skip: (params.page - 1) * params.limit,
       fields: 'items(*),count',

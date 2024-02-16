@@ -67,10 +67,10 @@ function Login() {
         <form onSubmit={callbacks.onSubmit}>
           <h2>{t('auth.title')}</h2>
           <Field label={t('auth.login')} error={select.errors?.login}>
-            <Input name="login" value={data.login} onChange={callbacks.onChange}/>
+            <Input<'login'> name="login" value={data.login} onChange={callbacks.onChange}/>
           </Field>
           <Field label={t('auth.password')} error={select.errors?.password}>
-            <Input<nameData> name="password" type="password" value={data.password}
+            <Input<'password'> name="password" type="password" value={data.password}
                    onChange={callbacks.onChange}/>
           </Field>
           <Field error={select.errors?.other}>

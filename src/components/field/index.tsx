@@ -5,7 +5,7 @@ import './style.css';
 
 interface Props {
     label?: string,
-    error: string,
+    error?: string[],
     children?: ReactNode
 }
 
@@ -18,7 +18,7 @@ const Field: React.FC<Props> = ({label, error, children}) => {
         {children}
       </div>
       <div className={cn('error')}>
-        {error}
+        {error ? error : ''}
       </div>
     </div>
   )

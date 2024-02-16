@@ -5,17 +5,14 @@ import useTranslate from "@src/hooks/use-translate";
 import Menu from "@src/components/menu";
 import BasketTool from "@src/components/basket-tool";
 import SideLayout from "@src/components/side-layout";
-import {useDispatch} from 'react-redux';
 
 function Navigation() {
   const store = useStore();
-  const dispatch = useDispatch();
 
-  const select = useSelector((state: any) => ({
+  const select = useSelector(state => ({
     modalsList: state.modals.modalsList,
     amount: state.basket.amount,
     sum: state.basket.sum,
-    lang: state.locale.lang
   }));
 
   const callbacks =  {

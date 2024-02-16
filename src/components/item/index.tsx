@@ -3,12 +3,12 @@ import {cn as bem} from '@bem-react/classname';
 import numberFormat from "@src/utils/number-format";
 import './style.css';
 import {Link} from "react-router-dom";
-import {ArticleInterface} from "../../../types/ArticleInterface";
+import {IArticle} from "../../../types/IArticle";
 
 interface Props {
-  item: ArticleInterface,
+  item: IArticle,
   link: string,
-  onAdd: (item: ArticleInterface) => void,
+  onAdd: (item: IArticle) => void,
   labelCurr?: string,
   labelAdd?: string
 }

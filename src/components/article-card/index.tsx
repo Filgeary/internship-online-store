@@ -2,11 +2,11 @@ import React, {memo} from "react";
 import {cn as bem} from '@bem-react/classname';
 import numberFormat from "../../utils/number-format";
 import './style.css';
-import {ArticleInterface} from "../../../types/ArticleInterface";
+import {IArticle} from "../../../types/IArticle";
 import {TranslateFunction} from "@src/i18n/context";
 
 interface Props {
-    article: ArticleInterface,
+    article: IArticle,
     onAdd: (_id: string) => void,
     t: TranslateFunction
 }

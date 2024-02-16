@@ -1,4 +1,4 @@
-import {Locale} from "../../types/Locale";
+export type Locale = 'ru-RU' | 'en-EN';
 
 /**
  * Форматирование разрядов числа

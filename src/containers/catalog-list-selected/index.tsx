@@ -4,13 +4,13 @@ import useSelector from "@src/hooks/use-selector";
 import useTranslate from "@src/hooks/use-translate";
 import List from "@src/components/list";
 import Pagination from "@src/components/pagination";
-import PropTypes from "prop-types";
 import ItemSelect from "@src/components/item-select";
-import {ArticleInterface} from "../../../types/ArticleInterface";
+import {IArticle} from "../../../types/IArticle";
+import {ExtendedModulesKey} from "@src/store/types";
 
 interface Props {
-  stateName: string,
-  selectedList: any,
+  stateName: ExtendedModulesKey<'catalog'>,
+  selectedList: Record<string, number>,
   onUpdateSelectedList: (obj: object) => void
 }
 
@@ -20,7 +20,7 @@ const CatalogListSelected: React.FC<Props> = ({stateName = 'catalog', selectedLi
 
   const {t}: any = useTranslate();
 
-  const select = useSelector((state: any) => ({
+  const select = useSelector(state => ({
     list: state[stateName].list,
     params: state[stateName].params,
     count: state[stateName].count,
@@ -30,10 +30,10 @@ const CatalogListSelected: React.FC<Props> = ({stateName = 'catalog', selectedLi
   const callbacks = {
     makePaginatorLink: useCallback((page: number) => {
       return `?${new URLSearchParams({
+        limit: String(select.params.limit),
         page: String(page),
-        limit: select.params.limit,
-        sort: select.params.sort,
-        query: select.params.query
+        query: select.params.query,
+        sort: select.params.sort
       })}`;
     }, [select.params.limit, select.params.sort, select.params.query]),
     // Пагинация
@@ -56,7 +56,7 @@ const CatalogListSelected: React.FC<Props> = ({stateName = 'catalog', selectedLi
   }
 
   const renders = {
-    item: useCallback((item: ArticleInterface) => {
+    item: useCallback((item: IArticle) => {
         return <ItemSelect item={item} select={selectedList[item._id]} onSelect={callbacks.onSelect}
                     labelAdd={t('article.add')}/>
       },
@@ -72,13 +72,4 @@ const CatalogListSelected: React.FC<Props> = ({stateName = 'catalog', selectedLi
     </>
   );
 }
-
-CatalogListSelected.prototype = {
-  stateName: PropTypes.string
-}
-
-CatalogListSelected.defaultProps = {
-  stateName: 'catalog'
-}
-
 export default memo(CatalogListSelected);
