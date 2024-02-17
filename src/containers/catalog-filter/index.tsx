@@ -34,11 +34,14 @@ function CatalogFilter() {
       ],
       [select.categories]
     ),
+    countries: useMemo(() => {
+      return [{ _id: '', code: '', title: 'Все' }, ...select.countries];
+    }, [select.countries]),
   };
 
   const helpers = {
     optionsBuilder: (search: string) => {
-      return select.countries.filter((option: { _id: string; code: string; title: string }) => {
+      return options.countries.filter((option: { _id: string; code: string; title: string }) => {
         return [option.code, option.title].some((val) =>
           val.toLowerCase().includes(search.toLowerCase())
         );
@@ -68,7 +71,7 @@ function CatalogFilter() {
         value={select.country}
         onSelected={(country) => callbacks.onCountrySelected(country._id)}
         displayStringForOption={(item) => item.title}
-        options={select.countries}
+        options={options.countries}
         optionsBuilder={helpers.optionsBuilder}
       />
       <button onClick={callbacks.onReset}>{t('filter.reset')}</button>

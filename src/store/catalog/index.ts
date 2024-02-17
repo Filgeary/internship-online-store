@@ -95,8 +95,6 @@ class CatalogState extends StoreModule<TCatalogState, TConfigModules['catalog']>
       }
     }
 
-    console.log('this is country:', params.country);
-
     const apiParams = exclude(
       {
         limit: params.limit,

@@ -1,10 +1,15 @@
-import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { memo, useCallback, useMemo, useRef, useState } from 'react';
 
 import './style.css';
 import { cn as bem } from '@bem-react/classname';
 import Arrow from '@src/assets/images/arrow.svg';
 import useOnClickOutside from '@src/hooks/use-on-click-outside';
 import debounce from 'lodash.debounce';
+
+import 'overlayscrollbars/overlayscrollbars.css';
+// import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
+import { Scrollbar } from 'react-scrollbars-custom';
+import Option from './option';
 
 type SelectCustomProps = {
   placeholder?: string;
@@ -38,10 +43,12 @@ function SelectCustom(props: SelectCustomProps) {
 
   const active = useMemo<TOption>(() => {
     return (
-      options.find((option) => option._id === value) ?? { _id: '', code: '', title: placeholder }
+      options.find((option) => option._id === value) ??
+      options[0] ?? { _id: '', code: '', title: '' }
     );
   }, [value, options, placeholder]);
   const items = useMemo(() => optionsBuilder(debouncedSearch), [optionsBuilder, debouncedSearch]);
+  // const items = options;
 
   const wrapperRef = useRef<HTMLDivElement>(null);
 
@@ -86,7 +93,7 @@ function SelectCustom(props: SelectCustomProps) {
         className={cn('row')}
       >
         <div className={cn('inner')}>
-          <Option disabled={true} code={active.code} title={active.title || placeholder} />
+          <Option disabled={true} code={active.code} title={active.title} />
           <div className={cn('marker')}>
             <img className={cn('marker-image')} src={Arrow} alt='' aria-hidden='true' />
           </div>
@@ -106,7 +113,34 @@ function SelectCustom(props: SelectCustomProps) {
             />
           </div>
 
-          <div className={cn('col')}>
+          <Scrollbar
+            className={cn('col')}
+            translateContentSizeYToHolder
+            thumbYProps={{
+              renderer: (props) => {
+                const { elementRef, ...restProps } = props;
+                return <div {...restProps} ref={elementRef} className={cn('col-thumb')} />;
+              },
+            }}
+            trackYProps={{
+              renderer: (props) => {
+                const { elementRef, ...restProps } = props;
+                return <div {...restProps} ref={elementRef} className={cn('col-track')} />;
+              },
+            }}
+            wrapperProps={{
+              renderer: (props) => {
+                const { elementRef, ...restProps } = props;
+                return <div {...restProps} ref={elementRef} className={cn('col-wrapper')} />;
+              },
+            }}
+            contentProps={{
+              renderer: (props) => {
+                const { elementRef, ...restProps } = props;
+                return <div {...restProps} ref={elementRef} className={cn('col-content')} />;
+              },
+            }}
+          >
             {items.map((option) => (
               <Option
                 key={option._id}
@@ -117,36 +151,9 @@ function SelectCustom(props: SelectCustomProps) {
                 onKeyDown={onSpaceClick(() => callbacks.setActive(option))}
               />
             ))}
-          </div>
+          </Scrollbar>
         </div>
       </div>
-    </div>
-  );
-}
-
-type OptionProps = {
-  code?: string;
-  title: string;
-  isActive?: boolean;
-  onClick?: () => void;
-  onKeyDown?: (...args: any[]) => void;
-  disabled?: boolean;
-};
-
-function Option(props: OptionProps) {
-  const { code, title, isActive, onClick, onKeyDown, disabled } = props;
-
-  const cn = bem('Option');
-
-  return (
-    <div
-      tabIndex={disabled ? -1 : 0}
-      onKeyDown={onKeyDown}
-      onClick={onClick}
-      className={cn({ active: isActive, disabled })}
-    >
-      <div className={cn('code')}>{code}</div>
-      <span className={cn('title')}>{title}</span>
     </div>
   );
 }

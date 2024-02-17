@@ -38,18 +38,18 @@ const translate: TTranslateFn = (lang, text, plural): string => {
 
 // Примеры использования функции translate
 // Верхний ключ
-const res1 = translate('ru', 'auth.login');
-translate('ru', 'article.add');
+// const res1 = translate('ru', 'auth.login');
+// translate('ru', 'article.add');
 
-// Вложенные ключи в виде массива
-const res2 = translate('ru', ['test', 'levelOneTest.testing1', 'levelTwoTest.testing2']);
+// // Вложенные ключи в виде массива
+// const res2 = translate('ru', ['test', 'levelOneTest.testing1', 'levelTwoTest.testing2']);
 
-// PHP-way для доступа к вложенным свойствам
-const res3 = translate('ru', 'test->levelOneTest.testing1->levelTwoTest.testing2');
+// // PHP-way для доступа к вложенным свойствам
+// const res3 = translate('ru', 'test->levelOneTest.testing1->levelTwoTest.testing2');
 
-console.log(res1);
-console.log(res2);
-console.log(res3);
+// console.log(res1);
+// console.log(res2);
+// console.log(res3);
 
 type TPlurals =
   | {
