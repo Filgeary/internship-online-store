@@ -1,12 +1,12 @@
 import StoreModule from "../module";
 import simplifyErrors from "../../utils/simplify-errors";
-import { SessionErrorType, SessionStateType } from "./types";
+import { SessionConfigType, SessionErrorType, SessionStateType } from "./types";
 import { UserProfileType } from "../profile/types";
 
 /**
  * Сессия
  */
-class SessionState extends StoreModule<'session'> {
+class SessionState extends StoreModule<SessionStateType, SessionConfigType> {
 
   waiting: boolean;
   exists: boolean;
@@ -25,6 +25,10 @@ class SessionState extends StoreModule<'session'> {
       waiting: true,
       exists: false
     };
+  }
+
+  initConfig(): SessionConfigType {
+    return this.config as SessionConfigType;
   }
 
   /**
@@ -70,6 +74,7 @@ class SessionState extends StoreModule<'session'> {
     } catch (e) {
       console.error(e);
     }
+
   }
 
   /**

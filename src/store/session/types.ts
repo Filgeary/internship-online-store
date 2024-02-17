@@ -1,4 +1,3 @@
-
 export type SessionStateType ={
   waiting: boolean;
   exists: boolean;
@@ -9,6 +8,10 @@ export type SessionStateType ={
       name: string
     }
   } | null;
+}
+
+export type SessionConfigType = {
+  tokenHeader: string;
 }
 
 export type SessionErrorType = {

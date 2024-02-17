@@ -1,5 +1,6 @@
-import { ConfigStoreType } from '../config.js';
+
 import Services from '../services.js';
+import { ConfigModulesType, ConfigStoreType } from '../types/config.js';
 import * as modules from './exports.js';
 import { ExtendedModulesKeys, ModulesKeys, StoreActionsType, StoreStateType } from './types.js';
 
@@ -35,7 +36,8 @@ class Store {
   }
 
   create<Key extends ModulesKeys>(name: Key) {
-    this.actions[name] = new modules[name](this, name, this.config?.modules[name] || {}) as StoreActionsType[Key];
+    let a = this.config?.modules[name] as ConfigModulesType[Key];
+    this.actions[name] = new modules[name](this, name, a) as StoreActionsType[Key];
     this.state[name] = this.actions[name].initState() as StoreStateType[Key];
   }
 

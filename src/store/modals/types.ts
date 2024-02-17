@@ -17,10 +17,13 @@ export type ModalType<T = any, U = any> = {
 
 export type ModalsKeys = keyof typeof modals;
 
-type a = Parameters<typeof modals['addToBasket']>[0]
-type b = Parameters<Parameters<typeof modals['addToBasket']>[0]['close']>
+// type a = Parameters<typeof modals['addToBasket']>
+// type b = Parameters<Parameters<typeof modals['addToBasket']>[0]['close']>
 
-export type ModalsType = {
+/**
+ * Список модальных окон с возвращаемым в Promice типом данных
+ */
+export type ModalsReturnType = {
   [key in ModalsKeys]: Parameters<Parameters<typeof modals[key]>[0]['close']>[0]
 }
 

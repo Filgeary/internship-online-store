@@ -1,5 +1,5 @@
-import { ConfigApiType } from "../config";
 import Services from "../services";
+import { ConfigApiType } from "../types/config";
 
 export type RequestProps = {
   url: string;

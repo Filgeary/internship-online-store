@@ -4,7 +4,7 @@ import { ProfileStateType, UserAccountType } from "./types";
 /**
  * Детальная информация о пользователе
  */
-class ProfileState extends StoreModule<'profile'> {
+class ProfileState extends StoreModule<ProfileStateType> {
 
   waiting: boolean;
   data: UserAccountType | null;

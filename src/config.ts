@@ -1,4 +1,4 @@
-import { ExtendedModulesKeys, ModulesKeys } from "./store/types";
+import { ConfigType } from "./types/config";
 
 const isProduction = process.env.NODE_ENV === 'production';
 
@@ -13,7 +13,7 @@ const config: ConfigType = {
     modules: {
       session: {
         // Названия токена в АПИ
-        tokenHeader: 'X-Token'
+        tokenHeader: 'X-Token',
       }
     }
   },
@@ -24,19 +24,4 @@ const config: ConfigType = {
 
 export default config;
 
-export type ConfigType = {
-  store: ConfigStoreType;
-  api: ConfigApiType;
-  redux?: any;
-}
 
-export type ConfigStoreType = {
-  log: boolean,
-  modules: {
-    [key in ModulesKeys as ExtendedModulesKeys<key>]?: any
-  }
-}
-
-export type ConfigApiType = {
-  baseUrl: string;
-}

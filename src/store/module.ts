@@ -1,15 +1,15 @@
 import Store from ".";
 import Services from "../services";
-import { ExtendedModulesKeys, ModulesKeys, StoreStateType } from "./types";
+import { ExtendedModulesKeys, ModulesKeys } from "./types";
 
 /**
  * Базовый класс для модулей хранилища
  * Для группировки действий над внешним состоянием
  */
-class StoreModule<T extends ModulesKeys> {
+class StoreModule<State, Config = {}> {
   store: Store;
   name: string;
-  config: any;
+  config: Config;
   services: Services;
 
   /**
@@ -17,26 +17,30 @@ class StoreModule<T extends ModulesKeys> {
    * @param name {String}
    * @param [config] {Object}
    */
-  constructor(store: Store, name: string, config = {})  {
+  constructor(store: Store, name: string, config: Config)  {
     this.store = store;
     this.name = name;
-    this.config = config;
+    this.config = config as Config;
     /** @type {Services} */
     this.services = store.services;
   }
 
-  initState() {
-    return {}
+  initState(): State {
+    return {} as State
   }
 
-  getState(): StoreStateType[T] {
-    return this.store.getState()[this.name as ExtendedModulesKeys<T>] as StoreStateType[T];
+  initConfig() : Config {
+    return this.config as Config;
   }
 
-  setState<Key extends ModulesKeys>(newState: StoreStateType[Key], description = 'setState') {
+  getState(): State {
+    return this.store.getState()[this.name as ExtendedModulesKeys<ModulesKeys>] as State;
+  }
+
+  setState(newState: State, description = 'setState') {
     this.store.setState({
       ...this.store.getState(),
-      [this.name as Key]: newState
+      [this.name]: newState
     }, description)
   }
 

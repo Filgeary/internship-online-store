@@ -5,7 +5,7 @@ import { CatalogArticleType, CatalogParamsType, CatalogStateType } from "./types
 /**
  * Состояние каталога - параметры фильтра исписок товара
  */
-class CatalogState extends StoreModule<'catalog'> {
+class CatalogState extends StoreModule<CatalogStateType> {
 
   waiting: boolean;
   count: number;

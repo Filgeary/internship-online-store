@@ -1,9 +1,15 @@
 import StoreModule from "../module";
-import { ModalType, ModalsKeys, ModalsStateType, ModalsType } from "./types";
+import { ModalType, ModalsKeys, ModalsReturnType, ModalsStateType } from "./types";
 
-class ModalsState extends StoreModule<'modals'> {
 
-  modals: ModalsStateType;
+/**
+ * Список открытых модальных/диалоговых окнах в приложении
+ */
+class ModalsState extends StoreModule<ModalsStateType> {
+
+  modals: {
+    [key: string]: ModalType
+  };
 
   initState(): ModalsStateType {
     return {
@@ -11,13 +17,13 @@ class ModalsState extends StoreModule<'modals'> {
     }
   }
 
-  open<T extends ModalsKeys>(name: T, data?: any): Promise<ModalsType[T]> {
+  open<T extends ModalsKeys>(name: T, data?: any): Promise<ModalsReturnType[T]> {
     return new Promise((resolve, reject) => {
       const newModal: ModalType = {
         id: self.crypto.randomUUID(),
         name,
         initialData: data,
-        close: (data: ModalsType[T]) => resolve(data),
+        close: (data: ModalsReturnType[T]) => resolve(data),
       }
 
       this.setState({

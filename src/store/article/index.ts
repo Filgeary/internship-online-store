@@ -4,7 +4,7 @@ import { ArticleStateType, ArticleType } from "./types";
 /**
  * Детальная ифнормация о товаре для страницы товара
  */
-class ArticleState extends StoreModule<'article'> {
+class ArticleState extends StoreModule<ArticleStateType> {
 
   data: ArticleType | null;
   waiting: boolean;
