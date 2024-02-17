@@ -23,21 +23,7 @@ export type TAllConfigs = {
 
 export type TKeyOfServices = keyof Omit<TServices, 'config'>;
 
-// TODO: what is the best way to type TConfig?
 export type TConfig = {
-  [Prop in TKeyOfServices]: Prop extends 'redux'
-    ? object
-    : Prop extends 'api'
-      ? { baseUrl: string }
-      : Prop extends 'store'
-        ? {
-            log: boolean;
-            modules: TAllConfigs;
-          }
-        : never;
-};
-
-export type TConfig2 = {
   redux: Record<string, any>;
   api: {
     baseUrl: string;

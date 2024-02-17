@@ -2,7 +2,7 @@ import type { TServices } from '@src/services';
 import type { TConfig } from '@src/store';
 import type { TErrorResponse, TResponse, TSuccessResponse } from '@src/types';
 
-// TODO: show type guards
+// API type guards
 export function isSuccessResponse<T>(res: TResponse<T>): res is TSuccessResponse<T> {
   return Boolean((res as TSuccessResponse<T>).result);
 }

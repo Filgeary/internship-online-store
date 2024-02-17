@@ -47,7 +47,6 @@ class SessionState extends StoreModule<InitialSessionState, SessionConfig> {
       });
 
       if (isSuccessResponse(res.data)) {
-        // TODO: show type guards
         this.setState(
           {
             ...this.getState(),
@@ -110,7 +109,6 @@ class SessionState extends StoreModule<InitialSessionState, SessionConfig> {
       const res = await this.services.api.request<IUserProfile>({ url: '/api/v1/users/self' });
 
       if (isErrorResponse(res.data)) {
-        // TODO: show type guards
         // Удаляем плохой токен
         window.localStorage.removeItem('token');
         this.services.api.setHeader(this.config.tokenHeader, null);
