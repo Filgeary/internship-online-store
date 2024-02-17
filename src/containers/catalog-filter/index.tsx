@@ -36,6 +36,16 @@ function CatalogFilter() {
     ),
   };
 
+  const helpers = {
+    optionsBuilder: (search: string) => {
+      return select.countries.filter((option: { _id: string; code: string; title: string }) => {
+        return [option.code, option.title].some((val) =>
+          val.toLowerCase().includes(search.toLowerCase())
+        );
+      });
+    },
+  };
+
   const { t } = useTranslate();
 
   return (
@@ -54,11 +64,12 @@ function CatalogFilter() {
       />
       {/* Выбор страны */}
       <SelectCustom
-        displayStringForOption={(item) => item.title}
         placeholder='Все'
         value={select.country}
         onSelected={(country) => callbacks.onCountrySelected(country._id)}
+        displayStringForOption={(item) => item.title}
         options={select.countries}
+        optionsBuilder={helpers.optionsBuilder}
       />
       <button onClick={callbacks.onReset}>{t('filter.reset')}</button>
     </SideLayout>

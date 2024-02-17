@@ -1,4 +1,4 @@
-import React, { memo, useMemo, useRef, useState } from 'react';
+import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import './style.css';
 import { cn as bem } from '@bem-react/classname';
@@ -10,6 +10,7 @@ type SelectCustomProps = {
   placeholder?: string;
   onSelected: (option: TOption) => void;
   displayStringForOption: (option: TOption) => string;
+  optionsBuilder: (search: string) => TOption[];
   options: Array<TOption>;
   value: string;
 };
@@ -20,13 +21,9 @@ type TOption = {
   title: string;
 };
 
-function SelectCustom({
-  placeholder,
-  onSelected,
-  displayStringForOption,
-  options,
-  value,
-}: SelectCustomProps) {
+function SelectCustom(props: SelectCustomProps) {
+  const { placeholder, onSelected, displayStringForOption, optionsBuilder, options, value } = props;
+
   const cn = bem('SelectCustom');
   const uid = useMemo(() => window.crypto.randomUUID(), []);
 
@@ -34,18 +31,17 @@ function SelectCustom({
   const [search, setSearch] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
 
+  const debounceFn = useCallback(
+    debounce((value: string) => setDebouncedSearch(value), 500),
+    []
+  );
+
   const active = useMemo<TOption>(() => {
     return (
       options.find((option) => option._id === value) ?? { _id: '', code: '', title: placeholder }
     );
-  }, [value, placeholder]);
-  const items = useMemo(() => {
-    return options.filter((option) => {
-      return [option.code, option.title].some((val) =>
-        val.toLowerCase().includes(debouncedSearch.toLowerCase())
-      );
-    });
-  }, [options, debouncedSearch]);
+  }, [value, options, placeholder]);
+  const items = useMemo(() => optionsBuilder(debouncedSearch), [optionsBuilder, debouncedSearch]);
 
   const wrapperRef = useRef<HTMLDivElement>(null);
 
@@ -69,7 +65,7 @@ function SelectCustom({
 
     setSearch: (value: string) => {
       setSearch(value);
-      debounce(() => setDebouncedSearch(value), 400);
+      debounceFn(value);
     },
 
     toggleOpen: () => setIsOpen((prev) => !prev),
