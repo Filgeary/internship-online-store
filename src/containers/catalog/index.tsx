@@ -93,7 +93,12 @@ function Catalog({ children, stateName }: CatalogProps) {
       [store]
     ),
     // Выбор страны
-    onCountrySelected: useCallback(() => {}, [store]),
+    onCountrySelected: useCallback(
+      (country: string) => {
+        store.actions[stateName].setParams({ country, page: 1 }, false);
+      },
+      [store]
+    ),
   };
 
   return (

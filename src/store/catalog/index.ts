@@ -95,6 +95,8 @@ class CatalogState extends StoreModule<TCatalogState, TConfigModules['catalog']>
       }
     }
 
+    console.log('this is country:', params.country);
+
     const apiParams = exclude(
       {
         limit: params.limit,
@@ -110,6 +112,10 @@ class CatalogState extends StoreModule<TCatalogState, TConfigModules['catalog']>
         'search[category]': '',
       }
     );
+
+    if (params.country) {
+      apiParams['search[madeIn]'] = params.country;
+    }
 
     try {
       const res = await this.services.api.request<{

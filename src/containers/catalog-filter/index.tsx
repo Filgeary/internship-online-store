@@ -34,7 +34,6 @@ function CatalogFilter() {
       ],
       [select.categories]
     ),
-    countries: useMemo(() => [], [select.countries]),
   };
 
   const { t } = useTranslate();
@@ -56,10 +55,9 @@ function CatalogFilter() {
       {/* Выбор страны */}
       <SelectCustom
         displayStringForOption={(item) => item.title}
-        onSelected={(item) => console.log('Пользователь выбрал:', item)}
-        defaultVal='Все'
-        // value={select.country}
-        // onSelected={callbacks.onCountrySelected}
+        placeholder='Все'
+        value={select.country}
+        onSelected={(country) => callbacks.onCountrySelected(country._id)}
         options={select.countries}
       />
       <button onClick={callbacks.onReset}>{t('filter.reset')}</button>

@@ -7,28 +7,38 @@ import useOnClickOutside from '@src/hooks/use-on-click-outside';
 import debounce from 'lodash.debounce';
 
 type SelectCustomProps = {
-  defaultVal?: string;
+  placeholder?: string;
   onSelected: (option: TOption) => void;
   displayStringForOption: (option: TOption) => string;
-  options: Array<{ code: string; title: string }>;
+  options: Array<TOption>;
+  value: string;
 };
 
 type TOption = {
+  _id: string;
   code: string;
   title: string;
 };
 
 function SelectCustom({
-  defaultVal,
+  placeholder,
   onSelected,
   displayStringForOption,
   options,
+  value,
 }: SelectCustomProps) {
   const cn = bem('SelectCustom');
+  const uid = useMemo(() => window.crypto.randomUUID(), []);
 
   const [isOpen, setIsOpen] = useState(false);
-  const [active, setActive] = useState<TOption>({ code: '', title: defaultVal });
+  const [search, setSearch] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
+
+  const active = useMemo<TOption>(() => {
+    return (
+      options.find((option) => option._id === value) ?? { _id: '', code: '', title: placeholder }
+    );
+  }, [value, placeholder]);
   const items = useMemo(() => {
     return options.filter((option) => {
       return [option.code, option.title].some((val) =>
@@ -53,15 +63,14 @@ function SelectCustom({
 
   const callbacks = {
     setActive: (item: TOption) => {
-      setActive(item);
-      setIsOpen(false);
-
       onSelected(item);
+      setIsOpen(false);
     },
 
-    setSearch: debounce((value: string) => {
-      setDebouncedSearch(value);
-    }, 400),
+    setSearch: (value: string) => {
+      setSearch(value);
+      debounce(() => setDebouncedSearch(value), 400);
+    },
 
     toggleOpen: () => setIsOpen((prev) => !prev),
 
@@ -76,12 +85,12 @@ function SelectCustom({
         onClick={callbacks.toggleOpen}
         onKeyDown={onSpaceClick(callbacks.toggleOpen)}
         tabIndex={0}
-        aria-controls='drop-countries'
+        aria-controls={uid}
         aria-expanded={isOpen}
         className={cn('row')}
       >
         <div className={cn('inner')}>
-          <Option disabled={true} code={active.code} title={active.title} />
+          <Option disabled={true} code={active.code} title={active.title || placeholder} />
           <div className={cn('marker')}>
             <img className={cn('marker-image')} src={Arrow} alt='' aria-hidden='true' />
           </div>
@@ -89,10 +98,11 @@ function SelectCustom({
       </div>
 
       {/* Выпадашка */}
-      <div className={cn('drop')} id='drop-countries'>
+      <div className={cn('drop')} id={uid}>
         <div className={cn('drop-inner')}>
           <div className={cn('search')}>
             <input
+              value={search}
               onChange={(e) => callbacks.setSearch(e.target.value)}
               className={cn('search-input')}
               type='text'
@@ -103,11 +113,12 @@ function SelectCustom({
           <div className={cn('col')}>
             {items.map((option) => (
               <Option
-                key={option.code}
+                key={option._id}
                 isActive={option.code === active.code}
                 code={option.code}
                 title={displayStringForOption(option)}
                 onClick={() => callbacks.setActive(option)}
+                onKeyDown={onSpaceClick(() => callbacks.setActive(option))}
               />
             ))}
           </div>
@@ -122,14 +133,22 @@ type OptionProps = {
   title: string;
   isActive?: boolean;
   onClick?: () => void;
+  onKeyDown?: (...args: any[]) => void;
   disabled?: boolean;
 };
 
-function Option({ code, title, isActive, onClick, disabled }: OptionProps) {
+function Option(props: OptionProps) {
+  const { code, title, isActive, onClick, onKeyDown, disabled } = props;
+
   const cn = bem('Option');
 
   return (
-    <div onClick={onClick} className={cn({ active: isActive, disabled })}>
+    <div
+      tabIndex={disabled ? -1 : 0}
+      onKeyDown={onKeyDown}
+      onClick={onClick}
+      className={cn({ active: isActive, disabled })}
+    >
       <div className={cn('code')}>{code}</div>
       <span className={cn('title')}>{title}</span>
     </div>
