@@ -1,11 +1,11 @@
-.Search {
+.AutocompleteSearch {
   margin-bottom: 10px;
   font-style: italic;
   display: flex;
   flex-direction: column;
 }
 
-.Search-input {
+.AutocompleteSearch-input {
   border: none;
   font: inherit;
 }

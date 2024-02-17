@@ -1,11 +1,11 @@
-.Option {
+.AutocompleteField {
   display: flex;
   column-gap: 5px;
   font-family: Arial, sans-serif;
   padding: 5px;
 }
 
-.Option-title {
+.AutocompleteField-title {
   color: #191f4d;
   font-size: 15px;
   font-weight: 400;
@@ -13,7 +13,7 @@
   word-break: break-word;
 }
 
-.Option-code {
+.AutocompleteField-code {
   border-radius: 3px;
   width: 18px;
   height: 18px;
@@ -27,26 +27,26 @@
   align-items: center;
 }
 
-.Option {
+.AutocompleteField {
   background: #fff;
   cursor: pointer;
   border: 1px solid rgba(255, 255, 255, 0);
 }
 
-.Option:not(.Option_active):hover {
+.AutocompleteField:not(.AutocompleteField_active):hover {
   background: #dbdfff;
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.Option_active {
+.AutocompleteField_active {
   background: #808dff;
-  /* pointer-events: none; */
+  pointer-events: none;
 
-  & .Option-title {
+  & .AutocompleteField-title {
     color: #fff;
   }
 }
 
-.Option_disabled {
+.AutocompleteField_disabled {
   pointer-events: none;
 }

@@ -38,7 +38,7 @@ function Modal({ children, ...props }: ModalProps) {
 
   const closeHandler = props.onClose || callbacks.closeModal;
 
-  useOnClickOutside(modalRef, closeHandler);
+  useOnClickOutside(modalRef, { closeByEsc: true }, closeHandler);
 
   useEffect(() => {
     if (!modalRef.current.contains(document.activeElement)) {

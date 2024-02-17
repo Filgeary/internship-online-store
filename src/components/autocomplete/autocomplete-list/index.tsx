@@ -3,14 +3,14 @@ import './style.css';
 import { Scrollbar } from 'react-scrollbars-custom';
 import { cn as bem } from '@bem-react/classname';
 import { useAutocomplete } from '..';
-import React from 'react';
+import React, { memo } from 'react';
 
 type ListProps = {
   children: React.ReactNode;
 };
 
-function List(props: ListProps) {
-  const cn = bem('List');
+function AutocompleteList(props: ListProps) {
+  const cn = bem('AutocompleteList');
 
   const { listRef } = useAutocomplete();
 
@@ -60,4 +60,4 @@ function List(props: ListProps) {
   );
 }
 
-export default List;
+export default memo(AutocompleteList);

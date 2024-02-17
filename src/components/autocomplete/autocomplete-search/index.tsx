@@ -2,17 +2,17 @@ import './style.css';
 
 import { cn as bem } from '@bem-react/classname';
 import { useAutocomplete } from '..';
-import React from 'react';
+import React, { memo } from 'react';
 
 type SearchProps = {
   placeholder?: string;
   onChange: (search: string) => void;
 };
 
-function Search(props: SearchProps) {
-  const cn = bem('Search');
+function AutocompleteSearch(props: SearchProps) {
+  const cn = bem('AutocompleteSearch');
 
-  const { values, callbacks } = useAutocomplete();
+  const { values, callbacks, searchRef } = useAutocomplete();
 
   const handlers = {
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -26,6 +26,7 @@ function Search(props: SearchProps) {
   return (
     <div className={cn()}>
       <input
+        ref={searchRef}
         value={values.search}
         onChange={handlers.onChange}
         className={cn('input')}
@@ -36,4 +37,4 @@ function Search(props: SearchProps) {
   );
 }
 
-export default Search;
+export default memo(AutocompleteSearch);

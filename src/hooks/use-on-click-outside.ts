@@ -1,6 +1,12 @@
 import React, { useEffect } from 'react';
 
-function useOnClickOutside(ref: React.RefObject<any>, ...handlers: (() => void)[]) {
+type TUseOnClickOutside = (
+  ref: React.RefObject<any>,
+  options: { closeByEsc: boolean },
+  ...handlers: Array<() => void>
+) => void;
+
+const useOnClickOutside: TUseOnClickOutside = (ref, { closeByEsc }, ...handlers) => {
   useEffect(() => {
     const runHandlers = () => handlers.forEach((handler) => handler());
 
@@ -16,6 +22,8 @@ function useOnClickOutside(ref: React.RefObject<any>, ...handlers: (() => void)[
     };
 
     const keyListener = (e: KeyboardEvent) => {
+      if (!closeByEsc) return;
+
       const escCode = 27;
 
       if (e.keyCode === escCode) {
@@ -31,6 +39,6 @@ function useOnClickOutside(ref: React.RefObject<any>, ...handlers: (() => void)[
       document.addEventListener('keydown', keyListener);
     };
   }, [ref, handlers]);
-}
+};
 
 export default useOnClickOutside;

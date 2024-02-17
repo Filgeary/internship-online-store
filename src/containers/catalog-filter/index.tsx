@@ -46,7 +46,10 @@ function CatalogFilter() {
       ],
       [select.categories]
     ),
-    countries: useMemo(() => {
+    countriesDefault: useMemo(() => {
+      return [{ _id: '', code: '', title: 'Все' }, ...select.countries];
+    }, [select.countries]),
+    countriesInAction: useMemo(() => {
       if (!search) return [{ _id: '', code: '', title: 'Все' }, ...select.countries];
       return helpers.optionsBuilder(search);
     }, [search, select.countries]),
@@ -73,11 +76,11 @@ function CatalogFilter() {
       <Autocomplete.Root
         value={select.country}
         onSelected={(country) => callbacks.onCountrySelected(country._id)}
-        options={select.countries}
+        options={options.countriesDefault}
       >
         <Autocomplete.Search onChange={helpers.optionsBuilder} placeholder='Поиск' />
         <Autocomplete.List>
-          {options.countries.map((option: TOption) => (
+          {options.countriesInAction.map((option: TOption) => (
             <Autocomplete.Option key={option._id} option={option} />
           ))}
         </Autocomplete.List>

@@ -15,65 +15,59 @@ const defaultProps: ModalLayoutProps = {
   onClose: () => {},
 };
 
-const ModalLayout = React.forwardRef(
-  (props: ModalLayoutProps, outerRef: { current: any }) => {
-    const cn = bem('ModalLayout');
+const ModalLayout = React.forwardRef((props: ModalLayoutProps, outerRef: { current: any }) => {
+  const cn = bem('ModalLayout');
 
-    // Корректировка центра, если модалка больше окна браузера.
-    const layout = useRef<HTMLDivElement>();
-    const frame = useRef<HTMLDivElement>();
-    useEffect(() => {
+  // Корректировка центра, если модалка больше окна браузера.
+  const layout = useRef<HTMLDivElement>();
+  const frame = useRef<HTMLDivElement>();
+  useEffect(() => {
+    if (!layout.current || !frame.current) return;
+
+    const resizeObserver = new ResizeObserver(() => {
       if (!layout.current || !frame.current) return;
+      // Центрирование frame или его прижатие к краю, если размеры больше чем у layout
+      layout.current.style.alignItems =
+        layout.current.clientHeight < frame.current.clientHeight ? 'flex-start' : 'center';
+      layout.current.style.justifyContent =
+        layout.current.clientWidth < frame.current.clientWidth ? 'flex-start' : 'center';
+    });
+    // Следим за изменениями размеров layout
+    resizeObserver.observe(layout.current);
 
-      const resizeObserver = new ResizeObserver(() => {
-        if (!layout.current || !frame.current) return;
-        // Центрирование frame или его прижатие к краю, если размеры больше чем у layout
-        layout.current.style.alignItems =
-          layout.current.clientHeight < frame.current.clientHeight
-            ? 'flex-start'
-            : 'center';
-        layout.current.style.justifyContent =
-          layout.current.clientWidth < frame.current.clientWidth
-            ? 'flex-start'
-            : 'center';
-      });
-      // Следим за изменениями размеров layout
-      resizeObserver.observe(layout.current);
-
-      return () => {
-        resizeObserver.disconnect();
-      };
-    }, []);
-
-    const callbacks = {
-      close: (e: React.MouseEvent<HTMLButtonElement>) => {
-        e.preventDefault();
-        props.onClose?.();
-      },
+    return () => {
+      resizeObserver.disconnect();
     };
+  }, []);
 
-    return (
-      <div
-        className={cn()}
-        ref={(el: HTMLDivElement) => {
-          layout.current = el;
-          outerRef.current = el;
-        }}
-        tabIndex={0}
-      >
-        <div className={cn('frame')} ref={frame}>
-          <div className={cn('head')}>
-            <h1 className={cn('title')}>{props.title}</h1>
-            <button className={cn('close')} onClick={callbacks.close}>
-              {props.labelClose}
-            </button>
-          </div>
-          <div className={cn('content')}>{props.children}</div>
+  const callbacks = {
+    close: (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.preventDefault();
+      props.onClose?.();
+    },
+  };
+
+  return (
+    <div
+      className={cn()}
+      ref={(el: HTMLDivElement) => {
+        layout.current = el;
+        outerRef.current = el;
+      }}
+      tabIndex={0}
+    >
+      <div className={cn('frame')} ref={frame}>
+        <div className={cn('head')}>
+          <h1 className={cn('title')}>{props.title}</h1>
+          <button className={cn('close')} onClick={callbacks.close}>
+            {props.labelClose}
+          </button>
         </div>
+        <div className={cn('content')}>{props.children}</div>
       </div>
-    );
-  }
-);
+    </div>
+  );
+});
 
 ModalLayout.defaultProps = defaultProps;
 
