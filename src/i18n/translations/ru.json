@@ -1,8 +1,10 @@
 {
   "title": "Магазин",
-  "menu.main": "Главная",
-  "basket.title": "Корзина",
+  "menu": {
+    "main": "Главная"
+  },
   "basket": {
+    "title": "Корзина",
     "open": "Перейти",
     "close": "Закрыть",
     "inBasket": "В корзине",
@@ -18,18 +20,30 @@
     },
     "choice": "Выбрать еще товар"
   },
-  "article.add": "Добавить",
-  "filter.reset": "Сбросить",
-  "auth.title": "Вход",
-  "auth.login": "Логин",
-  "auth.password": "Пароль",
-  "auth.signIn": "Войти",
-  "session.signIn": "Вход",
-  "session.signOut": "Выход",
-  "count.title": "Количество товара",
-  "count.count": "Введите количество товара, которое Вы бы хотели купить",
-  "count.cancel": "Отмена",
-  "modal.close": "Закрыть",
-  "modal.catalog": "Список товаров",
-  "modal.add": "Добавить выбранные товары"
+  "article": {
+    "add": "Добавить"
+  },
+  "filter": {
+    "reset": "Сбросить"
+  },
+  "auth": {
+    "title": "Вход",
+    "login": "Логин",
+    "password": "Пароль",
+    "signIn": "Войти"
+  },
+  "session": {
+    "signIn": "Вход",
+    "signOut": "Выход"
+  },
+  "count": {
+    "title": "Количество товара",
+    "count": "Введите количество товара, которое Вы бы хотели купить",
+    "cancel": "Отмена"
+  },
+  "modal": {
+    "close": "Закрыть",
+    "catalog": "Список товаров",
+    "add": "Добавить выбранные товары"
+  }
 }

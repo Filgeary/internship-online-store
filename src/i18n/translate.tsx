@@ -1,3 +1,4 @@
+import get from '@src/utils/get-dictionary';
 import * as translations from './translations';
 import { Lang, Text } from './type';
 
@@ -14,7 +15,7 @@ export default function translate(
   plural?: number
 ): string {
 
-  let result = translations[lang][text];
+  let result = get(translations[lang], text);
 
   if (typeof plural !== "undefined" && typeof result === "object") {
     const key = new Intl.PluralRules(lang).select(plural);

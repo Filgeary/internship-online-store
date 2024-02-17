@@ -1,6 +1,8 @@
 {
   "title": "Shop",
-  "menu.main": "Main",
+  "menu": {
+    "main": "Main"
+  },
   "basket": {
     "choice": "Select another product",
     "close": "Close",
@@ -16,18 +18,30 @@
       "other": "articles"
     }
   },
-  "article.add": "Add",
-  "filter.reset": "Reset",
-  "auth.title": "Sign In",
-  "auth.login": "Login",
-  "auth.password": "Password",
-  "auth.signIn": "Sign in",
-  "session.signIn": "Sign In",
-  "session.signOut": "Sign Out",
-  "count.title": "Quantity of goods",
-  "count.count": "Enter the quantity of goods you would like to buy",
-  "count.cancel": "Cancel",
-  "modal.close": "Close",
-  "modal.catalog": "List of products",
-  "modal.add": "Add selected products"
+  "article": {
+    "add": "Add"
+  },
+  "filter": {
+    "reset": "Reset"
+  },
+  "auth": {
+    "title": "Sign In",
+    "login": "Login",
+    "password": "Password",
+    "signIn": "Sign in"
+  },
+  "session": {
+    "signIn": "Sign In",
+    "signOut": "Sign Out"
+  },
+  "count": {
+    "title": "Quantity of goods",
+    "count": "Enter the quantity of goods you would like to buy",
+    "cancel": "Cancel"
+  },
+  "modal": {
+    "close": "Close",
+    "catalog": "List of products",
+    "add": "Add selected products"
+  }
 }

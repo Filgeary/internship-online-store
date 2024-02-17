@@ -1,3 +1,4 @@
+import { ConfigApi } from "@src/api/type.ts";
 import * as modules from "../store/exports.ts";
 
 export type importModules = typeof modules;
@@ -32,10 +33,6 @@ export type ConfigModules = {
 export type ConfigStore = {
     log: boolean;
     modules: ConfigModules;
-};
-
-export type ConfigApi = {
-  baseUrl: string;
 };
 
 export type Config = {

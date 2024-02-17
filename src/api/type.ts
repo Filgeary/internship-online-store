@@ -13,3 +13,7 @@ export interface ResponseApi<T> {
   status: number;
   headers: Headers;
 }
+
+export interface ConfigApi {
+  baseUrl: string
+}

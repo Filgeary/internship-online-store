@@ -20,7 +20,7 @@ function Article() {
   const params = useParams();
 
   useInit(() => {
-    store.actions.article?.load(params.id!);
+    store.actions.article.load(params.id!);
   }, [params.id]);
 
   const select = useSelector((state) => ({
@@ -36,7 +36,7 @@ function Article() {
         const storeName = "count";
         store.actions.modals
           .open(storeName)
-          .then((count) => store.actions.basket?.addToBasket(_id, count as number));
+          .then((count) => store.actions.basket.addToBasket(_id, count as number));
     }, [store]),
   };
 
