@@ -1,4 +1,4 @@
-import { memo, useMemo } from 'react';
+import { memo, useMemo, useState } from 'react';
 
 import useTranslate from '@src/hooks/use-translate';
 
@@ -9,10 +9,22 @@ import treeToList from '@src/utils/tree-to-list';
 import listToTree from '@src/utils/list-to-tree';
 
 import { useCatalog } from '../catalog';
-import SelectCustom from '@src/components/select-custom';
+import Autocomplete, { TOption } from '@src/components/autocomplete';
 
 function CatalogFilter() {
   const { callbacks, select } = useCatalog();
+  const [search, setSearch] = useState('');
+
+  const helpers = {
+    optionsBuilder: (search: string) => {
+      setSearch(search);
+      return select.countries.filter((option: { _id: string; code: string; title: string }) => {
+        return [option.code, option.title].some((val) =>
+          val.toLowerCase().includes(search.toLowerCase())
+        );
+      });
+    },
+  };
 
   const options = {
     sort: useMemo(
@@ -35,18 +47,9 @@ function CatalogFilter() {
       [select.categories]
     ),
     countries: useMemo(() => {
-      return [{ _id: '', code: '', title: 'Все' }, ...select.countries];
-    }, [select.countries]),
-  };
-
-  const helpers = {
-    optionsBuilder: (search: string) => {
-      return options.countries.filter((option: { _id: string; code: string; title: string }) => {
-        return [option.code, option.title].some((val) =>
-          val.toLowerCase().includes(search.toLowerCase())
-        );
-      });
-    },
+      if (!search) return [{ _id: '', code: '', title: 'Все' }, ...select.countries];
+      return helpers.optionsBuilder(search);
+    }, [search, select.countries]),
   };
 
   const { t } = useTranslate();
@@ -65,15 +68,20 @@ function CatalogFilter() {
         placeholder={'Поиск'}
         delay={1000}
       />
+
       {/* Выбор страны */}
-      <SelectCustom
-        placeholder='Все'
+      <Autocomplete.Root
         value={select.country}
         onSelected={(country) => callbacks.onCountrySelected(country._id)}
-        displayStringForOption={(item) => item.title}
-        options={options.countries}
-        optionsBuilder={helpers.optionsBuilder}
-      />
+        options={select.countries}
+      >
+        <Autocomplete.Search onChange={helpers.optionsBuilder} placeholder='Поиск' />
+        <Autocomplete.List>
+          {options.countries.map((option: TOption) => (
+            <Autocomplete.Option key={option._id} option={option} />
+          ))}
+        </Autocomplete.List>
+      </Autocomplete.Root>
       <button onClick={callbacks.onReset}>{t('filter.reset')}</button>
     </SideLayout>
   );

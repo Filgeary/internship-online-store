@@ -40,6 +40,7 @@
 
 .Option_active {
   background: #808dff;
+  /* pointer-events: none; */
 
   & .Option-title {
     color: #fff;
