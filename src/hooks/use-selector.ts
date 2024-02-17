@@ -15,6 +15,7 @@ export default function useSelector<T>(selectorFunc: (state: TRootState) => T): 
       const newState = selectorFunc(store.getState());
       setState(prevState => (shallowequal(prevState, newState) ? prevState : newState));
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Нет зависимостей - исполнится один раз
 
   // Отписка от store при демонтировании компонента

@@ -18,6 +18,8 @@ function Input(props: Props) {
   const cn = bem('Input');
   const [internalInputValue, setInternalInputValue] = useState(props.value);
 
+  // FIXME: check debounce usage with useCallback
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const onChangeDebounce = useCallback(
     debounce(value => props.onChange(value, props.name), props.delay || 500),
     [props.onChange, props.name],

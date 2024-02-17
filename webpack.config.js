@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebPackPlugin = require('html-webpack-plugin');

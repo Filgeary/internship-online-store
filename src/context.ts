@@ -1,5 +1,5 @@
-import React from 'react';
+import { createContext } from 'react';
 
 import type { TServices } from './services';
 
-export const ServicesContext = React.createContext({} as TServices);
+export const ServicesContext = createContext({} as TServices);

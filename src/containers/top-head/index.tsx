@@ -21,12 +21,12 @@ function TopHead() {
     // Переход к авторизации
     onSignIn: useCallback(() => {
       navigate('/login', { state: { back: location.pathname } });
-    }, [location.pathname]),
+    }, [location.pathname, navigate]),
 
     // Отмена авторизации
     onSignOut: useCallback(() => {
       store.actions.session.signOut();
-    }, []),
+    }, [store]),
   };
 
   return (

@@ -48,14 +48,14 @@ class CatalogState extends StoreModule<InitialCatalogState, CatalogConfig> {
    * Инициализация параметров.
    * Восстановление из адреса
    */
-  async initParams(newParams: InitialCatalogState['params'] | {} = {}) {
+  async initParams(newParams: InitialCatalogState['params'] | object = {}) {
     const shouldWriteToBrowserHistory =
       this.name !== 'catalog' ? this.config.shouldWriteToBrowserHistory : true;
 
     const urlParams = new URLSearchParams(
       shouldWriteToBrowserHistory ? window.location.search : '',
     );
-    let validParams = {} as InitialCatalogState['params'];
+    const validParams = {} as InitialCatalogState['params'];
     if (urlParams.has('page')) validParams.page = Number(urlParams.get('page')) || 1;
     if (urlParams.has('limit'))
       validParams.limit = Math.min(Number(urlParams.get('limit')) || 10, 50);
@@ -68,7 +68,7 @@ class CatalogState extends StoreModule<InitialCatalogState, CatalogConfig> {
   /**
    * Сброс параметров к начальным
    */
-  async resetParams(newParams: InitialCatalogState['params'] | {} = {}) {
+  async resetParams(newParams: InitialCatalogState['params'] | object = {}) {
     // Итоговые параметры из начальных, из URL и из переданных явно
     const params = { ...this.initState().params, ...newParams };
     // Установка параметров и загрузка данных
@@ -78,7 +78,7 @@ class CatalogState extends StoreModule<InitialCatalogState, CatalogConfig> {
   /**
    * Установка параметров и загрузка списка товаров
    */
-  async setParams(newParams: InitialCatalogState['params'] | {} = {}, replaceHistory = false) {
+  async setParams(newParams: InitialCatalogState['params'] | object = {}, replaceHistory = false) {
     const shouldWriteToBrowserHistory =
       this.name !== 'catalog' ? this.config.shouldWriteToBrowserHistory : true;
     const params = { ...this.getState().params, ...newParams };
@@ -94,7 +94,7 @@ class CatalogState extends StoreModule<InitialCatalogState, CatalogConfig> {
     );
 
     // Сохранить параметры в адрес страницы
-    let urlSearch = new URLSearchParams(exclude(params, this.initState().params)).toString();
+    const urlSearch = new URLSearchParams(exclude(params, this.initState().params)).toString();
     let url;
 
     if (shouldWriteToBrowserHistory) {

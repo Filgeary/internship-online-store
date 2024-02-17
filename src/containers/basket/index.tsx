@@ -47,10 +47,11 @@ function Basket({ onClose }: Props) {
       },
       [store],
     ),
-    openModalCatalog: useCallback(() => {
-      store.actions.modals.open('modalCatalog', callbacks.addToBasket);
-    }, [store]),
   };
+
+  const openModalCatalog = useCallback(() => {
+    store.actions.modals.open('modalCatalog', callbacks.addToBasket);
+  }, [callbacks.addToBasket, store]);
 
   const renders = {
     itemBasket: useCallback(
@@ -64,7 +65,7 @@ function Basket({ onClose }: Props) {
           labelDelete={t('basket.delete')}
         />
       ),
-      [callbacks.removeFromBasket, t],
+      [callbacks.closeModal, callbacks.removeFromBasket, t],
     ),
   };
 
@@ -84,7 +85,7 @@ function Basket({ onClose }: Props) {
       />
 
       <SideLayout side='center'>
-        <button onClick={callbacks.openModalCatalog}>{t('basket.selectMoreProducts')}</button>
+        <button onClick={openModalCatalog}>{t('basket.selectMoreProducts')}</button>
       </SideLayout>
     </ModalLayout>
   );

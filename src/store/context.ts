@@ -1,5 +1,5 @@
-import React from 'react';
+import { createContext } from 'react';
 
 import type { TStore } from '.';
 
-export const StoreContext = React.createContext({} as TStore);
+export const StoreContext = createContext({} as TStore);

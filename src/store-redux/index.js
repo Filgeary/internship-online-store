@@ -2,6 +2,7 @@ import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
 import * as reducers from './exports';
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default function createStoreRedux(services, config = {}) {
   return createStore(
     combineReducers(reducers),

@@ -10,13 +10,14 @@ export default function useInit(initFunc: Function, depends: any[] = [], backFor
     // компонент об изменениях, поэтому хук можно явно подписать на событие изменения истории
     // браузера (если нужно отреагировать на изменения search-параметров при переходе по истории)
     if (backForward) {
-      // @ts-ignore
+      // @ts-expect-error We can't verify signature of `initFunc`
       window.addEventListener('popstate', initFunc);
 
       return () => {
-        // @ts-ignore
+        // @ts-expect-error We can't verify signature of `initFunc`
         window.removeEventListener('popstate', initFunc);
       };
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, depends);
 }

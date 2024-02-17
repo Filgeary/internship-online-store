@@ -19,7 +19,8 @@ const ModalCatalog = ({ onClose }: Props) => {
   useEffect(() => {
     const init = async () => await store.actions['catalog2'].initParams();
     init();
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Нет зависимостей - исполнится один раз
 
   const callbacks = {
     closeModal: useCallback((data: any) => onClose(data), [onClose]),
@@ -31,7 +32,8 @@ const ModalCatalog = ({ onClose }: Props) => {
           setSelectedItems(prevState => prevState.filter(item => item !== id));
         }
       },
-      [selectedItems, setSelectedItems],
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      [selectedItems, setSelectedItems], // need watching for selectedItems
     ),
   };
 

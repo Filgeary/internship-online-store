@@ -39,7 +39,7 @@ function Article() {
     (_id: string) => {
       store.actions.modals.open('dialogAmount', callbacks.addToBasket.bind(null, _id));
     },
-    [store],
+    [callbacks.addToBasket, store],
   );
 
   return (

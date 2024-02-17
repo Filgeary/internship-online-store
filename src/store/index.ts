@@ -1,3 +1,4 @@
+/* eslint-disable import/namespace */
 import * as modules from './exports';
 
 import type { TServices } from '@src/services';
@@ -25,7 +26,7 @@ export type TKeyOfServices = keyof Omit<TServices, 'config'>;
 // TODO: what is the best way to type TConfig?
 export type TConfig = {
   [Prop in TKeyOfServices]: Prop extends 'redux'
-    ? {}
+    ? object
     : Prop extends 'api'
       ? { baseUrl: string }
       : Prop extends 'store'
@@ -60,7 +61,7 @@ class Store {
   constructor(
     services: TServices,
     config = {} as TConfig['store'],
-    initState: TRootState | {} = {},
+    initState: TRootState | object = {},
   ) {
     this.services = services;
     this.config = config as TConfig['store'];

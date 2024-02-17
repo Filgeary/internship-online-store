@@ -21,7 +21,8 @@ function Protected({ children, redirect }: Props) {
     if (!select.exists && !select.waiting) {
       navigate(redirect, { state: { back: location.pathname } });
     }
-  }, [select.exists, select.waiting]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [select.exists, select.waiting]); // watch for only necessary changes
 
   if (!select.exists || select.waiting) {
     return <div>Ждём...</div>;

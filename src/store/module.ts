@@ -11,7 +11,7 @@ class StoreModule<State, Config = object> {
   config: Config;
   services: TServices;
 
-  constructor(store: TStore, name: TKeyOfModules, config: Config | {} = {}) {
+  constructor(store: TStore, name: TKeyOfModules, config: Config | object = {}) {
     this.store = store;
     this.name = name;
     this.config = config as Config;

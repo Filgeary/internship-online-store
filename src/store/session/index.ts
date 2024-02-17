@@ -8,10 +8,12 @@ import type { IUserSession } from '@src/types/IUserSession';
 type InitialSessionState = {
   user: IUserSession['user'] | null;
   token: string | null;
-  errors: any;
+  errors: TUserSessionError | null;
   waiting: boolean;
   exists: boolean;
 };
+
+type TUserSessionError = Record<'login' | 'password' | 'other', string>;
 
 type SessionConfig = {
   tokenHeader: string;
@@ -68,7 +70,7 @@ class SessionState extends StoreModule<InitialSessionState, SessionConfig> {
         this.setState(
           {
             ...this.getState(),
-            errors: simplifyErrors(res.data.error.data.issues),
+            errors: simplifyErrors(res.data.error.data.issues) as TUserSessionError,
             waiting: false,
           },
           'Ошибка авторизации',

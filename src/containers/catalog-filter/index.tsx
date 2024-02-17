@@ -28,19 +28,22 @@ function CatalogFilter({ catalogSliceName = 'catalog' }: Props) {
     // Сортировка
     onSort: useCallback(
       (sort: string) => store.actions[catalogSliceName].setParams({ sort }),
-      [store],
+      [catalogSliceName, store],
     ),
     // Поиск
     onSearch: useCallback(
       (query: string) => store.actions[catalogSliceName].setParams({ query, page: 1 }),
-      [store],
+      [catalogSliceName, store],
     ),
     // Сброс
-    onReset: useCallback(() => store.actions[catalogSliceName].resetParams(), [store]),
+    onReset: useCallback(
+      () => store.actions[catalogSliceName].resetParams(),
+      [catalogSliceName, store],
+    ),
     // Фильтр по категории
     onCategory: useCallback(
       (category: string) => store.actions[catalogSliceName].setParams({ category, page: 1 }),
-      [store],
+      [catalogSliceName, store],
     ),
   };
 

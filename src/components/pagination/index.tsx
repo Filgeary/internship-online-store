@@ -20,12 +20,12 @@ function Pagination({ onChange, makeLink, page = 1, limit = 10, count = 1000, in
 
   // Номера слева и справа относительно активного номера, которые остаются видимыми
   let left = Math.max(page - indent, 1);
-  let right = Math.min(left + indent * 2, length);
+  const right = Math.min(left + indent * 2, length);
   // Корректировка когда страница в конце
   left = Math.max(right - indent * 2, 1);
 
   // Массив номеров, чтобы удобней отображать
-  let items = [];
+  const items = [];
   // Первая страница всегда нужна
   if (left > 1) items.push(1);
   // Пропуск
@@ -47,6 +47,7 @@ function Pagination({ onChange, makeLink, page = 1, limit = 10, count = 1000, in
   return (
     <ul className={cn()}>
       {items.map((number, index) => (
+        // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-noninteractive-element-interactions
         <li
           key={index}
           className={cn('item', { active: number === page, split: !number })}

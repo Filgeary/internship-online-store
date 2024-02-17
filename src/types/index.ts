@@ -1,13 +1,23 @@
 export type TModalsNames = 'basket' | 'dialogAmount' | 'modalCatalog';
 
-export type TResponse<T> = { result: T };
+export type TSuccessResponse<T> = { result: T };
 export type TErrorResponse = {
   error: {
     id: number;
     code: string;
     message: string;
-    data: { issues: any };
+    data: {
+      issues: TVerboseError[];
+    };
   };
+};
+export type TResponse<T> = TSuccessResponse<T> | TErrorResponse;
+
+export type TVerboseError = {
+  path: any[];
+  rule: string;
+  accept: boolean;
+  message: string;
 };
 
 // TODO: show recursive type

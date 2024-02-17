@@ -46,7 +46,7 @@ function CatalogList({
     ),
     onPaginate: useCallback(
       (page: string | number) => store.actions[catalogSliceName].setParams({ page }),
-      [store],
+      [catalogSliceName, store],
     ),
     makePaginatorLink: useCallback(
       (page: string) => {
@@ -65,7 +65,7 @@ function CatalogList({
     (_id: string | number) => {
       store.actions.modals.open('dialogAmount', callbacks.addToBasket.bind(null, String(_id)));
     },
-    [store],
+    [callbacks.addToBasket, store],
   );
 
   const renders = {

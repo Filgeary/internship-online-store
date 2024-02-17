@@ -53,7 +53,7 @@ function Login() {
           navigate(back);
         });
       },
-      [data, location.state],
+      [data, location.pathname, location.state, navigate, store.actions.session],
     ),
   };
 

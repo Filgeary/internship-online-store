@@ -1,13 +1,13 @@
 import type { TServices } from '@src/services';
 import type { TConfig } from '@src/store';
-import type { TErrorResponse, TResponse } from '@src/types';
+import type { TErrorResponse, TResponse, TSuccessResponse } from '@src/types';
 
 // TODO: show type guards
-export function isSuccessResponse<T>(res: TResponse<T> | TErrorResponse): res is TResponse<T> {
-  return Boolean((res as TResponse<T>).result);
+export function isSuccessResponse<T>(res: TResponse<T>): res is TSuccessResponse<T> {
+  return Boolean((res as TSuccessResponse<T>).result);
 }
 
-export function isErrorResponse<T>(res: TResponse<T> | TErrorResponse): res is TErrorResponse {
+export function isErrorResponse<T>(res: TResponse<T>): res is TErrorResponse {
   return Boolean((res as TErrorResponse).error);
 }
 
@@ -16,7 +16,7 @@ class APIService {
   config: TConfig['api'];
   defaultHeaders: Record<string, string>;
 
-  constructor(services: TServices, config: TConfig['api'] | {} = {}) {
+  constructor(services: TServices, config: TConfig['api'] | object = {}) {
     this.services = services;
     this.config = config as TConfig['api'];
     this.defaultHeaders = {
@@ -49,7 +49,7 @@ class APIService {
     });
 
     return {
-      data: (await res.json()) as TResponse<T> | TErrorResponse,
+      data: (await res.json()) as TResponse<T>,
       status: res.status,
       headers: res.headers,
     };

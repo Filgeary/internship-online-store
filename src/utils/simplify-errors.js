@@ -1,5 +1,10 @@
-export default function simplifyErrors(issues = {}) {
+/**
+ * @param {any[]=} issues
+ * @returns {Record<string, string>}
+ */
+export default function simplifyErrors(issues = []) {
   const result = {};
+
   for (const issue of issues) {
     const key = issue.path.join('.') || 'other';
     if (result[key]) {
@@ -8,5 +13,6 @@ export default function simplifyErrors(issues = {}) {
       result[key] = [issue.message];
     }
   }
+
   return result;
 }
