@@ -1,0 +1,12 @@
+.AutoComplete {
+  position: relative;
+  width: fit-content;
+}
+.AutoComplete-dropdown {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  width: 100%;
+  height: auto;
+}

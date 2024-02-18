@@ -14,7 +14,8 @@ export interface IQueryParams {
   limit: number,
   sort: Sort,
   query: string,
-  category: string
+  category: string,
+  madeIn: string
 }
 
 type IReadonlyQueryParams = {

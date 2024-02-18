@@ -66,4 +66,4 @@ function Article() {
   );
 }
 
-export default memo(Article);
+export default memo(Article)

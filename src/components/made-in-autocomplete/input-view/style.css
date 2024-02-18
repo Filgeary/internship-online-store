@@ -1,0 +1,17 @@
+.InputView{
+  color: #000;
+  margin: 10px 13px 10px 10px;
+  height: 15px;
+  /* width: 100%; */
+  font-size: 13px;
+  font-style: italic;
+  box-sizing: border-box;
+  border: none;
+}
+.InputView:focus{
+  outline: none;
+}
+
+.InputView::placeholder{
+  color: #CCCDD4;
+}

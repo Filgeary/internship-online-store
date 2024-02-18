@@ -45,7 +45,8 @@ function SelectItemsModal(props: SelectItemsModalProps) {
   useInit(async () => {
     await Promise.all([
       store.actions[catalogModuleName].setParams(),
-      store.actions.categories.load()
+      store.actions.categories.load(),
+      store.actions.manufacturer.load(),
     ])
   }, [lang], true);
 

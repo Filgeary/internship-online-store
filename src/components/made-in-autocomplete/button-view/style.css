@@ -1,0 +1,56 @@
+.ButtonView {
+  width: 240px;
+  height: 30px;
+  background-color: #fff;
+  padding: 6px 5px 6px 6px;
+  display: flex;
+  align-items: center;
+  border: none;
+  justify-content: space-between;
+  overflow: hidden;
+}
+
+.ButtonView-info {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 6px;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.ButtonView-code {
+  flex: 0 0 18px;
+  height: 18px;
+  width: 18px;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 8px;
+  color: #FFFFFF;
+  background-color: #6F7EFF;
+  box-sizing: border-box;
+  border-top: 1px;
+  pointer-events: none;
+}
+
+.ButtonView-title {
+  font-size: 15px;
+  color: #191F4D;
+  overflow: hidden;
+  text-wrap: nowrap;
+  text-overflow: ellipsis;
+  pointer-events: none;
+}
+
+.ButtonView-arrow {
+  transition: all 0.15s linear;
+  pointer-events: none;
+}
+
+.ButtonView-arrow_rotated {
+  transform: rotate(180deg);
+}
+

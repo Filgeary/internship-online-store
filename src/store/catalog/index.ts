@@ -20,6 +20,7 @@ class CatalogModule extends StoreModule<CatalogState, CatalogConfig> {
         sort: ESort.order,
         query: '',
         category: '',
+        madeIn: '',
       },
       count: 0,
       waiting: false
@@ -41,6 +42,7 @@ class CatalogModule extends StoreModule<CatalogState, CatalogConfig> {
       if (urlParams.has('sort')) validParams.sort = String(urlParams.get('sort')) as Sort;
       if (urlParams.has('query')) validParams.query = String(urlParams.get('query'));
       if (urlParams.has('category')) validParams.category = String(urlParams.get('category'));
+      if (urlParams.has('madeIn')) validParams.madeIn = String(urlParams.get('madeIn'));
       await this.setParams({...this.initState().params, ...validParams, ...newParams}, true);
     } else {
       await this.setParams({...this.initState().params});
@@ -92,11 +94,13 @@ class CatalogModule extends StoreModule<CatalogState, CatalogConfig> {
       fields: 'items(*),count',
       sort: params.sort,
       'search[query]': params.query,
-      'search[category]': params.category
+      'search[category]': params.category,
+      'search[madeIn]': params.madeIn
     }, {
       skip: 0,
       'search[query]': '',
-      'search[category]': ''
+      'search[category]': '',
+      'search[madeIn]': '',
     }) as Record<string, string>;
 
     const res = await this.services.api.request<{items: CatalogItemResponse[], count: number}>({url: `/api/v1/articles?${new URLSearchParams(apiParams)}`});
