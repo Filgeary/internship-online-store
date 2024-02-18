@@ -41,7 +41,6 @@ type TAutocompleteContext = {
   helpers: Record<string, any>;
   listRef: React.RefObject<Scrollbar>;
   searchRef: React.RefObject<HTMLInputElement>;
-  allOptionsRefs: React.RefObject<HTMLDivElement[]>;
   firstOptionRef: React.MutableRefObject<HTMLDivElement | null>;
 };
 
@@ -69,7 +68,6 @@ function Autocomplete(props: AutocompleteProps) {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<Scrollbar>(null);
   const searchRef = useRef<HTMLInputElement>(null);
-  const allOptionsRefs = useRef([]);
   const firstOptionRef = useRef<HTMLDivElement | null>(null);
 
   const callbacks = {
@@ -85,6 +83,8 @@ function Autocomplete(props: AutocompleteProps) {
     toggleOpen: () => setIsOpen((prev) => !prev),
 
     close: () => setIsOpen(false),
+
+    setInFocus,
   };
 
   const helpers = {
@@ -115,13 +115,11 @@ function Autocomplete(props: AutocompleteProps) {
   useOnClickOutside(wrapperRef, { closeByEsc: true }, callbacks.close);
 
   useEffect(() => {
-    // let index = 0; Для варианта через рефы
-
     const listener = (e: KeyboardEvent) => {
-      // Более оптимизированный подход (список не ререндерится)
       if (e.code === 'Tab') return;
       if (e.code.startsWith('Arrow')) e.preventDefault();
 
+      // Более оптимизированный подход (список не ререндерится)
       switch (e.code) {
         case 'ArrowDown': {
           let nextElement = document.activeElement.nextElementSibling as HTMLElement;
@@ -146,36 +144,6 @@ function Autocomplete(props: AutocompleteProps) {
           break;
         }
       }
-
-      // Вариант через рефы (минус в больших затратах памяти на создание массива)
-      // switch (e.code) {
-      //   case 'ArrowDown': {
-      //     const nextIndex = index + 1;
-      //     index = Math.min(allOptionsRefs.current.length - 1, nextIndex);
-      //     break;
-      //   }
-      //   case 'ArrowUp': {
-      //     const nextIndex = index - 1;
-      //     index = Math.max(0, nextIndex);
-      //     break;
-      //   }
-      // }
-
-      // allOptionsRefs.current[index]?.focus();
-
-      // React-way (ререндерится весь список, все 228 элементов в худшем случае)
-      // Т.к., меняется значение, которое потом идёт в контекст
-      // if (e.code.startsWith('Arrow')) e.preventDefault();
-      // switch (e.code) {
-      //   case 'ArrowDown': {
-      //     setInFocus((prevInFocus) => Math.min(prevInFocus + 1, options.length));
-      //     break;
-      //   }
-      //   case 'ArrowUp': {
-      //     setInFocus((prevInFocus) => Math.max(prevInFocus - 1, 0));
-      //     break;
-      //   }
-      // }
     };
 
     document.addEventListener('keydown', listener);
@@ -220,7 +188,6 @@ function Autocomplete(props: AutocompleteProps) {
                 callbacks,
                 listRef,
                 searchRef,
-                allOptionsRefs,
                 firstOptionRef,
               }}
             >

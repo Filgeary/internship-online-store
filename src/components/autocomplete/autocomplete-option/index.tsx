@@ -14,12 +14,13 @@ type OptionProps = {
 
 function AutocompleteOption(props: OptionProps) {
   const { option, isDisabled, isTitle, displayString, indexForFocus } = props;
-  const { values, helpers, callbacks, listRef, searchRef, allOptionsRefs, firstOptionRef } =
+  const { values, helpers, callbacks, listRef, searchRef, firstOptionRef } =
     useAutocompleteContext();
 
   const optionRef = useRef<HTMLDivElement>(null);
 
-  const isActive = values.active._id === props.option._id && !isTitle;
+  const isActive =
+    (values.active._id === props.option._id || values.inFocus === indexForFocus) && !isTitle;
 
   const handlers = {
     onClick: () => {
@@ -67,25 +68,6 @@ function AutocompleteOption(props: OptionProps) {
       firstOptionRef.current = null;
     };
   }, [values.search]);
-
-  // Для варианта через рефы
-  // useEffect(() => {
-  //   console.log(optionRef.current);
-  //   const index = allOptionsRefs.current.length;
-  //   allOptionsRefs.current.push(optionRef.current);
-
-  //   return () => {
-  //     // allOptionsRefs.current.splice(index, 1);
-  //     delete allOptionsRefs.current[index];
-  //   };
-  // }, [values.isOpen]);
-
-  // Для React-way перемещения по стрелочкам
-  // useEffect(() => {
-  //   if (values.inFocus === indexForFocus) {
-  //     optionRef.current.focus();
-  //   }
-  // }, [values.inFocus]);
 
   return (
     <AutocompleteField
