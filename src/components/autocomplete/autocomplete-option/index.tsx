@@ -14,7 +14,8 @@ type OptionProps = {
 
 function AutocompleteOption(props: OptionProps) {
   const { option, isDisabled, isTitle, displayString, indexForFocus } = props;
-  const { values, helpers, callbacks, listRef, searchRef } = useAutocompleteContext();
+  const { values, helpers, callbacks, listRef, searchRef, allOptionsRefs, firstOptionRef } =
+    useAutocompleteContext();
 
   const optionRef = useRef<HTMLDivElement>(null);
 
@@ -30,18 +31,23 @@ function AutocompleteOption(props: OptionProps) {
     if (isActive && optionRef.current && listRef.current) {
       // При раскрытии - активный будет по центру и в фокусе
       if (!values.search && document.activeElement !== searchRef.current) {
-        optionRef.current.focus();
+        // Для совместимости с плавной анимацией (smooth = true)
+        window.requestIdleCallback(() => {
+          optionRef.current.focus();
+        });
       }
       window.requestAnimationFrame(() => {
-        listRef.current.scrollTo(0, optionRef.current.offsetTop - listRef.current.clientHeight / 2);
+        listRef.current?.scrollTo(
+          0,
+          optionRef.current.offsetTop - listRef.current.clientHeight / 2
+        );
       });
     }
-  }, [isActive]);
+  }, [values.isOpen, isActive]);
 
   useEffect(() => {
     const listener = (e: KeyboardEvent) => {
       if (e.code === 'Enter') {
-        console.log('here');
         e.preventDefault();
         handlers.onClick();
       }
@@ -51,6 +57,30 @@ function AutocompleteOption(props: OptionProps) {
 
     return () => optionRef.current?.removeEventListener('keydown', listener);
   }, []);
+
+  // useEffect(() => {
+  //   if (!firstOptionRef.current) {
+  //     //@ts-ignore
+  //     firstOptionRef.current = optionRef.current;
+  //   }
+
+  //   return () => {
+  //     //@ts-ignore
+  //     firstOptionRef.current = null;
+  //   };
+  // }, []);
+
+  // Для варианта через рефы
+  useEffect(() => {
+    console.log(optionRef.current);
+    const index = allOptionsRefs.current.length;
+    allOptionsRefs.current.push(optionRef.current);
+
+    return () => {
+      // allOptionsRefs.current.splice(index, 1);
+      delete allOptionsRefs.current[index];
+    };
+  }, [values.isOpen]);
 
   // Для React-way перемещения по стрелочкам
   // useEffect(() => {

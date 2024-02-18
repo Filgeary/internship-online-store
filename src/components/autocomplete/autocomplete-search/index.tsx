@@ -17,7 +17,6 @@ function AutocompleteSearch(props: SearchProps) {
   const handlers = {
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
       const value = e.target.value;
-      console.log(listRef);
       listRef.current?.scrollToTop();
 
       callbacks.setSearch(value);

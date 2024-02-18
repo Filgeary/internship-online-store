@@ -3,6 +3,7 @@ import React, {
   memo,
   useContext,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -42,6 +43,8 @@ type TAutocompleteContext = {
   // listRef: React.LegacyRef<Scrollbar> & React.LegacyRef<HTMLDivElement>;
   listRef: React.RefObject<Scrollbar>;
   searchRef: React.RefObject<HTMLInputElement>;
+  allOptionsRefs: React.RefObject<HTMLDivElement[]>;
+  firstOptionRef: React.RefObject<HTMLDivElement | null>;
 };
 
 export const AutocompleteContext = createContext<TAutocompleteContext>(null);
@@ -68,6 +71,8 @@ function Autocomplete(props: AutocompleteProps) {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<Scrollbar>(null);
   const searchRef = useRef<HTMLInputElement>(null);
+  const allOptionsRefs = useRef([]);
+  const firstOptionRef = useRef<HTMLDivElement | null>(null);
 
   const callbacks = {
     setActive: (item: TOption) => {
@@ -112,33 +117,57 @@ function Autocomplete(props: AutocompleteProps) {
   useOnClickOutside(wrapperRef, { closeByEsc: true }, callbacks.close);
 
   useEffect(() => {
+    // let index = 0; Для варианта через рефы
+
     const listener = (e: KeyboardEvent) => {
+      console.log('->', allOptionsRefs.current);
+      allOptionsRefs.current = allOptionsRefs.current.filter(Boolean);
       // Более оптимизированный подход (список не ререндерится)
       if (e.code === 'Tab') return;
       if (e.code.startsWith('Arrow')) e.preventDefault();
+
       switch (e.code) {
         case 'ArrowDown': {
-          let nextElement = null;
-          while (
-            document.activeElement.nextElementSibling &&
-            !(nextElement = document.activeElement.nextElementSibling as HTMLElement).hasAttribute(
-              'tabindex'
-            )
-          ) {}
-          nextElement?.focus();
+          let nextElement = document.activeElement.nextElementSibling as HTMLElement;
+          while (nextElement && !nextElement?.hasAttribute('tabindex')) {
+            nextElement = nextElement.nextElementSibling as HTMLElement;
+          }
+
+          console.log('@', allOptionsRefs.current);
+          if (!nextElement) allOptionsRefs.current[0].focus();
+          else nextElement?.focus();
+
           break;
         }
         case 'ArrowUp': {
-          let prevElement = null;
-          while (
-            document.activeElement.previousElementSibling &&
-            !(prevElement = document.activeElement
-              .previousElementSibling as HTMLElement).hasAttribute('tabindex')
-          ) {}
-          prevElement?.focus();
+          let prevElement = document.activeElement.previousElementSibling as HTMLElement;
+          while (prevElement && !prevElement?.hasAttribute('tabindex')) {
+            prevElement = prevElement.previousElementSibling as HTMLElement;
+          }
+
+          if (!prevElement) searchRef.current.focus();
+          else prevElement?.focus();
+
           break;
         }
       }
+
+      // Вариант через рефы (минус в больших затратах памяти на создание массива)
+      // switch (e.code) {
+      //   case 'ArrowDown': {
+      //     const nextIndex = index + 1;
+      //     index = Math.min(allOptionsRefs.current.length - 1, nextIndex);
+      //     break;
+      //   }
+      //   case 'ArrowUp': {
+      //     const nextIndex = index - 1;
+      //     index = Math.max(0, nextIndex);
+      //     break;
+      //   }
+      // }
+
+      // allOptionsRefs.current[index]?.focus();
+
       // React-way (ререндерится весь список, все 228 элементов в худшем случае)
       // Т.к., меняется значение, которое потом идёт в контекст
       // if (e.code.startsWith('Arrow')) e.preventDefault();
@@ -159,7 +188,7 @@ function Autocomplete(props: AutocompleteProps) {
     return () => {
       document.removeEventListener('keydown', listener);
     };
-  });
+  }, [isOpen]);
 
   return (
     <div ref={wrapperRef} className={cn({ active: isOpen, smooth })}>
@@ -188,9 +217,21 @@ function Autocomplete(props: AutocompleteProps) {
       {/* Выпадашка */}
       <div className={cn('drop')} id={uid}>
         <div className={cn('drop-inner')}>
-          <AutocompleteContext.Provider value={{ values, helpers, callbacks, listRef, searchRef }}>
-            {children}
-          </AutocompleteContext.Provider>
+          {isOpen && (
+            <AutocompleteContext.Provider
+              value={{
+                values,
+                helpers,
+                callbacks,
+                listRef,
+                searchRef,
+                allOptionsRefs,
+                firstOptionRef,
+              }}
+            >
+              {children}
+            </AutocompleteContext.Provider>
+          )}
         </div>
       </div>
     </div>
