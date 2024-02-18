@@ -9,7 +9,7 @@ import config from "./config";
 
 const services = new Services(config);
 
-const root = createRoot(document.getElementById("root"));
+const root = createRoot(document.getElementById("root")!);
 
 // Первый рендер приложения
 root.render(

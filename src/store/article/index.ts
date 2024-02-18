@@ -1,13 +1,13 @@
 import StoreModule from "../module";
-import { Article, IArticleState } from "./types";
+import { IArticle, IArticleState } from "./types";
 
 /**
  * Детальная ифнормация о товаре для страницы товара
  */
-class ArticleState extends StoreModule {
+class ArticleState extends StoreModule<IArticleState> {
   initState(): IArticleState {
     return {
-      data: {} as Article,
+      data: {} as IArticle,
       waiting: false, // признак ожидания загрузки
     };
   }
@@ -15,7 +15,7 @@ class ArticleState extends StoreModule {
   async load(id: string) {
     // Сброс текущего товара и установка признака ожидания загрузки
     this.setState({
-      data: {} as Article,
+      data: {} as IArticle,
       waiting: true,
     });
 
@@ -27,7 +27,7 @@ class ArticleState extends StoreModule {
       // Товар загружен успешно
       this.setState(
         {
-          data: res.data.result as Article,
+          data: res.data.result as IArticle,
           waiting: false,
         },
         "Загружен товар из АПИ"
@@ -36,7 +36,7 @@ class ArticleState extends StoreModule {
       // Ошибка при загрузке
       // @todo В стейт можно положить информацию об ошибке
       this.setState({
-        data: {} as Article,
+        data: {} as IArticle,
         waiting: false,
       });
     }

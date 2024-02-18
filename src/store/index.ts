@@ -1,45 +1,104 @@
+import Services from "@src/services";
 import * as modules from "./exports";
+import {
+  TStoreModuleConfigName,
+  TState,
+  TStoreBasicModuleName,
+  TStoreConfig,
+  TStoreModuleName,
+  TStoreModules,
+  TStoreNewModuleName,
+} from "./types";
 
 /**
  * Хранилище состояния приложения
  */
 class Store {
-  state: IState;
-  services: any;
-  config: any;
-  listeners: any;
-  actions: any;
-  constructor(services, config = {}, initState = {} as IState) {
+  state: TState;
+  services: Services;
+  config: Partial<TStoreConfig>;
+  listeners: (() => void)[];
+  actions: TStoreModules;
+  /**
+   * @param services Сервисы
+   * @param config Конфиг стора
+   * @param initState начальный стейт
+   */
+  constructor(
+    services: Services,
+    config: Partial<TStoreConfig> = {},
+    initState = {} as TState
+  ) {
     this.services = services;
     this.config = config;
     this.listeners = []; // Слушатели изменений состояния
     this.state = initState;
-    this.actions = {};
-    for (const name of Object.keys(modules)) {
-      this.actions[name] = new modules[name](
-        this,
-        name,
-        this.config?.modules[name] || {}
-      );
-      this.state[name] = this.actions[name].initState();
+    this.actions = {} as TStoreModules;
+    // for (const name of Object.keys(modules)) {
+    //   this.actions[name] = new modules[name](
+    //     this,
+    //     name,
+    //     this.config?.modules[name] || {}
+    //   );
+    //   this.state[name] = this.actions[name].initState();
+    // }
+    const keys = Object.keys(modules) as TStoreBasicModuleName[];
+    for (const name of keys) {
+      this.create(name);
     }
   }
 
-  make(name, base) {
-    this.actions[name] = new modules[base](
+  // Создание state
+  create<Key extends TStoreModuleName>(
+    baseName: TStoreBasicModuleName & Key,
+    configName: TStoreModuleConfigName = baseName,
+    name: Key = baseName
+  ) {
+    this.actions[name] = new modules[baseName](
       this,
       name,
-      this.config?.modules[base] || {}
-    );
-    this.state[name] = this.actions[name].initState();
+      //@ts-ignore
+      this.config?.modules?.[configName] || {}
+    ) as TStoreModules[Key];
+    this.state[name] = this.actions[baseName].initState() as TState[Key];
+  }
+
+  // Создание нового state, на основе базового
+  make(
+    name: TStoreModuleName,
+    base: TStoreBasicModuleName,
+    configName: TStoreModuleConfigName
+  ) {
+    this.create(base, configName, name);
+  }
+
+  // create<Name extends TStoreModuleName>(name: Name) {
+  //   this.actions[name] = new modules[name as TStoreModuleName](
+  //     this,
+  //     name,
+  //     this.config.modules[name as TStoreModuleName] as TStoreConfig
+  //   ) as TStoreModules[Name];
+  //   this.state[name] = this.actions[name].initState() as TState[Name];
+  // }
+
+  // make(
+  //   name: TStoreModuleName,
+  //   base: TStoreBasicModuleName,
+  //   configName: TStoreModuleConfigName
+  // ) {
+  //   this.create(base, configName, name);
+  // }
+
+  // Удаление state (всех, кроме базовых)
+  delete(name: TStoreNewModuleName) {
+    delete this.actions[name];
+    delete this.state[name];
   }
 
   /**
    * Подписка слушателя на изменения состояния
-   * @param listener {Function}
-   * @returns {Function} Функция отписки
    */
-  subscribe(listener) {
+  subscribe(listener: () => void) {
     this.listeners.push(listener);
     // Возвращается функция для удаления добавленного слушателя
     return () => {
@@ -60,7 +119,7 @@ class Store {
    * profile: Object,
    * }}
    */
-  getState(): IState {
+  getState(): TState {
     return this.state;
   }
 
@@ -81,7 +140,8 @@ class Store {
     }
     this.state = newState;
     // Вызываем всех слушателей
-    for (const listener of this.listeners) listener(this.state);
+    // for (const listener of this.listeners) listener(this.state);
+    for (const listener of this.listeners) listener();
   }
 }
 

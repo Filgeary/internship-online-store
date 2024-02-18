@@ -1,14 +1,13 @@
 import { useEffect, useLayoutEffect, useMemo, useState } from "react";
 import shallowequal from "shallowequal";
 import useStore from "./use-store";
-import { IState } from "@src/store";
+import { TState } from "@src/store/types";
 
+type TSelectorFunc<T> = (state: TState) => T;
 /**
  * Хук для выборки данных из store и отслеживания их изменения
- * @param selectorFunc {Function}
- * @return {*}
  */
-export default function useSelector(selectorFunc: (state: IState) => any) {
+export default function useSelector<T>(selectorFunc: TSelectorFunc<T>) {
   const store = useStore();
 
   const [state, setState] = useState(() => selectorFunc(store.getState()));

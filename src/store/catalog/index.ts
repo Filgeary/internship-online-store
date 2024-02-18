@@ -1,14 +1,13 @@
 import StoreModule from "../module";
 import exclude from "@src/utils/exclude";
-import { CatalogParams, ICatalogState } from "./types";
+import { ICatalogConfig, ICatalogParams, ICatalogState } from "./types";
 
 /**
  * Состояние каталога - параметры фильтра исписок товара
  */
-class CatalogState extends StoreModule {
+class CatalogState extends StoreModule<ICatalogState, ICatalogConfig> {
   /**
    * Начальное состояние
-   * @return {Object}
    */
   initState(): ICatalogState {
     return {
@@ -28,12 +27,11 @@ class CatalogState extends StoreModule {
   /**
    * Инициализация параметров.
    * Восстановление из адреса
-   * @param [newParams] {Object} Новые параметры
-   * @return {Promise<void>}
+   * @param [newParams] Новые параметры
    */
-  async initParams(newParams = {}) {
+  async initParams(newParams = {} as ICatalogParams) {
     const urlParams = new URLSearchParams(window.location.search);
-    let validParams = {} as CatalogParams;
+    let validParams = {} as ICatalogParams;
     if (urlParams.has("page"))
       validParams.page = Number(urlParams.get("page")) || 1;
     if (urlParams.has("limit"))
@@ -50,8 +48,7 @@ class CatalogState extends StoreModule {
 
   /**
    * Сброс параметров к начальным
-   * @param [newParams] {Object} Новые параметры
-   * @return {Promise<void>}
+   * @param [newParams] Новые параметры
    */
   async resetParams(newParams = {}) {
     // Итоговые параметры из начальных, из URL и из переданных явно
@@ -62,12 +59,12 @@ class CatalogState extends StoreModule {
 
   /**
    * Установка параметров и загрузка списка товаров
-   * @param [newParams] {Object} Новые параметры
-   * @param [replaceHistory] {Boolean} Заменить адрес (true) или новая запись в истории браузера (false)
-   * @returns {Promise<void>}
+   * @param [newParams] Новые параметры
+   * @param [replaceHistory] Заменить адрес (true) или новая запись в истории браузера (false)
+   * @param [setUrl] Задать квери параметры в адресной строке
    */
   async setParams(
-    newParams: CatalogParams = {} as CatalogParams,
+    newParams: ICatalogParams = {} as ICatalogParams,
     replaceHistory: boolean = false,
     setUrl: boolean = false
   ) {

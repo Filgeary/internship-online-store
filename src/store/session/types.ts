@@ -7,3 +7,7 @@ export interface ISessionState {
   waiting: boolean;
   exists: boolean;
 }
+
+export interface ISessionConfig {
+  tokenHeader: string;
+}

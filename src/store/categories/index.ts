@@ -4,7 +4,7 @@ import { ICategoriesState } from "./types";
 /**
  * Список категорий
  */
-class CategoriesState extends StoreModule {
+class CategoriesState extends StoreModule<ICategoriesState> {
   initState(): ICategoriesState {
     return {
       list: [],

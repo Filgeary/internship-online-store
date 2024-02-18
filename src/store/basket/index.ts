@@ -4,7 +4,7 @@ import { IBasketState } from "./types";
 /**
  * Покупательская корзина
  */
-class BasketState extends StoreModule {
+class BasketState extends StoreModule<IBasketState> {
   initState(): IBasketState {
     return {
       list: [],
@@ -13,7 +13,7 @@ class BasketState extends StoreModule {
     };
   }
 
-  async addToBasket(_id: string, count: number) {
+  async addToBasket(_id: string, count: number = 1) {
     let sum = 0;
     // Ищем товар в корзине, чтобы увеличить его количество
     let exist = false;
@@ -32,6 +32,7 @@ class BasketState extends StoreModule {
       const res = await this.services.api.request({
         url: `/api/v1/articles/${_id}`,
       });
+      //@ts-ignore
       const item = res.data.result;
 
       list.push({ ...item, amount: count }); // list уже новый, в него можно пушить.

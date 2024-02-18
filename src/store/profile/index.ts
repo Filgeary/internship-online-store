@@ -4,10 +4,7 @@ import { IProfileState, User } from "./types";
 /**
  * Детальная информация о пользователе
  */
-class ProfileState extends StoreModule {
-  data: User;
-  waiting: boolean;
-
+class ProfileState extends StoreModule<IProfileState> {
   initState(): IProfileState {
     return {
       data: {} as User,

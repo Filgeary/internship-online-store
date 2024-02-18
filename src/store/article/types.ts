@@ -1,13 +1,13 @@
 import { Category } from "../categories/types";
 
-export interface Article {
+export interface IArticle {
   _id: string;
   _key: string;
   name: string;
   title: string;
   description: string;
   price: number;
-  madeIn: MadeIn;
+  madeIn: IMadeIn;
   edition: number;
   category: Category;
   order: number;
@@ -16,13 +16,13 @@ export interface Article {
   isFavorite: boolean;
 }
 
-export interface MadeIn {
+export interface IMadeIn {
   title: string;
   code: string;
   _id: string;
 }
 
 export interface IArticleState {
-  data: Article;
+  data: IArticle;
   waiting: boolean;
 }

@@ -1,7 +1,11 @@
-import { Article } from "../article/types";
+import { IArticle } from "../article/types";
+
+export interface IBasketArticle extends IArticle {
+  amount: number;
+}
 
 export interface IBasketState {
-  list: Article[];
+  list: IBasketArticle[];
   sum: number;
   amount: number;
 }

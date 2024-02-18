@@ -1,8 +1,10 @@
-import { Api, Config } from "./../config";
+import Services from "@src/services";
+import { ApiConfig } from "./types";
+
 interface Request {
   url: string;
-  method: "GET" | "POST" | "DELETE" | "PUT";
-  headers: Record<string, string>;
+  method?: "GET" | "POST" | "DELETE" | "PUT";
+  headers?: Record<string, string>;
 }
 
 interface Response<T> {
@@ -13,10 +15,10 @@ interface Response<T> {
 
 class APIService {
   defaultHeaders: Record<string, string>;
-  services: any;
-  config: Api;
+  services: Services;
+  config: ApiConfig;
 
-  constructor(services: Config, config: Api = {} as Api) {
+  constructor(services: Services, config: ApiConfig = {} as ApiConfig) {
     this.services = services;
     this.config = config;
     this.defaultHeaders = {

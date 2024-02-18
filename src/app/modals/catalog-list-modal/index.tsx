@@ -14,18 +14,22 @@ import ItemSelectable from "@src/components/item-selectable";
 import useInit from "@src/hooks/use-init";
 import CatalogFilter from "@src/containers/catalog-filter";
 import { ModalProps } from "../types";
+import useStoreState from "@src/hooks/use-store-state";
 
 function CatalogListModal({ onTop, id }: ModalProps) {
   const store = useStore();
   const dispatch = useDispatch();
+  const stateName = useStoreState("catalog", "catalog");
 
   const [selectedItems, setSelectedItems] = useState([]);
 
   useInit(
     async () => {
       await Promise.all([
-        store.actions.catalog2.initParams(
-          store.actions.catalog2.initState().params
+        //@ts-ignore
+        store.actions[stateName].initParams(
+          //@ts-ignore
+          store.actions[stateName].initState().params
         ),
       ]);
     },

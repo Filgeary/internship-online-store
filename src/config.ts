@@ -1,28 +1,18 @@
-import { StoreModuleName } from "./store/types";
+import { ApiConfig } from "./api/types";
+import { TStoreConfig } from "./store/types";
 
 const isProduction = process.env.NODE_ENV === "production";
 
-export type ApiConfig = {
-  baseUrl: string;
-};
-
-type StoreModuleConfig = Record<StoreModuleName, Record<string, string>>;
-
-export type StoreConfig = {
-  log: boolean;
-  modules: Partial<StoreModuleConfig>;
-};
-
-export type Config = {
-  store: StoreConfig;
+export type TConfig = {
+  store?: TStoreConfig;
   redux?: {};
-  api: ApiConfig;
+  api?: ApiConfig;
 };
 
 /**
  * Настройки сервисов
  */
-const config: Config = {
+const config: TConfig = {
   store: {
     // Логировать установку состояния?
     log: !isProduction,

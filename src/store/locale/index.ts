@@ -2,9 +2,7 @@ import { Language } from "@src/i18n/types";
 import StoreModule from "../module";
 import { ILocaleState } from "./types";
 
-class LocaleState extends StoreModule {
-  lang: Language;
-
+class LocaleState extends StoreModule<ILocaleState> {
   initState(): ILocaleState {
     return {
       lang: "ru",

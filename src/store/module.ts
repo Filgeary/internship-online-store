@@ -1,15 +1,18 @@
-import { StoreModuleName } from "./types";
+import { TStoreModuleName } from "./types";
+import Store from ".";
+import Services from "@src/services";
 
 /**
  * Базовый класс для модулей хранилища
  * Для группировки действий над внешним состоянием
  */
 class StoreModule<State, Config = {}> {
-  store: any;
-  name: StoreModuleName;
+  store: Store;
+  name: TStoreModuleName;
   config: Config;
-  services: any;
-  constructor(store, name: StoreModuleName, config = {} as Config) {
+  services: Services;
+
+  constructor(store: Store, name: TStoreModuleName, config = {} as Config) {
     this.store = store;
     this.name = name;
     this.config = config;
@@ -22,10 +25,10 @@ class StoreModule<State, Config = {}> {
   }
 
   getState() {
-    return this.store.getState()[this.name];
+    return this.store.getState()[this.name] as State;
   }
 
-  setState(newState, description = "setState") {
+  setState(newState: State, description = "setState") {
     this.store.setState(
       {
         ...this.store.getState(),

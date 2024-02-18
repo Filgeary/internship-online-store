@@ -1,20 +1,14 @@
 import StoreModule from "../module";
 import simplifyErrors from "@src/utils/simplify-errors";
 import { User } from "../profile/types";
-import { ISessionState } from "./types";
+import { ISessionConfig, ISessionState } from "./types";
 
 /**
  * Сессия
  */
-class SessionState extends StoreModule {
-  user: User;
-  token: string | null;
-  errors: string | null;
-  waiting: boolean;
-  exists: boolean;
+class SessionState extends StoreModule<ISessionState, ISessionConfig> {
   /**
    * Начальное состояние
-   * @return {Object}
    */
   initState(): ISessionState {
     return {
