@@ -6,10 +6,10 @@ import List from '@src/components/list';
 import Pagination from '@src/components/pagination';
 import Spinner from '@src/components/spinner';
 
-import { useCatalog } from '../catalog';
+import { useCatalogContext } from '../catalog';
 
 function CatalogList() {
-  const { select, callbacks } = useCatalog();
+  const { select, callbacks } = useCatalogContext();
 
   const { t } = useTranslate();
 

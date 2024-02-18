@@ -1,4 +1,4 @@
-import { memo, useMemo, useState } from 'react';
+import { memo, useMemo } from 'react';
 
 import useTranslate from '@src/hooks/use-translate';
 
@@ -8,23 +8,11 @@ import SideLayout from '@src/components/side-layout';
 import treeToList from '@src/utils/tree-to-list';
 import listToTree from '@src/utils/list-to-tree';
 
-import { useCatalog } from '../catalog';
-import Autocomplete, { TOption } from '@src/components/autocomplete';
+import { useCatalogContext } from '../catalog';
+import CatalogCountry from '../catalog-country';
 
 function CatalogFilter() {
-  const { callbacks, select } = useCatalog();
-  const [search, setSearch] = useState('');
-
-  const helpers = {
-    optionsBuilder: (search: string) => {
-      setSearch(search);
-      return select.countries.filter((option: { _id: string; code: string; title: string }) => {
-        return [option.code, option.title].some((val) =>
-          val.toLowerCase().includes(search.toLowerCase())
-        );
-      });
-    },
-  };
+  const { callbacks, select } = useCatalogContext();
 
   const options = {
     sort: useMemo(
@@ -46,13 +34,6 @@ function CatalogFilter() {
       ],
       [select.categories]
     ),
-    countriesDefault: useMemo(() => {
-      return [{ _id: '', code: '', title: 'Все' }, ...select.countries];
-    }, [select.countries]),
-    countriesInAction: useMemo(() => {
-      if (!search) return [{ _id: '', code: '', title: 'Все' }, ...select.countries];
-      return helpers.optionsBuilder(search);
-    }, [search, select.countries]),
   };
 
   const { t } = useTranslate();
@@ -71,20 +52,7 @@ function CatalogFilter() {
         placeholder={'Поиск'}
         delay={1000}
       />
-
-      {/* Выбор страны */}
-      <Autocomplete.Root
-        value={select.country}
-        onSelected={(country) => callbacks.onCountrySelected(country._id)}
-        options={options.countriesDefault}
-      >
-        <Autocomplete.Search onChange={helpers.optionsBuilder} placeholder='Поиск' />
-        <Autocomplete.List>
-          {options.countriesInAction.map((option: TOption) => (
-            <Autocomplete.Option key={option._id} option={option} />
-          ))}
-        </Autocomplete.List>
-      </Autocomplete.Root>
+      <CatalogCountry />
       <button onClick={callbacks.onReset}>{t('filter.reset')}</button>
     </SideLayout>
   );

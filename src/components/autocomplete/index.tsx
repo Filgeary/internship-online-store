@@ -42,7 +42,7 @@ type TAutocompleteContext = {
 };
 
 export const AutocompleteContext = createContext<TAutocompleteContext>(null);
-export const useAutocomplete = () => {
+export const useAutocompleteContext = () => {
   const ctx = useContext(AutocompleteContext);
 
   if (!ctx) {
@@ -60,6 +60,7 @@ function Autocomplete(props: AutocompleteProps) {
 
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState('');
+  const [inFocus, setInFocus] = useState<number>(null);
 
   const wrapperRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
@@ -96,6 +97,7 @@ function Autocomplete(props: AutocompleteProps) {
   const values = {
     isOpen,
     search,
+    inFocus,
 
     active: useMemo<TOption>(() => {
       return (
@@ -108,21 +110,45 @@ function Autocomplete(props: AutocompleteProps) {
 
   useEffect(() => {
     const listener = (e: KeyboardEvent) => {
+      // Более оптимизированный подход (список не ререндерится)
       if (e.code === 'Tab') return;
       if (e.code.startsWith('Arrow')) e.preventDefault();
-
       switch (e.code) {
         case 'ArrowDown': {
-          //@ts-ignore
-          document.activeElement.nextElementSibling?.focus();
+          let nextElement = null;
+          while (
+            document.activeElement.nextElementSibling &&
+            !(nextElement = document.activeElement.nextElementSibling as HTMLElement).hasAttribute(
+              'tabindex'
+            )
+          ) {}
+          nextElement?.focus();
           break;
         }
         case 'ArrowUp': {
-          //@ts-ignore
-          document.activeElement.previousElementSibling?.focus();
+          let prevElement = null;
+          while (
+            document.activeElement.previousElementSibling &&
+            !(prevElement = document.activeElement
+              .previousElementSibling as HTMLElement).hasAttribute('tabindex')
+          ) {}
+          prevElement?.focus();
           break;
         }
       }
+      // React-way (ререндерится весь список, все 228 элементов в худшем случае)
+      // Т.к., меняется значение, которое потом идёт в контекст
+      // if (e.code.startsWith('Arrow')) e.preventDefault();
+      // switch (e.code) {
+      //   case 'ArrowDown': {
+      //     setInFocus((prevInFocus) => Math.min(prevInFocus + 1, options.length));
+      //     break;
+      //   }
+      //   case 'ArrowUp': {
+      //     setInFocus((prevInFocus) => Math.max(prevInFocus - 1, 0));
+      //     break;
+      //   }
+      // }
     };
 
     document.addEventListener('keydown', listener);
@@ -157,8 +183,8 @@ function Autocomplete(props: AutocompleteProps) {
       </div>
 
       {/* Выпадашка */}
-      {isOpen && (
-        <div className={cn('drop')} id={uid}>
+      <div className={cn('drop')} id={uid}>
+        {isOpen && (
           <div className={cn('drop-inner')}>
             <AutocompleteContext.Provider
               value={{ values, helpers, callbacks, listRef, searchRef }}
@@ -166,8 +192,8 @@ function Autocomplete(props: AutocompleteProps) {
               {children}
             </AutocompleteContext.Provider>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }

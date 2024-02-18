@@ -2,7 +2,7 @@ import './style.css';
 
 import { Scrollbar } from 'react-scrollbars-custom';
 import { cn as bem } from '@bem-react/classname';
-import { useAutocomplete } from '..';
+import { useAutocompleteContext } from '..';
 import React, { memo } from 'react';
 
 type ListProps = {
@@ -12,7 +12,7 @@ type ListProps = {
 function AutocompleteList(props: ListProps) {
   const cn = bem('AutocompleteList');
 
-  const { listRef } = useAutocomplete();
+  const { listRef } = useAutocompleteContext();
 
   return (
     <Scrollbar
@@ -45,16 +45,6 @@ function AutocompleteList(props: ListProps) {
         },
       }}
     >
-      {/* {values.items.map((option: TOption) => (
-        <Option
-          key={option._id}
-          isActive={option.code === values.active.code}
-          code={option.code}
-          title={props.displayStringForOption(option)}
-          onClick={() => callbacks.setActive(option)}
-          onKeyDown={helpers.onSpaceClick(() => callbacks.setActive(option))}
-        />
-      ))} */}
       {props.children}
     </Scrollbar>
   );

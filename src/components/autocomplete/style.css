@@ -24,15 +24,20 @@
 
 .Autocomplete-row {
   cursor: pointer;
+  padding: 5px 0;
 
   &:active {
     opacity: 0.6;
   }
 }
 
-.Autocomplete-row,
+.Autocomplete-inner {
+  padding-right: 9px;
+}
+
 .Autocomplete-drop-inner {
-  padding: 6px;
+  padding: 5px;
+  padding-top: 2px;
 }
 
 .Autocomplete-drop {

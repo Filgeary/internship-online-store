@@ -6,7 +6,7 @@ import Pagination from '@src/components/pagination';
 import Spinner from '@src/components/spinner';
 import ItemSelectable from '@src/components/item-selectable';
 
-import { useCatalog } from '../catalog';
+import { useCatalogContext } from '../catalog';
 
 type CatalogListAppendProps = {
   onItemClick: (item: TItem) => void;
@@ -16,7 +16,7 @@ type CatalogListAppendProps = {
 };
 
 function CatalogListAppend(props: CatalogListAppendProps) {
-  const { select, callbacks } = useCatalog();
+  const { select, callbacks } = useCatalogContext();
 
   const { t } = useTranslate();
 

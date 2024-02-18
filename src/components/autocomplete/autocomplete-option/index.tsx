@@ -1,18 +1,20 @@
 import './style.css';
 
 import { memo, useEffect, useRef } from 'react';
-import { TOption, useAutocomplete } from '..';
+import { TOption, useAutocompleteContext } from '..';
 import AutocompleteField from '../autocomplete-field';
 
 type OptionProps = {
   option: TOption;
   isDisabled?: boolean;
   isTitle?: boolean;
+  displayString: (option: TOption) => string;
+  indexForFocus?: number;
 };
 
 function AutocompleteOption(props: OptionProps) {
-  const { option, isDisabled, isTitle } = props;
-  const { values, helpers, callbacks, listRef, searchRef } = useAutocomplete();
+  const { option, isDisabled, isTitle, displayString, indexForFocus } = props;
+  const { values, helpers, callbacks, listRef, searchRef } = useAutocompleteContext();
 
   const optionRef = useRef<HTMLDivElement>(null);
 
@@ -36,6 +38,27 @@ function AutocompleteOption(props: OptionProps) {
     }
   }, [isActive]);
 
+  useEffect(() => {
+    const listener = (e: KeyboardEvent) => {
+      if (e.code === 'Enter') {
+        console.log('here');
+        e.preventDefault();
+        handlers.onClick();
+      }
+    };
+
+    optionRef.current?.addEventListener('keydown', listener);
+
+    return () => optionRef.current?.removeEventListener('keydown', listener);
+  }, []);
+
+  // Для React-way перемещения по стрелочкам
+  // useEffect(() => {
+  //   if (values.inFocus === indexForFocus) {
+  //     optionRef.current.focus();
+  //   }
+  // }, [values.inFocus]);
+
   return (
     <AutocompleteField
       ref={optionRef}
@@ -44,7 +67,7 @@ function AutocompleteOption(props: OptionProps) {
       onClick={handlers.onClick}
       onKeyDown={helpers.onSpaceDown(handlers.onClick)}
       code={option.code}
-      title={option.title}
+      title={displayString(option)}
     />
   );
 }

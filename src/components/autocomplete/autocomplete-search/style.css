@@ -1,6 +1,5 @@
 .AutocompleteSearch {
-  margin-bottom: 10px;
-  font-style: italic;
+  margin-bottom: 12px;
   display: flex;
   flex-direction: column;
 }
@@ -8,4 +7,6 @@
 .AutocompleteSearch-input {
   border: none;
   font: inherit;
+  font-style: italic;
+  font-size: 13px;
 }
