@@ -14,13 +14,7 @@ export interface Params {
   sort: string;
   query: string;
   category: string;
-}
-
-export interface ResponseCatalog {
-  result: {
-    count: number;
-    items: Article[]
-  }
+  madeIn: string
 }
 
 export type InitConfigCatalog = {

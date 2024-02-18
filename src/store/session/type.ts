@@ -15,37 +15,6 @@ export interface Credentials {
   password: string;
 }
 
-export interface ResponseDataSessionError {
-  error?: {
-    code: string;
-    data: {
-      issues: [{
-        accept: boolean;
-        message: string;
-        rule: string;
-      }]
-    };
-    id: string;
-    message: string;
-  },
-}
-
-interface ResponseDataSessionSuccess {
-  result?: {
-    token: string;
-    user: Profile;
-  };
-}
-
-interface ResponseDataSessionRemindSuccess {
-  result?: Profile;
-}
-
-export type ResponseDataSessionRemind = ResponseDataSessionRemindSuccess &
-  ResponseDataSessionError;
-
-export type ResponseDataSession = ResponseDataSessionSuccess & ResponseDataSessionError;
-
 export type InitConfigSession = {
   tokenHeader: "X-Token";
 };

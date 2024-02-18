@@ -1,0 +1,11 @@
+.ItemCountry-code {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #6F7EFF;
+  border-radius: 3px;
+  color: #fff;
+  min-width: 18px;
+  height: 18px;
+  font-size: 10px;
+}

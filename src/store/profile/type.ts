@@ -29,7 +29,3 @@ export interface InitialStateProfile {
   data: Profile | {};
   waiting: boolean;
 }
-
-export interface ResponseProfile {
-  result: Profile;
-}

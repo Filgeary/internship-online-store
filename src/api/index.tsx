@@ -20,19 +20,14 @@ class APIService {
 
   /**
    * HTTP запрос
-   * @param url
-   * @param method
-   * @param headers
-   * @param options
-   * @returns {Promise<{}>}
    */
-  async request<T>({
+  async request({
     url,
     method = "GET",
-    headers = {},
+    headers = {} as Headers,
     ...options
-  }: RequestArgs): Promise<ResponseApi<T>> {
-    if (!url.match(/^(http|\/\/)/)) url = this.config.baseUrl + url;
+  }: Partial<Request>) {
+    if (!url?.match(/^(http|\/\/)/)) url = this.config.baseUrl + url;
     const res = await fetch(url, {
       method,
       headers: { ...this.defaultHeaders, ...headers },

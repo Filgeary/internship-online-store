@@ -1,5 +1,5 @@
 import StoreModule from "../module";
-import { InitialStateCategories, ResponseDataCategories } from "./type";
+import { InitialStateCategories } from "./type";
 
 
 /**
@@ -26,7 +26,7 @@ class CategoriesState extends StoreModule<InitialStateCategories> {
       "Ожидание загрузки категорий"
     );
 
-    const res = await this.services.api.request<ResponseDataCategories>({
+    const res = await this.services.api.request({
       url: `/api/v1/categories?fields=_id,title,parent(_id)&limit=*`,
     });
 

@@ -6,21 +6,21 @@ import List from "@src/components/list";
 import Spinner from "@src/components/spinner";
 import SelectableItem from "@src/components/selectable-item";
 import { ItemType } from "@src/components/item-basket/type";
-import { AllStoreNames } from "@src/store/type";
+import { StoreNames } from "../catalog-filter/type";
 
-function CatalogListSelectable(props: { storeName: string }) {
+function CatalogListSelectable(props: StoreNames) {
   const store = useStore();
 
   const select = useSelector((state) => ({
-    list: state[props.storeName].list,
-    waiting: state[props.storeName].waiting,
-    selected: state[props.storeName].selected,
+    list: state[props.storeName]!.list,
+    waiting: state[props.storeName]!.waiting,
+    selected: state[props.storeName]!.selected,
   }));
 
   const callbacks = {
     onSelect: useCallback(
       (_id: string) => {
-        store.actions[props.storeName].selectItem(_id);
+        store.actions[props.storeName]!.selectItem(_id);
       },
       [store]
     ),

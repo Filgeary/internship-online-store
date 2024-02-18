@@ -2,9 +2,9 @@ import { Lang } from "@src/i18n/type";
 
 export interface SelectProps {
   options: {
-    value: Lang;
+    value: Lang | string;
     title: string;
   }[];
-  value: Lang;
-  onChange: (value: Lang) => void;
+  value: Lang | string;
+  onChange: (value: Lang & string) => void;
 }

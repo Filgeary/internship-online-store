@@ -9,9 +9,3 @@ export interface InitialStateCategories {
   list: Category[];
   waiting: boolean;
 }
-
-export interface ResponseDataCategories {
-  result: {
-    items: Category[]
-  }
-}

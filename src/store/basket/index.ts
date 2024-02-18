@@ -1,4 +1,3 @@
-import { ResponseData } from "../article/type";
 import StoreModule from "../module";
 import type { InitialStateBasket } from "./type";
 
@@ -35,7 +34,7 @@ class BasketState extends StoreModule<InitialStateBasket> {
 
     if (!exist) {
       // Поиск товара в каталоге, чтобы его добавить в корзину.
-      const res = await this.services.api.request<ResponseData>({
+      const res = await this.services.api.request({
         url: `/api/v1/articles/${_id}`,
       });
 

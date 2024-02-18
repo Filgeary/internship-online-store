@@ -18,7 +18,7 @@ export type TActions = {
   [Key in keyModules as CopiedStores<Key>]: Actions[Key];
 };
 
-export type KeysCopiedStores = keyof TActions;
+export type KeysCopiedStores = `${keyModules}_${string}`;
 
 export type TState = {
   [Key in keyModules as CopiedStores<Key>]: ReturnType<

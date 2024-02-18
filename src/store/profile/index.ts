@@ -1,5 +1,5 @@
 import StoreModule from "../module";
-import type { InitialStateProfile, ResponseProfile } from "./type";
+import type { InitialStateProfile } from "./type";
 
 /**
  * Детальная информация о пользователе
@@ -23,7 +23,7 @@ class ProfileState extends StoreModule<InitialStateProfile> {
       waiting: true,
     });
 
-    const res = await this.services.api.request<ResponseProfile>({
+    const res = await this.services.api.request({
       url: `/api/v1/users/self`,
     });
 

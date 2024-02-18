@@ -16,15 +16,10 @@ function CatalogList() {
     waiting: state.catalog.waiting,
   }));
 
-  const storeName = {
-    count: "count",
-    catalog: "catalog"
-  }
-
   const callbacks = {
     addToBasket: useCallback( async( _id: string ) => {
       store.actions.modals
-        .open(storeName.count)
+        .open('count')
         .then((count) => store.actions.basket.addToBasket(_id, Number(count)));
       }, [store])
   };
@@ -49,7 +44,7 @@ function CatalogList() {
   return (
     <Spinner active={select.waiting}>
       <List list={select.list} renderItem={renders.item}/>
-      <Paginator storeName={storeName.catalog}/>
+      <Paginator storeName={'catalog'}/>
     </Spinner>
   );
 }

@@ -1,5 +1,5 @@
 import StoreModule from "../module";
-import type { ResponseData, InitialStateArticle, Article } from "./type";
+import type { InitialStateArticle, Article } from "./type";
 
 /**
  * Детальная ифнормация о товаре для страницы товара
@@ -25,7 +25,7 @@ class ArticleState extends StoreModule<InitialStateArticle> {
     });
 
     try {
-      const res = await this.services.api.request<ResponseData>({
+      const res = await this.services.api.request({
         url: `/api/v1/articles/${id}?fields=*,madeIn(title,code),category(title)`,
       });
 

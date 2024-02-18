@@ -1,6 +1,6 @@
 import StoreModule from "../module";
 import simplifyErrors from "@src/utils/simplify-errors";
-import { Credentials, InitConfigSession, InitialStateSession, ResponseDataSession, ResponseDataSessionRemind } from "./type";
+import { Credentials, InitConfigSession, InitialStateSession } from "./type";
 
 /**
  * Сессия
@@ -32,10 +32,10 @@ class SessionState extends StoreModule<InitialStateSession, InitConfigSession> {
   async signIn(data: Credentials, onSuccess: () => void): Promise<void> {
     this.setState(this.initState(), "Авторизация");
     try {
-      const res = await this.services.api.request<ResponseDataSession>({
+      const res = await this.services.api.request({
         url: "/api/v1/users/sign",
         method: "POST",
-        body: JSON.stringify(data),
+        body: JSON.stringify(data) as any,
       });
 
       if (!res.data.error) {
@@ -105,7 +105,7 @@ class SessionState extends StoreModule<InitialStateSession, InitConfigSession> {
       // Устанавливаем токен в АПИ
       this.services.api.setHeader(this.config.tokenHeader, token);
       // Проверяем токен выбором своего профиля
-      const res = await this.services.api.request<ResponseDataSessionRemind>({
+      const res = await this.services.api.request({
         url: "/api/v1/users/self",
       });
 
@@ -132,7 +132,6 @@ class SessionState extends StoreModule<InitialStateSession, InitConfigSession> {
           },
           "Успешно вспомнили сессию"
         );
-        console.log(res.data.result);
       }
     } else {
       // Если токена не было, то сбрасываем ожидание (так как по умолчанию true)

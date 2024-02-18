@@ -6,3 +6,12 @@
 .Input_theme_big{
   width: 300px;
 }
+
+.Input_theme_search {
+  width: 100%;
+  padding: 7px 6px;
+  border: none;
+  outline: none;
+  font-size: 14px;
+  box-sizing: border-box;
+}

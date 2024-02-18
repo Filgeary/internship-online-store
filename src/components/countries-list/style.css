@@ -1,0 +1,35 @@
+.CountriesList {
+  margin: 0;
+  padding: 0;
+  max-height: 120px;
+  overflow-y: auto;
+}
+
+.CountriesList::-webkit-scrollbar {
+  width: 8px;
+}
+
+.CountriesList::-webkit-scrollbar-thumb {
+  background-color: #E5E6E9;
+  border-radius: 5px;
+}
+
+.CountriesList-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px;
+  cursor: pointer;
+  transition: .3s;
+  font-size: 15px;
+}
+
+.CountriesList-item_selected {
+  background-color: #808DFF;
+  color: #fff;
+}
+
+.CountriesList-item:hover {
+  background-color: #DBDFFF;
+  color: #000;
+}

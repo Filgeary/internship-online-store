@@ -21,9 +21,9 @@ export default function translate(
     const key = new Intl.PluralRules(lang).select(plural);
 
     if (key in result) {
-      result = result[key as keyof typeof result];
+      return result[key as keyof typeof result];
     }
   }
 
-  return typeof result === "string" ? result : text;
+  return result;
 }

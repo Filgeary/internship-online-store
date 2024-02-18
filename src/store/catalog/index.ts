@@ -1,6 +1,6 @@
 import StoreModule from "../module";
 import exclude from "@src/utils/exclude";
-import type { InitConfigCatalog, InitialStateCatalog, Params, ResponseCatalog } from "./type";
+import type { InitConfigCatalog, InitialStateCatalog, Params } from "./type";
 
 /**
  * Состояние каталога - параметры фильтра исписок товара
@@ -19,6 +19,7 @@ class CatalogState extends StoreModule<InitialStateCatalog, InitConfigCatalog> {
         sort: "order",
         query: "",
         category: "",
+        madeIn: ""
       },
       count: 0,
       selected: [],
@@ -51,6 +52,8 @@ class CatalogState extends StoreModule<InitialStateCatalog, InitConfigCatalog> {
         validParams.query = urlParams.get("query") || undefined;
       if (urlParams.has("category"))
         validParams.category = urlParams.get("category") || undefined;
+      if (urlParams.has("madeIn"))
+        validParams.madeIn = urlParams.get("madeIn") || undefined;
     }
     await this.setParams(
       { ...this.initState().params, ...validParams, ...newParams },
@@ -115,15 +118,17 @@ class CatalogState extends StoreModule<InitialStateCatalog, InitConfigCatalog> {
         sort: params.sort,
         "search[query]": params.query,
         "search[category]": params.category,
+        "search[madeIn]": params.madeIn
       },
       {
         skip: 0,
         "search[query]": "",
         "search[category]": "",
+        "search[madeIn]": ""
       }
     );
 
-    const res = await this.services.api.request<ResponseCatalog>({
+    const res = await this.services.api.request({
       url: `/api/v1/articles?${new URLSearchParams(apiParams)}`,
     });
 

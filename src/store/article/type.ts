@@ -28,7 +28,3 @@ export interface InitialStateArticle {
   data: Article,
   waiting: boolean
 }
-
-export interface ResponseData {
-  result: Article
-}

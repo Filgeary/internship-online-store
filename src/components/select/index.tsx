@@ -1,11 +1,11 @@
 import {ChangeEvent, memo} from "react";
 import type { SelectProps } from "./type";
-import './style.css';
 import { Lang } from "@src/i18n/type";
+import './style.css';
 
 function Select(props: SelectProps) {
   const onSelect = (e: ChangeEvent<HTMLSelectElement>) => {
-    props.onChange(e.target.value as Lang);
+    props.onChange(e.target.value as Lang & string);
   };
 
   return (
