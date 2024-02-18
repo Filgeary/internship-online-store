@@ -18,16 +18,16 @@ export interface IQueryParams {
 }
 
 type IReadonlyQueryParams = {
-  readonly [K in keyof IQueryParams]: IQueryParams[K]
+  [K in keyof IQueryParams]: IQueryParams[K]
 }
 
 export type CatalogItemResponse = Pick<CatalogItem, '_id' | 'price' | 'title'>
 
 export interface CatalogState {
-  readonly list: CatalogItem[],
-  readonly params: IReadonlyQueryParams,
-  readonly count: number,
-  readonly waiting: boolean
+  list: CatalogItem[],
+  params: IReadonlyQueryParams,
+  count: number,
+  waiting: boolean
 }
 
 export type CatalogConfig = {

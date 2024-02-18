@@ -27,11 +27,11 @@ type ObjectTranslations<T> = { [P in keyof T as T[P] extends object ? P : never]
 //Ключи, по которым возвращается перевод
 export type StringTranslateKey = keyof StringTranslations<Translations[LangCode]>
 //Ключи, по которым возвращается объект плюрализации
-export type ObjectTranslateKey = keyof ObjectTranslations<Translations[LangCode]>
+export type PluralTranslateKey = keyof ObjectTranslations<Translations[LangCode]>
 
 //Объекты плюрализации по языкам
 export type PluralObjects = {
-  [K in keyof Translations]: Translations[K][ObjectTranslateKey]
+  [K in keyof Translations]: Translations[K][PluralTranslateKey]
 }
 
 //Доступные языки

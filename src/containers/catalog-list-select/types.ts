@@ -1,7 +1,7 @@
-import type { CopiedModuleName } from "@src/store/types"
+import { CreateStoreModuleName } from "@src/store/types"
 
 export type CatalogListSelectProps = {
-  catalogModuleName: CopiedModuleName<'catalog'> | 'catalog',
+  catalogModuleName: CreateStoreModuleName<'catalog'>
   selectedItems: string[],
   toggleSelect: (itemId: string) => void
 }

@@ -1,7 +1,9 @@
 import codeGenerator from '@src/utils/code-generator.js';
 import * as modules from './exports';
 import type Services from '@src/services';
-import type { BasicModuleName, State, Actions, CopiedModuleName, StoreConfig, ModuleName } from './types';
+import type { StoreConfig, State, Actions, Modules, ModuleNames } from './types';
+
+
 
 /**
  * Хранилище состояния приложения
@@ -26,16 +28,16 @@ class Store {
     this.config = config;
     this.listeners = []; // Слушатели изменений состояния
     this.generateId = codeGenerator(1)
-    //@ts-ignore
-    this.actions = {}
-    //@ts-ignore
-    this.state = initState || {}
-    const modulesKeys = Object.keys(modules) as BasicModuleName[]  
-    const create = <Name extends BasicModuleName>(name: Name) => {
-      this.actions[name] = new (modules[name])(
+    this.actions = {} as Actions
+    this.state = (initState || {}) as State
+    const modulesKeys = Object.keys(modules) as (keyof Modules)[]  
+    const create = <Name extends keyof Modules>(name: Name) => {
+      const config = this.config.modules[name]
+      this.actions[name] = new modules[name] (
         this, 
         name, 
-        this.config.modules[name]
+        //@ts-ignore
+        config
       ) as Actions[Name]
       if (initState?.[name]) {
         this.state[name] = initState[name]!
@@ -44,7 +46,7 @@ class Store {
       }
     }
     for (const name of modulesKeys) {
-      create(name as BasicModuleName)
+      create(name)
     }
   }
 
@@ -102,22 +104,26 @@ class Store {
     for (const listener of this.listeners) listener(this.getState());
   }
 
-  public makeModule<T extends BasicModuleName>(basicModuleName: T, moduleConfig?: Partial<StoreConfig['modules'][T]>): CopiedModuleName<T>{
-    const newModuleName = `${basicModuleName}_${this.generateId()}` as CopiedModuleName<T>;
+  public makeModule<T extends keyof Modules>(
+      basicModuleName: T, 
+      moduleConfig?: Partial<StoreConfig['modules'][T]>  
+  ): `${T}_${number}`{
+    const newModuleName = `${basicModuleName}_${this.generateId()}` as `${T}_${number}`;
     this.actions[newModuleName] = new modules[basicModuleName](
       this, 
       newModuleName, 
+      //@ts-ignore
       {
         ...this.config?.modules[basicModuleName],  
         ...moduleConfig
-      } || {}
+      }
     ) as Actions[`${T}_${number}`];
 
     this.state[newModuleName] = this.actions[newModuleName].initState() as State[`${T}_${number}`];
     return newModuleName 
   }
 
-  public deleteModule(moduleName: CopiedModuleName<BasicModuleName>): void {
+  public deleteModule(moduleName: `${keyof Modules}_${number}`): void {
     delete this.actions[moduleName]
     delete this.state[moduleName]
   }

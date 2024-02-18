@@ -1,10 +1,10 @@
 import StoreModule from "../module";
-import type { CategoriesState, ICategoryResponse } from "./types";
+import type { CategoriesConfig, CategoriesState, ICategoryResponse } from "./types";
 
 /**
  * Список категорий
  */
-class CategoriesModule extends StoreModule<'categories'> {    
+class CategoriesModule extends StoreModule<CategoriesState, CategoriesConfig> {    
   /**
    * Начальное состояние
    * @return {Object}

@@ -4,6 +4,6 @@ export enum Locales {
 }
 
 export interface LocaleState {
-  readonly lang: Locales
+  lang: Locales
 }
 export type LocaleConfig = {}

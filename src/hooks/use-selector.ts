@@ -2,10 +2,11 @@ import {useLayoutEffect, useMemo, useState} from "react";
 import shallowequal from 'shallowequal';
 import useStore from "./use-store";
 import type Store from "@src/store";
+import { State } from "@src/store/types";
 
 interface UseSelector {
   <Selected extends object>(
-    selectorFunc: (state: ReturnType<Store['getState']>) => Selected
+    selectorFunc: (state: State) => Selected
   ): Selected;
 }
 // /**

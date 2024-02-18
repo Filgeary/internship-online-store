@@ -1,8 +1,8 @@
 import type { Article } from "@src/types"
 
 export interface ArticleState {
-  readonly data: Partial<Article>
-  readonly waiting: boolean
+  data: Partial<Article>
+  waiting: boolean
 }
 
 export type ArticleResponse = Pick<

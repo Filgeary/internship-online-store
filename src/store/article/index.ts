@@ -1,10 +1,10 @@
 import StoreModule from "../module";
-import type { ArticleResponse, ArticleState } from "./types";
+import type { ArticleConfig, ArticleResponse, ArticleState } from "./types";
 
 /**
  * Детальная ифнормация о товаре для страницы товара
  */
-class ArticleModule extends StoreModule<'article'> {
+class ArticleModule extends StoreModule<ArticleState, ArticleConfig> {
   initState(): ArticleState {
     return {
       data: {},

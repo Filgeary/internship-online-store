@@ -1,12 +1,12 @@
 import StoreModule from "../module";
 import exclude from "@src/utils/exclude";
 import { ESort}  from "./types";
-import type { CatalogItemResponse, CatalogState, IQueryParams, Sort } from "./types";
+import type { CatalogConfig, CatalogItemResponse, CatalogState, IQueryParams, Sort } from "./types";
 
 /**
  * Состояние каталога - параметры фильтра исписок товара
  */
-class CatalogModule extends StoreModule<'catalog'> {
+class CatalogModule extends StoreModule<CatalogState, CatalogConfig> {
   // /**
   //  * Начальное состояние
   //  * @return {Object}

@@ -1,15 +1,15 @@
 import codeGenerator from "@src/utils/code-generator";
 import StoreModule from "../module";
 import type Store from "..";
-import { ModalCodes, type ModalsState, type Modals} from "./types";
-import { StoreConfig } from "../types";
+import { ModalCodes, type ModalsState, type Modals, ModalsConfig} from "./types";
+import { ModuleNames, StoreConfig } from "../types";
 
-class ModalsModule extends StoreModule<'modals'> {
+class ModalsModule extends StoreModule<ModalsState, ModalsConfig> {
   protected generateId: Function
   types: {
     [key in keyof typeof ModalCodes]: typeof ModalCodes[key]
   }
-  constructor(...params: [Store, 'modals', StoreConfig['modules']['modals']]) {
+  constructor(...params: [Store, ModuleNames, ModalsConfig]) {
     super(...params);
     this.generateId = codeGenerator(1);
     this.types = {

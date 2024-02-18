@@ -1,11 +1,11 @@
 import { BasketItem } from "@src/types";
 import StoreModule from "../module";
-import type { BasketState, ItemResponse } from "./types";
+import type { BasketConfig, BasketState, ItemResponse } from "./types";
 
 /**
  * Покупательская корзина
  */
-class BasketModule extends StoreModule<'basket'> {
+class BasketModule extends StoreModule<BasketState, BasketConfig> {
   initState(): BasketState {
     return {
       list: [],

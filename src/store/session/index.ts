@@ -1,10 +1,10 @@
 import StoreModule from "../module";
 import simplifyErrors from "@src/utils/simplify-errors";
-import { SessionState, IUser, RemindResponse } from "./types";
+import { SessionState, IUser, RemindResponse, SessionConfig } from "./types";
 /**
  * Сессия
  */
-class SessionModule extends StoreModule<'session'> {
+class SessionModule extends StoreModule<SessionState, SessionConfig> {
   /**
    * Начальное состояние
    * @return {Object}

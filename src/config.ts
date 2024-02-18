@@ -26,12 +26,12 @@ const config: Config = {
       catalog: {
         urlEditing: true
       },
-      article: undefined,
-      basket: undefined,
-      categories: undefined,
-      locale: undefined,
-      modals: undefined,
-      profile: undefined
+      article: {},
+      basket: {},
+      categories: {},
+      locale: {},
+      modals: {},
+      profile: {}
     }
   },
   api: {

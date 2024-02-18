@@ -1,10 +1,10 @@
 import StoreModule from "../module";
-import type { ProfileDataResponse, ProfileState } from "./types";
+import type { ProfileConfig, ProfileDataResponse, ProfileState } from "./types";
 
 /**
  * Детальная информация о пользователе
  */
-class ProfileModule extends StoreModule<'profile'> {
+class ProfileModule extends StoreModule<ProfileState, ProfileConfig> {
   initState(): ProfileState {
     return {
       data: {},

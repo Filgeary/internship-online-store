@@ -1,12 +1,12 @@
 import type Services from "@src/services";
 import type Store from ".";
-import type { ExtractBaseName, ModuleName, State, StoreConfig } from "./types";
+import type { ModuleNames } from "./types";
 
 /**
  * Базовый класс для модулей хранилища
  * Для группировки действий над внешним состоянием
  */
-class StoreModule<T extends ModuleName> {
+class StoreModule<State extends object, Config extends object> {
 
   /**
    * @param store {Store}
@@ -14,27 +14,26 @@ class StoreModule<T extends ModuleName> {
    * @param [config] {Object}
    */
   protected store: Store
-  protected config: StoreConfig['modules'][ExtractBaseName<T>]
+  config: Config
   protected services: Services
-  protected name: T
+  protected name: ModuleNames
 
-  constructor(store: Store, name: T, config: StoreConfig['modules'][ExtractBaseName<T>]) {
+  constructor(store: Store, name: ModuleNames, config: Config) {
     this.store = store;
     this.name = name;
     this.config = config;
-    /** @type {Services} */
     this.services = store.services;
   }
 
-  protected initState() {
-    return {}
+  protected initState(): State {
+    return {} as State
   }
 
-  protected getState(): State[T]  {
-    return this.store.getState()[this.name];
+  getState(): State  {
+    return this.store.getState()[this.name] as State
   }
 
-  protected setState(newState: State[T], description: string = 'setState') {
+  protected setState(newState: State, description: string = 'setState') {
     this.store.setState({
       ...this.store.getState(),
       [this.name]: newState
