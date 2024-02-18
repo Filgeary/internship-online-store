@@ -4,13 +4,9 @@
 }
 
 .Autocomplete_active {
-  /* box-shadow: 0 8px 8px 0 rgba(60, 60, 63, 0.25); */
-
   & .Autocomplete-drop {
-    /* display: block; */
     opacity: 1;
     visibility: visible;
-    /* z-index: 10; */
   }
 
   & .Autocomplete-drop-inner {
@@ -19,6 +15,14 @@
 
   & .Autocomplete-marker {
     rotate: 180deg;
+  }
+}
+
+.Autocomplete_smooth {
+  & .Autocomplete-drop {
+    transition:
+      visibility ease 0.15s,
+      opacity ease 0.15s;
   }
 }
 
@@ -41,13 +45,8 @@
 }
 
 .Autocomplete-drop {
-  /* display: none; */
   opacity: 0;
   visibility: hidden;
-  /* transition:
-    visibility ease 0.15s,
-    opacity ease 0.15s; */
-  /* z-index: -10; */
   position: relative;
 }
 

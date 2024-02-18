@@ -11,6 +11,7 @@ import Arrow from '@src/assets/images/arrow.svg';
 
 import './style.css';
 import { cn as bem } from '@bem-react/classname';
+import { Scrollbar } from 'react-scrollbars-custom';
 
 import useOnClickOutside from '@src/hooks/use-on-click-outside';
 
@@ -25,6 +26,7 @@ type AutocompleteProps = {
   onSelected: (option: TOption) => void;
   options: Array<TOption>;
   value: string;
+  smooth?: boolean;
 };
 
 export type TOption = {
@@ -37,7 +39,8 @@ type TAutocompleteContext = {
   values: Record<string, any>;
   callbacks: Record<string, any>;
   helpers: Record<string, any>;
-  listRef: React.RefObject<HTMLDivElement>;
+  // listRef: React.LegacyRef<Scrollbar> & React.LegacyRef<HTMLDivElement>;
+  listRef: React.RefObject<Scrollbar>;
   searchRef: React.RefObject<HTMLInputElement>;
 };
 
@@ -53,7 +56,7 @@ export const useAutocompleteContext = () => {
 };
 
 function Autocomplete(props: AutocompleteProps) {
-  const { children, placeholder, onSelected, options, value } = props;
+  const { children, placeholder, onSelected, options, value, smooth = false } = props;
 
   const cn = bem('Autocomplete');
   const uid = useMemo(() => window.crypto.randomUUID(), []);
@@ -63,7 +66,7 @@ function Autocomplete(props: AutocompleteProps) {
   const [inFocus, setInFocus] = useState<number>(null);
 
   const wrapperRef = useRef<HTMLDivElement>(null);
-  const listRef = useRef<HTMLDivElement>(null);
+  const listRef = useRef<Scrollbar>(null);
   const searchRef = useRef<HTMLInputElement>(null);
 
   const callbacks = {
@@ -159,7 +162,7 @@ function Autocomplete(props: AutocompleteProps) {
   });
 
   return (
-    <div ref={wrapperRef} className={cn({ active: isOpen })}>
+    <div ref={wrapperRef} className={cn({ active: isOpen, smooth })}>
       <div
         onClick={callbacks.toggleOpen}
         onKeyDown={helpers.onSpaceDown(callbacks.toggleOpen)}
@@ -184,15 +187,11 @@ function Autocomplete(props: AutocompleteProps) {
 
       {/* Выпадашка */}
       <div className={cn('drop')} id={uid}>
-        {isOpen && (
-          <div className={cn('drop-inner')}>
-            <AutocompleteContext.Provider
-              value={{ values, helpers, callbacks, listRef, searchRef }}
-            >
-              {children}
-            </AutocompleteContext.Provider>
-          </div>
-        )}
+        <div className={cn('drop-inner')}>
+          <AutocompleteContext.Provider value={{ values, helpers, callbacks, listRef, searchRef }}>
+            {children}
+          </AutocompleteContext.Provider>
+        </div>
       </div>
     </div>
   );

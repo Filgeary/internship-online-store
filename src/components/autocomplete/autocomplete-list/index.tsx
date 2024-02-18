@@ -1,9 +1,9 @@
+import React, { LegacyRef, memo } from 'react';
 import './style.css';
 
 import { Scrollbar } from 'react-scrollbars-custom';
 import { cn as bem } from '@bem-react/classname';
 import { useAutocompleteContext } from '..';
-import React, { memo } from 'react';
 
 type ListProps = {
   children: React.ReactNode;
@@ -17,8 +17,7 @@ function AutocompleteList(props: ListProps) {
   return (
     <Scrollbar
       className={cn('col')}
-      //@ts-ignore
-      ref={listRef}
+      ref={listRef as LegacyRef<Scrollbar> & LegacyRef<HTMLDivElement>}
       translateContentSizeYToHolder
       thumbYProps={{
         renderer: (props) => {

@@ -12,11 +12,13 @@ type SearchProps = {
 function AutocompleteSearch(props: SearchProps) {
   const cn = bem('AutocompleteSearch');
 
-  const { values, callbacks, searchRef } = useAutocompleteContext();
+  const { values, callbacks, searchRef, listRef } = useAutocompleteContext();
 
   const handlers = {
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
       const value = e.target.value;
+      console.log(listRef);
+      listRef.current?.scrollToTop();
 
       callbacks.setSearch(value);
       props.onChange(value);

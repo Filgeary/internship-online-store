@@ -34,6 +34,7 @@ function CatalogCountry() {
       value={select.country}
       onSelected={(country) => callbacks.onCountrySelected(country._id)}
       options={options.countriesDefault}
+      smooth={true}
     >
       <Autocomplete.Search onChange={helpers.optionsBuilder} placeholder='Поиск' />
       <Autocomplete.List>
