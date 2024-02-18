@@ -3,6 +3,10 @@ export type TModalsState = {
   lastOpened: string | null;
 };
 
+export type TModalsConfig = {
+  onlyUnique: boolean;
+};
+
 export type TOpenedModal = {
   name: TModalsNames;
   resolve: (...value: any[]) => void;

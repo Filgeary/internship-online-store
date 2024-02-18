@@ -12,7 +12,9 @@ export type TCountries = {
   isDeleted: boolean;
 };
 
-export type TCountriesStoreState = {
+export type TCountriesState = {
   list: TCountries[];
   waiting: boolean;
 };
+
+export type TCountriesConfig = {};

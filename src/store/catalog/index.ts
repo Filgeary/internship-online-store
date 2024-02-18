@@ -1,12 +1,13 @@
 import StoreModule from '../module';
 import exclude from '@src/utils/exclude';
-import { TCatalogState } from './types';
-import { TConfigModules } from '@src/config';
+import { TCatalogConfig, TCatalogState } from './types';
 
 /**
  * Состояние каталога - параметры фильтра исписок товара
  */
-class CatalogState extends StoreModule<TCatalogState, TConfigModules['catalog']> {
+class CatalogState extends StoreModule<TCatalogState, TCatalogConfig> {
+  readonly config: TCatalogConfig;
+
   /**
    * Начальное состояние
    * @return {Object}

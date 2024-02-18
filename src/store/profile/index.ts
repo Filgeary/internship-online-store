@@ -1,14 +1,12 @@
-import { TConfigModules } from '@src/config';
 import StoreModule from '../module';
-import { TProfileState } from './types';
+import { TProfileState, TProfileConfig } from './types';
 
 /**
  * Детальная информация о пользователе
  */
-class ProfileState extends StoreModule<
-  TProfileState,
-  TConfigModules['profile']
-> {
+class ProfileState extends StoreModule<TProfileState, TProfileConfig> {
+  readonly config: TProfileConfig;
+
   initState(): TProfileState {
     return {
       data: {},

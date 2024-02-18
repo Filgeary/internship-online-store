@@ -5,3 +5,7 @@ export type TSessionState = {
   waiting: boolean;
   exists: boolean;
 };
+
+export type TSessionConfig = {
+  tokenHeader: string;
+};

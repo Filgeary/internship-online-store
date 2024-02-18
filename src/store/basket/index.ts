@@ -1,11 +1,12 @@
-import { TConfigModules } from '@src/config';
 import StoreModule from '../module';
-import { TBasketActive, TBasketArticle, TBasketState } from './types';
+import { TBasketActive, TBasketArticle, TBasketConfig, TBasketState } from './types';
 
 /**
  * Покупательская корзина
  */
-class BasketState extends StoreModule<TBasketState, TConfigModules['basket']> {
+class BasketState extends StoreModule<TBasketState, TBasketConfig> {
+  readonly config: TBasketConfig;
+
   initState(): TBasketState {
     return {
       list: [],

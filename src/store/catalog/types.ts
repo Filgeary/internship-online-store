@@ -13,3 +13,8 @@ export type TCatalogState = {
   count: number;
   waiting: boolean;
 };
+
+export type TCatalogConfig = {
+  ignoreUrlOnInit: boolean;
+  ignoreUrl: boolean;
+};

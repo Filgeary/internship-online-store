@@ -3,6 +3,8 @@ export type TCategoriesState = {
   waiting: boolean;
 };
 
+export type TCategoriesConfig = {};
+
 export type TCategory = {
   _id: string;
   title: string;

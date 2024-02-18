@@ -1,15 +1,13 @@
 import StoreModule from '../module';
 import simplifyErrors from '@src/utils/simplify-errors';
-import { TSessionState } from './types';
-import { TConfigModules } from '@src/config';
+import { TSessionState, TSessionConfig } from './types';
 
 /**
  * Сессия
  */
-class SessionState extends StoreModule<
-  TSessionState,
-  TConfigModules['session']
-> {
+class SessionState extends StoreModule<TSessionState, TSessionConfig> {
+  readonly config: TSessionConfig;
+
   /**
    * Начальное состояние
    * @return {Object}
@@ -30,10 +28,7 @@ class SessionState extends StoreModule<
    * @param onSuccess
    * @returns {Promise<void>}
    */
-  async signIn(
-    data: { login: string; password: string },
-    onSuccess?: () => void
-  ): Promise<void> {
+  async signIn(data: { login: string; password: string }, onSuccess?: () => void): Promise<void> {
     this.setState(this.initState(), 'Авторизация');
     try {
       const res = await this.services.api.request<{
@@ -61,10 +56,7 @@ class SessionState extends StoreModule<
         window.localStorage.setItem('token', res.data.result.token);
 
         // Устанавливаем токен в АПИ
-        this.services.api.setHeader(
-          this.config.tokenHeader,
-          res.data.result.token
-        );
+        this.services.api.setHeader(this.config.tokenHeader, res.data.result.token);
 
         if (onSuccess) onSuccess();
       } else {

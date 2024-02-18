@@ -1,8 +1,10 @@
 import StoreModule from '../module';
-import { TCountries, TCountriesStoreState } from './types';
+import { TCountries, TCountriesConfig, TCountriesState } from './types';
 
-class CountriesStore extends StoreModule<TCountriesStoreState, any> {
-  initState(): TCountriesStoreState {
+class CountriesStore extends StoreModule<TCountriesState, TCountriesConfig> {
+  readonly config: TCountriesConfig;
+
+  initState(): TCountriesState {
     return {
       list: [],
       waiting: false,

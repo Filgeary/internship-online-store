@@ -1,14 +1,12 @@
-import { TConfigModules } from '@src/config';
 import StoreModule from '../module';
-import { TArticleState } from './types';
+import { TArticleState, TArticleConfig } from './types';
 
 /**
  * Детальная ифнормация о товаре для страницы товара
  */
-class ArticleState extends StoreModule<
-  TArticleState,
-  TConfigModules['article']
-> {
+class ArticleState extends StoreModule<TArticleState, TArticleConfig> {
+  readonly config: TArticleConfig;
+
   initState(): TArticleState {
     return {
       data: {},

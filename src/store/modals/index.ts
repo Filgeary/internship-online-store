@@ -1,10 +1,9 @@
 import StoreModule from '../module';
-import generateHash from '@src/utils/generate-hash';
+import { TMapOfOpened, TModalsConfig, TModalsState } from './types';
 
-import { TMapOfOpened, TModalsState } from './types';
-import { TConfigModules } from '@src/config';
+class ModalsState extends StoreModule<TModalsState, TModalsConfig> {
+  readonly config: TModalsConfig;
 
-class ModalsState extends StoreModule<TModalsState, TConfigModules['modals']> {
   initState(): TModalsState {
     return {
       mapOfOpened: {} as TMapOfOpened, // Для быстрого поиска
@@ -16,9 +15,7 @@ class ModalsState extends StoreModule<TModalsState, TConfigModules['modals']> {
    * Открыть модалку
    * @param name {String}
    */
-  open: <T>(name: TModalsNames) => Promise<T> | undefined = (
-    name: TModalsNames
-  ) => {
+  open: <T>(name: TModalsNames) => Promise<T> | undefined = (name: TModalsNames) => {
     if (this.config.onlyUnique && this.getState().mapOfOpened[name]) return;
     const id = self.crypto.randomUUID();
 
@@ -89,12 +86,7 @@ class ModalsState extends StoreModule<TModalsState, TConfigModules['modals']> {
    * @param isSuccess {Boolean} Resolve / Reject при закрытии
    * @param fromEnd {Boolean} Начинать поиск с конца
    */
-  closeByName(
-    name: string,
-    data: any,
-    isSuccess: boolean = true,
-    fromEnd: boolean = true
-  ) {
+  closeByName(name: string, data: any, isSuccess: boolean = true, fromEnd: boolean = true) {
     const newMapOfOpened = { ...this.getState().mapOfOpened };
     const arrOfIds = Object.keys(this.getState().mapOfOpened);
 
