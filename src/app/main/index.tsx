@@ -10,11 +10,8 @@ import { CatalogFilter } from '@src/containers/hoc/with-catalog-filter'
 import CatalogList from "@src/containers/catalog-list"
 import LocaleSelect from "@src/containers/locale-select"
 import TopHead from "@src/containers/top-head"
-import translate from '@src/i18n/additional_translation'
 
 function Main() {
-
-  translate('en', 'basket.open')
 
   const store = useStore();
 
@@ -22,6 +19,7 @@ function Main() {
     await Promise.all([
       store.actions.catalog.initParams(),
       store.actions.categories.load(),
+      store.actions.countries.load(),
     ]);
   }, [], true);
 

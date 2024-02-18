@@ -7,6 +7,7 @@ import Input from "@src/components/input"
 import SideLayout from "@src/components/side-layout"
 import treeToList from "@src/utils/tree-to-list"
 import listToTree from "@src/utils/list-to-tree"
+import SelectCustom from "@src/containers/select-custom"
 import { StoreState } from "@src/store/types"
 
 function CatalogFilter() {
@@ -55,6 +56,7 @@ function CatalogFilter() {
       <Input value={select.query} onChange={callbacks.onSearch} placeholder={'Поиск'}
              delay={1000}/>
       <button onClick={callbacks.onReset}>{t('filter.reset')}</button>
+      <SelectCustom/>
     </SideLayout>
   )
 }

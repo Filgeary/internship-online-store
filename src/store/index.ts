@@ -33,6 +33,7 @@ class Store {
      * session: SessionState,
      * profile: ProfileState,
      * catalog-modal: CatalogModalState
+     * countries
      * }} */
     this.actions = {} as Actions;
     const keys = Object.keys(modules) as IKeysModules[];

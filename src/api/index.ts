@@ -39,7 +39,7 @@ class APIService {
       headers: { ...this.defaultHeaders, ...headers },
       ...options,
     });
-    return { data: await res.json(), status: res.status, headers: res.headers };
+    return { data: await res.json() as T, status: res.status, headers: res.headers as any };
   }
 
   /**

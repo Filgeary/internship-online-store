@@ -6,12 +6,13 @@ interface SideLayoutProps {
   children: ReactNode
   side?: 'start' | 'end' | 'between'
   padding?: 'small' | 'medium'
+  align?: 'start' | 'end'
 }
 
-const SideLayout: FC<SideLayoutProps> = ({ children, side, padding }) => {
+const SideLayout: FC<SideLayoutProps> = ({ children, side, padding, align }) => {
   const cn = bem('SideLayout');
   return (
-    <div className={cn({side, padding})}>
+    <div className={cn({side, padding, align})}>
       {React.Children.map(children, (child, index) => (
         <div key={index} className={cn('item')}>{child}</div>
       ))}

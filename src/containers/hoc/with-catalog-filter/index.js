@@ -1,20 +1,24 @@
-import React, { useCallback, useMemo } from 'react';
-import useSelector from "@src/hooks/use-selector";
-import useTranslate from "@src/hooks/use-translate";
-import SideLayout from "@src/components/side-layout";
-import Select from "@src/components/select";
-import Input from "@src/components/input";
-import useStore from "@src/hooks/use-store";
-import treeToList from "@src/utils/tree-to-list";
-import listToTree from "@src/utils/list-to-tree";
+import React, { useCallback, useMemo } from 'react'
+import useSelector from "@src/hooks/use-selector"
+import useTranslate from "@src/hooks/use-translate"
+import SideLayout from "@src/components/side-layout"
+import Select from "@src/components/select"
+import Input from "@src/components/input"
+import useStore from "@src/hooks/use-store"
+import treeToList from "@src/utils/tree-to-list"
+import listToTree from "@src/utils/list-to-tree"
+import SelectCustom from "@src/containers/select-custom"
 
 const CatalogFilterContent = ({ sort, query, category, onSort, onSearch, onReset, onCategory, options, t }) => {
     return (
-      <SideLayout padding='medium'>
-        <Select options={options.categories} value={category} onChange={onCategory}/>
-        <Select options={options.sort} value={sort} onChange={onSort}/>
-        <Input value={query} onChange={onSearch} placeholder={'Поиск'} delay={1000}/>
-        <button onClick={onReset}>{t('filter.reset')}</button>
+      <SideLayout align='start'>
+        <SelectCustom/>
+        <SideLayout padding='medium'>
+          <Select options={options.categories} value={category} onChange={onCategory}/>
+          <Select options={options.sort} value={sort} onChange={onSort}/>
+          <Input value={query} onChange={onSearch} placeholder={'Поиск'} delay={1000}/>
+          <button onClick={onReset}>{t('filter.reset')}</button>
+        </SideLayout>
       </SideLayout>
     );
   };

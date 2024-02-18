@@ -31,3 +31,11 @@
 .SideLayout-item {
   margin: 0 5px;
 }
+
+.SideLayout_align_start {
+  align-items: flex-start;
+}
+
+.SideLayout_align_end {
+  align-items: flex-end;
+}
