@@ -9,6 +9,7 @@ function CatalogCountry() {
   const helpers = {
     optionsBuilder: (search: string) => {
       setSearch(search);
+
       return select.countries.filter((option: { _id: string; code: string; title: string }) => {
         return [option.code, option.title].some((val) =>
           val.toLowerCase().includes(search.toLowerCase())
@@ -43,7 +44,7 @@ function CatalogCountry() {
             key={option._id}
             option={option}
             displayString={(option) => option.title}
-            indexForFocus={index}
+            indexForFocus={index} // Для фокуса через стейт
           />
         ))}
       </Autocomplete.List>

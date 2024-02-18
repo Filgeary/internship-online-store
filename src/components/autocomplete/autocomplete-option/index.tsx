@@ -58,29 +58,27 @@ function AutocompleteOption(props: OptionProps) {
     return () => optionRef.current?.removeEventListener('keydown', listener);
   }, []);
 
-  // useEffect(() => {
-  //   if (!firstOptionRef.current) {
-  //     //@ts-ignore
-  //     firstOptionRef.current = optionRef.current;
-  //   }
-
-  //   return () => {
-  //     //@ts-ignore
-  //     firstOptionRef.current = null;
-  //   };
-  // }, []);
-
-  // Для варианта через рефы
   useEffect(() => {
-    console.log(optionRef.current);
-    const index = allOptionsRefs.current.length;
-    allOptionsRefs.current.push(optionRef.current);
+    if (!firstOptionRef.current) {
+      firstOptionRef.current = optionRef.current;
+    }
 
     return () => {
-      // allOptionsRefs.current.splice(index, 1);
-      delete allOptionsRefs.current[index];
+      firstOptionRef.current = null;
     };
-  }, [values.isOpen]);
+  }, [values.search]);
+
+  // Для варианта через рефы
+  // useEffect(() => {
+  //   console.log(optionRef.current);
+  //   const index = allOptionsRefs.current.length;
+  //   allOptionsRefs.current.push(optionRef.current);
+
+  //   return () => {
+  //     // allOptionsRefs.current.splice(index, 1);
+  //     delete allOptionsRefs.current[index];
+  //   };
+  // }, [values.isOpen]);
 
   // Для React-way перемещения по стрелочкам
   // useEffect(() => {

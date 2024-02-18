@@ -3,7 +3,6 @@ import React, {
   memo,
   useContext,
   useEffect,
-  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -40,11 +39,10 @@ type TAutocompleteContext = {
   values: Record<string, any>;
   callbacks: Record<string, any>;
   helpers: Record<string, any>;
-  // listRef: React.LegacyRef<Scrollbar> & React.LegacyRef<HTMLDivElement>;
   listRef: React.RefObject<Scrollbar>;
   searchRef: React.RefObject<HTMLInputElement>;
   allOptionsRefs: React.RefObject<HTMLDivElement[]>;
-  firstOptionRef: React.RefObject<HTMLDivElement | null>;
+  firstOptionRef: React.MutableRefObject<HTMLDivElement | null>;
 };
 
 export const AutocompleteContext = createContext<TAutocompleteContext>(null);
@@ -120,8 +118,6 @@ function Autocomplete(props: AutocompleteProps) {
     // let index = 0; Для варианта через рефы
 
     const listener = (e: KeyboardEvent) => {
-      console.log('->', allOptionsRefs.current);
-      allOptionsRefs.current = allOptionsRefs.current.filter(Boolean);
       // Более оптимизированный подход (список не ререндерится)
       if (e.code === 'Tab') return;
       if (e.code.startsWith('Arrow')) e.preventDefault();
@@ -133,8 +129,7 @@ function Autocomplete(props: AutocompleteProps) {
             nextElement = nextElement.nextElementSibling as HTMLElement;
           }
 
-          console.log('@', allOptionsRefs.current);
-          if (!nextElement) allOptionsRefs.current[0].focus();
+          if (!nextElement) firstOptionRef.current.focus();
           else nextElement?.focus();
 
           break;
