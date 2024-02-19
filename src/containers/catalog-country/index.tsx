@@ -34,31 +34,45 @@ function CatalogCountry() {
 
   const handlers = {
     onOpen: () => {
-      if (select.countries.length <= 1) {
-        store.actions.countries.load();
-      }
+      // if (select.countries.length === select.country.length) {
+      // }
+      store.actions.countries.load();
     },
 
     onClose: (ids: string[]) => {
-      console.log('Выпадашка закрыта:', ids);
+      if (select.country.toString() === ids.toString()) return;
+
+      if (ids.length === 1) {
+        callbacks.onCountrySelected(ids[0]);
+        return;
+      }
+
+      callbacks.onManyCountriesSelected(ids);
     },
   };
 
   useEffect(() => {
     if (select.country && select.countries.length === 0) {
+      if (Array.isArray(select.country)) {
+        store.actions.countries.loadManyByIds(select.country);
+        return;
+      }
+
       store.actions.countries.loadById(select.country);
     }
   }, [select.country]);
 
-  useEffect(() => {
-    store.actions.countries.load();
-  }, []);
+  // useEffect(() => {
+  //   store.actions.countries.load();
+  // }, []);
 
   return (
     <Autocomplete.Root
-      // value={['65817be05c295a2ff2fcc5e7', '65817be05c295a2ff2fcc5e9']}
       value={select.country}
-      onSelected={(country) => callbacks.onCountrySelected(country._id)}
+      isMultiple={false}
+      // isMultiple={true}
+      // onSelected={(country) => callbacks.onCountrySelected(country._id)}
+      // onSelected={(country) => alert(JSON.stringify(country))}
       options={options.countriesDefault}
       smooth={true}
       onOpen={handlers.onOpen}
@@ -69,12 +83,11 @@ function CatalogCountry() {
     >
       <Autocomplete.Search onChange={helpers.optionsBuilder} placeholder='Поиск' />
       <Autocomplete.List>
-        {options.countriesInAction.map((option, index) => (
+        {options.countriesInAction.map((option) => (
           <Autocomplete.Option
             key={option._id}
             option={option}
             displayString={(option) => option.title}
-            indexForFocus={index} // Для фокуса через стейт
           />
         ))}
       </Autocomplete.List>

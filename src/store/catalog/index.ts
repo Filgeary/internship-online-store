@@ -21,7 +21,7 @@ class CatalogState extends StoreModule<TCatalogState, TCatalogConfig> {
         sort: 'order',
         query: '',
         category: '',
-        country: '',
+        countries: '',
       },
       count: 0,
       waiting: false,
@@ -44,7 +44,10 @@ class CatalogState extends StoreModule<TCatalogState, TCatalogConfig> {
       if (urlParams.has('sort')) validParams.sort = urlParams.get('sort');
       if (urlParams.has('query')) validParams.query = urlParams.get('query');
       if (urlParams.has('category')) validParams.category = urlParams.get('category');
-      if (urlParams.has('country')) validParams.country = urlParams.get('country');
+      if (urlParams.has('countries')) {
+        const countries = urlParams.get('countries').split(',');
+        validParams.countries = countries.length > 1 ? countries : countries[0];
+      }
     }
     await this.setParams({ ...this.initState().params, ...validParams, ...newParams }, true);
   }
@@ -112,8 +115,10 @@ class CatalogState extends StoreModule<TCatalogState, TCatalogConfig> {
       }
     );
 
-    if (params.country) {
-      apiParams['search[madeIn]'] = params.country;
+    if (params.countries) {
+      apiParams['search[madeIn]'] = Array.isArray(params.countries)
+        ? params.countries.join('|')
+        : params.countries;
     }
 
     try {

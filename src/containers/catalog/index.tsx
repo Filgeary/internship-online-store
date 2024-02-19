@@ -34,7 +34,7 @@ function Catalog({ children, stateName }: CatalogProps) {
     sort: state[stateName].params.sort,
     query: state[stateName].params.query,
     category: state[stateName].params.category,
-    country: state[stateName].params.country,
+    country: state[stateName].params.countries,
 
     categories: state.categories.list,
     countries: state.countries.list,
@@ -96,7 +96,14 @@ function Catalog({ children, stateName }: CatalogProps) {
     // Выбор страны
     onCountrySelected: useCallback(
       (country: string) => {
-        store.actions[stateName].setParams({ country, page: 1 }, false);
+        store.actions[stateName].setParams({ countries: country, page: 1 }, false);
+      },
+      [store]
+    ),
+    // Выбор нескольких стран
+    onManyCountriesSelected: useCallback(
+      (countries: string[]) => {
+        store.actions[stateName].setParams({ countries, page: 1 }, false);
       },
       [store]
     ),

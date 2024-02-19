@@ -8,7 +8,7 @@ export type TCatalogState = {
     sort: string;
     query: string;
     category: string;
-    country: string;
+    countries: string | string[];
   };
   count: number;
   waiting: boolean;

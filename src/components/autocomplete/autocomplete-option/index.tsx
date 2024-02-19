@@ -21,12 +21,8 @@ function AutocompleteOption(props: OptionProps) {
 
   // const isActive =
   //   (values.active._id === props.option._id || values.inFocus === indexForFocus) && !isTitle;
-  // const isActive =
-  //   values.active._id === props.option._id ||
-  //   (values.selected.length > 1 && values.selected.includes(props.option._id));
 
   const isActive = values.selected.includes(props.option._id);
-  // console.log(values.selected, option, isActive);
 
   const handlers = {
     onClick: () => {
@@ -71,7 +67,7 @@ function AutocompleteOption(props: OptionProps) {
     optionRef.current?.addEventListener('keydown', listener);
 
     return () => optionRef.current?.removeEventListener('keydown', listener);
-  }, [disabled, isActive]);
+  }, [disabled, isActive, handlers.onClick]);
 
   useEffect(() => {
     if (disabled) return;

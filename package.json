@@ -20,6 +20,7 @@
   "homepage": "https://github.com/ylabio/react-webinar-3#readme",
   "dependencies": {
     "@bem-react/classname": "^1.6.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
     "lodash.debounce": "^4.0.8",
     "lodash.throttle": "^4.1.1",
     "overlayscrollbars-react": "^0.5.4",

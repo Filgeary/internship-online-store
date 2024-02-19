@@ -24,14 +24,15 @@ import simplifyName from '@src/utils/simplify-name';
 type AutocompleteProps = {
   children: React.ReactNode;
   placeholder?: string;
-  onSelected: (option: TOption) => void;
   options: Array<TOption>;
   value: string | string[];
-  smooth?: boolean;
+  onSelected?: (option: TOption) => void;
   onOpen?: () => void;
   onClose?: (ids: string[]) => void;
+  smooth?: boolean;
   onFirstDropAll?: boolean;
   disabled?: boolean;
+  isMultiple?: boolean;
 };
 
 export type TOption = {
@@ -62,9 +63,13 @@ export const useAutocompleteContext = () => {
 };
 
 function Autocomplete(props: AutocompleteProps) {
-  const { children, smooth = false, disabled = false, onFirstDropAll = false } = props;
-
-  const isMultiple = Array.isArray(props.value);
+  const {
+    children,
+    smooth = false,
+    disabled = false,
+    onFirstDropAll = false,
+    isMultiple = false,
+  } = props;
 
   const cn = bem('Autocomplete');
   const uid = useMemo(() => window.crypto.randomUUID(), []);
@@ -80,27 +85,27 @@ function Autocomplete(props: AutocompleteProps) {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<Scrollbar>(null);
   const searchRef = useRef<HTMLInputElement>(null);
+  const dropRef = useRef<HTMLDivElement>(null);
   const firstOptionRef = useRef<HTMLDivElement | null>(null);
 
   const callbacks = {
     setActive: (item: TOption) => {
       if (!isMultiple) {
         setSelected([item._id]);
-        props.onSelected(item);
+        props.onSelected?.(item);
         setIsOpen(false);
       } else {
-        // Когда выбрано onFirstDropAll - сбрасываем при выборе первого все остальные
-        if (onFirstDropAll && item._id === props.options[0]._id) {
-          setSelected([item._id]);
-          return;
-        } else if (onFirstDropAll) {
-          // Иначе - если выделен первый пункт - то снимаем его
-          if (selected[0] === props.options[0]._id) {
+        if (onFirstDropAll) {
+          if (item._id === props.options[0]._id) {
+            setSelected([item._id]);
+            return;
+          } else if (selected[0] === props.options[0]._id) {
             setSelected((prevSelected) => prevSelected.slice(1));
           }
         }
 
         setSelected((prevSelected) => [...prevSelected, item._id]);
+        props.onSelected?.(item);
       }
     },
 
@@ -112,9 +117,14 @@ function Autocomplete(props: AutocompleteProps) {
       setSearch(value);
     },
 
-    toggleOpen: () => setIsOpen((prev) => !prev),
+    toggleOpen: () => {
+      setIsOpen((prevOpen) => !prevOpen);
+    },
 
-    close: () => setIsOpen(false),
+    close: () => {
+      props.onClose(selected);
+      setIsOpen(false);
+    },
 
     setInFocus,
   };
@@ -214,26 +224,20 @@ function Autocomplete(props: AutocompleteProps) {
 
   useEffect(() => {
     if (isOpen) props.onOpen();
-    else {
-      props.onClose?.(selected);
-      // setSelected([]);
-    }
+    else props.onClose(selected);
   }, [isOpen]);
 
   useEffect(() => {
-    const isBottomNear = document.body.clientHeight - wrapperRef.current.offsetTop < 117;
-    setDropOnTop(isBottomNear);
-  }, [disabled]);
+    window.requestAnimationFrame(() => {
+      const isBottomNear =
+        document.body.clientHeight - wrapperRef.current.offsetTop < dropRef.current.clientHeight;
+      setDropOnTop(isBottomNear);
+    });
+  }, [disabled, isOpen]);
 
   useEffect(() => {
-    if (!isMultiple) {
-      setSelected(Array.isArray(props.value) ? props.value : [props.value]);
-    }
+    setSelected(Array.isArray(props.value) ? props.value : [props.value]);
   }, [props.value]);
-
-  useEffect(() => {
-    console.log('@', selected);
-  }, [selected]);
 
   return (
     <div ref={wrapperRef} className={cn({ active: isOpen, smooth, disabled })}>
@@ -257,7 +261,7 @@ function Autocomplete(props: AutocompleteProps) {
 
       {/* Выпадашка */}
       <div className={cn('drop')} id={uid}>
-        <div className={cn('drop-inner', { top: dropOnTop })}>
+        <div ref={dropRef} className={cn('drop-inner', { top: dropOnTop })}>
           {isOpen && (
             <AutocompleteContext.Provider
               value={{
