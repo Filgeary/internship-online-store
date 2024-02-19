@@ -19,12 +19,22 @@ function AutocompleteOption(props: OptionProps) {
 
   const optionRef = useRef<HTMLDivElement>(null);
 
-  const isActive =
-    (values.active._id === props.option._id || values.inFocus === indexForFocus) && !isTitle;
+  // const isActive =
+  //   (values.active._id === props.option._id || values.inFocus === indexForFocus) && !isTitle;
+  // const isActive =
+  //   values.active._id === props.option._id ||
+  //   (values.selected.length > 1 && values.selected.includes(props.option._id));
+
+  const isActive = values.selected.includes(props.option._id);
+  // console.log(values.selected, option, isActive);
 
   const handlers = {
     onClick: () => {
-      callbacks.setActive(option);
+      if (isActive) {
+        callbacks.removeActive(option);
+      } else {
+        callbacks.setActive(option);
+      }
     },
   };
 
@@ -61,7 +71,7 @@ function AutocompleteOption(props: OptionProps) {
     optionRef.current?.addEventListener('keydown', listener);
 
     return () => optionRef.current?.removeEventListener('keydown', listener);
-  }, [disabled]);
+  }, [disabled, isActive]);
 
   useEffect(() => {
     if (disabled) return;
@@ -78,7 +88,7 @@ function AutocompleteOption(props: OptionProps) {
   return (
     <AutocompleteField
       ref={optionRef}
-      isDisabled={isDisabled}
+      isDisabled={isDisabled || (isActive && !values.isMultiple)}
       isActive={isActive}
       onClick={handlers.onClick}
       onKeyDown={helpers.onSpaceDown(handlers.onClick)}

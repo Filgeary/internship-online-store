@@ -19,15 +19,18 @@ import AutocompleteOption from './autocomplete-option';
 import AutocompleteSearch from './autocomplete-search';
 import AutocompleteList from './autocomplete-list';
 import AutocompleteField from './autocomplete-field';
+import simplifyName from '@src/utils/simplify-name';
 
 type AutocompleteProps = {
   children: React.ReactNode;
   placeholder?: string;
   onSelected: (option: TOption) => void;
   options: Array<TOption>;
-  value: string;
+  value: string | string[];
   smooth?: boolean;
   onOpen?: () => void;
+  onClose?: (ids: string[]) => void;
+  onFirstDropAll?: boolean;
   disabled?: boolean;
 };
 
@@ -59,7 +62,9 @@ export const useAutocompleteContext = () => {
 };
 
 function Autocomplete(props: AutocompleteProps) {
-  const { children, smooth = false, disabled = false } = props;
+  const { children, smooth = false, disabled = false, onFirstDropAll = false } = props;
+
+  const isMultiple = Array.isArray(props.value);
 
   const cn = bem('Autocomplete');
   const uid = useMemo(() => window.crypto.randomUUID(), []);
@@ -68,6 +73,9 @@ function Autocomplete(props: AutocompleteProps) {
   const [search, setSearch] = useState('');
   const [inFocus, setInFocus] = useState<number>(null);
   const [dropOnTop, setDropOnTop] = useState(false);
+  const [selected, setSelected] = useState<string[]>(
+    Array.isArray(props.value) ? props.value : [props.value]
+  );
 
   const wrapperRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<Scrollbar>(null);
@@ -76,8 +84,28 @@ function Autocomplete(props: AutocompleteProps) {
 
   const callbacks = {
     setActive: (item: TOption) => {
-      props.onSelected(item);
-      setIsOpen(false);
+      if (!isMultiple) {
+        setSelected([item._id]);
+        props.onSelected(item);
+        setIsOpen(false);
+      } else {
+        // Когда выбрано onFirstDropAll - сбрасываем при выборе первого все остальные
+        if (onFirstDropAll && item._id === props.options[0]._id) {
+          setSelected([item._id]);
+          return;
+        } else if (onFirstDropAll) {
+          // Иначе - если выделен первый пункт - то снимаем его
+          if (selected[0] === props.options[0]._id) {
+            setSelected((prevSelected) => prevSelected.slice(1));
+          }
+        }
+
+        setSelected((prevSelected) => [...prevSelected, item._id]);
+      }
+    },
+
+    removeActive: (item: TOption) => {
+      setSelected((prevSelected) => prevSelected.filter((option) => option !== item._id));
     },
 
     setSearch: (value: string) => {
@@ -105,11 +133,17 @@ function Autocomplete(props: AutocompleteProps) {
   };
 
   const values = {
-    isOpen,
+    selected,
     search,
+    isOpen,
     inFocus,
+    isMultiple,
 
-    active: useMemo<TOption>(() => {
+    active: useMemo<TOption | TOption[]>(() => {
+      if (isMultiple) {
+        return props.options.filter((option) => selected.includes(option._id));
+      }
+
       return (
         props.options.find((option) => option._id === props.value) ?? {
           _id: null,
@@ -117,7 +151,22 @@ function Autocomplete(props: AutocompleteProps) {
           title: null,
         }
       );
-    }, [props.value, props.options, props.placeholder]),
+    }, [props.value, props.options, props.placeholder, isMultiple, selected]),
+  };
+
+  // Более системная информация о дальнейших отображаемых данных
+  const options = {
+    activeTitle: Array.isArray(values.active) ? values.active[0]?.title : values.active.title,
+    activeCode: Array.isArray(values.active) ? values.active[0]?.code : values.active.code,
+    restLength: selected.slice(1).length,
+  };
+
+  // Отображение, понятное пользователю
+  const views = {
+    activeTitle: options.activeTitle
+      ? simplifyName(options.activeTitle, options.restLength)
+      : props.placeholder,
+    activeCode: options.activeCode,
   };
 
   useOnClickOutside(wrapperRef, { closeByEsc: true }, callbacks.close);
@@ -165,12 +214,26 @@ function Autocomplete(props: AutocompleteProps) {
 
   useEffect(() => {
     if (isOpen) props.onOpen();
+    else {
+      props.onClose?.(selected);
+      // setSelected([]);
+    }
   }, [isOpen]);
 
   useEffect(() => {
     const isBottomNear = document.body.clientHeight - wrapperRef.current.offsetTop < 117;
     setDropOnTop(isBottomNear);
   }, [disabled]);
+
+  useEffect(() => {
+    if (!isMultiple) {
+      setSelected(Array.isArray(props.value) ? props.value : [props.value]);
+    }
+  }, [props.value]);
+
+  useEffect(() => {
+    console.log('@', selected);
+  }, [selected]);
 
   return (
     <div ref={wrapperRef} className={cn({ active: isOpen, smooth, disabled })}>
@@ -184,11 +247,7 @@ function Autocomplete(props: AutocompleteProps) {
         className={cn('row')}
       >
         <div className={cn('inner')}>
-          <AutocompleteField
-            isDisabled={true}
-            code={values.active.code}
-            title={values.active.title || props.placeholder}
-          />
+          <AutocompleteField isDisabled={true} code={views.activeCode} title={views.activeTitle} />
 
           <div className={cn('marker')}>
             <img className={cn('marker-image')} src={Arrow} alt='' aria-hidden='true' />

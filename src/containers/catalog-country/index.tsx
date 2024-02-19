@@ -38,6 +38,10 @@ function CatalogCountry() {
         store.actions.countries.load();
       }
     },
+
+    onClose: (ids: string[]) => {
+      console.log('Выпадашка закрыта:', ids);
+    },
   };
 
   useEffect(() => {
@@ -47,18 +51,21 @@ function CatalogCountry() {
   }, [select.country]);
 
   useEffect(() => {
-    console.log('IsLoading:', select.countriesLoading);
-  }, [select.countriesLoading]);
+    store.actions.countries.load();
+  }, []);
 
   return (
     <Autocomplete.Root
+      // value={['65817be05c295a2ff2fcc5e7', '65817be05c295a2ff2fcc5e9']}
       value={select.country}
       onSelected={(country) => callbacks.onCountrySelected(country._id)}
       options={options.countriesDefault}
       smooth={true}
       onOpen={handlers.onOpen}
+      onClose={handlers.onClose}
       disabled={select.countriesLoading || select.waiting}
       placeholder={'Выбор страны'}
+      onFirstDropAll={true}
     >
       <Autocomplete.Search onChange={helpers.optionsBuilder} placeholder='Поиск' />
       <Autocomplete.List>

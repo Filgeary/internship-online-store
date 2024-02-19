@@ -41,7 +41,6 @@
 
 .AutocompleteField_active {
   background: #808dff;
-  pointer-events: none;
 
   & .AutocompleteField-title {
     color: #fff;

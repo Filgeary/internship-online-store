@@ -45,8 +45,6 @@ class CountriesStore extends StoreModule<TCountriesState, TCountriesConfig> {
 
     const country = res.data.result;
 
-    console.log('@', res);
-
     this.setState(
       {
         ...this.getState(),
