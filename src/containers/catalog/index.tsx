@@ -38,6 +38,7 @@ function Catalog({ children, stateName }: CatalogProps) {
 
     categories: state.categories.list,
     countries: state.countries.list,
+    countriesLoading: state.countries.waiting,
   }));
 
   const callbacks = {

@@ -27,6 +27,8 @@ type AutocompleteProps = {
   options: Array<TOption>;
   value: string;
   smooth?: boolean;
+  onOpen?: () => void;
+  disabled?: boolean;
 };
 
 export type TOption = {
@@ -42,6 +44,7 @@ type TAutocompleteContext = {
   listRef: React.RefObject<Scrollbar>;
   searchRef: React.RefObject<HTMLInputElement>;
   firstOptionRef: React.MutableRefObject<HTMLDivElement | null>;
+  disabled: boolean;
 };
 
 export const AutocompleteContext = createContext<TAutocompleteContext>(null);
@@ -56,7 +59,15 @@ export const useAutocompleteContext = () => {
 };
 
 function Autocomplete(props: AutocompleteProps) {
-  const { children, placeholder, onSelected, options, value, smooth = false } = props;
+  const {
+    children,
+    placeholder,
+    onSelected,
+    options,
+    value,
+    smooth = false,
+    disabled = false,
+  } = props;
 
   const cn = bem('Autocomplete');
   const uid = useMemo(() => window.crypto.randomUUID(), []);
@@ -64,6 +75,7 @@ function Autocomplete(props: AutocompleteProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState('');
   const [inFocus, setInFocus] = useState<number>(null);
+  const [dropOnTop, setDropOnTop] = useState(false);
 
   const wrapperRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<Scrollbar>(null);
@@ -115,6 +127,8 @@ function Autocomplete(props: AutocompleteProps) {
   useOnClickOutside(wrapperRef, { closeByEsc: true }, callbacks.close);
 
   useEffect(() => {
+    if (disabled) return;
+
     const listener = (e: KeyboardEvent) => {
       if (e.code === 'Tab') return;
       if (e.code.startsWith('Arrow')) e.preventDefault();
@@ -127,7 +141,7 @@ function Autocomplete(props: AutocompleteProps) {
             nextElement = nextElement.nextElementSibling as HTMLElement;
           }
 
-          if (!nextElement) firstOptionRef.current.focus();
+          if (!nextElement) firstOptionRef.current?.focus();
           else nextElement?.focus();
 
           break;
@@ -138,7 +152,7 @@ function Autocomplete(props: AutocompleteProps) {
             prevElement = prevElement.previousElementSibling as HTMLElement;
           }
 
-          if (!prevElement) searchRef.current.focus();
+          if (!prevElement) searchRef.current?.focus();
           else prevElement?.focus();
 
           break;
@@ -151,10 +165,19 @@ function Autocomplete(props: AutocompleteProps) {
     return () => {
       document.removeEventListener('keydown', listener);
     };
+  }, [disabled, isOpen]);
+
+  useEffect(() => {
+    if (isOpen) props.onOpen();
   }, [isOpen]);
 
+  useEffect(() => {
+    const isBottomNear = document.body.clientHeight - wrapperRef.current.offsetTop < 117;
+    setDropOnTop(isBottomNear);
+  }, [disabled]);
+
   return (
-    <div ref={wrapperRef} className={cn({ active: isOpen, smooth })}>
+    <div ref={wrapperRef} className={cn({ active: isOpen, smooth, disabled })}>
       <div
         onClick={callbacks.toggleOpen}
         onKeyDown={helpers.onSpaceDown(callbacks.toggleOpen)}
@@ -179,7 +202,7 @@ function Autocomplete(props: AutocompleteProps) {
 
       {/* Выпадашка */}
       <div className={cn('drop')} id={uid}>
-        <div className={cn('drop-inner')}>
+        <div className={cn('drop-inner', { top: dropOnTop })}>
           {isOpen && (
             <AutocompleteContext.Provider
               value={{
@@ -189,6 +212,7 @@ function Autocomplete(props: AutocompleteProps) {
                 listRef,
                 searchRef,
                 firstOptionRef,
+                disabled,
               }}
             >
               {children}

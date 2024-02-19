@@ -1,4 +1,4 @@
-export type TCountries = {
+export type TCountry = {
   _id: string;
   _key: string;
   title: string;
@@ -13,7 +13,7 @@ export type TCountries = {
 };
 
 export type TCountriesState = {
-  list: TCountries[];
+  list: TCountry[];
   waiting: boolean;
 };
 

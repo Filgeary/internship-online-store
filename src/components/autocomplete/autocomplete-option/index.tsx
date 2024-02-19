@@ -14,7 +14,7 @@ type OptionProps = {
 
 function AutocompleteOption(props: OptionProps) {
   const { option, isDisabled, isTitle, displayString, indexForFocus } = props;
-  const { values, helpers, callbacks, listRef, searchRef, firstOptionRef } =
+  const { values, helpers, callbacks, listRef, searchRef, firstOptionRef, disabled } =
     useAutocompleteContext();
 
   const optionRef = useRef<HTMLDivElement>(null);
@@ -29,12 +29,14 @@ function AutocompleteOption(props: OptionProps) {
   };
 
   useEffect(() => {
+    if (disabled) return;
+
     if (isActive && optionRef.current && listRef.current) {
       // При раскрытии - активный будет по центру и в фокусе
       if (!values.search && document.activeElement !== searchRef.current) {
         // Для совместимости с плавной анимацией (smooth = true)
         window.requestIdleCallback(() => {
-          optionRef.current.focus();
+          optionRef.current?.focus();
         });
       }
       window.requestAnimationFrame(() => {
@@ -44,9 +46,11 @@ function AutocompleteOption(props: OptionProps) {
         );
       });
     }
-  }, [values.isOpen, isActive]);
+  }, [values.isOpen, isActive, disabled]);
 
   useEffect(() => {
+    if (disabled) return;
+
     const listener = (e: KeyboardEvent) => {
       if (e.code === 'Enter') {
         e.preventDefault();
@@ -57,9 +61,11 @@ function AutocompleteOption(props: OptionProps) {
     optionRef.current?.addEventListener('keydown', listener);
 
     return () => optionRef.current?.removeEventListener('keydown', listener);
-  }, []);
+  }, [disabled]);
 
   useEffect(() => {
+    if (disabled) return;
+
     if (!firstOptionRef.current) {
       firstOptionRef.current = optionRef.current;
     }
@@ -67,7 +73,7 @@ function AutocompleteOption(props: OptionProps) {
     return () => {
       firstOptionRef.current = null;
     };
-  }, [values.search]);
+  }, [values.search, disabled]);
 
   return (
     <AutocompleteField

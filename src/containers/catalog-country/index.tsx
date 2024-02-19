@@ -1,8 +1,10 @@
 import Autocomplete, { TOption } from '@src/components/autocomplete';
 import { useCatalogContext } from '../catalog';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import useStore from '@src/hooks/use-store';
 
 function CatalogCountry() {
+  const store = useStore();
   const { select, callbacks } = useCatalogContext();
   const [search, setSearch] = useState('');
 
@@ -30,12 +32,32 @@ function CatalogCountry() {
     }, [search, select.countries]),
   };
 
+  const handlers = {
+    onOpen: () => {
+      if (select.countries.length <= 1) {
+        store.actions.countries.load();
+      }
+    },
+  };
+
+  useEffect(() => {
+    if (select.country && select.countries.length === 0) {
+      store.actions.countries.loadById(select.country);
+    }
+  }, [select.country]);
+
+  useEffect(() => {
+    console.log('IsLoading:', select.countriesLoading);
+  }, [select.countriesLoading]);
+
   return (
     <Autocomplete.Root
       value={select.country}
       onSelected={(country) => callbacks.onCountrySelected(country._id)}
       options={options.countriesDefault}
       smooth={true}
+      onOpen={handlers.onOpen}
+      disabled={select.countriesLoading || select.waiting}
     >
       <Autocomplete.Search onChange={helpers.optionsBuilder} placeholder='Поиск' />
       <Autocomplete.List>

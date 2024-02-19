@@ -1,5 +1,5 @@
 import StoreModule from '../module';
-import { TCountries, TCountriesConfig, TCountriesState } from './types';
+import { TCountry, TCountriesConfig, TCountriesState } from './types';
 
 class CountriesStore extends StoreModule<TCountriesState, TCountriesConfig> {
   readonly config: TCountriesConfig;
@@ -17,7 +17,7 @@ class CountriesStore extends StoreModule<TCountriesState, TCountriesConfig> {
   async load() {
     this.setState({ ...this.getState(), waiting: true }, 'Грузим страны с сервера');
 
-    const res = await this.services.api.request<{ items: TCountries[] }>({
+    const res = await this.services.api.request<{ items: TCountry[] }>({
       url: `/api/v1/countries?lang=ru&limit=*&skip=0&fields=%2A`,
     });
 
@@ -30,6 +30,30 @@ class CountriesStore extends StoreModule<TCountriesState, TCountriesConfig> {
         waiting: false,
       },
       'Страны успешно получены'
+    );
+  }
+
+  /**
+   * Загрузить страну по id
+   */
+  async loadById(id: string) {
+    this.setState({ ...this.getState(), waiting: true });
+
+    const res = await this.services.api.request<TCountry>({
+      url: `/api/v1/countries/${id}?lang=ru&fields=%2A`,
+    });
+
+    const country = res.data.result;
+
+    console.log('@', res);
+
+    this.setState(
+      {
+        ...this.getState(),
+        list: [country],
+        waiting: false,
+      },
+      `Страна c id ${id} успешно получена`
     );
   }
 }
