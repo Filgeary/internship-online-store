@@ -50,6 +50,10 @@ module.exports = {
           },
         ], */
         // Вот тут можно убрать кое-что, тогда проверять жёстче будет
+        '@typescript-eslint/consistent-type-assertions': 'off',
+        'class-methods-use-this': 'off',
+        'react/function-component-definition': 'off',
+        'import/no-default-export': 'off',
         '@typescript-eslint/explicit-function-return-type': 'off',
         '@typescript-eslint/no-unsafe-member-access': 'off',
         '@typescript-eslint/no-unsafe-call': 'off',
