@@ -1,7 +1,7 @@
-import { ReactNode } from "react";
+import { RefObject } from "react";
 
 export interface DropdownTemplateProps {
   renderSelectedItem: () => JSX.Element;
-  renderInput: () => JSX.Element;
+  renderInput: (searchRef: RefObject<HTMLInputElement>) => JSX.Element;
   renderOptions: () => JSX.Element;
 }

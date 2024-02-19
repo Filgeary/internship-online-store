@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react";
+import { RefObject, useCallback, useMemo, useState } from "react";
 import useSelector from "@src/hooks/use-selector";
 import useStore from "@src/hooks/use-store";
 import DropdownTemplate from "@src/components/dropdown-template";
@@ -10,6 +10,7 @@ import { Country } from "@src/store/countries/type";
 
 function Dropdown() {
   const store = useStore();
+  const [search, setSearch] = useState('');
 
   const select = useSelector((state) => ({
     countries: state.countries.list,
@@ -21,21 +22,28 @@ function Dropdown() {
   const callbacks = {
     onSearch: useCallback(
       (value: string) => {
+        setSearch(value);
         store.actions.countries.search(value);
       },
       [store]
     ),
     onSelect: useCallback(
-      (data: Country) => {
-        store.actions.catalog.setParams({ madeIn: data._id, page: 1 });
+      (_id: string) => {
+        store.actions.catalog.setParams({ madeIn: _id, page: 1 });
       },
       [store]
     ),
+    onOpen: () => store.actions.countries.load(),
   };
 
   const options = {
     selected: select.countries.find(item => item._id === select.madeIn),
-    countriesList: useMemo<Country[]>(() => [{_id: '', code: '', title: "Все"}, ...select.countries], [select.countries])
+    countriesList: useMemo<Country[]>(() => {
+      if(search) {
+        return select.countries;
+      }
+      return [{_id: '', code: '', title: "Все"}, ...select.countries]
+    }, [select.countries, search])
   }
 
   const renders = {
@@ -48,13 +56,14 @@ function Dropdown() {
       ),
       [options.selected]
     ),
-    input: () => (
+    input: (searchRef: RefObject<HTMLInputElement>) => (
       <Input
         value={""}
         name={"search-value"}
         onChange={callbacks.onSearch}
         placeholder="Поиск"
         theme="search"
+        ref={searchRef}
       />
     ),
     options: useCallback(
