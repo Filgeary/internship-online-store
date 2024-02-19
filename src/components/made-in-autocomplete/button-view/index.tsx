@@ -5,15 +5,18 @@ import {cn as bem} from '@bem-react/classname';
 import './style.css'
 import Arrow from "./arrow";
 
-function ButtonView(props: ContainerViewBuilder & {
+type Props = ContainerViewBuilder & {
   value: MadeInOption | MadeInOption[] | undefined,
   multiple: boolean | undefined
-}) {
+}
+
+function ButtonView(props: Props) {
+  const {dropdownController, buttonRef} = props
   const cn = bem('ButtonView')
 
   if (props.multiple && Array.isArray(props.value)) {
     return (
-      <button className={cn()} onClick={props.onToggle} ref={props.buttonRef}tabIndex={props.tabIndex}>
+      <button className={cn()} onClick={dropdownController.onToggle} ref={buttonRef}>
         <div className={cn('info')}>
           {props.value.length > 1 
             ? props.value.map(option => <div className={cn('code')}>{option.code}</div>)
@@ -26,7 +29,7 @@ function ButtonView(props: ContainerViewBuilder & {
           }
         </div>
         <Arrow className={cn('arrow', {
-          rotated: props.isCollapsed
+          rotated: dropdownController.isCollapsed
         })}/>
 {/*         
         {
@@ -37,13 +40,13 @@ function ButtonView(props: ContainerViewBuilder & {
   }
 
   return (
-    <button className={cn()} onClick={props.onToggle} ref={props.buttonRef} tabIndex={props.tabIndex}>
+    <button className={cn()} onClick={dropdownController.onToggle} ref={buttonRef}>
       <div className={cn('info')}>
         <div className={cn('code')}>{(props.value as MadeInOption | undefined)?.code}</div>
         <span className={cn('title')}>{(props.value as MadeInOption | undefined)?.title || 'Все'}</span>
       </div>
       <Arrow className={cn('arrow', {
-        rotated: props.isCollapsed
+        rotated: dropdownController.isCollapsed
       })}/>
     </button>
   )

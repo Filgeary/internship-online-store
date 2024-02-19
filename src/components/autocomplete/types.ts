@@ -6,26 +6,33 @@ export type Option = {
 }
 
 export type FieldViewBuilderProps = {
-  textEditingController: {
+  inputController: {
     value: string,
     onChange: (e: ChangeEvent<HTMLInputElement>) => void
   },
-  focusNode: RefObject<HTMLInputElement>,
-  tabIndex: number
+  inputRef: RefObject<HTMLInputElement>,
 }
 
 export type OptionsViewBuilder<O extends Option = Option> = {
-  onSelected: (option: O) => void,
-  onKeyUp: (e: KeyboardEvent<HTMLLIElement>, option: O) => void,
-  filteredOptions: O[]
-  liRef: RefObject<HTMLLIElement>
+  hoverController: {
+    item: {index: number, hovered: boolean} | null
+    onMouseEnter: (index: number) => void
+    onMouseLeave: () => void
+    itemRef: RefObject<HTMLLIElement>,
+    listRef: RefObject<HTMLUListElement>
+  }
+  optionsController: {
+    onSelect: (option: O) => void,
+    buildedOptions: O[]
+  }
 }
 
 export type ContainerViewBuilder = {
-  onToggle: () => void,
-  tabIndex: number
+  dropdownController: {
+    onToggle: () => void,
+    isCollapsed: boolean
+  }
   buttonRef: RefObject<HTMLButtonElement>,
-  isCollapsed: boolean
 }
 
 type ViewProps<O extends Option> = {

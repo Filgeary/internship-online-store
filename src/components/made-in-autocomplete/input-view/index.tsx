@@ -4,13 +4,13 @@ import {cn as bem} from '@bem-react/classname';
 import './style.css'
 
 function InputView(props: FieldViewBuilderProps) {
+  const {inputRef, inputController} = props
   const cn = bem('InputView')
 
   return (
-    <input value={props.textEditingController.value}
-      onChange={props.textEditingController.onChange}
-      ref={props.focusNode}
-      tabIndex={props.tabIndex}
+    <input value={inputController.value}
+      onChange={inputController.onChange}
+      ref={inputRef}
       placeholder="Поиск"
       className={cn()}/>
   )

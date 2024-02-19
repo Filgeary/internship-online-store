@@ -53,16 +53,17 @@
   overflow: hidden;
 }
 
-.OptionsView-li:hover,
-.OptionsView-li:focus {
+.OptionsView-li_hovered {
   background-color: #DBDFFF;
   outline: none;
 }
 
-.OptionsView-li_selected,
-.OptionsView-li_selected:hover,
-.OptionsView-li_selected:focus {
+.OptionsView-li_selected {
   background-color: #808DFF;
+}
+
+.OptionsView-li_hovered.OptionsView-li_selected {
+  background-color: #4e59bb
 }
 
 .OptionsView-li_selected .OptionsView-title,

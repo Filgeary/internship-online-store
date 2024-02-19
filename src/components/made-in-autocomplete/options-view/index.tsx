@@ -4,23 +4,27 @@ import './style.css'
 import { OptionsViewBuilder } from "@src/components/autocomplete/types";
 import { MadeInOption } from "../types";
 
-function OptionsView(props: OptionsViewBuilder<MadeInOption> & {
-  selected: MadeInOption | MadeInOption[] | undefined
-}) {
+type Props = OptionsViewBuilder<MadeInOption> & {
+  selected: MadeInOption | MadeInOption[] | undefined,
+}
+
+function OptionsView(props: Props) {
+  const {hoverController, optionsController} = props
   const cn = bem('OptionsView')
 
   return (
-    <ul className={cn()}>
-      {props.filteredOptions.map((option,i) => (
+    <ul className={cn()} onMouseLeave={hoverController.onMouseLeave} ref={hoverController.listRef}>
+      {optionsController.buildedOptions.map((option,i) => (
         <li key={option.value} 
-            ref={i === 0 ? props.liRef : undefined}
-            onClick={() => props.onSelected(option)}
-            onKeyUp={(e) => props.onKeyUp(e, option)}
-            tabIndex={0}
+            ref={props.hoverController.item?.index === i ? hoverController.itemRef : undefined}
+            onClick={() => optionsController.onSelect(option)}
+            
+            onMouseEnter={() => hoverController.onMouseEnter(i)}
             className={cn('li', {
               selected: Array.isArray(props.selected) 
                 ? Boolean(props.selected.find(op => op.value === option.value))
-                : (props.selected?.value === option.value)
+                : (props.selected?.value === option.value),
+              hovered: hoverController.item?.index === i && hoverController.item?.hovered
             })}
         >
           <div className={cn("code")}>{option.code}</div>
