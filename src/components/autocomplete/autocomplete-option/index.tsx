@@ -36,7 +36,7 @@ function AutocompleteOption(props: OptionProps) {
       if (!values.search && document.activeElement !== searchRef.current) {
         // Для совместимости с плавной анимацией (smooth = true)
         window.requestIdleCallback(() => {
-          optionRef.current?.focus();
+          // optionRef.current?.focus();
         });
       }
       window.requestAnimationFrame(() => {

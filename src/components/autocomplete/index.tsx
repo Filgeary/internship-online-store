@@ -59,15 +59,7 @@ export const useAutocompleteContext = () => {
 };
 
 function Autocomplete(props: AutocompleteProps) {
-  const {
-    children,
-    placeholder,
-    onSelected,
-    options,
-    value,
-    smooth = false,
-    disabled = false,
-  } = props;
+  const { children, smooth = false, disabled = false } = props;
 
   const cn = bem('Autocomplete');
   const uid = useMemo(() => window.crypto.randomUUID(), []);
@@ -84,7 +76,7 @@ function Autocomplete(props: AutocompleteProps) {
 
   const callbacks = {
     setActive: (item: TOption) => {
-      onSelected(item);
+      props.onSelected(item);
       setIsOpen(false);
     },
 
@@ -119,9 +111,13 @@ function Autocomplete(props: AutocompleteProps) {
 
     active: useMemo<TOption>(() => {
       return (
-        options.find((option) => option._id === value) ?? { _id: null, code: null, title: null }
+        props.options.find((option) => option._id === props.value) ?? {
+          _id: null,
+          code: null,
+          title: null,
+        }
       );
-    }, [value, options, placeholder]),
+    }, [props.value, props.options, props.placeholder]),
   };
 
   useOnClickOutside(wrapperRef, { closeByEsc: true }, callbacks.close);
@@ -160,10 +156,10 @@ function Autocomplete(props: AutocompleteProps) {
       }
     };
 
-    document.addEventListener('keydown', listener);
+    wrapperRef.current?.addEventListener('keydown', listener);
 
     return () => {
-      document.removeEventListener('keydown', listener);
+      wrapperRef.current?.removeEventListener('keydown', listener);
     };
   }, [disabled, isOpen]);
 
