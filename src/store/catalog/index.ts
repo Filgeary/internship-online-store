@@ -19,6 +19,7 @@ class CatalogState extends StoreModule {
         sort: "order",
         query: "",
         category: "",
+        madeIn: "",
       },
       count: 0,
       waiting: false,
@@ -42,6 +43,7 @@ class CatalogState extends StoreModule {
     if (urlParams.has("query")) validParams.query = urlParams.get("query");
     if (urlParams.has("category"))
       validParams.category = urlParams.get("category");
+    if (urlParams.has("madeIn")) validParams.madeIn = urlParams.get("madeIn");
     await this.setParams(
       { ...this.initState().params, ...validParams, ...newParams },
       true
@@ -107,10 +109,12 @@ class CatalogState extends StoreModule {
         sort: params.sort,
         "search[query]": params.query,
         "search[category]": params.category,
+        "search[madeIn]": params.madeIn,
       },
       {
         skip: 0,
         "search[query]": "",
+        "search[madeIn]": "",
         "search[category]": "",
       }
     );

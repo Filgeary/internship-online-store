@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { Children, memo } from "react";
 
 import { cn as bem } from "@bem-react/classname";
 import "./style.css";
@@ -17,7 +17,12 @@ function SideLayout({
   const cn = bem("SideLayout");
   return (
     <div className={cn({ side, padding })}>
-      <div className={cn("item")}>{children}</div>
+      {Children.map(children, (child) => (
+        //@ts-ignore
+        <div key={child.key} className={cn("item")}>
+          {child}
+        </div>
+      ))}
     </div>
   );
 }

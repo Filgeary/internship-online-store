@@ -4,6 +4,7 @@ export type CatalogParams = {
   sort: string;
   query: string;
   category: string;
+  madeIn: string;
 };
 
 export interface ICatalogState {

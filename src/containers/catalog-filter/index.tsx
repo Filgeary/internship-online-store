@@ -1,4 +1,4 @@
-import { memo, useCallback, useMemo } from "react";
+import { memo, useCallback, useMemo, useState } from "react";
 import useTranslate from "@src/hooks/use-translate";
 import useStore from "@src/hooks/use-store";
 import useSelector from "@src/hooks/use-selector";
@@ -7,6 +7,8 @@ import Input from "@src/components/input";
 import SideLayout from "@src/components/side-layout";
 import treeToList from "@src/utils/tree-to-list";
 import listToTree from "@src/utils/list-to-tree";
+import SelectCustom from "@src/components/select-custom";
+import { countries } from "@src/components/select-custom/data";
 
 type CatalogFilterProps = {
   catalog: "catalog" | "catalog2";
@@ -19,10 +21,21 @@ function CatalogFilter({ catalog }: CatalogFilterProps) {
     sort: state[catalog].params.sort,
     query: state[catalog].params.query,
     category: state[catalog].params.category,
+    madeIn: state[catalog].params.madeIn,
     categories: state.categories.list,
+    countries: state.countries.list,
   }));
 
   const callbacks = {
+    onMadeIn: useCallback(
+      (countryId) =>
+        store.actions[catalog].setParams(
+          { madeIn: countryId },
+          false,
+          catalog === "catalog" ? true : false
+        ),
+      [store]
+    ),
     // Сортировка
     onSort: useCallback(
       (sort) =>
@@ -77,6 +90,14 @@ function CatalogFilter({ catalog }: CatalogFilterProps) {
       ],
       [select.categories]
     ),
+    countries: useMemo(() => {
+      return [
+        { value: "", title: "Все", shortcut: "" },
+        ...select.countries.map((el) => {
+          return { title: el.title, value: el._id, shortcut: el.code };
+        }),
+      ];
+    }, [select.countries]),
   };
 
   const { t } = useTranslate();
@@ -92,6 +113,11 @@ function CatalogFilter({ catalog }: CatalogFilterProps) {
         options={options.sort}
         value={select.sort}
         onChange={callbacks.onSort}
+      />
+      <SelectCustom
+        options={options.countries}
+        selected={select.madeIn}
+        onChange={callbacks.onMadeIn}
       />
       {/* @ts-ignore */}
       <Input

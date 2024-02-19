@@ -1,0 +1,103 @@
+.SelectCustom {
+  width: 237px;
+  font-size: 15px;
+  background-color: white;
+  color: #191f4d;
+}
+
+.SelectCustom-container {
+  position: relative;
+}
+
+.SelectCustom-selected {
+  cursor: pointer;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.SelectCustom-shortcut {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 19px;
+  height: 19px;
+  color: white;
+  border-radius: 3px;
+  background-color: #6f7eff;
+  font-size: 8px;
+}
+
+.SelectCustom-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+}
+
+.SelectCustom-menu {
+  position: absolute;
+  top: 32px;
+  left: 0px;
+  width: 237px;
+  background-color: rgb(255, 255, 255);
+}
+
+.SelectCustom-options {
+  overflow-y: scroll;
+  overflow-x: hidden;
+  height: 200px;
+
+  &::-webkit-scrollbar {
+    width: 10px;
+    background: rgb(255, 255, 255);
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #e5e6e9;
+    border-radius: 20px;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: #dcdee4;
+  }
+}
+
+.SelectCustom-option {
+  cursor: pointer;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  &:hover {
+    background-color: #dbdfff;
+  }
+}
+
+.SelectCustom-option-selected {
+  cursor: pointer;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: white;
+  background-color: #808dff;
+}
+
+.SelectCustom-search {
+  all: unset;
+  width: calc(100% - 20px);
+  height: 30px;
+  border: 0px;
+  padding: 5px 10px;
+  font-style: italic;
+  font-family: Arial, Helvetica, sans-serif;
+
+  &::placeholder {
+    font-weight: 400;
+  }
+}
+
+.SelectCustom-title {
+  overflow: hidden;
+  white-space: nowrap;
+}
