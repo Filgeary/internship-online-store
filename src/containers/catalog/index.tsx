@@ -34,10 +34,10 @@ function Catalog({ children, stateName }: CatalogProps) {
     sort: state[stateName].params.sort,
     query: state[stateName].params.query,
     category: state[stateName].params.category,
-    country: state[stateName].params.country,
+    countries: state[stateName].params.countries,
 
     categories: state.categories.list,
-    countries: state.countries.list,
+    allCountries: state.countries.list,
     countriesLoading: state.countries.waiting,
   }));
 
@@ -95,8 +95,8 @@ function Catalog({ children, stateName }: CatalogProps) {
     ),
     // Выбор страны
     onCountrySelected: useCallback(
-      (country: string) => {
-        store.actions[stateName].setParams({ country, page: 1 }, false);
+      (countries: string[]) => {
+        store.actions[stateName].setParams({ countries, page: 1 }, false);
       },
       [store]
     ),

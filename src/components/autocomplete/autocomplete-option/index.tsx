@@ -19,8 +19,12 @@ function AutocompleteOption(props: OptionProps) {
 
   const optionRef = useRef<HTMLDivElement>(null);
 
+  // const isActive =
+  //   (values.active._id === props.option._id || values.inFocus === indexForFocus) && !isTitle;
+  // const isActive = values.value.includes(props.option._id) && !isTitle;
   const isActive =
-    (values.active._id === props.option._id || values.inFocus === indexForFocus) && !isTitle;
+    (values.active._id === props.option._id && Boolean(props.option._id)) ||
+    (values.value.includes(props.option._id) && Boolean(props.option._id));
 
   const handlers = {
     onClick: () => {

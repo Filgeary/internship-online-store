@@ -25,10 +25,11 @@ type AutocompleteProps = {
   placeholder?: string;
   onSelected: (option: TOption) => void;
   options: Array<TOption>;
-  value: string;
+  value: string | string[];
   smooth?: boolean;
   onOpen?: () => void;
   disabled?: boolean;
+  onClose?: () => void;
 };
 
 export type TOption = {
@@ -61,6 +62,8 @@ export const useAutocompleteContext = () => {
 function Autocomplete(props: AutocompleteProps) {
   const { children, smooth = false, disabled = false } = props;
 
+  const multiple = Array.isArray(props.value);
+
   const cn = bem('Autocomplete');
   const uid = useMemo(() => window.crypto.randomUUID(), []);
 
@@ -77,7 +80,10 @@ function Autocomplete(props: AutocompleteProps) {
   const callbacks = {
     setActive: (item: TOption) => {
       props.onSelected(item);
-      setIsOpen(false);
+
+      if (!multiple) {
+        setIsOpen(false);
+      }
     },
 
     setSearch: (value: string) => {
@@ -108,6 +114,8 @@ function Autocomplete(props: AutocompleteProps) {
     isOpen,
     search,
     inFocus,
+    multiple,
+    value: props.value,
 
     active: useMemo<TOption>(() => {
       return (
@@ -118,6 +126,15 @@ function Autocomplete(props: AutocompleteProps) {
         }
       );
     }, [props.value, props.options, props.placeholder]),
+    actives: useMemo<TOption[]>(() => {
+      return props.options.filter((option) => props.value.includes(option._id));
+    }, [props.value, props.options, props.placeholder]),
+  };
+
+  const options = {
+    title: multiple
+      ? `${values.actives[0]?.title} и ещё ${values.actives.slice(1).length}`
+      : values.active.title,
   };
 
   useOnClickOutside(wrapperRef, { closeByEsc: true }, callbacks.close);
@@ -165,6 +182,7 @@ function Autocomplete(props: AutocompleteProps) {
 
   useEffect(() => {
     if (isOpen) props.onOpen();
+    if (!isOpen) props.onClose();
   }, [isOpen]);
 
   useEffect(() => {
@@ -184,11 +202,7 @@ function Autocomplete(props: AutocompleteProps) {
         className={cn('row')}
       >
         <div className={cn('inner')}>
-          <AutocompleteField
-            isDisabled={true}
-            code={values.active.code}
-            title={values.active.title}
-          />
+          <AutocompleteField isDisabled={true} code={values.active.code} title={options.title} />
 
           <div className={cn('marker')}>
             <img className={cn('marker-image')} src={Arrow} alt='' aria-hidden='true' />

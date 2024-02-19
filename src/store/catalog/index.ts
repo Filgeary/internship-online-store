@@ -21,7 +21,7 @@ class CatalogState extends StoreModule<TCatalogState, TCatalogConfig> {
         sort: 'order',
         query: '',
         category: '',
-        country: '',
+        countries: [],
       },
       count: 0,
       waiting: false,
@@ -112,8 +112,8 @@ class CatalogState extends StoreModule<TCatalogState, TCatalogConfig> {
       }
     );
 
-    if (params.country) {
-      apiParams['search[madeIn]'] = params.country;
+    if (params.countries.length) {
+      apiParams['search[madeIn]'] = params.countries.join('|');
     }
 
     try {
