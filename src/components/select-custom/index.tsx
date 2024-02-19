@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import "./style.css";
 import { ArrowDown } from "../icons/arrow-down";
 import { ArrowUp } from "../icons/arrow-up";
-import useInit from "@src/hooks/use-init";
 import useStore from "@src/hooks/use-store";
 
 type Option = {
@@ -42,11 +41,13 @@ function SelectCustom({ selected, options, onChange }: SelectProps) {
     setSearch("");
   };
 
-  const filteredOptions = options.filter((el) => {
+  const filteredOptions = options.filter((option) => {
     const regExp = new RegExp("^" + search, "i");
-    if (regExp.test(el.title)) {
-      return el;
-    }
+    const optionWords = option.title.split(" ");
+    return optionWords.some((optionWord) => {
+      const res = regExp.test(optionWord);
+      return res;
+    });
   });
 
   const onSearch = (e: React.ChangeEvent<HTMLInputElement>) => {

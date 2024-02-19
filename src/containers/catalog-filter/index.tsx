@@ -8,7 +8,6 @@ import SideLayout from "@src/components/side-layout";
 import treeToList from "@src/utils/tree-to-list";
 import listToTree from "@src/utils/list-to-tree";
 import SelectCustom from "@src/components/select-custom";
-import { countries } from "@src/components/select-custom/data";
 
 type CatalogFilterProps = {
   catalog: "catalog" | "catalog2";
