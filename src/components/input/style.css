@@ -6,3 +6,14 @@
 .Input_theme_big{
   width: 300px;
 }
+
+.Input_theme_transparent{
+  width: 217px;
+  border: none;
+  outline: 0;
+}
+
+.Input_theme_transparent::placeholder{
+  color: rgba(204, 205, 212, 1);
+  font-style: italic;
+}

@@ -8,18 +8,17 @@ import useStore from "@src/hooks/use-store"
 import treeToList from "@src/utils/tree-to-list"
 import listToTree from "@src/utils/list-to-tree"
 import SelectCustom from "@src/containers/select-custom"
+import Button from "@src/components/button"
 
 const CatalogFilterContent = ({ sort, query, category, onSort, onSearch, onReset, onCategory, options, t }) => {
     return (
-      <SideLayout align='start'>
-        <SelectCustom/>
-        <SideLayout padding='medium'>
+        <SideLayout padding='medium' align='start'>
+          <SelectCustom/>
           <Select options={options.categories} value={category} onChange={onCategory}/>
           <Select options={options.sort} value={sort} onChange={onSort}/>
           <Input value={query} onChange={onSearch} placeholder={'Поиск'} delay={1000}/>
-          <button onClick={onReset}>{t('filter.reset')}</button>
+          <Button value={t('filter.reset')} closeStyle={true} onClick={onReset}/>
         </SideLayout>
-      </SideLayout>
     );
   };
 

@@ -8,3 +8,10 @@
   cursor: pointer;
 }
 
+.Button_close {
+  font-size: 14px;
+  border: 1px solid rgb(122, 120, 120);
+  border-radius: 3px;
+  padding: 4px;
+}
+

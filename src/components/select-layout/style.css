@@ -1,35 +1,93 @@
 .Select-layout {
   width: 240px;
   position: relative;
+  color: rgba(25, 31, 77, 1);
 }
 
 .Select-layout-wrap-list {
-    width: 240px;
-    height: 300px;
-    position: absolute;
-    box-shadow: 0px 5px 10px 2px rgba(34, 60, 80, 0.2);
+  box-sizing: border-box;
+  width: 240px;
+  position: absolute;
+  box-shadow: 0px 5px 10px 2px rgba(34, 60, 80, 0.2);
+  background-color: rgba(255, 255, 255, 1);
+}
+
+.Select-layout-wrap-span {
+  display: flex;
+}
+
+.Select-layout-code {
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 8px;
+  background-color:rgba(111, 126, 255, 1);
+  color: rgba(255, 255, 255, 1);
+  margin-right: 7px;
+  border-radius: 3px;
+}
+
+.Select-layout-wrap-input {
+  width: 217px;
+  margin: 0 auto;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  background-color: rgba(255, 255, 255, 1);
 }
 
 .Select-layout-list {
-  width: 240px;
+  width: 225px;
   max-height: 163px;
-  /* position: absolute; */
-  overflow-y: auto;
+  overflow-y: scroll;
   list-style-type: none;
   margin: 0;
   padding: 5px;
-  box-shadow: 0px 5px 10px 2px rgba(34, 60, 80, 0.2);
+  /* background-attachment: local, local;
+  background-image: url("../../assets/images/rectangle.png");
+  background-repeat: no-repeat, no-repeat; */
 }
 
 .Select-layout-list::-webkit-scrollbar {
   width: 7px;
-  height: 3px;
-  background-color: #E5E6E9; /* Цвет бегунка */
-  border-radius: 20px; /* Округление бегунка */
-  border: 3px solid #E5E6E9; /* Оформление границ бегунка */
+}
+
+.Select-layout-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.Select-layout-list::-webkit-scrollbar-thumb {
+  /* background: #e5e6e9; */
+  background-image: url("../../assets/images/rectangle.png");
+  border-radius: 8px;
 }
 
 .Select-layout-item {
+  display: flex;
+  align-items: center;
   height: 30px;
-  background-color: #808DFF;
-  }
+  font-weight: 400;
+  font-size: 15px;
+  padding-left: 5px;
+  /* background-color: #808dff; */
+}
+
+.Select-layout-item:hover {
+  background-color: rgba(219, 223, 255, 1);
+}
+
+.Select-layout-input {
+  display: flex;
+  justify-content: space-between;
+  box-sizing: border-box;
+  height: 30px;
+  background-color: rgba(255, 255, 255, 1);
+  padding: 8px;
+  box-shadow: 0px 0px 10px 2px rgba(34, 60, 80, 0.2);
+}
+
+.Select-layout-input_select {
+  box-shadow: none;
+}

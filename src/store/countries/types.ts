@@ -1,6 +1,7 @@
 export interface IСountry {
     title: string
    _id: string
+   code: string
   }
 
 export interface ICountriesInitState {

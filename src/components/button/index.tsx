@@ -6,11 +6,12 @@ import './style.css'
 interface IButtonProps {
   value: string
   onClick?: () => void
+  closeStyle?: boolean
 }
-const Button: FC<IButtonProps> = ({ value, onClick = () => {} }) =>{
+const Button: FC<IButtonProps> = ({ value, onClick = () => {}, closeStyle = false }) =>{
   const cn = bem('Button')
   return (
-    <button className={cn()} onClick={onClick}>{value}</button>
+    <button className={cn({ close: closeStyle })} onClick={onClick}>{value}</button>
   )
 }
 
