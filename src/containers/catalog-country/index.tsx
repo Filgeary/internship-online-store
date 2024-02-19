@@ -58,6 +58,7 @@ function CatalogCountry() {
       smooth={true}
       onOpen={handlers.onOpen}
       disabled={select.countriesLoading || select.waiting}
+      placeholder={'Выбор страны'}
     >
       <Autocomplete.Search onChange={helpers.optionsBuilder} placeholder='Поиск' />
       <Autocomplete.List>

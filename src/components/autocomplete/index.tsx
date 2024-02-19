@@ -187,7 +187,7 @@ function Autocomplete(props: AutocompleteProps) {
           <AutocompleteField
             isDisabled={true}
             code={values.active.code}
-            title={values.active.title}
+            title={values.active.title || props.placeholder}
           />
 
           <div className={cn('marker')}>
