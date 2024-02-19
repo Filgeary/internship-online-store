@@ -1,4 +1,4 @@
-import {memo, useCallback, useEffect, useMemo} from "react";
+import {memo, useCallback, useMemo} from "react";
 import useTranslate from "@src/hooks/use-translate";
 import useStore from "@src/hooks/use-store";
 import useSelector from "@src/hooks/use-selector";
@@ -7,8 +7,8 @@ import Input from "@src/components/input";
 import SideLayout from "@src/components/side-layout";
 import treeToList from "@src/utils/tree-to-list";
 import listToTree from "@src/utils/list-to-tree";
-import { StoreNames } from "./type";
 import Dropdown from "../dropdown";
+import { StoreNames } from "./type";
 
 function CatalogFilter(props: StoreNames) {
   const store = useStore();
@@ -17,13 +17,8 @@ function CatalogFilter(props: StoreNames) {
     sort: state[props.storeName]!.params.sort,
     query: state[props.storeName]!.params.query,
     category: state[props.storeName]!.params.category,
-    madeIn: state[props.storeName]!.params.madeIn,
     categories: state.categories.list,
   }));
-
-  useEffect(() => {
-    store.actions.countries.select(select.madeIn);
-  }, [])
 
   const callbacks = {
     // Сортировка
@@ -46,11 +41,6 @@ function CatalogFilter(props: StoreNames) {
     onCategory: useCallback(
       (category: string) =>
         store.actions[props.storeName]!.setParams({ category, page: 1 }),
-      [store]
-    ),
-    onCountry: useCallback(
-      (madeIn: string) =>
-        store.actions[props.storeName]!.setParams({ madeIn, page: 1 }),
       [store]
     ),
   };

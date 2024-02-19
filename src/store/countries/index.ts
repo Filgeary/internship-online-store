@@ -7,7 +7,6 @@ class CountriesState extends StoreModule<InitialStateCountries> {
       list: [],
       waiting: false,
       count: 0,
-      selected: null
     };
   }
 
@@ -31,7 +30,7 @@ class CountriesState extends StoreModule<InitialStateCountries> {
           ...this.getState(),
           list: res.data.result.items,
           waiting: false,
-          count: res.data.result.count
+          count: res.data.result.count,
         },
         "Страны загружены"
       );
@@ -59,19 +58,6 @@ class CountriesState extends StoreModule<InitialStateCountries> {
         "Страны загружены"
       );
     }
-  }
-  async select(_id: string) {
-    const res = await this.services.api.request({
-      url: `/api/v1/countries/${_id}?fields=_id,title,code&limit=*`,
-    });
-
-    if(res.status === 200) {
-      this.setState({
-        ...this.getState(),
-        selected: res.data.result,
-      });
-    }
-
   }
 }
 

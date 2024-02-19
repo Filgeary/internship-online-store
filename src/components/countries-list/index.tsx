@@ -3,8 +3,12 @@ import ItemCountry from "../item-country";
 import './style.css';
 import { CountriesListProps } from "./type";
 import { memo } from "react";
+import useKeyPress from "@src/hooks/use-key-press";
 
 function CountriesList(props: CountriesListProps) {
+  const arrowDown = useKeyPress("ArrowDown");
+  const arrowUp = useKeyPress("ArrowUp");
+  const enter = useKeyPress("Enter");
   const cn = bem("CountriesList");
 
   return (
@@ -14,7 +18,7 @@ function CountriesList(props: CountriesListProps) {
           className={cn("item", {
             selected: props.selectedItemId === country._id,
           })}
-          onClick={() => props.onSelect(country._id)}
+          onClick={() => props.onSelect(country)}
           tabIndex={index}
           key={country._id}
         >

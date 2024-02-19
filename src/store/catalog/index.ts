@@ -103,8 +103,8 @@ class CatalogState extends StoreModule<InitialStateCatalog, InitConfigCatalog> {
         window.location.pathname +
         (urlSearch ? `?${urlSearch}` : "") +
         window.location.hash;
-      if (replaceHistory) {
-        window.history.replaceState({}, "", url);
+        if (replaceHistory) {
+          window.history.replaceState({}, "", url);
       } else {
         window.history.pushState({}, "", url);
       }
@@ -141,7 +141,7 @@ class CatalogState extends StoreModule<InitialStateCatalog, InitConfigCatalog> {
           waiting: false,
         },
         "Загружен список товаров из АПИ"
-      );
+        );
     }
   }
 

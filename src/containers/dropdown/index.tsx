@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import useSelector from "@src/hooks/use-selector";
 import useStore from "@src/hooks/use-store";
 import DropdownTemplate from "@src/components/dropdown-template";
@@ -6,6 +6,7 @@ import Spinner from "@src/components/spinner";
 import Input from "@src/components/input";
 import ItemCountry from "@src/components/item-country";
 import CountriesList from "@src/components/countries-list";
+import { Country } from "@src/store/countries/type";
 
 function Dropdown() {
   const store = useStore();
@@ -14,7 +15,7 @@ function Dropdown() {
     countries: state.countries.list,
     count: state.countries.count,
     waiting: state.countries.waiting,
-    selected: state.countries.selected,
+    madeIn: state.catalog.params.madeIn
   }));
 
   const callbacks = {
@@ -25,21 +26,28 @@ function Dropdown() {
       [store]
     ),
     onSelect: useCallback(
-      (_id: string) => {
-        store.actions.countries.select(_id);
-        store.actions.catalog.setParams({ madeIn: _id, page: 1 });
+      (data: Country) => {
+        store.actions.catalog.setParams({ madeIn: data._id, page: 1 });
       },
       [store]
     ),
   };
 
+  const options = {
+    selected: select.countries.find(item => item._id === select.madeIn),
+    countriesList: useMemo<Country[]>(() => [{_id: '', code: '', title: "Все"}, ...select.countries], [select.countries])
+  }
+
   const renders = {
-    selectedItem: useCallback(() => (
-      <ItemCountry
-        title={select.selected?.title ? select.selected?.title : "Все"}
-        code={select.selected?.code}
-      />
-    ), [select.selected]),
+    selectedItem: useCallback(
+      () => (
+        <ItemCountry
+          title={options.selected?.title ? options.selected?.title : "Все"}
+          code={options.selected?.code}
+        />
+      ),
+      [options.selected]
+    ),
     input: () => (
       <Input
         value={""}
@@ -53,13 +61,13 @@ function Dropdown() {
       () => (
         <Spinner active={select.waiting}>
           <CountriesList
-            countries={select.countries}
-            selectedItemId={select.selected?._id}
+            countries={options.countriesList}
+            selectedItemId={select.madeIn}
             onSelect={callbacks.onSelect}
           />
         </Spinner>
       ),
-      [select.countries, select.selected]
+      [select.countries, select.madeIn]
     ),
   };
 
