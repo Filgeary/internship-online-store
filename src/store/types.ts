@@ -14,13 +14,20 @@ export type StoreState = {
     [moduleKey in AllModules]: ReturnType<ActionsState[moduleKey]["initState"]>;
 };
 
-export type ExtendedModulesKey<T extends AllModules> = T | `${T}-${string}`;
-export type ExtendedModulesAllKey = ExtendedModulesKey<AllModules>
+// Специальный тип стора, которые собирается из внутренних конфигов, определяя их через ReturnType, проходясь по каждому модулю
+export type TModulesConfig = {
+  [moduleKey in AllModules as ExtendedModulesKey<moduleKey>]: ReturnType<ActionsState[moduleKey]["initConfig"]>;
+}
 
+// Расширение ключей модулей, чтобы можно было использовать названия, которые просто начинаются с названия модуля
+export type ExtendedModulesKey<T extends AllModules> = T | `${T}-${string}`;
+
+// Типы состояний всех модулей + разрешение индексации по расширенным ключам
 export type AssembledState = {
   [key in AllModules as ExtendedModulesKey<key>]: ReturnType<AssembledActions[key]['initState']>;
 };
 
+// Типы состояний всех модулей + разрешение индексации по расширенным ключам
 export type AssembledActions = {
   [key in AllModules as ExtendedModulesKey<key>]: InstanceType<ImportModules[key]>;
 };

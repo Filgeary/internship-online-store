@@ -1,5 +1,5 @@
 import * as modules from './exports';
-import {Config, CurrentModuleConfig} from "@src/config";
+import {Config} from "@src/config";
 import Services from "@src/services";
 import {
   ActionsState,
@@ -7,7 +7,7 @@ import {
   AssembledActions,
   AssembledState,
   ExtendedModulesKey,
-  StoreState
+  StoreState, TModulesConfig
 } from "@src/store/types";
 
 
@@ -54,14 +54,14 @@ class Store {
    * @param base {String} - Имя state с которого будет происходить копирование
    * @param config {Object} - Какие-то параметры конфига
    * */
-  makeCopy<T extends AllModules, Name extends ExtendedModulesKey<AllModules>>(name: Name, base: AllModules, config: CurrentModuleConfig[T] = {} as CurrentModuleConfig[T]) {
+  makeCopy<T extends AllModules, Name extends ExtendedModulesKey<AllModules>>(name: Name, base: AllModules, config: TModulesConfig[T] = {} as TModulesConfig[T]) {
     // Возможно дубликат уже есть
     if (this.actions[name] && this.state[name]) {
       console.error("Дубликат с таким именем уже существует");
       return;
     }
     // Создаем новый конфиг, который будет использован в конструкторе, по умолчанию это конфиг по имени модуля, но можно передавать другие значения
-    const newConfig: CurrentModuleConfig[T] = this.config.modules[base] ? {...this.config.modules[base], ...config} : {...config};
+    const newConfig: TModulesConfig[T] = this.config.modules[base] ? {...this.config.modules[base], ...config} : {...config};
     // Создаем конструктор модуля и проверяем есть ли там что-то
     const moduleConstructor = modules[base];
     if (moduleConstructor) {

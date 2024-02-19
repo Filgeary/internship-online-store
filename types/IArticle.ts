@@ -1,3 +1,4 @@
+// Тип для страны производства
 export interface MadeIn {
   _id: string,
   code: string,

@@ -1,13 +1,9 @@
 import StoreModule from "../module";
-import simplifyErrors, {IIssue} from "@src/utils/simplify-errors";
-import {Config, CurrentModuleConfig} from "@src/config";
-import Store from "@src/store";
+import simplifyErrors from "@src/utils/simplify-errors";
 import {IUser} from "../../../types/User";
 import {TSessionData} from "../../../types/Response";
-import {AllModules} from "@src/store/types";
-import Services from "@src/services";
 
-type TSessionConfig = CurrentModuleConfig['session']
+type TSessionConfig = {tokenHeader: string}
 
 /**
  * Сессия

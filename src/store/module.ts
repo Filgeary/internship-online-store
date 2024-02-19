@@ -1,7 +1,6 @@
 import Store from "@src/store/index";
-import {AllModules, AssembledState, ExtendedModulesKey, StoreState} from "@src/store/types";
+import {AllModules, AssembledState, ExtendedModulesKey} from "@src/store/types";
 import Services from "@src/services";
-import {CurrentModuleConfig} from "@src/config";
 
 /**
  * Базовый класс для модулей хранилища
@@ -29,13 +28,12 @@ class StoreModule<T extends ExtendedModulesKey<AllModules>, Config = object> {
     this.services = store.services;
   }
 
+  initConfig(): Config {
+    return {} as Config;
+  }
   initState() {
     return {}
   }
-  initConfig() {
-    return {} as Config
-  }
-
   getState(): AssembledState[T] {
     return this.store.getState()[this.name] as AssembledState[T];
   }

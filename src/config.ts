@@ -1,9 +1,10 @@
-import {AllModules, ImportModules} from "@src/store/types";
+import {AllModules, ImportModules, TModulesConfig} from "@src/store/types";
 
 
 const isProduction = process.env.NODE_ENV === 'production';
 
-const compositeConfig = {
+// Это конфиг для заполнения с помощью него будут инициализироваться обязательные поля в модулях
+const defaultConfig = {
   store: {
     log: !isProduction,
     modules: {
@@ -20,21 +21,23 @@ const compositeConfig = {
   }
 }
 
-type TConfig = typeof compositeConfig;
+// Получаем тип конфига
+type TConfig = typeof defaultConfig;
+// Тип модулей
 type TStoreModules = TConfig['store']['modules'];
+// Ключи "существующих" модулей
 type TStoreModulesKeys = keyof TStoreModules;
+// Ключи модулей, которых нет в конфиге, но они могут существовать
 type exceptForConfigurationModules = keyof Omit<ImportModules, TStoreModulesKeys>
-
-type ModuleConfigExt<Module> = Module extends TStoreModulesKeys ? TStoreModules[Module] : {};
-
+// С помощью этого типа можно будет сделать свойства в типе T, которые пересекаются со свойствами в типе K необязательными.
+// Omit<T, K> удаляет все свойства из типа T, которые перечислены в типе K. Таким образом, создается новый тип без указанных свойств.
+// Pick<T, K> выбирает только указанные свойства из типа T.
+// Partial<Pick<T, K>> делает только выбранные свойства необязательными, превращая их в key?: value.
+// С помощью & объединяются типы без указанных свойств (сделанных частично необязательными) и только указанных свойств (сделанных частично необязательными).
 type PartialBy<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
 
-// Объединим типы для всех модулей
-export type ModuleConfig = {
-  [key in AllModules]: ModuleConfigExt<key>;
-};
-
-export type CurrentModuleConfig = PartialBy<ModuleConfig, exceptForConfigurationModules>
+// Тип, который будет представлять объект модулей, при этом модули которые не присутствуют в конфиге будут помечены как необязательные
+export type CurrentModuleConfig = PartialBy<TModulesConfig, exceptForConfigurationModules>
 
 // Тип для всей конфигурации
 export interface Config {
@@ -46,6 +49,5 @@ export interface Config {
     baseUrl: string;
   };
 }
-
-const config: Config = compositeConfig;
+const config: Config = defaultConfig;
 export default config;

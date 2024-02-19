@@ -1,8 +1,5 @@
 import StoreModule from "../module";
 import exclude from "@src/utils/exclude";
-import Store from "@src/store";
-import {CurrentModuleConfig} from "@src/config";
-import {AllModules} from "@src/store/types";
 
 export type TSort = 'order' | 'title.ru' | '-price' | 'edition'
 export interface Params {
@@ -13,7 +10,7 @@ export interface Params {
   category: string
 }
 
-type TCatalogConfig = CurrentModuleConfig['catalog']
+type TCatalogConfig = {entryURLParams: boolean}
 
 /**
  * Состояние каталога - параметры фильтра и список товара

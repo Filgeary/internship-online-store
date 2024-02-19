@@ -1,8 +1,10 @@
+// Интерфейс ролей
 interface Role {
   _id: string;
   _type: string;
 }
 
+// Профиль
 export interface Profile {
   name: string;
   surname?: string;
@@ -16,6 +18,7 @@ export interface Profile {
   street?: string;
 }
 
+// Интерфейс юзера
 export interface IUser {
   _id: string;
   _key: string;

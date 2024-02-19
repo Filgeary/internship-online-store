@@ -1,0 +1,50 @@
+{
+  "title": "Shop",
+  "menu": {
+    "main": "Main"
+  },
+  "basket": {
+    "title": "Cart",
+    "open": "Open",
+    "close": "Close",
+    "inBasket": "In cart",
+    "empty": "empty",
+    "total": "Total",
+    "unit": "pcs",
+    "delete": "Delete",
+    "articles": {
+      "one": "article",
+      "other": "articles"
+    },
+    "add": "Add another product"
+  },
+  "modalAdd": {
+    "article": {
+      "one": "article",
+      "other": "articles"
+    },
+    "close": "close",
+    "sum": "for the amount",
+    "cancel": "cancel",
+    "ok": "ok"
+  },
+  "modalList": {
+    "title": "Select products"
+  },
+  "article": {
+    "add": "Add"
+  },
+  "filter": {
+    "reset": "Reset"
+  },
+  "auth": {
+    "title": "Sign In",
+    "login": "Login",
+    "password": "Password",
+    "signIn": "Sign in"
+  },
+  "session": {
+    "signIn": "Sign in",
+    "signOut": "Sign Out"
+  }
+}

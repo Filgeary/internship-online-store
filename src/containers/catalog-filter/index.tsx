@@ -7,8 +7,8 @@ import Input from "@src/components/input";
 import SideLayout from "@src/components/side-layout";
 import treeToList from "@src/utils/tree-to-list";
 import listToTree from "@src/utils/list-to-tree";
-import {ExtendedModulesAllKey, ExtendedModulesKey} from "@src/store/types";
-import {Params, TSort} from "@src/store/catalog";
+import {ExtendedModulesKey} from "@src/store/types";
+import {TSort} from "@src/store/catalog";
 
 interface Props {
   stateName?: ExtendedModulesKey<'catalog'>,

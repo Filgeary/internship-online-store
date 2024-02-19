@@ -10,6 +10,7 @@ export interface IResponses<T> {
   "headers": Record<string, string>
 }
 
+// Ошибка с сервера
 interface ErrorData {
   "error": {
     "id": string,
@@ -21,6 +22,7 @@ interface ErrorData {
   }
 }
 
+// Успешная сессия
 interface SuccessfulSessionData {
   "result": {
     "token": string
@@ -28,18 +30,14 @@ interface SuccessfulSessionData {
   }
 }
 
+// Успешная загрузка категорий
 interface SuccessfulCategoryData {
   "result": {
     "items": Tree[]
   }
 }
 
-interface SuccessfulArticlesData {
-  "result": {
-    "items": IArticle[]
-  }
-}
-
+// Успешная загрузка товаров
 interface SuccessfulArticleData {
   "result": IArticle
 }
@@ -47,4 +45,3 @@ interface SuccessfulArticleData {
 export type TCategoryData = IResponses<SuccessfulCategoryData>;
 export type TSessionData = IResponses<SuccessfulSessionData>;
 export type TArticleData = IResponses<SuccessfulArticleData>
-export type TAllData = TCategoryData | TSessionData | TArticleData
