@@ -1,5 +1,3 @@
-import './style.css';
-
 import { memo, useEffect, useRef } from 'react';
 import { TOption, useAutocompleteContext } from '..';
 import AutocompleteField from '../autocomplete-field';
@@ -19,10 +17,8 @@ function AutocompleteOption(props: OptionProps) {
 
   const optionRef = useRef<HTMLDivElement>(null);
 
-  // const isActive =
-  //   (values.active._id === props.option._id || values.inFocus === indexForFocus) && !isTitle;
-
-  const isActive = values.selected.includes(props.option._id);
+  const isActive =
+    (values.selected.includes(props.option._id) || values.inFocus === indexForFocus) && !isTitle;
 
   const handlers = {
     onClick: () => {

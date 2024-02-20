@@ -34,9 +34,11 @@ function CatalogCountry() {
 
   const handlers = {
     onOpen: () => {
-      // if (select.countries.length === select.country.length) {
-      // }
-      store.actions.countries.load();
+      const countryArray = Array.isArray(select.country) ? select.country : [select.country];
+
+      if (select.countries.length <= countryArray.length) {
+        store.actions.countries.load();
+      }
     },
 
     onClose: (ids: string[]) => {
@@ -69,8 +71,8 @@ function CatalogCountry() {
   return (
     <Autocomplete.Root
       value={select.country}
-      isMultiple={false}
-      // isMultiple={true}
+      // isMultiple={false}
+      isMultiple={true}
       // onSelected={(country) => callbacks.onCountrySelected(country._id)}
       // onSelected={(country) => alert(JSON.stringify(country))}
       options={options.countriesDefault}
@@ -83,11 +85,12 @@ function CatalogCountry() {
     >
       <Autocomplete.Search onChange={helpers.optionsBuilder} placeholder='Поиск' />
       <Autocomplete.List>
-        {options.countriesInAction.map((option) => (
+        {options.countriesInAction.map((option, index) => (
           <Autocomplete.Option
             key={option._id}
             option={option}
             displayString={(option) => option.title}
+            indexForFocus={index}
           />
         ))}
       </Autocomplete.List>
