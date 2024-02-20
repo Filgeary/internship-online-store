@@ -118,13 +118,13 @@ class CatalogState extends StoreModule<InitialStateCatalog, InitConfigCatalog> {
         sort: params.sort,
         "search[query]": params.query,
         "search[category]": params.category,
-        "search[madeIn]": params.madeIn
+        "search[madeIn]": params.madeIn,
       },
       {
         skip: 0,
         "search[query]": "",
         "search[category]": "",
-        "search[madeIn]": ""
+        "search[madeIn]": "",
       }
     );
 

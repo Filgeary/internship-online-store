@@ -1,4 +1,4 @@
 export interface ItemCountryProps {
-  title: string
+  title?: string
   code?: string,
 }

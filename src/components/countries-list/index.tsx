@@ -1,33 +1,43 @@
-import { memo, useEffect, useRef } from "react";
+import { memo, useCallback, useState } from "react";
 import { cn as bem } from "@bem-react/classname";
 import ItemCountry from "../item-country";
-import useKeyPress from "@src/hooks/use-key-press";
 import { CountriesListProps } from "./type";
 import './style.css';
 
 function CountriesList(props: CountriesListProps) {
-  const arrowDown = useKeyPress("ArrowDown");
-  const arrowUp = useKeyPress("ArrowUp");
-  const enter = useKeyPress("Enter");
   const cn = bem("CountriesList");
+  const firstState = props.selectedItemId.split('|').filter(item => item);
 
-  const countryRef = useRef<HTMLLIElement>(null);
+  const [selected, setSelected] = useState<string[]>(firstState);
 
-  useEffect(() => {
-    if(enter) {
-      countryRef.current?.click();
-    }
-  }, [enter])
+  const callbacks = {
+    onSelect: useCallback((_id: string) => {
+      if (!_id) {
+        props.onSelect([_id]);
+        setSelected([]);
+        return
+      }
+      if (!selected.includes(_id)) {
+        setSelected((prev) => [...prev, _id]);
+        props.onSelect([...selected, _id]);
+      } else {
+        const filterSelected = selected.filter((item) => item !== _id);
+        setSelected(filterSelected);
+        props.onSelect(filterSelected);
+      }
+    }, [selected])
+  }
 
   return (
     <ul className={cn()}>
       {props.countries.map((country, index) => (
         <li
           className={cn("item", {
-            selected: props.selectedItemId === country._id,
+            selected: selected.includes(country._id),
+            highlight: props.focusInd === index + 1,
           })}
-          onClick={() => props.onSelect(country._id)}
-          tabIndex={index}
+          onClick={() => callbacks.onSelect(country._id)}
+          tabIndex={index + 1}
           key={country._id}
         >
           <ItemCountry title={country.title} code={country.code} />

@@ -1,4 +1,4 @@
-import { RefObject, useCallback, useMemo, useState } from "react";
+import { RefObject, useCallback, useEffect, useMemo, useState } from "react";
 import useSelector from "@src/hooks/use-selector";
 import useStore from "@src/hooks/use-store";
 import DropdownTemplate from "@src/components/dropdown-template";
@@ -14,10 +14,18 @@ function Dropdown() {
 
   const select = useSelector((state) => ({
     countries: state.countries.list,
-    count: state.countries.count,
+    selected: state.countries.selected,
     waiting: state.countries.waiting,
     madeIn: state.catalog.params.madeIn
   }));
+
+  useEffect(() => {
+    if (Array.isArray(select.madeIn)) {
+      store.actions.countries.loadById(select.madeIn);
+    } else {
+      store.actions.countries.loadById([select.madeIn]);
+    }
+  }, [select.madeIn])
 
   const callbacks = {
     onSearch: useCallback(
@@ -27,17 +35,15 @@ function Dropdown() {
       },
       [store]
     ),
-    onSelect: useCallback(
-      (_id: string) => {
-        store.actions.catalog.setParams({ madeIn: _id, page: 1 });
-      },
-      [store]
-    ),
-    onOpen: () => store.actions.countries.load(),
+    onSelectMany: useCallback((ids: string[]) => {
+        store.actions.catalog.setParams({ madeIn: ids.join('|'), page: 1 })
+    }, [store]),
+    removeSelectedItem: () => {
+
+    }
   };
 
   const options = {
-    selected: select.countries.find(item => item._id === select.madeIn),
     countriesList: useMemo<Country[]>(() => {
       if(search) {
         return select.countries;
@@ -49,12 +55,22 @@ function Dropdown() {
   const renders = {
     selectedItem: useCallback(
       () => (
-        <ItemCountry
-          title={options.selected?.title ? options.selected?.title : "Все"}
-          code={options.selected?.code}
-        />
+        <>
+          {select.selected.length > 1 ? (
+            select.selected.map((country) => (
+              <li key={country.code} title={country.title} onClick={callbacks.removeSelectedItem}>
+                <ItemCountry code={country.code} />
+              </li>
+            ))
+          ) : (
+            <ItemCountry
+              code={select.selected[0]?.code}
+              title={select.selected[0]?.title ?? "Все"}
+            />
+          )}
+        </>
       ),
-      [options.selected]
+      [select.selected]
     ),
     input: (searchRef: RefObject<HTMLInputElement>) => (
       <Input
@@ -67,12 +83,13 @@ function Dropdown() {
       />
     ),
     options: useCallback(
-      () => (
+      (focusInd: number) => (
         <Spinner active={select.waiting}>
           <CountriesList
+            focusInd={focusInd}
             countries={options.countriesList}
             selectedItemId={select.madeIn}
-            onSelect={callbacks.onSelect}
+            onSelect={callbacks.onSelectMany}
           />
         </Spinner>
       ),
@@ -85,7 +102,7 @@ function Dropdown() {
       renderSelectedItem={renders.selectedItem}
       renderInput={renders.input}
       renderOptions={renders.options}
-    />
+      countOfOptions={options.countriesList.length} />
   );
 }
 

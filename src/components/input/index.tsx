@@ -1,4 +1,4 @@
-import {ChangeEvent, LegacyRef, RefObject, forwardRef, memo, useCallback, useLayoutEffect, useState} from 'react';
+import {ChangeEvent, LegacyRef, forwardRef, memo, useCallback, useLayoutEffect, useState} from 'react';
 import {cn as bem} from '@bem-react/classname';
 import debounce from 'lodash.debounce';
 import type { InputProps } from './type';
@@ -33,6 +33,7 @@ const Input = forwardRef(function Input(
       type={props.type}
       placeholder={props.placeholder}
       onChange={onChange}
+      tabIndex={0}
       ref={ref}
     />
   );

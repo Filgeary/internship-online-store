@@ -1,12 +1,12 @@
 import StoreModule from "../module";
-import { InitialStateCountries } from "./type";
+import { Country, InitialStateCountries } from "./type";
 
 class CountriesState extends StoreModule<InitialStateCountries> {
   initState(): InitialStateCountries {
     return {
       list: [],
       waiting: false,
-      count: 0,
+      selected: [],
     };
   }
 
@@ -30,7 +30,6 @@ class CountriesState extends StoreModule<InitialStateCountries> {
           ...this.getState(),
           list: res.data.result.items,
           waiting: false,
-          count: res.data.result.count,
         },
         "Страны загружены"
       );
@@ -52,12 +51,29 @@ class CountriesState extends StoreModule<InitialStateCountries> {
         {
           ...this.getState(),
           list: res.data.result.items,
-          count: res.data.result.count,
           waiting: false,
         },
         "Страны загружены"
       );
     }
+  }
+
+  async loadById(ids: string[]) {
+    this.setState({ ...this.getState(), waiting: true });
+    const ind = ids.filter(item => item)
+    const res = await this.services.api.request({
+      url: `/api/v1/countries/?search[ids]=${ind.join("|")}&fields=*`,
+    });
+
+    this.setState(
+      {
+        ...this.getState(),
+        selected: res.data.result.items,
+        waiting: false,
+      },
+      `Страны ${ids} успешно получены`
+    );
+
   }
 }
 

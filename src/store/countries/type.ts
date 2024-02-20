@@ -1,7 +1,7 @@
 export interface InitialStateCountries {
-  list: Country[],
-  waiting: boolean,
-  count: number,
+  list: Country[];
+  waiting: boolean;
+  selected: Country[];
 }
 
 export interface Country {

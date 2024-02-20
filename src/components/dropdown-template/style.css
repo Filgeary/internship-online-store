@@ -33,6 +33,13 @@
   align-items: center;
   padding: 0 6px;
   gap: 6px;
+  overflow: hidden;
+
+  span {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
 }
 
 .Dropdown-menu__wrapper {
