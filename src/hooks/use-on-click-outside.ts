@@ -11,11 +11,6 @@ const useOnClickOutside: TUseOnClickOutside = (ref, { closeByEsc }, ...handlers)
     const runHandlers = () => handlers.forEach((handler) => handler());
 
     const listener = (e: Event) => {
-      // if (e.currentTarget === e.target) {
-      //   runHandlers();
-      // }
-
-      //@ts-ignore
       if (!ref.current.contains(e.target)) {
         runHandlers();
       }

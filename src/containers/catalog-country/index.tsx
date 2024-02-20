@@ -2,6 +2,7 @@ import Autocomplete, { TOption } from '@src/components/autocomplete';
 import { useCatalogContext } from '../catalog';
 import { useEffect, useMemo, useState } from 'react';
 import useStore from '@src/hooks/use-store';
+import sliceLongString from '@src/utils/slice-long-string';
 
 function CatalogCountry() {
   const store = useStore();
@@ -82,6 +83,7 @@ function CatalogCountry() {
       disabled={select.countriesLoading || select.waiting}
       placeholder={'Выбор страны'}
       onFirstDropAll={true}
+      showActiveCodes={false}
     >
       <Autocomplete.Search onChange={helpers.optionsBuilder} placeholder='Поиск' />
       <Autocomplete.List>
@@ -89,7 +91,7 @@ function CatalogCountry() {
           <Autocomplete.Option
             key={option._id}
             option={option}
-            displayString={(option) => option.title}
+            displayString={(option) => sliceLongString(option.title)}
             indexForFocus={index}
           />
         ))}

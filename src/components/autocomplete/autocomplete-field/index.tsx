@@ -1,6 +1,7 @@
 import React, { memo } from 'react';
 import './style.css';
 import { cn as bem } from '@bem-react/classname';
+import AutocompleteCode from '../autocomplete-code';
 
 type FieldProps = {
   isDisabled?: boolean;
@@ -22,7 +23,7 @@ function AutocompleteField(props: FieldProps, ref: React.RefObject<HTMLDivElemen
       onClick={props.onClick}
       className={cn({ active: props.isActive, disabled: props.isDisabled })}
     >
-      <div className={cn('code')}>{props.code}</div>
+      <AutocompleteCode code={props.code} />
       <span className={cn('title')}>{props.title}</span>
     </div>
   );

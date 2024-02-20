@@ -3,6 +3,7 @@ import React, {
   memo,
   useContext,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -20,6 +21,8 @@ import AutocompleteSearch from './autocomplete-search';
 import AutocompleteList from './autocomplete-list';
 import AutocompleteField from './autocomplete-field';
 import simplifyName from '@src/utils/simplify-name';
+import AutocompleteCode from './autocomplete-code';
+import sliceLongString from '@src/utils/slice-long-string';
 
 type AutocompleteProps = {
   children: React.ReactNode;
@@ -33,6 +36,8 @@ type AutocompleteProps = {
   onFirstDropAll?: boolean;
   disabled?: boolean;
   isMultiple?: boolean;
+  max?: number;
+  showActiveCodes?: boolean;
 };
 
 export type TOption = {
@@ -69,6 +74,8 @@ function Autocomplete(props: AutocompleteProps) {
     disabled = false,
     onFirstDropAll = false,
     isMultiple = false,
+    max = 10,
+    showActiveCodes = false,
   } = props;
 
   const cn = bem('Autocomplete');
@@ -140,6 +147,12 @@ function Autocomplete(props: AutocompleteProps) {
 
       return handler;
     },
+
+    deleteByCodeClick: (e: MouseEvent, option: TOption) => {
+      e.stopPropagation();
+
+      callbacks.removeActive(option);
+    },
   };
 
   const values = {
@@ -151,7 +164,7 @@ function Autocomplete(props: AutocompleteProps) {
 
     active: useMemo<TOption | TOption[]>(() => {
       if (isMultiple) {
-        return props.options.filter((option) => selected.includes(option._id));
+        return selected.map((id) => props.options.find((option) => option._id === id));
       }
 
       return (
@@ -162,6 +175,11 @@ function Autocomplete(props: AutocompleteProps) {
         }
       );
     }, [props.value, props.options, props.placeholder, isMultiple, selected]),
+
+    selectedOptions: useMemo(() => {
+      // return props.options.filter((option) => selected.includes(option._id));
+      return selected.map((id) => props.options.find((option) => option._id === id));
+    }, [selected, props.options]),
   };
 
   // Более системная информация о дальнейших отображаемых данных
@@ -169,12 +187,13 @@ function Autocomplete(props: AutocompleteProps) {
     activeTitle: Array.isArray(values.active) ? values.active[0]?.title : values.active.title,
     activeCode: Array.isArray(values.active) ? values.active[0]?.code : values.active.code,
     restLength: selected.slice(1).length,
+    isMultipleSelected: values.selectedOptions.length > 1,
   };
 
   // Отображение, понятное пользователю
   const views = {
     activeTitle: options.activeTitle
-      ? simplifyName(options.activeTitle, options.restLength)
+      ? simplifyName(sliceLongString(options.activeTitle), options.restLength)
       : props.placeholder,
     activeCode: options.activeCode,
   };
@@ -239,6 +258,13 @@ function Autocomplete(props: AutocompleteProps) {
     setSelected(Array.isArray(props.value) ? props.value : [props.value]);
   }, [props.value]);
 
+  useLayoutEffect(() => {
+    if (selected.length > max) {
+      alert(`Максимум ${max} выбранных стран!`);
+      setSelected(selected.slice(0, max));
+    }
+  }, [selected]);
+
   return (
     <div ref={wrapperRef} className={cn({ active: isOpen, smooth, disabled })}>
       <div
@@ -251,7 +277,25 @@ function Autocomplete(props: AutocompleteProps) {
         className={cn('row')}
       >
         <div className={cn('inner')}>
-          <AutocompleteField isDisabled={true} code={views.activeCode} title={views.activeTitle} />
+          {options.isMultipleSelected && showActiveCodes ? (
+            <div className={cn('codes-list')}>
+              {values.selectedOptions.map((option, index) => (
+                <AutocompleteCode
+                  key={option?._id ?? index}
+                  code={option?.code}
+                  onClick={(e) => helpers.deleteByCodeClick(e, option)}
+                  className={cn('code-action')}
+                  title={option?.title && sliceLongString(option.title)}
+                />
+              ))}
+            </div>
+          ) : (
+            <AutocompleteField
+              isDisabled={true}
+              code={views.activeCode}
+              title={views.activeTitle}
+            />
+          )}
 
           <div className={cn('marker')}>
             <img className={cn('marker-image')} src={Arrow} alt='' aria-hidden='true' />

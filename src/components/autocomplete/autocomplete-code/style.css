@@ -1,0 +1,14 @@
+.AutocompleteCode {
+  flex-shrink: 0;
+  border-radius: 3px;
+  width: 18px;
+  height: 18px;
+  background: #6f7eff;
+  font-weight: 700;
+  font-size: 8px;
+  text-align: center;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

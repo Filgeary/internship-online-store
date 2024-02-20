@@ -72,3 +72,17 @@
   justify-content: space-between;
   align-items: center;
 }
+
+.Autocomplete-marker {
+  margin-left: auto;
+}
+
+.Autocomplete-codes-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7.5px;
+}
+
+.Autocomplete-code-action {
+  cursor: not-allowed;
+}
