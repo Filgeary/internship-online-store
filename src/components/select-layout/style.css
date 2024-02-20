@@ -14,10 +14,12 @@
 
 .Select-layout-wrap-span {
   display: flex;
+  width: 90%;
+  height: 30px;
 }
 
 .Select-layout-code {
-  width: 18px;
+  width: 8.5%;
   height: 18px;
   display: flex;
   align-items: center;
@@ -28,6 +30,18 @@
   color: rgba(255, 255, 255, 1);
   margin-right: 7px;
   border-radius: 3px;
+}
+
+.Select-layout-code_select {
+  width: 18px;
+}
+
+.Select-layout-text {
+  width: 70%;
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .Select-layout-wrap-input {
@@ -52,6 +66,7 @@
 
 .Select-layout-list::-webkit-scrollbar {
   width: 7px;
+  overflow: hidden;
 }
 
 .Select-layout-list::-webkit-scrollbar-track {
@@ -75,6 +90,11 @@
 }
 
 .Select-layout-item:hover {
+  background-color: rgba(219, 223, 255, 1);
+  overflow-y: auto;
+}
+
+.Select-layout-item_hover {
   background-color: rgba(219, 223, 255, 1);
 }
 

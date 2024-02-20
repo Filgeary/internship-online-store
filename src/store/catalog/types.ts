@@ -6,6 +6,7 @@ export interface IParams {
     sort: string
     query: string
     category: string
+    madeIn: string
   }
 
 export interface IIinitCatalogState {
@@ -21,6 +22,7 @@ export interface IValidParams {
     sort?:  string | null
     query?: string | null
     category?: string | null
+    madeIn?: string | null
 }
 
 export interface ISelected {
