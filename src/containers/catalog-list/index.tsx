@@ -31,6 +31,8 @@ function CatalogList({
     limit: state[storeSlice].params.limit,
     sort: state[storeSlice].params.sort,
     query: state[storeSlice].params.query,
+    category: state[storeSlice].params.category,
+    madeIn: state[storeSlice].params.madeIn,
     count: state[storeSlice].count,
     waiting: state[storeSlice].waiting,
   }));
@@ -46,11 +48,18 @@ function CatalogList({
         });
     }, [store]),
     // Пагинация
-    onPaginate: useCallback((page: number) => store.actions[storeSlice].setParams({page}, false, !isModal), [store]),
+    onPaginate: useCallback((page: number) => store.actions[storeSlice].setParams({ page }), [store]),
     // генератор ссылки для пагинатора
     makePaginatorLink: useCallback((page: number) => {
-      return `?${new URLSearchParams({page, limit: select.limit, sort: select.sort, query: select.query})}`;
-    }, [select.limit, select.sort, select.query])
+      //@ts-ignore
+      return `?${new URLSearchParams({page,
+                                      limit: select.limit,
+                                      sort: select.sort,
+                                      query: select.query,
+                                      category: select.category,
+                                      madeIn: select.madeIn,
+                                    })}`;
+    }, [select.limit, select.sort, select.query, select.category, select.madeIn])
   }
 
   const {t} = useTranslate();

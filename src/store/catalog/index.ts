@@ -1,16 +1,27 @@
 import StoreModule from "../module";
 import exclude from "../../utils/exclude";
-import { CatalogArticleType, CatalogParamsType, CatalogStateType } from "./types";
+import { CatalogArticleType, CatalogConfigType, CatalogParamsType, CatalogStateType } from "./types";
+import Store from "..";
 
 /**
  * Состояние каталога - параметры фильтра исписок товара
  */
-class CatalogState extends StoreModule<CatalogStateType> {
+class CatalogState extends StoreModule<CatalogStateType, CatalogConfigType> {
 
   waiting: boolean;
   count: number;
   list: CatalogArticleType[];
   params: CatalogParamsType
+
+  constructor(store: Store, name: string, config: CatalogConfigType)  {
+    let configParams: CatalogConfigType;
+    if(/\d/.test(name)) {
+      configParams = {...config, changeUrl: false}
+    } else {
+      configParams = config;
+    }
+    super(store, name, configParams);
+  }
 
   /**
    * Начальное состояние
@@ -24,11 +35,16 @@ class CatalogState extends StoreModule<CatalogStateType> {
         limit: 10,
         sort: 'order',
         query: '',
-        category: ''
+        category: '',
+        madeIn: '',
       },
       count: 0,
       waiting: false
     }
+  }
+
+  initConfig(): CatalogConfigType {
+    return this.config as CatalogConfigType;
   }
 
   /**
@@ -39,39 +55,37 @@ class CatalogState extends StoreModule<CatalogStateType> {
    */
   async initParams(newParams: CatalogParamsType | {} = {}): Promise<void> {
     const urlParams = new URLSearchParams(window.location.search);
-    let validParams: CatalogParamsType;
+    let validParams: CatalogParamsType = {} as CatalogParamsType;
     if (urlParams.has('page')) validParams.page = Number(urlParams.get('page')) || 1;
     if (urlParams.has('limit')) validParams.limit = Math.min(Number(urlParams.get('limit')) || 10, 50);
     if (urlParams.has('sort')) validParams.sort = urlParams.get('sort');
     if (urlParams.has('query')) validParams.query = urlParams.get('query');
     if (urlParams.has('category')) validParams.category = urlParams.get('category');
+    if (urlParams.has('madeIn')) validParams.madeIn = urlParams.get('madeIn');
     await this.setParams({...this.initState().params, ...validParams, ...newParams}, true);
   }
 
   /**
    * Сброс параметров к начальным
    * @param [newParams] {Object} Новые параметры
-   * @param [changeUrl] {Boolean} Менять параметры адресной строки браузера (true) или нет (false)
    * @return {Promise<void>}
    */
-  async resetParams(newParams: CatalogParamsType | {} = {}, changeUrl: boolean = true): Promise<void> {
+  async resetParams(newParams: CatalogParamsType | {} = {}): Promise<void> {
     // Итоговые параметры из начальных, из URL и из переданных явно
     const params = {...this.initState().params, ...newParams};
     // Установка параметров и загрузка данных
-    await this.setParams(params, false, changeUrl);
+    await this.setParams(params);
   }
 
   /**
    * Установка параметров и загрузка списка товаров
    * @param [newParams] {Object} Новые параметры
    * @param [replaceHistory] {Boolean} Заменить адрес (true) или новая запись в истории браузера (false)
-   * @param [changeUrl] {Boolean} Заменить url адресной строки (true) или не менять адрес окна в браузере (false)
    * @returns {Promise<void>}
    */
   async setParams(
       newParams: CatalogParamsType | {} = {},
       replaceHistory: boolean = false,
-      changeUrl: boolean = true
     ): Promise<void> {
     const params: CatalogParamsType = {...this.getState().params, ...newParams};
 
@@ -82,7 +96,7 @@ class CatalogState extends StoreModule<CatalogStateType> {
       waiting: true
     }, 'Установлены параметры каталога');
 
-    if(changeUrl) {
+    if(this.config.changeUrl) {
       // Сохранить параметры в адрес страницы
       let urlSearch = new URLSearchParams(exclude(params, this.initState().params)).toString();
       const url = window.location.pathname + (urlSearch ? `?${urlSearch}`: '') + window.location.hash;
@@ -99,11 +113,13 @@ class CatalogState extends StoreModule<CatalogStateType> {
       fields: 'items(*),count',
       sort: params.sort,
       'search[query]': params.query,
-      'search[category]': params.category
+      'search[category]': params.category,
+      'search[madeIn]': params.madeIn,
     }, {
       skip: 0,
       'search[query]': '',
-      'search[category]': ''
+      'search[category]': '',
+      'search[madeIn]': '',
     });
 
     const res = await this.services.api.request({url: `/api/v1/articles?${new URLSearchParams(apiParams)}`});

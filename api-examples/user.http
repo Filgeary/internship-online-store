@@ -22,3 +22,7 @@ Content-Type: application/json
 GET {{baseUrl}}/users/self
 X-Token: {{token}}
 Content-Type: application/json
+
+
+
+http://example.front.ylab.io/api/v1/docs/

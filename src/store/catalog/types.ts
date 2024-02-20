@@ -1,3 +1,7 @@
+export type CatalogConfigType = {
+  changeUrl: boolean
+}
+
 export type CatalogStateType = {
   waiting: boolean;
   count: number;
@@ -11,6 +15,7 @@ export type CatalogParamsType = {
   sort: string;
   query: string;
   category: string;
+  madeIn: string;
 }
 
 export type CatalogArticleType = {

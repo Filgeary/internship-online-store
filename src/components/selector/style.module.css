@@ -1,0 +1,65 @@
+.Selector {
+  display: flex;
+  align-items: center;
+  width: 240px;
+  height: 30px;
+}
+
+.Chevron {
+  width: 20px;
+  height: 20px;
+  transition: transform 0.5s;
+}
+
+.Open {
+  transform: rotate(180deg);
+}
+
+.Dropdown {
+  position: absolute;
+  display: flex;
+  width: 240px;
+  max-height: 170px;
+  padding: 5px;
+  flex-direction: column;
+  background-color: white;
+  box-shadow: 0px 8px 8px 0px rgba(60, 60, 63, 0.25);
+}
+
+.DropdownInput {
+  border: none;
+  padding: 0;
+  margin: 10px;
+  height: 15px;
+  font-style: italic;
+}
+
+.DropdownInput::placeholder {
+  color: #CCCDD4;
+}
+
+.DropdownInput:focus {
+  outline: none;
+}
+
+.DropdownList {
+  position: relative;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.DropdownList::-webkit-scrollbar {
+  width: 8px;
+  background-color: transparent;
+}
+
+.DropdownList::-webkit-scrollbar-thumb {
+  width: 8px;
+  height: 60px;
+  border-radius: 5px;
+  background: #E5E6E9;
+}
+
+.DropdownList::-webkit-scrollbar-track {
+  background-color: transparent;
+}

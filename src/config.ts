@@ -14,6 +14,9 @@ const config: ConfigType = {
       session: {
         // Названия токена в АПИ
         tokenHeader: 'X-Token',
+      },
+      catalog: {
+        changeUrl: true,
       }
     }
   },

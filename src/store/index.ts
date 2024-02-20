@@ -25,8 +25,8 @@ class Store {
     this.config = config;
     this.listeners = []; // Слушатели изменений состояния
 
-    this.actions = {};
-    this.state = initState;
+    this.actions = {} as StoreActionsType;
+    this.state = initState as StoreStateType;
 
     for (const name of Object.keys(modules) as ModulesKeys[]) {
       this.create(name)

@@ -1,0 +1,45 @@
+.Item {
+  display: flex;
+  align-items: center;
+  padding: 5px;
+  margin-right: auto;
+}
+
+.ItemSelected {
+  background-color: #808DFF;
+}
+
+.ItemSelected .ItemText {
+  color: white;
+}
+
+.ItemIcon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 6px;
+  width: 18px;
+  height: 18px;
+  border-radius: 3px;
+  background: #6F7EFF;
+
+}
+
+.ItemIconText {
+  font-family: Arial;
+  color: #FFF;
+  font-size: 8px;
+  font-weight: 700;
+}
+
+.ItemText {
+  color: #191F4D;
+  font-family: Arial;
+  font-size: 15px;
+  font-weight: 400;
+}
+
+.ItemHover {
+  background-color: #DBDFFF;
+}
+
