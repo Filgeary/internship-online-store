@@ -65,10 +65,6 @@ function CatalogCountry() {
     }
   }, [select.country]);
 
-  // useEffect(() => {
-  //   store.actions.countries.load();
-  // }, []);
-
   return (
     <Autocomplete.Root
       value={select.country}
@@ -76,6 +72,7 @@ function CatalogCountry() {
       isMultiple={true}
       // onSelected={(country) => callbacks.onCountrySelected(country._id)}
       // onSelected={(country) => alert(JSON.stringify(country))}
+      onRemoveCodes={callbacks.onManyCountriesSelected}
       options={options.countriesDefault}
       smooth={true}
       onOpen={handlers.onOpen}
@@ -83,7 +80,7 @@ function CatalogCountry() {
       disabled={select.countriesLoading || select.waiting}
       placeholder={'Выбор страны'}
       onFirstDropAll={true}
-      showActiveCodes={false}
+      showActiveCodes={true}
     >
       <Autocomplete.Search onChange={helpers.optionsBuilder} placeholder='Поиск' />
       <Autocomplete.List>

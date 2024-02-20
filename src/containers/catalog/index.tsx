@@ -107,6 +107,10 @@ function Catalog({ children, stateName }: CatalogProps) {
       },
       [store]
     ),
+    // Удаление страны
+    onRemoveCountry: useCallback(() => {
+      // (country: string) => store.action;
+    }, [store]),
   };
 
   return (

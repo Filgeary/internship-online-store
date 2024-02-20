@@ -38,6 +38,7 @@ type AutocompleteProps = {
   isMultiple?: boolean;
   max?: number;
   showActiveCodes?: boolean;
+  onRemoveCodes?: (ids: string[]) => void;
 };
 
 export type TOption = {
@@ -117,7 +118,16 @@ function Autocomplete(props: AutocompleteProps) {
     },
 
     removeActive: (item: TOption) => {
-      setSelected((prevSelected) => prevSelected.filter((option) => option !== item._id));
+      const newSelected = selected.filter((option) => option !== item._id);
+      setSelected(newSelected);
+
+      if (!isOpen) {
+        props.onRemoveCodes?.(newSelected);
+      }
+
+      if (!newSelected.length) {
+        setSelected([props.options[0]._id]);
+      }
     },
 
     setSearch: (value: string) => {
@@ -175,11 +185,6 @@ function Autocomplete(props: AutocompleteProps) {
         }
       );
     }, [props.value, props.options, props.placeholder, isMultiple, selected]),
-
-    selectedOptions: useMemo(() => {
-      // return props.options.filter((option) => selected.includes(option._id));
-      return selected.map((id) => props.options.find((option) => option._id === id));
-    }, [selected, props.options]),
   };
 
   // Более системная информация о дальнейших отображаемых данных
@@ -187,7 +192,7 @@ function Autocomplete(props: AutocompleteProps) {
     activeTitle: Array.isArray(values.active) ? values.active[0]?.title : values.active.title,
     activeCode: Array.isArray(values.active) ? values.active[0]?.code : values.active.code,
     restLength: selected.slice(1).length,
-    isMultipleSelected: values.selectedOptions.length > 1,
+    isMultipleSelected: Array.isArray(values.active) && values.active.length > 1,
   };
 
   // Отображение, понятное пользователю
@@ -279,15 +284,16 @@ function Autocomplete(props: AutocompleteProps) {
         <div className={cn('inner')}>
           {options.isMultipleSelected && showActiveCodes ? (
             <div className={cn('codes-list')}>
-              {values.selectedOptions.map((option, index) => (
-                <AutocompleteCode
-                  key={option?._id ?? index}
-                  code={option?.code}
-                  onClick={(e) => helpers.deleteByCodeClick(e, option)}
-                  className={cn('code-action')}
-                  title={option?.title && sliceLongString(option.title)}
-                />
-              ))}
+              {Array.isArray(values.active) &&
+                values.active.map((option, index) => (
+                  <AutocompleteCode
+                    key={option?._id ?? index}
+                    code={option?.code}
+                    onClick={(e) => helpers.deleteByCodeClick(e, option)}
+                    className={cn('code-action')}
+                    title={option?.title && sliceLongString(option.title)}
+                  />
+                ))}
             </div>
           ) : (
             <AutocompleteField
