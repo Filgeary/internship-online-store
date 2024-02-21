@@ -5,17 +5,17 @@ import { ArrowUp } from "../icons/arrow-up";
 import useStore from "@src/hooks/use-store";
 import { useClickOutside } from "@src/hooks/use-click-outside";
 import { Option } from "./types";
-import SelectCustomMenu from "./select-custom-menu";
+import MultiSelectMenu from "./multiselect-menu";
 
 type SelectProps = {
-  selected: Option["value"] | null;
+  selected: Option[] | null;
   options: Option[];
   enableSearch?: boolean;
-  onChange?: (selected: Option["value"]) => void;
+  onChange?: (option: Option) => void;
   onClose?: () => void;
 };
 
-function SelectCustom({
+function MultiSelect({
   selected,
   options,
   onChange,
@@ -25,10 +25,6 @@ function SelectCustom({
 
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState("");
-
-  const selectedOption = options.find((el) => {
-    return el.value === selected;
-  });
 
   const filteredOptions = options.filter((option) => {
     const regExp = new RegExp("^" + search, "i");
@@ -45,16 +41,12 @@ function SelectCustom({
 
   const ulRef = useRef<HTMLUListElement>(null);
 
-  const selectedOptionIndex = filteredOptions
-    .map((e) => e.value)
-    .indexOf(selected);
-
-  const [hoveredOption, setHoveredOption] = useState(selectedOptionIndex);
+  const [hoveredOption, setHoveredOption] = useState(0);
 
   const onOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
     setIsOpen(!isOpen);
-    setHoveredOption(selectedOptionIndex);
+    setHoveredOption(0);
     setSearch("");
     !isOpen && store.actions.countries.load();
   };
@@ -115,7 +107,7 @@ function SelectCustom({
         }
 
       case "Enter":
-        onChange(hoveredOptionObject.value);
+        onChange(hoveredOptionObject);
         break;
 
       case "Escape":
@@ -127,13 +119,13 @@ function SelectCustom({
     }
   };
 
-  useEffect(() => {
-    if (isOpen && ulRef.current && selected) {
-      (
-        ulRef.current.childNodes[selectedOptionIndex] as HTMLLIElement
-      ).scrollIntoView({ block: "center" });
-    }
-  }, [isOpen]);
+  // useEffect(() => {
+  //   if (isOpen && ulRef.current && selected) {
+  //     (
+  //       ulRef.current.childNodes[selectedOptionIndex] as HTMLLIElement
+  //     ).scrollIntoView({ block: "center" });
+  //   }
+  // }, [isOpen]);
 
   return (
     <div className="SelectCustom" ref={rootRef}>
@@ -143,21 +135,32 @@ function SelectCustom({
           onClick={(event) => onOpen(event)}
           onKeyDown={(e) => handleKeyDown(e)}
         >
-          <div className="SelectCustom-shortcut">
-            {selectedOption?.shortcut}
-          </div>
-          <div className="SelectCustom-title">{selectedOption?.title}</div>
+          {selected[0].value === "" && (
+            <div className="SelectCustom-shortcut"></div>
+          )}
+          {selected[0].value !== "" && (
+            <div className="SelectCustom-shortcut">{selected.length}</div>
+          )}
+
+          {selected[0].value === "" && (
+            <div className="SelectCustom-title">Выберите страны</div>
+          )}
+
+          {selected[0].value !== "" && (
+            <div className="SelectCustom-title">Стран выбрано</div>
+          )}
+
           <div className="SelectCustom-arrow">
             {isOpen ? <ArrowUp /> : <ArrowDown />}
           </div>
         </button>
         {isOpen && (
-          <SelectCustomMenu
+          <MultiSelectMenu
             onClose={onClose}
             onSearch={onSearch}
             ref={ulRef}
             search={search}
-            selectedOption={selectedOption}
+            selectedOptions={selected}
             onChange={onChange}
             hoveredOptionObject={hoveredOptionObject}
             filteredOptions={filteredOptions}
@@ -169,4 +172,4 @@ function SelectCustom({
   );
 }
 
-export default SelectCustom;
+export default MultiSelect;

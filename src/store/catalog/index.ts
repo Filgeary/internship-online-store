@@ -43,7 +43,7 @@ class CatalogState extends StoreModule {
     if (urlParams.has("query")) validParams.query = urlParams.get("query");
     if (urlParams.has("category"))
       validParams.category = urlParams.get("category");
-    if (urlParams.has("madeIn")) validParams.madeIn = urlParams.get("madeIn");
+    // if (urlParams.has("madeIn")) validParams.madeIn = urlParams.get("madeIn");
     await this.setParams(
       { ...this.initState().params, ...validParams, ...newParams },
       true

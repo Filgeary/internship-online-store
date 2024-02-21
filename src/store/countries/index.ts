@@ -2,7 +2,7 @@ import StoreModule from "../module";
 import { ICountriesState } from "./types";
 
 /**
- * Список категорий
+ * Список стран
  */
 class CountriesState extends StoreModule {
   initState(): ICountriesState {
@@ -12,26 +12,26 @@ class CountriesState extends StoreModule {
     };
   }
   /**
-   * Загрузка списка товаров
+   * Загрузка списка стран
    */
   async load() {
     this.setState(
       { ...this.getState(), waiting: true },
-      "Ожидание загрузки категорий"
+      "Ожидание загрузки стран"
     );
 
     const res = await this.services.api.request({
       url: `/api/v1/countries?fields=_id,title,code&limit=*`,
     });
 
-    // Товар загружен успешно
+    // Страны загружен успешно
     this.setState(
       {
         ...this.getState(),
         list: res.data.result.items,
         waiting: false,
       },
-      "Категории загружены"
+      "Страны загружены"
     );
   }
 }

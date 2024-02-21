@@ -8,6 +8,8 @@ import SideLayout from "@src/components/side-layout";
 import treeToList from "@src/utils/tree-to-list";
 import listToTree from "@src/utils/list-to-tree";
 import SelectCustom from "@src/components/select-custom";
+import MultiSelect from "@src/components/multiselect";
+import { Option } from "@src/components/multiselect/types";
 
 type CatalogFilterProps = {
   catalog: "catalog" | "catalog2";
@@ -101,6 +103,36 @@ function CatalogFilter({ catalog }: CatalogFilterProps) {
 
   const { t } = useTranslate();
 
+  const [selectedCountries, setSelectedCountries] = useState<Option[]>([
+    { value: "", title: "Все", shortcut: "" },
+  ]);
+
+  const onChangeSelectedCountries = (option: Option) => {
+    if (option.value === "") {
+      setSelectedCountries([{ value: "", title: "Все", shortcut: "" }]);
+      return;
+    }
+    setSelectedCountries((state) => {
+      return state.filter((el) => {
+        return el.value !== "";
+      });
+    });
+    if (
+      selectedCountries.some(
+        (selectedCountry) => selectedCountry.value === option.value
+      )
+    ) {
+      const filteredArray = selectedCountries.filter((el) => {
+        return el.value !== option.value;
+      });
+      filteredArray.length
+        ? setSelectedCountries(filteredArray)
+        : setSelectedCountries([{ value: "", title: "Все", shortcut: "" }]);
+      return;
+    }
+    setSelectedCountries((selectedCountries) => [...selectedCountries, option]);
+  };
+
   return (
     <SideLayout padding="medium">
       <Select
@@ -117,14 +149,21 @@ function CatalogFilter({ catalog }: CatalogFilterProps) {
         options={options.countries}
         selected={select.madeIn}
         onChange={callbacks.onMadeIn}
+        enableSearch
+      />
+      <MultiSelect
+        options={options.countries}
+        selected={selectedCountries}
+        onChange={onChangeSelectedCountries}
+        enableSearch
       />
       {/* @ts-ignore */}
-      <Input
+      {/* <Input
         value={select.query}
         onChange={callbacks.onSearch}
         placeholder={"Поиск"}
         delay={1000}
-      />
+      /> */}
       <button onClick={callbacks.onReset}>{t("filter.reset")}</button>
     </SideLayout>
   );
