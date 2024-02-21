@@ -1,4 +1,4 @@
-export type TCatalogArticle = TArticle & { count?: number };
+export type TCatalogArticle = TArticle & { count?: number; amount?: number };
 
 export type TCatalogState = {
   list: TCatalogArticle[];

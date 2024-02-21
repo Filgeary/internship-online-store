@@ -6,7 +6,7 @@ import AutocompleteCode from '../autocomplete-code';
 type FieldProps = {
   isDisabled?: boolean;
   isActive?: boolean;
-  onKeyDown?: () => void;
+  onKeyDown?: React.KeyboardEventHandler;
   onClick?: () => void;
   code?: string;
   title?: string;

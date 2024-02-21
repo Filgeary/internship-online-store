@@ -7,6 +7,7 @@ import Pagination from '@src/components/pagination';
 import Spinner from '@src/components/spinner';
 
 import { useCatalogContext } from '../catalog';
+import { TCatalogArticle } from '@src/store/catalog/types';
 
 function CatalogList() {
   const { select, callbacks } = useCatalogContext();
@@ -15,7 +16,7 @@ function CatalogList() {
 
   const renders = {
     item: useCallback(
-      (item: TItem) => (
+      (item: TCatalogArticle) => (
         <Item
           item={item}
           onAdd={() => callbacks.openModalOfCount(item)}

@@ -2,10 +2,45 @@ import React, { memo, createContext, useContext, useCallback } from 'react';
 
 import useStore from '@src/hooks/use-store';
 import { useAppSelector } from '@src/hooks/use-selector';
+import { TCatalogArticle } from '@src/store/catalog/types';
+import { TBasketActive } from '@src/store/basket/types';
+import { TCategory } from '@src/store/categories/types';
+import { TCountry } from '@src/store/countries/types';
 
-const CatalogContext = createContext(null);
+type TCatalogContext = {
+  select: {
+    list: TCatalogArticle[];
+    page: number;
+    limit: number;
+    count: number;
+    waiting: boolean;
+    activeItemBasket: TBasketActive;
+    sort: string;
+    query: string;
+    category: string;
+    country: string | string[];
+    categories: TCategory[];
+    countries: TCountry[];
+    countriesLoading: boolean;
+  };
+  // callbacks: Record<string, (...args: any[]) => any>;
+  callbacks: {
+    addToBasket: (_id: string | number) => void;
+    onPaginate: (page: number) => void;
+    makePaginatorLink: (page: string | number) => string;
+    openModalOfCount: (item: TArticle) => void;
+    onSort: (sort: string) => void;
+    onSearch: (query: string) => void;
+    onReset: () => void;
+    onCategory: (category: string) => void;
+    onCountrySelected: (country: string) => void;
+    onManyCountriesSelected: (country: string[]) => void;
+  };
+};
 
-export const useCatalogContext = () => {
+const CatalogContext = createContext<TCatalogContext>(null);
+
+export const useCatalogContext = (): TCatalogContext => {
   const ctx = useContext(CatalogContext);
 
   if (!ctx) {
@@ -54,7 +89,7 @@ function Catalog({ children, stateName }: CatalogProps) {
     ),
     // Генератор ссылки для пагинатора
     makePaginatorLink: useCallback(
-      (page: string) => {
+      (page: string | number) => {
         return `?${new URLSearchParams({ page, limit: select.limit, sort: select.sort, query: select.query } as Record<string, any>)}`;
       },
       [select.limit, select.sort, select.query]
@@ -107,10 +142,6 @@ function Catalog({ children, stateName }: CatalogProps) {
       },
       [store]
     ),
-    // Удаление страны
-    onRemoveCountry: useCallback(() => {
-      // (country: string) => store.action;
-    }, [store]),
   };
 
   return (

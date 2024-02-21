@@ -48,9 +48,26 @@ export type TOption = {
 };
 
 type TAutocompleteContext = {
-  values: Record<string, any>;
-  callbacks: Record<string, any>;
-  helpers: Record<string, any>;
+  values: {
+    search: string;
+    selected: string[];
+    inFocus: number;
+    isOpen: boolean;
+    isMultiple: boolean;
+    active: TOption | TOption[];
+  };
+  callbacks: {
+    setActive: (item: TOption) => void;
+    removeActive: (item: TOption) => void;
+    setSearch: (value: string) => void;
+    toggleOpen: () => void;
+    close: () => void;
+    setInFocus: React.Dispatch<React.SetStateAction<number>>;
+  };
+  helpers: {
+    onSpaceDown: (...handlers: ((...args: any[]) => void)[]) => React.KeyboardEventHandler;
+    deleteByCodeClick: (e: React.MouseEvent, option: TOption) => void;
+  };
   listRef: React.RefObject<Scrollbar>;
   searchRef: React.RefObject<HTMLInputElement>;
   firstOptionRef: React.MutableRefObject<HTMLDivElement | null>;
@@ -58,7 +75,7 @@ type TAutocompleteContext = {
 };
 
 export const AutocompleteContext = createContext<TAutocompleteContext>(null);
-export const useAutocompleteContext = () => {
+export const useAutocompleteContext = (): TAutocompleteContext => {
   const ctx = useContext(AutocompleteContext);
 
   if (!ctx) {
@@ -95,6 +112,24 @@ function Autocomplete(props: AutocompleteProps) {
   const searchRef = useRef<HTMLInputElement>(null);
   const dropRef = useRef<HTMLDivElement>(null);
   const firstOptionRef = useRef<HTMLDivElement | null>(null);
+
+  const helpers = {
+    onSpaceDown: (...handlers: ((...args: any[]) => void)[]): React.KeyboardEventHandler => {
+      const handler: React.KeyboardEventHandler = (e: React.KeyboardEvent) => {
+        if (e.code === 'Space') {
+          e.preventDefault();
+          handlers.forEach((handler) => handler());
+        }
+      };
+
+      return handler;
+    },
+
+    deleteByCodeClick: (e: React.MouseEvent, option: TOption) => {
+      e.stopPropagation();
+      callbacks.removeActive(option);
+    },
+  };
 
   const callbacks = {
     setActive: (item: TOption) => {
@@ -144,25 +179,6 @@ function Autocomplete(props: AutocompleteProps) {
     },
 
     setInFocus,
-  };
-
-  const helpers = {
-    onSpaceDown: (...handlers: ((...args: any[]) => void)[]): React.KeyboardEventHandler => {
-      const handler: React.KeyboardEventHandler = (e: React.KeyboardEvent) => {
-        if (e.code === 'Space') {
-          e.preventDefault();
-          handlers.forEach((handler) => handler());
-        }
-      };
-
-      return handler;
-    },
-
-    deleteByCodeClick: (e: MouseEvent, option: TOption) => {
-      e.stopPropagation();
-
-      callbacks.removeActive(option);
-    },
   };
 
   const values = {
