@@ -2,6 +2,9 @@
   position: relative;
   cursor: pointer;
   text-wrap: nowrap;
+  background-color: white;
+
+  /* z-index: 1; */
 }
 
 .SelectCustomView-select {
@@ -12,9 +15,40 @@
   height: 30px;
   width: 240px;
   padding: 0 5px;
+  border: 1px solid #9e9e9e;
+  background-clip: padding-box;
+  overflow: hidden;
+}
+
+.SelectCustomView-gradient {
+  position: absolute;
+  display: block;
+  box-sizing: border-box;
+  right: 1px;
+  width: 70px;
+  height: calc(100% - 2px);
+  background: linear-gradient(to right, transparent, white 60%, white);
+}
+
+.SelectCustomView-select_menuOpen.SelectCustomView-select_palacement_top  {
+  border-top-color: transparent;
+}
+
+.SelectCustomView-select_menuOpen.SelectCustomView-select_palacement_bottom {
+  border-bottom-color: transparent;
+}
+
+.SelectCustomView-menu > .List > .List-item {
+    border-bottom: none;
+}
+
+.SelectCustomView-menu > .List > .List-item:first-child {
+    border-top: none;
 }
 
 .SelectCustomView-icon {
+  position: absolute;
+  right: 5px;
   height: 20px;
   width: 20px;
 }
@@ -46,21 +80,72 @@
   line-height: 30px;
 }
 
+/*
+.SelectCustomView-title_longLine {
+  width: calc(100% - 110px);
+  overflow: hidden;
+}
+*/
+
 .SelectCustomView-menu {
   position: absolute;
   box-sizing: border-box;
   width: 240px;
   min-height: 90px;
+  max-height: 180px;
   padding: 5px;
   background-color: white;
+  border: 1px solid #9e9e9e;
+  background-clip: padding-box;
+  overflow-y: auto;
+  scrollbar-width: thin;
 }
 
 .SelectCustomView-menu_palacement_top {
-  top: -90px;
+  /* top: -88px; */
+  top: -178px;
   box-shadow: 0 -8px 8px 0 #3C3C3F40;
+  border-bottom-color: transparent;
 }
 
-.SelectCustomView-menu_palacement_bottom {
-  top: 30px;
-  box-shadow: 0 8px 8px 0 #3C3C3F40;
+/* Это решение имеет артефакты при изменении масштаба страницы
+.SelectCustomView-menu_palacement_top::after {
+  position: absolute;
+  display: block;
+  box-sizing: border-box;
+  left: -1px;
+  top: 75px;
+  height: 30px;
+  width: 240px;
+  content: '';
+  border: 1px solid #9e9e9e;
+  border-top-color: transparent;
+  border-bottom-color: transparent;
+  background-color: white;
+  z-index: -1;
 }
+*/
+
+.SelectCustomView-menu_palacement_bottom {
+  top: 28px;
+  box-shadow: 0 8px 8px 0 #3C3C3F40;
+  border-top-color: transparent;
+}
+
+/* Это решение имеет артефакты при изменении масштаба страницы
+.SelectCustomView-menu_palacement_bottom::after {
+  position: absolute;
+  display: block;
+  box-sizing: border-box;
+  left: -1px;
+  top: -15px;
+  height: 30px;
+  width: 240px;
+  content: '';
+  border: 1px solid #9e9e9e;
+  border-top-color: transparent;
+  border-bottom-color: transparent;
+  background-color: white;
+  z-index: -1;
+}
+*/

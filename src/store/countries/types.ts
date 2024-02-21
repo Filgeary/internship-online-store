@@ -1,5 +1,7 @@
+import { type TListItem } from '@src/components/list/types';
+
 export interface ICountriesInitState {
-  list: Array<Record<string, unknown>>;
-  selected: Array<Record<string, unknown>>;
+  list: TListItem[];
+  selected: string[];
   waiting: boolean;
 }

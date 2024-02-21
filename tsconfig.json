@@ -8,6 +8,7 @@
     "removeComments": false,
     "sourceMap": true,
     "resolveJsonModule": true,
+    "lib": ["DOM", "ESNext"],
     "paths": {
       "@custom-types/*": ["./custom-types/*"],
       "@src/*": ["./src/*"]

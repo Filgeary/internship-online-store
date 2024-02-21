@@ -1,22 +1,24 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
+
+// Дополнять по мере необходимости
+export type TKeyboardKeys = 'Enter' | 'ArrowDown' | 'ArrowUp' | 'Escape';
 
 export interface IKeyPressedData {
   key: string;
   isPressed: boolean;
 }
 
-export type TKeyPressedOptions = Partial<{
+export type TKeyPressedOptions<T> = Partial<{
   keys: Array<
     Partial<{
-      key: string;
+      key: TKeyboardKeys | T; // подходит любая строка, но подсказки будут работать
       preventDefault: boolean;
       callback: (key: string, isPressed: boolean) => void;
       onKeyDown: boolean; // запустить callback на keyDown
       onKeyUp: boolean; // запустить callback на keyUp
     }>
   >;
-  depends: unknown[];
 }>;
 
 /**
@@ -24,9 +26,13 @@ export type TKeyPressedOptions = Partial<{
  * Ограничение: если в колбэках есть setState (от useState), то
  * он должен использовать колбэк, а не внешнюю переменную при
  * обращении к значению стейта, например `setMenuOpen(prev => !prev)`.
+ * То есть, не будут работать внешние переменные созданные useState,
+ * значение в них будет устаревшим, в то же времея переменные созданные
+ * useRef в `current` будут работать корректно и содержать новое значение.
  */
-export default function useKeyPressed(target: HTMLDivElement | null, options?: TKeyPressedOptions) {
-  const { keys = [], depends = [] } = options ?? {};
+export default function useKeyPressed<T extends string>(target: HTMLDivElement | null, options?: TKeyPressedOptions<T>) {
+  const { keys = [] } = options ?? {};
+  const depends = useMemo(() => keys.filter(({ callback }) => callback !== undefined).map(({ callback }) => callback), [keys]);
 
   const keyDownHandler = useCallback((event: KeyboardEvent) => {
     const opt = keys.find(({ key }) => key === event.key);
