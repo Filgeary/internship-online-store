@@ -5,7 +5,7 @@ import { TCatalogState, TItem, TParams } from "./types";
 /**
  * Состояние каталога - параметры фильтра исписок товара
  */
-class CatalogState extends StoreModule<TCatalogState > {
+class CatalogState extends StoreModule<TCatalogState> {
   /**
    * Начальное состояние
    * @return {Object}
@@ -19,6 +19,7 @@ class CatalogState extends StoreModule<TCatalogState > {
         sort: "order",
         query: "",
         category: "",
+        madeIn: "",
       },
       count: 0,
       selectedItems: [],
@@ -44,6 +45,7 @@ class CatalogState extends StoreModule<TCatalogState > {
     if (urlParams.has("query")) validParams.query = urlParams.get("query");
     if (urlParams.has("category"))
       validParams.category = urlParams.get("category");
+    if (urlParams.has("madeIn")) validParams.madeIn = urlParams.get("madeIn");
 
     await this.setParams(
       { ...this.initState().params, ...validParams, ...newParams },
@@ -113,11 +115,13 @@ class CatalogState extends StoreModule<TCatalogState > {
         sort: params.sort,
         "search[query]": params.query,
         "search[category]": params.category,
+        "search[madeIn]": params.madeIn,
       },
       {
         skip: 0,
         "search[query]": "",
         "search[category]": "",
+        "search[madeIn]": "",
       }
     );
 

@@ -8,9 +8,10 @@ import SideLayout from "@src/components/side-layout";
 import treeToList from "@src/utils/tree-to-list";
 import listToTree from "@src/utils/list-to-tree";
 import { TKey } from "@src/store/types";
+import SelectBox from "@src/components/select-box";
 
 export type TCatalogFilter = {
-  storeName: 'catalog' ;
+  storeName: "catalog";
 };
 
 function CatalogFilter(props: TCatalogFilter) {
@@ -20,7 +21,9 @@ function CatalogFilter(props: TCatalogFilter) {
     sort: state[props.storeName].params.sort,
     query: state[props.storeName].params.query,
     category: state[props.storeName].params.category,
+    madeIn: state[props.storeName].params.madeIn,
     categories: state.categories.list,
+    countries: state.madeIn.list,
   }));
 
   const callbacks = {
@@ -31,15 +34,24 @@ function CatalogFilter(props: TCatalogFilter) {
     ),
     // Поиск
     onSearch: useCallback(
-      (query: string) => store.actions[props.storeName].setParams({ query, page: 1 }),
+      (query: string) =>
+        store.actions[props.storeName].setParams({ query, page: 1 }),
       [store]
     ),
     // Сброс
-    onReset: useCallback(() => store.actions[props.storeName].resetParams(), [store]),
+    onReset: useCallback(
+      () => store.actions[props.storeName].resetParams(),
+      [store]
+    ),
     // Фильтр по категории
     onCategory: useCallback(
       (category: string) =>
         store.actions[props.storeName].setParams({ category, page: 1 }),
+      [store]
+    ),
+    onMadeIn: useCallback(
+      (madeIn: string) =>
+        store.actions[props.storeName].setParams({ madeIn, page: 1 }),
       [store]
     ),
   };
@@ -67,12 +79,21 @@ function CatalogFilter(props: TCatalogFilter) {
       ],
       [select.categories]
     ),
+    countries: useMemo(
+      () => [{ title: "Все", _id: "", code: "" }, ...select.countries],
+      [select.countries]
+    ),
   };
 
   const { t } = useTranslate();
 
   return (
     <SideLayout padding="medium">
+      <SelectBox
+        options={options.countries}
+        value={select.madeIn}
+        onSelect={callbacks.onMadeIn}
+      />
       <Select
         options={options.categories}
         value={select.category}

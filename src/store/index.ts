@@ -1,6 +1,6 @@
 import Services from "@src/services.ts";
 import * as modules from "./exports.ts";
-import { TConfig, TConfigStore } from "@src/config.ts";
+import {  TConfigStore } from "@src/config.ts";
 import {
   TActions,
   TKey,

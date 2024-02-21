@@ -3,7 +3,7 @@ import "./style.css";
 import { TLang } from "@src/i18n/translate";
 
 type TSelectProps = {
-  options: { value: string | number; title: string }[];
+  options: any[];
   value?: any;
   onChange: (lang: TLang) => void;
 };

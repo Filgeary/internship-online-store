@@ -3,7 +3,7 @@ import StoreModule from "../module";
 import simplifyErrors from "@src/utils/simplify-errors";
 
 type TSessionState = {
-  user?: { userName: string } | {};
+  user?: { userName?: string } ;
   token?: string | null;
   errors?: any;
   waiting?: boolean;

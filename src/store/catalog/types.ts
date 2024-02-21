@@ -11,6 +11,7 @@ export type TParams = {
   sort: string | null;
   query: string | null;
   category: string | null | undefined;
+  madeIn: string | null;
 };
 
 export type TCatalogState = {

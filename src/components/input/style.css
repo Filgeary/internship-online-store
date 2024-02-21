@@ -6,3 +6,17 @@
 .Input_theme_big{
   width: 300px;
 }
+
+.Input_theme_select{
+  width: 230px;
+  box-sizing: border-box;
+  border: none;
+  outline: none;
+}
+
+/* input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+    outline: none;
+} */
