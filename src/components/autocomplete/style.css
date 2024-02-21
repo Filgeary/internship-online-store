@@ -2,12 +2,22 @@
   position: relative;
   width: fit-content;
 }
-.AutoComplete-dropdown {
+.Dropdown {
   position: absolute;
   left: 0;
   right: 0;
-  top: 100%;
   width: 100%;
   height: auto;
+  background-color: #fff;
   outline: none;
+}
+
+.Dropdown_position_bottom {
+  top: 100%;
+  box-shadow: 0px 8px 8px 0px rgba(60, 60, 63, 0.25);
+}
+
+.Dropdown_position_top {
+  bottom: 100%;
+  box-shadow: 0px -8px 8px 0px rgba(60, 60, 63, 0.25);
 }

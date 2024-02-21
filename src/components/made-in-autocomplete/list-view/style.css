@@ -1,0 +1,41 @@
+.ListView {
+  padding: 0;
+  max-height: 120px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  background-color: #FFFFFF;
+  overflow: overlay;
+  box-sizing: border-box;
+  margin: 0 5px 5px;
+}
+
+.ListView::-webkit-scrollbar {
+  /* height: 8px; */
+  width: 8px;
+}
+.ListView::-webkit-scrollbar-track {
+  border-radius: 5px;
+  background-color: transparent;
+}
+
+.ListView::-webkit-scrollbar-track:hover {
+  background-color: transparent;
+}
+
+.ListView::-webkit-scrollbar-track:active {
+  background-color: transparent;
+}
+
+.ListView::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+  background-color: #E5E6E9;
+}
+
+.ListView::-webkit-scrollbar-thumb:hover {
+  background-color: #C0C1C3;
+}
+
+.ListView::-webkit-scrollbar-thumb:active {
+  background-color: #B2B3B5;
+}
+

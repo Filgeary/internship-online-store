@@ -1,4 +1,4 @@
-import { ChangeEvent, ReactElement, RefObject, KeyboardEvent } from "react"
+import { ReactElement, RefObject, ReactNode } from "react"
 
 export type Option = {
   title: string,
@@ -9,32 +9,32 @@ export type InputViewBuilderProps = {
   inputRef: RefObject<HTMLInputElement>,
 }
 
-export type OptionsViewBuilderProps<O extends Option = Option> = {
-  hoverController: {
-    item: {index: number, hovered: boolean} | null
-    onMouseEnterOption: (optionIndex: number) => void
-    onMouseLeaveList: () => void
-    itemRef: RefObject<HTMLLIElement>,
-    listRef: RefObject<HTMLUListElement>
-  }
-  optionsController: {
-    onSelect: (option: O) => void,
-    buildedOptions: O[]
-  }
+export type ListViewBuilderProps = {
+  onMouseLeaveList: () => void
+  listRef: RefObject<HTMLUListElement>
+  children: ReactNode | ReactNode[]
+}
+
+export type ListElementViewBuilderProps<O extends Option = Option> = {
+  option: O
+  onClickListElement: () => void,
+  onMouseEnterListElement: () => void
+  hovered: boolean
+  selected: boolean
+  listElementRef: RefObject<HTMLLIElement> | undefined
 }
 
 export type ButtonViewBuilderProps = {
-  dropdownController: {
-    toggleDropdown: () => void,
-    isCollapsed: boolean
-  }
+  toggleDropdown: () => void,
+  isDropdownCollapsed: boolean
   buttonRef: RefObject<HTMLButtonElement>,
 }
 
 type ViewProps<O extends Option> = {
   optionsBuilder: (inputValue: string) => O[],
   inputViewBuilder: (props: InputViewBuilderProps) => ReactElement,
-  optionsViewBuilder: (props: OptionsViewBuilderProps<O>) => ReactElement
+  listViewBuilder: (props: ListViewBuilderProps) => ReactElement
+  listElementViewBuilder: (props: ListElementViewBuilderProps) => ReactElement
   buttonViewBuilder: (props: ButtonViewBuilderProps) => ReactElement,
   dropdownClassName: string
 }
@@ -44,17 +44,16 @@ type OptionsBaseProps<O extends Option> = {
   onSelect: (option: O) => void,
 }
 
-type SingleOptionProps<O extends Option> = OptionsBaseProps<O> & {
+type SingleOptionProps<O extends Option> = {
   value: O | undefined,
   multiple?: never,
-  
 }
 
-type MultipleOptionsProps<O extends Option> = OptionsBaseProps<O> & {
+type MultipleOptionsProps<O extends Option> = {
   value: O[],
   multiple: true
 }
 
-export type OptionsProps<O extends Option> = SingleOptionProps<O> | MultipleOptionsProps<O>
+export type OptionsProps<O extends Option> = OptionsBaseProps<O> & (SingleOptionProps<O> | MultipleOptionsProps<O>)
 
 export type AutocompleteProps<O extends Option> = OptionsProps<O> & ViewProps<O>

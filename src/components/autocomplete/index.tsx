@@ -1,56 +1,59 @@
-import { KeyboardEvent, memo, useCallback, useMemo, useRef, useState } from "react";
-import { AutocompleteProps, Option } from "./types";
+import { memo, useCallback, useRef, useState } from "react";
+import type { AutocompleteProps, Option } from "./types";
 import {cn as bem} from '@bem-react/classname';
-import './style.css'
-import Options from "./options";
+import Options from "./list";
 import Input from "./input";
 import Dropdown from "./dropdown";
+import './style.css'
 
 function Autocomplete<O extends Option>(props: AutocompleteProps<O>) {
   const cn = bem('AutoComplete');
   const [isDropdownCollapsed, setDropdownCollapsed] = useState<boolean>(true)
-  const buttonRef = useRef<HTMLButtonElement>(null)
-  const dropdownRef = useRef<HTMLDivElement>(null)
-  const inputRef = useRef<HTMLInputElement>(null)
 
+  const refs = {
+    button: useRef<HTMLButtonElement>(null),
+    dropdown: useRef<HTMLDivElement>(null),
+    input: useRef<HTMLInputElement>(null),
+  }
 
   const callbacks = {
     toggleDropdown: useCallback(() => setDropdownCollapsed(prev => !prev), []),
 
     collapseDropdown: useCallback((focusOnButton?: boolean) => {
       setDropdownCollapsed(true)
-      focusOnButton && buttonRef?.current?.focus()
+      focusOnButton && refs.button?.current?.focus()
     }, []),
   }
   
   return(
     <div className={cn()}>
       {props.buttonViewBuilder({
-        dropdownController: {
-          toggleDropdown: callbacks.toggleDropdown,
-          isCollapsed: isDropdownCollapsed
-        },
-        buttonRef
+        toggleDropdown: callbacks.toggleDropdown,
+        isDropdownCollapsed: isDropdownCollapsed,
+        buttonRef: refs.button
       })}
       {!isDropdownCollapsed && <Dropdown 
-        dropdownClassName={props.dropdownClassName || cn('dropdown')}
+        dropdownClassName={props.dropdownClassName}
         collapseDropdown={callbacks.collapseDropdown}
         refs={{
-          buttonRef:buttonRef,
-          dropdownRef:dropdownRef
+          button: refs.button,
+          dropdown: refs.dropdown,
         }}
       >
         <Input
           inputViewBuilder={props.inputViewBuilder}
-          inputRef={inputRef}
+          inputRef={refs.input}
         />
         {/* @ts-ignore */}
         <Options
-          optionsViewBuilder={props.optionsViewBuilder as any}
+          listElementViewBuilder={props.listElementViewBuilder as any}
+          listViewBuilder={props.listViewBuilder as any}
           options={props.options}
           collapseDropdown={callbacks.collapseDropdown}
-          dropdownRef={dropdownRef}
-          inputRef={inputRef}
+          refs={{
+            dropdown: refs.dropdown,
+            input: refs.input
+          }}
           onSelect={props.onSelect as any}
           optionsBuilder={props.optionsBuilder}
           multiple={props.multiple}

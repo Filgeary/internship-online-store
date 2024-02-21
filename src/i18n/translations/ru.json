@@ -1,60 +1,93 @@
 {
   "title": "Магазин",
-  "menu.main": "Главная",
-  "basket.title": "Корзина",
-  "basket.open": "Перейти",
-  "basket.close": "Закрыть",
-  "basket.inBasket": "В корзине",
-  "basket.empty": "пусто",
-  "basket.total": "Итого",
-  "basket.unit": "шт",
-  "basket.delete": "Удалить",
-  "basket.articles": {
-    "one": "товар",
-    "few": "товара",
-    "many": "товаров",
-    "other": "товара"
+  "menu": {
+    "main": "Главная"
   },
-  "basket.select-more-items": "Выбрать еще товар",
-  "article.add": "Добавить",
-  "article.country": "Страна производитель",
-  "article.category": "Категория",
-  "article.release": "Год выпуска",
-  "article.price": "Цена",
-  "filter.reset": "Сбросить",
-  "auth.title": "Вход",
-  "auth.login": "Логин",
-  "auth.password": "Пароль",
-  "auth.signIn": "Войти",
-  "session.signIn": "Вход",
-  "session.signOut": "Выход",
-  "comments.comments": "Комментарии",
-  "comments.reply": "Ответить",
-  "comments.new-reply": "Новый ответ",
-  "comments.send": "Отправить",
-  "comments.cancel": "Отмена",
-  "comments.text": "Текст",
-  "comments.login": "Войдите",
-  "comments.to-reply": ", чтобы иметь возможность ответить.",
-  "comments.new-comment": "Новый комментарий",
-  "comments.to-comment": ", чтобы иметь возможность комментровать",
-  "profile.profile": "Профиль",
-  "profile.name": "Имя",
-  "profile.phone": "Телефон",
-  "protected.wait": "Ждём...",
-  "catalog-filter.in-order": "По порядку",
-  "catalog-filter.by-naming": "По именованию",
-  "catalog-filter.expensive": "Сначала дорогие",
-  "catalog-filter.ancient": "Древние",
-  "catalog-filter.all": "Все",
-  "catalog-filter.search": "Поиск",
-  "amount-dialog.cancel": "Отмена",
-  "amount-dialog.amount": "Количество",
-  "amount-dialog.items-amount": "Количество товара",
-  "amount-dialog.ok": "Ок",
-  "amount-dialog.loading": "Загрузка...",
-  "select-items-modal.choose-items": "Выбрать товары",
-  "select-items-modal.ok": "Ок",
-  "select-items-modal.add-items-in-basket": "Добавить товары в корзину",
-  "select-items-modal.add": "Добавить"
+  "basket": {
+    "title": "Корзина",
+    "open": "Перейти",
+    "close": "Закрыть",
+    "inBasket": "В корзине",
+    "empty": "пусто",
+    "total": "Итого",
+    "unit": "шт",
+    "test": {
+      "test": {
+        "test": "test"
+      }
+    },
+    "delete": "Удалить",
+    "articles": {
+      "one": "товар",
+      "few": "товара",
+      "many": "товаров",
+      "other": "товара"
+    },
+    "select-more-items": "Выбрать еще товар"
+  },
+  "article": {
+    "add": "Добавить",
+    "country": "Страна производитель",
+    "category": "Категория",
+    "release": "Год выпуска",
+    "price": "Цена"
+  },
+  "filter": {
+    "reset": "Сбросить"
+  },
+  "auth": {
+    "title": "Вход",
+    "login": "Логин",
+    "password": "Пароль",
+    "signIn": "Войти"
+  },
+  "session": {
+    "signIn": "Вход",
+    "signOut": "Выход"
+  },
+  "comments": {
+    "comments": "Комментарии",
+    "reply": "Ответить",
+    "new-reply": "Новый ответ",
+    "send": "Отправить",
+    "cancel": "Отмена",
+    "text": "Текст",
+    "login": "Войдите",
+    "to-reply": ", чтобы иметь возможность ответить.",
+    "new-comment": "Новый комментарий",
+    "to-comment": ", чтобы иметь возможность комментровать"
+  },
+  "profile": {
+    "profile": "Профиль",
+    "name": "Имя",
+    "phone": "Телефон"
+  },
+  "protected": {
+    "wait": "Ждём..."
+  },
+  "catalog-filter": {
+    "in-order": "По порядку",
+    "by-naming": "По именованию",
+    "expensive": "Сначала дорогие",
+    "ancient": "Древние",
+    "all": "Все",
+    "search": "Поиск"
+  },
+  "amount-dialog": {
+    "cancel": "Отмена",
+    "amount": "Количество",
+    "items-amount": "Количество товара",
+    "ok": "Ок",
+    "loading": "Загрузка..."
+  },
+  "select-items-modal": {
+    "choose-items": "Выбрать товары",
+    "ok": "Ок",
+    "add-items-in-basket": "Добавить товары в корзину",
+    "add": "Добавить"
+  },
+  "made-in-autocomplete": {
+    "search": "Поиск...",
+    "all": "Все"
+ }
 }

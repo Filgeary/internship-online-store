@@ -1,7 +1,6 @@
 import {useEffect, useMemo, useState} from 'react';
 import useServices from './use-services';
-import type { LangCode } from '@src/i18n/types';
-import I18nService from '@src/i18n';
+import { LangCode } from '@src/i18n/types';
 
 
 /**
@@ -10,16 +9,6 @@ import I18nService from '@src/i18n';
 export default function useTranslate() {
   const i18n = useServices().i18n
   const [lang, setLocalLang] = useState(() => i18n.getLang())
-
-  // function t(textKey: StringTranslateKey): ReturnType<I18nService['translate']>;
-  // function t(textKey: PluralTranslateKey, plural: number): ReturnType<I18nService['translate']>;
-  // function t(textKey: TranslateKey, plural?: number | undefined): ReturnType<I18nService['translate']> {
-  //   return i18n.translate(textKey, plural)
-  // }
-
-  // function t(...args: Parameters<I18nService['translate']>): ReturnType<I18nService['translate']> {
-  //   return i18n.translate(...args)
-  // }
 
   const t = i18n.translate.bind(i18n)
 

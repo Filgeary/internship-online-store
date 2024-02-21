@@ -1,0 +1,60 @@
+.ListElementView {
+  list-style-type: none;
+  height: 30px;
+  max-width: 230px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 6px;
+  padding: 6px 5px 6px 6px;
+  box-sizing: border-box;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.ListElementView_hovered {
+  background-color: #DBDFFF;
+  outline: none;
+}
+
+.ListElementView_selected {
+  background-color: #808DFF;
+}
+
+.ListElementView_hovered.ListElementView_selected {
+  background-color: #4e59bb
+}
+
+.ListElementView_selected .ListElementView-title,
+.ListElementView_selected:hover .ListElementView-title,
+.ListElementView_selected:focus .ListElementView-title{
+  color: #FFF;
+}
+
+.ListElementView-code{
+  flex: 0 0 18px;
+  height: 18px;
+  width: 18px;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 8px;
+  color: #FFFFFF;
+  background-color: #6F7EFF;
+  box-sizing: border-box;
+  border-top: 1px;
+}
+
+.ListElementView-title{
+  font-size: 15px;
+  color: #191F4D;
+  overflow: hidden;
+  text-wrap: nowrap;
+  text-overflow: ellipsis;
+}
+
+
+

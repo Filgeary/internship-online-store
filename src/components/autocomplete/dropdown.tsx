@@ -1,21 +1,26 @@
-import { ReactNode, RefObject, memo, useEffect } from "react";
+import { ReactNode, type RefObject, memo, useEffect, useState, useLayoutEffect } from "react";
+import {cn as bem} from '@bem-react/classname';
+import './style.css'
 
 type Props = {
   dropdownClassName: string
   collapseDropdown: (focusOnButton?: boolean) => void
   refs: {
-    buttonRef: RefObject<HTMLButtonElement>
-    dropdownRef: RefObject<HTMLDivElement>
+    button: RefObject<HTMLButtonElement>
+    dropdown: RefObject<HTMLDivElement>
   }
   children: ReactNode | ReactNode[]
 }
 
 function Dropdown(props: Props) {
+  const cn = bem('Dropdown');
   const refs = props.refs
+
+  const [position, setPosition] = useState('bottom');
 
   useEffect(() => {
     function foreignClickOrFocus(e: MouseEvent | FocusEvent) {
-      if (e.target !== refs.buttonRef.current && e.target !== refs.dropdownRef.current) {
+      if (e.target !== refs.button.current && e.target !== refs.dropdown.current) {
         props.collapseDropdown(e.type === 'focusin')
       }
     }
@@ -26,12 +31,26 @@ function Dropdown(props: Props) {
       document.body.removeEventListener('focusin', foreignClickOrFocus)
     }
   }, [])
+  
+  useLayoutEffect(() => {
+    const $dropdown = refs.dropdown.current
+    if (!$dropdown) return
+    const dropdownHeight = $dropdown.clientHeight;
+    const spaceBelow = window.innerHeight - $dropdown.getBoundingClientRect().bottom;
+    if (spaceBelow < dropdownHeight) {
+      setPosition('top');
+    } else {
+      setPosition('bottom');
+    }
+  }, []);
 
   return (
     <div
         tabIndex={-1} 
-        className={props.dropdownClassName} 
-        ref={refs.dropdownRef}
+        className={props.dropdownClassName + ' ' + cn('', {
+          position
+        })} 
+        ref={refs.dropdown}
       >
         {props.children}
     </div>

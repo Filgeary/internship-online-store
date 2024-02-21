@@ -1,11 +1,6 @@
-import type I18nService from '.'
 import * as translations from './translations'
 
-export enum LangCodes {
-  ru = 'ru',
-  en = 'en',
-  //При добавлении нового языка передается его код
-} 
+type Translations = typeof translations
 
 export enum LangTitles {
   ru = 'Русккий',
@@ -13,36 +8,50 @@ export enum LangTitles {
   //При добавлении нового языка передается его название
 }
 
-type Translations = typeof translations
-//Код языка
+
+export enum LangCodes {
+  ru = 'ru',
+  en = 'en',
+  //При добавлении нового языка передается его код
+} 
+
 export type LangCode = keyof Translations
-//Ключи для перевода
-export type TranslateKey = keyof Translations[LangCode]
 
-//Хелпер для получения типов с ключами, по которым возвращаются переводы
-type StringTranslations<T> = { [P in keyof T as T[P] extends string ? P : never]: T[P] }
-//Хелпер для получения типов с ключами, по которым возвращаются объекты плюрализации
-type ObjectTranslations<T> = { [P in keyof T as T[P] extends object ? P : never]: T[P] }
-
-//Ключи, по которым возвращается перевод
-export type StringTranslateKey = keyof StringTranslations<Translations[LangCode]>
-//Ключи, по которым возвращается объект плюрализации
-export type PluralTranslateKey = keyof ObjectTranslations<Translations[LangCode]>
-
-//Объекты плюрализации по языкам
-export type PluralObjects = {
-  [K in keyof Translations]: Translations[K][PluralTranslateKey]
-}
-
-//Доступные языки
 export type AvaliableLang = {
   value: LangCodes,
   title: LangTitles
 }
 
-export type I18nConfig = {
-  avaliableLangs: AvaliableLang[],
-  defaultLang: LangCodes
+
+export type PluralForm = 'one' | 'few' | 'many' | 'other'
+export type PluralObjects = {
+  [K in PluralForm]: string
 }
 
-export type TranslateFn = I18nService['translate']
+type StringForms<T extends object> = 
+{
+    [K in keyof T]: `${K extends string 
+      // Добавляем ключ, если не является ключом для плюрализации
+      ? K extends PluralForm ? "" : K
+      : ''}${T[K] extends object 
+        // если тип по ключу - объект,
+        // и если ключи типа по ключю не являются ключами для плюрализации,
+        // то переходи в рекурсию
+        ? keyof T[K] extends PluralForm ? never : `.${StringForms<T[K]>}`
+          : ''}`
+  }[keyof T]
+
+
+type AllForms<T extends object> =
+{
+  [K in keyof T]: `${K extends string 
+    ? K extends PluralForm ? "" : K
+    : ''}${T[K] extends object 
+      ? `${keyof T[K] extends PluralForm ? '' : '.'}${AllForms<T[K]>}`
+      : ''}`
+}[keyof T]
+
+
+export type TranslateKey = AllForms<Translations[LangCodes]>
+export type StringTranslateKey = StringForms<Translations[LangCodes]>
+export type PluralTranslateKey = Exclude<TranslateKey, StringTranslateKey>

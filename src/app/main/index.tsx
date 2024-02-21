@@ -1,5 +1,4 @@
 import {memo} from 'react';
-import React from 'react'
 import useStore from "@src/hooks/use-store";
 import useTranslate from "@src/hooks/use-translate";
 import useInit from "@src/hooks/use-init";
@@ -10,6 +9,7 @@ import CatalogFilter from "@src/containers/catalog-filter";
 import CatalogList from "@src/containers/catalog-list";
 import LocaleSelect from "@src/containers/locale-select";
 import TopHead from "@src/containers/top-head";
+import MadeInAutocomplete from '@src/components/made-in-autocomplete';
 
 function Main() {
 
@@ -25,15 +25,72 @@ function Main() {
   }, [lang], true);
 
   return (
-    <PageLayout>
-      <TopHead/>
-      <Head title={t("title")}>
-        <LocaleSelect/>
-      </Head>
-      <Navigation/>
-      <CatalogFilter/>
-      <CatalogList/>
-    </PageLayout>
+    <>
+      <PageLayout>
+        <TopHead/>
+        <Head title={t("title")}>
+          <LocaleSelect/>
+        </Head>
+        <Navigation/>
+        <CatalogFilter/>
+        <CatalogList/>
+      </PageLayout>
+      <MadeInAutocomplete
+        onSelect={() => {}}
+        options={[
+          {
+            code: '1',
+            title: "First",
+            value: "first"
+          },
+          {
+            code: '2',
+            title: "2",
+            value: "2"
+          },
+          {
+            code: '3',
+            title: "3",
+            value: "3"
+          },
+          {
+            code: '4',
+            title: "4",
+            value: "4"
+          },
+          {
+            code: '5',
+            title: "5",
+            value: "5"
+          },
+          {
+            code: '6',
+            title: "6",
+            value: "6"
+          },
+          {
+            code: '7',
+            title: "7",
+            value: "7"
+          },
+          {
+            code: '8',
+            title: "8",
+            value: "8"
+          },
+          {
+            code: '9',
+            title: "8",
+            value: "8"
+          }
+        ]}
+        value={{
+          code: '1',
+          title: "First",
+          value: "first"
+        }}
+      />
+    </>
   );
 }
 
