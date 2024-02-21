@@ -1,51 +1,39 @@
-import { ReactNode, RefObject, memo, useEffect, useRef } from "react";
+import { ReactNode, RefObject, memo, useEffect } from "react";
 
 type Props = {
-  onKeyDown: (e: React.KeyboardEvent<HTMLDivElement>) => void
   dropdownClassName: string
-  collapseDropdown: () => void
-  collapseDropdownAndFocusOnButton: () => void
+  collapseDropdown: (focusOnButton?: boolean) => void
+  refs: {
+    buttonRef: RefObject<HTMLButtonElement>
+    dropdownRef: RefObject<HTMLDivElement>
+  }
   children: ReactNode | ReactNode[]
-  buttonRef: RefObject<HTMLButtonElement>
 }
 
 function Dropdown(props: Props) {
-  const {onKeyDown, dropdownClassName, buttonRef, collapseDropdown, children, collapseDropdownAndFocusOnButton} = props
-
-  const dropdownRef = useRef<HTMLDivElement>(null)
+  const refs = props.refs
 
   useEffect(() => {
-    function findParent(node: Node, target: Node | null): boolean {
-      if (target === null) return false;
-      if (node === target) return true;
-      else return node.parentNode ? findParent(node.parentNode, target) : false
-    }
-    const clickHandler = (e: MouseEvent) => {
-      if (e.target && e.target !== buttonRef.current && !findParent(e.target as Node, dropdownRef.current)) {
-        collapseDropdown()
+    function foreignClickOrFocus(e: MouseEvent | FocusEvent) {
+      if (e.target !== refs.buttonRef.current && e.target !== refs.dropdownRef.current) {
+        props.collapseDropdown(e.type === 'focusin')
       }
     }
-    const focusHandler = (e: FocusEvent) => {
-      if (e.target && e.target !== buttonRef.current && !findParent(e.target as Node, dropdownRef.current)) {
-        collapseDropdownAndFocusOnButton()
-      }
-    }
-    document.body.addEventListener('click', clickHandler)
-    document.body.addEventListener('focusin', focusHandler)
+    document.body.addEventListener('click', foreignClickOrFocus)
+    document.body.addEventListener('focusin', foreignClickOrFocus)
     return () => {
-      document.body.removeEventListener('click', clickHandler)
-      document.body.removeEventListener('focusin', focusHandler)
+      document.body.removeEventListener('click', foreignClickOrFocus)
+      document.body.removeEventListener('focusin', foreignClickOrFocus)
     }
   }, [])
 
   return (
     <div
         tabIndex={-1} 
-        onKeyDown={onKeyDown} 
-        className={dropdownClassName} 
-        ref={dropdownRef}
+        className={props.dropdownClassName} 
+        ref={refs.dropdownRef}
       >
-        {children}
+        {props.children}
     </div>
   )
 }

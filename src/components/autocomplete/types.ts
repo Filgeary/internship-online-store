@@ -6,10 +6,6 @@ export type Option = {
 }
 
 export type InputViewBuilderProps = {
-  inputController: {
-    value: string,
-    onChange: (e: ChangeEvent<HTMLInputElement>) => void
-  },
   inputRef: RefObject<HTMLInputElement>,
 }
 

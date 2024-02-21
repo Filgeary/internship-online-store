@@ -4,12 +4,11 @@ import {cn as bem} from '@bem-react/classname';
 import './style.css'
 
 function InputView(props: InputViewBuilderProps) {
-  const {inputRef, inputController} = props
+  const {inputRef} = props
   const cn = bem('InputView')
 
   return (
-    <input value={inputController.value}
-      onChange={inputController.onChange}
+    <input
       ref={inputRef}
       placeholder="Поиск"
       className={cn()}/>
