@@ -23,6 +23,7 @@ import AutocompleteField from './autocomplete-field';
 import simplifyName from '@src/utils/simplify-name';
 import AutocompleteCode from './autocomplete-code';
 import sliceLongString from '@src/utils/slice-long-string';
+import { TAutocompleteContext, TOption } from './types';
 
 type AutocompleteProps = {
   children: React.ReactNode;
@@ -39,39 +40,6 @@ type AutocompleteProps = {
   max?: number;
   showActiveCodes?: boolean;
   onRemoveCodes?: (ids: string[]) => void;
-};
-
-export type TOption = {
-  _id: string | null;
-  code: string | null;
-  title: string | null;
-};
-
-type TAutocompleteContext = {
-  values: {
-    search: string;
-    selected: string[];
-    inFocus: number;
-    isOpen: boolean;
-    isMultiple: boolean;
-    active: TOption | TOption[];
-  };
-  callbacks: {
-    setActive: (item: TOption) => void;
-    removeActive: (item: TOption) => void;
-    setSearch: (value: string) => void;
-    toggleOpen: () => void;
-    close: () => void;
-    setInFocus: React.Dispatch<React.SetStateAction<number>>;
-  };
-  helpers: {
-    onSpaceDown: (...handlers: ((...args: any[]) => void)[]) => React.KeyboardEventHandler;
-    deleteByCodeClick: (e: React.MouseEvent, option: TOption) => void;
-  };
-  listRef: React.RefObject<Scrollbar>;
-  searchRef: React.RefObject<HTMLInputElement>;
-  firstOptionRef: React.MutableRefObject<HTMLDivElement | null>;
-  disabled: boolean;
 };
 
 export const AutocompleteContext = createContext<TAutocompleteContext>(null);
@@ -101,7 +69,6 @@ function Autocomplete(props: AutocompleteProps) {
 
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState('');
-  const [inFocus, setInFocus] = useState<number>(null);
   const [dropOnTop, setDropOnTop] = useState(false);
   const [selected, setSelected] = useState<string[]>(
     Array.isArray(props.value) ? props.value : [props.value]
@@ -177,15 +144,12 @@ function Autocomplete(props: AutocompleteProps) {
       props.onClose(selected);
       setIsOpen(false);
     },
-
-    setInFocus,
   };
 
   const values = {
     selected,
     search,
     isOpen,
-    inFocus,
     isMultiple,
 
     active: useMemo<TOption | TOption[]>(() => {
@@ -219,7 +183,7 @@ function Autocomplete(props: AutocompleteProps) {
     activeCode: options.activeCode,
   };
 
-  useOnClickOutside(wrapperRef, { closeByEsc: true }, callbacks.close);
+  useOnClickOutside(wrapperRef, { triggerByEsc: true }, callbacks.close);
 
   useEffect(() => {
     if (disabled) return;

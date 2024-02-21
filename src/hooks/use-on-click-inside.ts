@@ -1,17 +1,18 @@
 import React, { useEffect } from 'react';
 
-type TUseOnClickOutside = (
+type TUseOnClickInside = (
   ref: React.RefObject<any>,
   options: { triggerByEsc: boolean },
   ...handlers: Array<() => void>
 ) => void;
 
-const useOnClickOutside: TUseOnClickOutside = (ref, { triggerByEsc }, ...handlers) => {
+const useOnClickInside: TUseOnClickInside = (ref, { triggerByEsc }, ...handlers) => {
   useEffect(() => {
     const runHandlers = () => handlers.forEach((handler) => handler());
+    const refNode = ref.current;
 
     const listener = (e: Event) => {
-      if (!ref.current.contains(e.target)) {
+      if (e.target === refNode) {
         runHandlers();
       }
     };
@@ -26,14 +27,14 @@ const useOnClickOutside: TUseOnClickOutside = (ref, { triggerByEsc }, ...handler
       }
     };
 
-    document.addEventListener('pointerdown', listener);
-    document.addEventListener('keydown', keyListener);
+    refNode?.addEventListener('pointerdown', listener);
+    refNode?.addEventListener('keydown', keyListener);
 
     return () => {
-      document.removeEventListener('pointerdown', listener);
-      document.addEventListener('keydown', keyListener);
+      refNode?.removeEventListener('pointerdown', listener);
+      refNode?.addEventListener('keydown', keyListener);
     };
   }, [ref, handlers]);
 };
 
-export default useOnClickOutside;
+export default useOnClickInside;

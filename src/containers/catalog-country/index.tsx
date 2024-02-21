@@ -1,8 +1,9 @@
-import Autocomplete, { TOption } from '@src/components/autocomplete';
+import Autocomplete from '@src/components/autocomplete';
 import { useCatalogContext } from '../catalog';
 import { useEffect, useMemo, useState } from 'react';
 import useStore from '@src/hooks/use-store';
 import sliceLongString from '@src/utils/slice-long-string';
+import { TOption } from '@src/components/autocomplete/types';
 
 function CatalogCountry() {
   const store = useStore();
@@ -84,12 +85,11 @@ function CatalogCountry() {
     >
       <Autocomplete.Search onChange={helpers.optionsBuilder} placeholder='Поиск' />
       <Autocomplete.List>
-        {options.countriesInAction.map((option, index) => (
+        {options.countriesInAction.map((option) => (
           <Autocomplete.Option
             key={option._id}
             option={option}
             displayString={(option) => sliceLongString(option.title)}
-            indexForFocus={index}
           />
         ))}
       </Autocomplete.List>

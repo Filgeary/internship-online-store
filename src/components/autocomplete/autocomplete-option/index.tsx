@@ -1,24 +1,22 @@
 import { memo, useEffect, useRef } from 'react';
-import { TOption, useAutocompleteContext } from '..';
+import { useAutocompleteContext } from '..';
 import AutocompleteField from '../autocomplete-field';
+import { TOption } from '../types';
 
 type OptionProps = {
   option: TOption;
   isDisabled?: boolean;
-  isTitle?: boolean;
   displayString: (option: TOption) => string;
-  indexForFocus?: number;
 };
 
 function AutocompleteOption(props: OptionProps) {
-  const { option, isDisabled, isTitle, displayString, indexForFocus } = props;
+  const { option, isDisabled, displayString } = props;
   const { values, helpers, callbacks, listRef, searchRef, firstOptionRef, disabled } =
     useAutocompleteContext();
 
   const optionRef = useRef<HTMLDivElement>(null);
 
-  const isActive =
-    (values.selected.includes(props.option._id) || values.inFocus === indexForFocus) && !isTitle;
+  const isActive = values.selected.includes(props.option._id);
 
   const handlers = {
     onClick: () => {

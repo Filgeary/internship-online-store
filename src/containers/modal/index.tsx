@@ -1,8 +1,8 @@
 import React, { useCallback, useRef, memo, useEffect } from 'react';
 
 import useStore from '@src/hooks/use-store';
-import useOnClickOutside from '@src/hooks/use-on-click-outside';
 import useModalId from '@src/hooks/use-modal-id';
+import useOnClickInside from '@src/hooks/use-on-click-inside';
 
 import ModalLayout from '@src/components/modal-layout';
 import { useAppSelector } from '@src/hooks/use-selector';
@@ -38,9 +38,10 @@ function Modal({ children, ...props }: ModalProps) {
 
   const closeHandler = props.onClose || callbacks.closeModal;
 
-  useOnClickOutside(modalRef, { closeByEsc: true }, closeHandler);
+  useOnClickInside(modalRef, { triggerByEsc: true }, closeHandler);
 
   useEffect(() => {
+    console.log(modalRef.current);
     if (!modalRef.current.contains(document.activeElement)) {
       modalRef.current?.focus();
     }
