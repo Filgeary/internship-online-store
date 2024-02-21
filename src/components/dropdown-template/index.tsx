@@ -15,8 +15,7 @@ function DropdownTemplate(props: DropdownTemplateProps) {
   const escape = useKeyPress("Escape");
   const selectContainer = useRef<HTMLDivElement>(null);
   const searchRef = useRef<HTMLInputElement>(null);
-  const dropdownHeight = 160;
-  const position = checkPosition(selectContainer, dropdownHeight);
+  const position = checkPosition(selectContainer);
 
   useEffect(() => {
     window.addEventListener("mousedown", handleClickOutside);
@@ -54,7 +53,7 @@ function DropdownTemplate(props: DropdownTemplateProps) {
   return (
     <div className={cn()} ref={selectContainer}>
       <div className={cn("selected")} onClick={callbacks.onOpen}>
-        <div className={cn("all")}>{props.renderSelectedItem()}</div>
+        <div className={cn("all")}>{props.renderSelectedItem(open)}</div>
         <div className={cn("arrow", { open })}></div>
       </div>
       <div

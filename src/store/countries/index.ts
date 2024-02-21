@@ -58,11 +58,10 @@ class CountriesState extends StoreModule<InitialStateCountries> {
     }
   }
 
-  async loadById(ids: string[]) {
+  async loadById(ids: string) {
     this.setState({ ...this.getState(), waiting: true });
-    const ind = ids.filter(item => item)
     const res = await this.services.api.request({
-      url: `/api/v1/countries/?search[ids]=${ind.join("|")}&fields=*`,
+      url: `/api/v1/countries/?search[ids]=${ids}&fields=*`,
     });
 
     this.setState(
@@ -73,7 +72,14 @@ class CountriesState extends StoreModule<InitialStateCountries> {
       },
       `Страны ${ids} успешно получены`
     );
+  }
 
+  removeSelectedItem(_id: string) {
+    const selected = this.getState().selected.filter(item => item._id !== _id);
+    this.setState({
+      ...this.getState(),
+      selected
+    })
   }
 }
 

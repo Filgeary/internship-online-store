@@ -1,4 +1,4 @@
-import { RefObject, useCallback, useEffect, useMemo, useState } from "react";
+import { MouseEvent, RefObject, useCallback, useEffect, useMemo, useState } from "react";
 import useSelector from "@src/hooks/use-selector";
 import useStore from "@src/hooks/use-store";
 import DropdownTemplate from "@src/components/dropdown-template";
@@ -7,6 +7,7 @@ import Input from "@src/components/input";
 import ItemCountry from "@src/components/item-country";
 import CountriesList from "@src/components/countries-list";
 import { Country } from "@src/store/countries/type";
+import DropdownSelected from "@src/components/dropdown-selected";
 
 function Dropdown() {
   const store = useStore();
@@ -19,12 +20,12 @@ function Dropdown() {
     madeIn: state.catalog.params.madeIn
   }));
 
+  const [selected, setSelected] = useState<string[]>([]);
+
   useEffect(() => {
-    if (Array.isArray(select.madeIn)) {
-      store.actions.countries.loadById(select.madeIn);
-    } else {
-      store.actions.countries.loadById([select.madeIn]);
-    }
+    store.actions.countries.loadById(select.madeIn);
+    const madeIn = select.madeIn.split("|").filter((item) => item);
+    setSelected(madeIn);
   }, [select.madeIn])
 
   const callbacks = {
@@ -35,12 +36,22 @@ function Dropdown() {
       },
       [store]
     ),
-    onSelectMany: useCallback((ids: string[]) => {
-        store.actions.catalog.setParams({ madeIn: ids.join('|'), page: 1 })
-    }, [store]),
-    removeSelectedItem: () => {
-
-    }
+    onSelectMany: useCallback(
+      (ids: string[]) => {
+        store.actions.catalog.setParams({ madeIn: ids.join("|"), page: 1 });
+      },
+      [store]
+    ),
+    removeSelectedItem: useCallback(
+      (_id: string, e: React.MouseEvent<HTMLLIElement>) => {
+        const filtered = selected.filter((item) => item !== _id);
+        setSelected(filtered);
+        callbacks.onSelectMany(filtered);
+        store.actions.countries.removeSelectedItem(_id);
+        e.stopPropagation();
+      },
+      [store, selected]
+    ),
   };
 
   const options = {
@@ -54,21 +65,8 @@ function Dropdown() {
 
   const renders = {
     selectedItem: useCallback(
-      () => (
-        <>
-          {select.selected.length > 1 ? (
-            select.selected.map((country) => (
-              <li key={country.code} title={country.title} onClick={callbacks.removeSelectedItem}>
-                <ItemCountry code={country.code} />
-              </li>
-            ))
-          ) : (
-            <ItemCountry
-              code={select.selected[0]?.code}
-              title={select.selected[0]?.title ?? "Все"}
-            />
-          )}
-        </>
+      (open: boolean) => (
+        <DropdownSelected open={open} selected={select.selected} removeSelectedItem={callbacks.removeSelectedItem} />
       ),
       [select.selected]
     ),
@@ -88,8 +86,9 @@ function Dropdown() {
           <CountriesList
             focusInd={focusInd}
             countries={options.countriesList}
-            selectedItemId={select.madeIn}
             onSelect={callbacks.onSelectMany}
+            selected={selected}
+            setSelected={setSelected}
           />
         </Spinner>
       ),

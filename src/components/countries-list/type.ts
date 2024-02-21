@@ -1,8 +1,9 @@
 import { Country } from "@src/store/countries/type";
 
 export interface CountriesListProps {
-  countries: Country[],
-  selectedItemId: string,
-  onSelect: (_id: string[]) => void,
-  focusInd: number
+  countries: Country[];
+  onSelect: (_id: string[]) => void;
+  focusInd: number;
+  selected: string[];
+  setSelected: React.Dispatch<React.SetStateAction<string[]>>;
 }

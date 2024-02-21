@@ -6,26 +6,25 @@ import './style.css';
 
 function CountriesList(props: CountriesListProps) {
   const cn = bem("CountriesList");
-  const firstState = props.selectedItemId.split('|').filter(item => item);
 
-  const [selected, setSelected] = useState<string[]>(firstState);
 
   const callbacks = {
     onSelect: useCallback((_id: string) => {
+      if (props.selected.length === 10) return;
       if (!_id) {
         props.onSelect([_id]);
-        setSelected([]);
+        props.setSelected([]);
         return
       }
-      if (!selected.includes(_id)) {
-        setSelected((prev) => [...prev, _id]);
-        props.onSelect([...selected, _id]);
+      if (!props.selected.includes(_id)) {
+        props.setSelected((prev) => [...prev, _id]);
+        props.onSelect([...props.selected, _id]);
       } else {
-        const filterSelected = selected.filter((item) => item !== _id);
-        setSelected(filterSelected);
+        const filterSelected = props.selected.filter((item) => item !== _id);
+        props.setSelected(filterSelected);
         props.onSelect(filterSelected);
       }
-    }, [selected])
+    }, [props.selected])
   }
 
   return (
@@ -33,7 +32,7 @@ function CountriesList(props: CountriesListProps) {
       {props.countries.map((country, index) => (
         <li
           className={cn("item", {
-            selected: selected.includes(country._id),
+            selected: props.selected.includes(country._id),
             highlight: props.focusInd === index + 1,
           })}
           onClick={() => callbacks.onSelect(country._id)}

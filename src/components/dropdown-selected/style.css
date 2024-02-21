@@ -1,0 +1,29 @@
+.DropdownSelected {
+  display: flex;
+  gap: 6px;
+}
+
+.DropdownSelected-more {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #6F7EFF;
+  border-radius: 3px;
+  color: #fff;
+  min-width: 25px;
+  height: 18px;
+  font-size: 10px;
+}
+
+.DropdownSelected-menu {
+  display: flex;
+  gap: 6px;
+  margin: 0;
+  padding: 10px;
+  position: absolute;
+  background: #fff;
+  top: 100%;
+  bottom: auto;
+  right: 0;
+  box-shadow: 0 5px 3px 0 rgba(0, 0, 0, 0.2);
+}

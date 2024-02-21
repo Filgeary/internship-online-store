@@ -73,7 +73,7 @@ function CatalogFilter(props: StoreNames) {
   const { t } = useTranslate();
 
   return (
-    <SideLayout padding="medium">
+    <SideLayout padding="medium" side="top" minHeight={55}>
       <Select
         options={options.categories}
         value={select.category}
