@@ -5,7 +5,7 @@ export type Option = {
   value: string,
 }
 
-export type FieldViewBuilderProps = {
+export type InputViewBuilderProps = {
   inputController: {
     value: string,
     onChange: (e: ChangeEvent<HTMLInputElement>) => void
@@ -13,11 +13,11 @@ export type FieldViewBuilderProps = {
   inputRef: RefObject<HTMLInputElement>,
 }
 
-export type OptionsViewBuilder<O extends Option = Option> = {
+export type OptionsViewBuilderProps<O extends Option = Option> = {
   hoverController: {
     item: {index: number, hovered: boolean} | null
-    onMouseEnter: (index: number) => void
-    onMouseLeave: () => void
+    onMouseEnterOption: (optionIndex: number) => void
+    onMouseLeaveList: () => void
     itemRef: RefObject<HTMLLIElement>,
     listRef: RefObject<HTMLUListElement>
   }
@@ -27,9 +27,9 @@ export type OptionsViewBuilder<O extends Option = Option> = {
   }
 }
 
-export type ContainerViewBuilder = {
+export type ButtonViewBuilderProps = {
   dropdownController: {
-    onToggle: () => void,
+    toggleDropdown: () => void,
     isCollapsed: boolean
   }
   buttonRef: RefObject<HTMLButtonElement>,
@@ -37,15 +37,15 @@ export type ContainerViewBuilder = {
 
 type ViewProps<O extends Option> = {
   optionsBuilder: (inputValue: string) => O[],
-  fieldViewBuilder: (props: FieldViewBuilderProps) => ReactElement,
-  optionsViewBuilder: (props: OptionsViewBuilder<O>) => ReactElement
-  containerViewBuilder: (props: ContainerViewBuilder) => ReactElement,
+  inputViewBuilder: (props: InputViewBuilderProps) => ReactElement,
+  optionsViewBuilder: (props: OptionsViewBuilderProps<O>) => ReactElement
+  buttonViewBuilder: (props: ButtonViewBuilderProps) => ReactElement,
   dropdownClassName: string
 }
 
 type OptionsBaseProps<O extends Option> = {
   options: O[],
-  onSelected: (option: O) => void,
+  onSelect: (option: O) => void,
 }
 
 type SingleOptionProps<O extends Option> = OptionsBaseProps<O> & {

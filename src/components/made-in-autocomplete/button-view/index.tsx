@@ -1,22 +1,22 @@
-import { ContainerViewBuilder } from "@src/components/autocomplete/types";
+import { AutocompleteProps, ButtonViewBuilderProps } from "@src/components/autocomplete/types";
 import { memo } from "react";
 import { MadeInOption } from "../types";
 import {cn as bem} from '@bem-react/classname';
 import './style.css'
 import Arrow from "./arrow";
 
-type Props = ContainerViewBuilder & {
-  value: MadeInOption | MadeInOption[] | undefined,
-  multiple: boolean | undefined
+type Props<O extends MadeInOption> = ButtonViewBuilderProps & {
+  value: AutocompleteProps<O>['value'],
+  multiple?: AutocompleteProps<O>['multiple']
 }
 
-function ButtonView(props: Props) {
+function ButtonView<O extends MadeInOption>(props: Props<O>) {
   const {dropdownController, buttonRef} = props
   const cn = bem('ButtonView')
 
   if (props.multiple && Array.isArray(props.value)) {
     return (
-      <button className={cn()} onClick={dropdownController.onToggle} ref={buttonRef}>
+      <button className={cn()} onClick={dropdownController.toggleDropdown} ref={buttonRef}>
         <div className={cn('info')}>
           {props.value.length > 1 
             ? props.value.map(option => <div className={cn('code')}>{option.code}</div>)
@@ -31,16 +31,12 @@ function ButtonView(props: Props) {
         <Arrow className={cn('arrow', {
           rotated: dropdownController.isCollapsed
         })}/>
-{/*         
-        {
-        props.value.length ?  props.value.map(option => option.title).join(',') : 'Все'
-        } */}
       </button>
     ) 
   }
 
   return (
-    <button className={cn()} onClick={dropdownController.onToggle} ref={buttonRef}>
+    <button className={cn()} onClick={dropdownController.toggleDropdown} ref={buttonRef}>
       <div className={cn('info')}>
         <div className={cn('code')}>{(props.value as MadeInOption | undefined)?.code}</div>
         <span className={cn('title')}>{(props.value as MadeInOption | undefined)?.title || 'Все'}</span>

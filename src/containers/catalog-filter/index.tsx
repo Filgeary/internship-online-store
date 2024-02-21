@@ -102,11 +102,11 @@ function CatalogFilter(props: CatalogFilterProps) {
         <Select options={options.categories} value={select.category} onChange={callbacks.onCategory}/>
         <Select options={options.sort} value={select.sort} onChange={callbacks.onSort}/>
         <Input value={select.query} onChange={callbacks.onSearch} placeholder={t('catalog-filter.search')} delay={1000}/>
-        <MadeInAutocomplete options={options.madeIn} value={renders.madeIn} onSelected={callbacks.onMadeIn} multiple/>
+        <MadeInAutocomplete options={options.madeIn} value={renders.madeIn} onSelect={callbacks.onMadeIn} multiple/>
         <button onClick={callbacks.onReset}>{t('filter.reset')}</button>
       </SideLayout>
       <SideLayout padding='medium'>
-        <MadeInAutocomplete options={options.madeIn} value={singleValue} onSelected={callbacks.onMadeInSingle}/>
+        <MadeInAutocomplete options={options.madeIn} value={singleValue} onSelect={callbacks.onMadeInSingle}/>
       </SideLayout>
     </>
   )

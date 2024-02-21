@@ -1,107 +1,115 @@
-import { ChangeEvent, memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { KeyboardEvent, memo, useCallback, useMemo, useRef, useState } from "react";
 import { AutocompleteProps, Option } from "./types";
 import {cn as bem} from '@bem-react/classname';
 import './style.css'
-import useAutocompleteScrollAdjustment from "./hooks/use-autocomplete-scroll-adjustment";
-import useAutocompeteCollapseOnForeignAction from "./hooks/use-autocompete-collapse-on-foreign-action";
-import useOnDropdownKeyDown from "./hooks/use-on-dropdown-key-down";
+import Options from "./options";
+import Input from "./input";
+import Dropdown from "./dropdown";
+import Button from "./button";
 
 function Autocomplete<O extends Option>(props: AutocompleteProps<O>) {
   const cn = bem('AutoComplete');
   const [inputValue, setInputValue] = useState<string>('')
   const [isDropdownCollapsed, setDropdownCollapsed] = useState<boolean>(true)
   const [hoveredItem, setHoveredItem] = useState<{index: number, hovered: boolean} | null>(null)
-  const inputRef = useRef<HTMLInputElement>(null)
-  const toggleDropdownButtonRef = useRef<HTMLButtonElement>(null)
-  const dropdownRef = useRef<HTMLDivElement>(null)
-  const listItemRef = useRef<HTMLLIElement>(null)
-  const listRef = useRef<HTMLUListElement>(null)
-  const triggerMouseEnterRef = useRef<boolean>(true)
-
+  const buttonRef = useRef<HTMLButtonElement>(null)
+  const itemRef = useRef<HTMLLIElement>(null)
+  
   const buildedOptions = useMemo(() => (
     props.optionsBuilder(inputValue)
   ), [inputValue, props.options])
 
   const callbacks = {
-    onInput: useCallback((e: ChangeEvent<HTMLInputElement>) => {
-      setInputValue(e.target.value)
-      setHoveredItem({hovered: true, index: 0})
+
+    toggleDropdown: useCallback(() => setDropdownCollapsed(prev => !prev), []),
+
+    dropHoveredItemToStart: useCallback(() => setHoveredItem({hovered: true, index: 0}), []),
+
+    collapseDropdownAndFocusOnButton: useCallback(() => {
+      setDropdownCollapsed(true)
+      setHoveredItem(null)
+      buttonRef?.current?.focus()
     }, []),
 
-    onToggleDropdown: useCallback(() => setDropdownCollapsed(prev => !prev), []),
-
-    onMouseEnterOption: useCallback((index: number) => {
-      if (!triggerMouseEnterRef.current) return triggerMouseEnterRef.current = true;
-      setHoveredItem({hovered: true, index})
+    collapseDropdown: useCallback(() => {
+      setHoveredItem(null)
+      setDropdownCollapsed(true)
     }, []),
 
-    onMouseLeaveOption: useCallback(() => setHoveredItem(prev => (prev?.index || prev?.index === 0) ? ({...prev, hovered: false}) : null), []),
-
-    onSelectOption: useCallback((option: O) => {
-      if (!props.multiple && props.value?.value != option.value) {
-        setDropdownCollapsed(true)
-        toggleDropdownButtonRef?.current?.focus()
+    onDropdownKeyDown: useCallback((e: KeyboardEvent<HTMLDivElement>) => {
+      switch (e.key) {
+        case "Enter": 
+          e.preventDefault()
+          if (!hoveredItem) break
+          const founded = buildedOptions.find((_, i) => i === hoveredItem?.index)
+          if (!founded) break
+          if (!props.multiple && (props.value as O | undefined)?.value != founded.value) {
+            callbacks.collapseDropdownAndFocusOnButton()
+          }
+          props.onSelect(founded)
+          break
+        case "ArrowDown":
+          e.preventDefault()
+          if (hoveredItem && buildedOptions.length > (hoveredItem.index + 1)) {
+            console.log(itemRef?.current)
+            itemRef?.current?.nextElementSibling?.scrollIntoView({behavior: 'instant', block: 'center'})
+            setHoveredItem({ index: hoveredItem.index + 1, hovered: true})
+            
+          } else if (!hoveredItem) {
+            callbacks.dropHoveredItemToStart()
+          }
+          break;
+        case "ArrowUp":
+          e.preventDefault()
+          if (hoveredItem && (hoveredItem.index - 1) >= 0 ) {
+            setHoveredItem({index: hoveredItem.index - 1, hovered: true})
+            itemRef?.current?.previousElementSibling?.scrollIntoView({behavior: 'instant', block: 'center'})
+          } else if (!hoveredItem) {
+            callbacks.dropHoveredItemToStart()
+          }
+          break;
+        case "Escape":
+          e.preventDefault()
+          callbacks.collapseDropdownAndFocusOnButton()
+          break;
       }
-      props.onSelected(option)
-    }, [props.onSelected, props.value, props.multiple]),
-
-    onKeyDown: useOnDropdownKeyDown({
-      buildedOptions, hoveredItem, setDropdownCollapsed,
-      setHoveredItem, toggleDropdownButtonRef, value: props.value,
-      multiple: props.multiple, onSelected: props.onSelected
-    }),
+    }, [buildedOptions, hoveredItem, props.multiple, props.value, props.onSelect])
   }
-
-  useAutocompleteScrollAdjustment({
-    hoveredItem, itemRef: listItemRef, listRef, triggerMouseEnterRef
-  })
-
-  useEffect(() => {
-    if (isDropdownCollapsed) return setHoveredItem(null);
-    console.log(inputRef?.current)
-    inputRef?.current?.focus()
-  }, [isDropdownCollapsed])
-
-  useAutocompeteCollapseOnForeignAction({
-    dropdownRef, isDropdownCollapsed, setDropdownCollapsed, toggleDropdownButtonRef
-  })
-  
   
   return(
     <div className={cn()}>
-      {props.containerViewBuilder({
-        dropdownController: {
-          onToggle: callbacks.onToggleDropdown,
-          isCollapsed: isDropdownCollapsed
-        },
-        buttonRef: toggleDropdownButtonRef
-      })}
-      {!isDropdownCollapsed && <div
-        tabIndex={-1} 
-        onKeyDown={callbacks.onKeyDown} 
-        className={props.dropdownClassName || cn('dropdown')} 
-        ref={dropdownRef}
+      <Button
+        buttonRef={buttonRef}
+        buttonViewBuilder={props.buttonViewBuilder}
+        isDropdownCollapsed={isDropdownCollapsed}
+        toggleDropdown={callbacks.toggleDropdown}
+      />
+      {!isDropdownCollapsed && <Dropdown 
+        dropdownClassName={props.dropdownClassName || cn('dropdown')}
+        onKeyDown={callbacks.onDropdownKeyDown}
+        collapseDropdown={callbacks.collapseDropdown}
+        collapseDropdownAndFocusOnButton={callbacks.collapseDropdownAndFocusOnButton}
+        buttonRef={buttonRef}
       >
-        {props.fieldViewBuilder({
-          inputController: {
-            value: inputValue, onChange: callbacks.onInput 
-          },
-          inputRef,
-        })}
-        {props.optionsViewBuilder({
-          hoverController: {
-            item: hoveredItem,
-            onMouseEnter: callbacks.onMouseEnterOption,
-            onMouseLeave: callbacks.onMouseLeaveOption,
-            itemRef: listItemRef,
-            listRef,
-          },
-          optionsController: {
-            onSelect: callbacks.onSelectOption,
-            buildedOptions,
-          },
-        })}
-      </div>}
+        <Input
+          inputViewBuilder={props.inputViewBuilder}
+          inputValue={inputValue}
+          dropHoveredItemToStart={callbacks.dropHoveredItemToStart}
+          setInputValue={setInputValue}
+        />
+        {/* @ts-ignore */}
+        <Options
+          buildedOptions={buildedOptions}
+          hoveredItem={hoveredItem}
+          collapseDropdownAndFocusOnButton={callbacks.collapseDropdownAndFocusOnButton}
+          onSelect={props.onSelect as any}
+          optionsViewBuilder={props.optionsViewBuilder as any}
+          setHoveredItem={setHoveredItem}
+          multiple={props.multiple}
+          value={props.value}
+          itemRef={itemRef}
+        />
+      </Dropdown>}
     </div>
   )
 }

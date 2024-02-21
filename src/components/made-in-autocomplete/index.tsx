@@ -1,6 +1,6 @@
 import { memo, useCallback } from "react"
 import Autocomplete from "../autocomplete"
-import { ContainerViewBuilder, FieldViewBuilderProps, Option, OptionsViewBuilder } from "../autocomplete/types"
+import { ButtonViewBuilderProps, InputViewBuilderProps, OptionsViewBuilderProps } from "../autocomplete/types"
 import { MadeInOption, MadeInAutocompleteProps } from "./types"
 import OptionsView from "./options-view";
 import InputView from "./input-view";
@@ -15,21 +15,21 @@ function MadeInAutocomplete(
   const cn = bem('MadeInAutocomplete')
 
   const renders = {
-    fieldViewBuilder: useCallback((props: FieldViewBuilderProps) => (
-      <InputView {...props}/>
+    inputViewBuilder: useCallback((inputProps: InputViewBuilderProps) => (
+      <InputView {...inputProps}/>
     ), []),
 
-    optionsViewBuilder: useCallback((cProps: OptionsViewBuilder<MadeInOption>) => (
-      <OptionsView {...cProps} selected={props.value}/>
+    optionsViewBuilder: useCallback((optionsProps: OptionsViewBuilderProps<MadeInOption>) => (
+      <OptionsView {...optionsProps} selected={props.value}/>
     ), [props.options, props.value]),
 
-    containerViewBuilder: useCallback((cProps: ContainerViewBuilder) => (
-        <ButtonView {...cProps} value={props.value} multiple={props.multiple}/>
+    buttonViewBuilder: useCallback((buttonProps: ButtonViewBuilderProps) => (
+        <ButtonView {...buttonProps} value={props.value} multiple={props.multiple}/>
       ), [props.value]),
 
-    optionsBuilder: useCallback((inputValue: string) =>  
-      props.options.filter((option) => option.title.toLowerCase().includes(inputValue.trim().toLowerCase())
-    ), [props.options])
+    optionsBuilder: useCallback((inputValue: string) => {
+      return props.options.filter((option) => option.title.toLowerCase().includes(inputValue.trim().toLowerCase()))
+    }, [props.options])
   }
 
   if (props.multiple) {
@@ -37,11 +37,11 @@ function MadeInAutocomplete(
       <Autocomplete
         options={props.options}
         value={props.value}
-        onSelected={props.onSelected}
-        fieldViewBuilder={renders.fieldViewBuilder}
+        onSelect={props.onSelect}
+        inputViewBuilder={renders.inputViewBuilder}
         optionsViewBuilder={renders.optionsViewBuilder}
         optionsBuilder={renders.optionsBuilder}
-        containerViewBuilder={renders.containerViewBuilder}
+        buttonViewBuilder={renders.buttonViewBuilder}
         multiple={props.multiple}
         dropdownClassName={cn('dropdown')}
       />
@@ -52,11 +52,11 @@ function MadeInAutocomplete(
     <Autocomplete
       options={props.options}
       value={props.value}
-      onSelected={props.onSelected}
-      fieldViewBuilder={renders.fieldViewBuilder}
+      onSelect={props.onSelect}
+      inputViewBuilder={renders.inputViewBuilder}
       optionsViewBuilder={renders.optionsViewBuilder}
       optionsBuilder={renders.optionsBuilder}
-      containerViewBuilder={renders.containerViewBuilder}
+      buttonViewBuilder={renders.buttonViewBuilder}
       dropdownClassName={cn('dropdown')}
     />
   )

@@ -35,3 +35,5 @@ type AllForms<T extends object> =
 export type TranslateKey = AllForms<Translations[LangCodes]>
 export type StringTranslateKey = StringForms<Translations[LangCodes]>
 export type PluralTranslateKey = Exclude<TranslateKey, StringTranslateKey>
+
+// type S = StringTranslateKey  PluralTranslateKey

@@ -1,10 +1,10 @@
 import { memo } from "react"
 import {cn as bem} from '@bem-react/classname';
 import './style.css'
-import { OptionsViewBuilder } from "@src/components/autocomplete/types";
+import { OptionsViewBuilderProps } from "@src/components/autocomplete/types";
 import { MadeInOption } from "../types";
 
-type Props = OptionsViewBuilder<MadeInOption> & {
+type Props = OptionsViewBuilderProps<MadeInOption> & {
   selected: MadeInOption | MadeInOption[] | undefined,
 }
 
@@ -13,13 +13,15 @@ function OptionsView(props: Props) {
   const cn = bem('OptionsView')
 
   return (
-    <ul className={cn()} onMouseLeave={hoverController.onMouseLeave} ref={hoverController.listRef}>
+    <ul className={cn()} 
+        onMouseLeave={hoverController.onMouseLeaveList}
+        ref={hoverController.listRef}
+    >
       {optionsController.buildedOptions.map((option,i) => (
         <li key={option.value} 
             ref={props.hoverController.item?.index === i ? hoverController.itemRef : undefined}
             onClick={() => optionsController.onSelect(option)}
-            
-            onMouseEnter={() => hoverController.onMouseEnter(i)}
+            onMouseEnter={() => hoverController.onMouseEnterOption(i)}
             className={cn('li', {
               selected: Array.isArray(props.selected) 
                 ? Boolean(props.selected.find(op => op.value === option.value))
