@@ -1,5 +1,5 @@
 import StoreModule from "../module";
-import { Country, InitialStateCountries } from "./type";
+import { InitialStateCountries } from "./type";
 
 class CountriesState extends StoreModule<InitialStateCountries> {
   initState(): InitialStateCountries {

@@ -33,7 +33,6 @@ const Input = forwardRef(function Input(
       type={props.type}
       placeholder={props.placeholder}
       onChange={onChange}
-      tabIndex={0}
       ref={ref}
     />
   );

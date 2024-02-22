@@ -7,7 +7,7 @@ function ItemCountry(props: ItemCountryProps) {
 
   return (
     <>
-      <div className={cn("code")}>{props.code}</div>
+      <div className={cn("code")} onClick={props.onClick}>{props.code}</div>
       <span>{props.title}</span>
     </>
   );

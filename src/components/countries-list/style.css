@@ -29,7 +29,8 @@
   color: #fff;
 }
 
-.CountriesList-item:hover {
+.CountriesList-item:hover,
+.CountriesList-item_highlight {
   background-color: #DBDFFF;
   color: #000;
 }

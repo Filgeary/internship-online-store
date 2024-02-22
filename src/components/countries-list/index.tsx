@@ -1,12 +1,11 @@
-import { memo, useCallback, useState } from "react";
+import { LegacyRef, forwardRef, memo, useCallback } from "react";
 import { cn as bem } from "@bem-react/classname";
 import ItemCountry from "../item-country";
 import { CountriesListProps } from "./type";
 import './style.css';
 
-function CountriesList(props: CountriesListProps) {
+function CountriesList(props: CountriesListProps, ref: LegacyRef<HTMLUListElement>) {
   const cn = bem("CountriesList");
-
 
   const callbacks = {
     onSelect: useCallback((_id: string) => {
@@ -28,15 +27,15 @@ function CountriesList(props: CountriesListProps) {
   }
 
   return (
-    <ul className={cn()}>
+    <ul className={cn()} ref={ref}>
       {props.countries.map((country, index) => (
         <li
           className={cn("item", {
             selected: props.selected.includes(country._id),
-            highlight: props.focusInd === index + 1,
+            highlight: props.focusInd === index,
           })}
           onClick={() => callbacks.onSelect(country._id)}
-          tabIndex={index + 1}
+          tabIndex={index}
           key={country._id}
         >
           <ItemCountry title={country.title} code={country.code} />
@@ -46,4 +45,4 @@ function CountriesList(props: CountriesListProps) {
   );
 }
 
-export default memo(CountriesList);
+export default memo(forwardRef(CountriesList));

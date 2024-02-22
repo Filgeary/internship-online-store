@@ -1,10 +1,9 @@
-import { MouseEvent, RefObject, useCallback, useEffect, useMemo, useState } from "react";
+import { RefObject, useCallback, useEffect, useMemo, useState } from "react";
 import useSelector from "@src/hooks/use-selector";
 import useStore from "@src/hooks/use-store";
 import DropdownTemplate from "@src/components/dropdown-template";
 import Spinner from "@src/components/spinner";
 import Input from "@src/components/input";
-import ItemCountry from "@src/components/item-country";
 import CountriesList from "@src/components/countries-list";
 import { Country } from "@src/store/countries/type";
 import DropdownSelected from "@src/components/dropdown-selected";
@@ -12,6 +11,7 @@ import DropdownSelected from "@src/components/dropdown-selected";
 function Dropdown() {
   const store = useStore();
   const [search, setSearch] = useState('');
+  const [selected, setSelected] = useState<string[]>([]);
 
   const select = useSelector((state) => ({
     countries: state.countries.list,
@@ -19,8 +19,6 @@ function Dropdown() {
     waiting: state.countries.waiting,
     madeIn: state.catalog.params.madeIn
   }));
-
-  const [selected, setSelected] = useState<string[]>([]);
 
   useEffect(() => {
     store.actions.countries.loadById(select.madeIn);
@@ -43,7 +41,7 @@ function Dropdown() {
       [store]
     ),
     removeSelectedItem: useCallback(
-      (_id: string, e: React.MouseEvent<HTMLLIElement>) => {
+      (_id: string, e: React.MouseEvent<HTMLDivElement>) => {
         const filtered = selected.filter((item) => item !== _id);
         setSelected(filtered);
         callbacks.onSelectMany(filtered);
@@ -66,7 +64,11 @@ function Dropdown() {
   const renders = {
     selectedItem: useCallback(
       (open: boolean) => (
-        <DropdownSelected open={open} selected={select.selected} removeSelectedItem={callbacks.removeSelectedItem} />
+        <DropdownSelected
+          open={open}
+          selected={select.selected}
+          removeSelectedItem={callbacks.removeSelectedItem}
+        />
       ),
       [select.selected]
     ),
@@ -81,7 +83,7 @@ function Dropdown() {
       />
     ),
     options: useCallback(
-      (focusInd: number) => (
+      (focusInd: number, menuRef: RefObject<HTMLUListElement>) => (
         <Spinner active={select.waiting}>
           <CountriesList
             focusInd={focusInd}
@@ -89,6 +91,7 @@ function Dropdown() {
             onSelect={callbacks.onSelectMany}
             selected={selected}
             setSelected={setSelected}
+            ref={menuRef}
           />
         </Spinner>
       ),
