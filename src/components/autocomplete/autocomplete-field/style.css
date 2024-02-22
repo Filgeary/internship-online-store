@@ -24,6 +24,11 @@
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
+.AutocompleteField:not(.AutocompleteField_active):focus-visible {
+  background: #dbdfff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
 .AutocompleteField_active {
   background: #808dff;
 

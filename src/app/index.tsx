@@ -10,6 +10,7 @@ import Profile from './profile';
 import Protected from '@src/containers/protected';
 
 import AllModals from '@src/containers/all-modals';
+import Community from './community';
 
 /**
  * Приложение
@@ -34,6 +35,14 @@ function App() {
             element={
               <Protected redirect='/login'>
                 <Profile />
+              </Protected>
+            }
+          />
+          <Route
+            path={'/community'}
+            element={
+              <Protected redirect='/login'>
+                <Community />
               </Protected>
             }
           />

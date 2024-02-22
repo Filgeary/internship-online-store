@@ -3,7 +3,7 @@ import * as langs from './translations';
 export type TRuLang = typeof langs.translations.ru;
 export type TEnLang = typeof langs.translations.en;
 
-export type TAllLangsPick = keyof (TRuLang | TEnLang);
+export type TAllLangsPick = keyof (TRuLang & TEnLang);
 
 // Утилита для преобразования всех ключей в Union-тип
 type TFlattenKeys<T> = T extends object

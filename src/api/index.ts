@@ -1,30 +1,7 @@
 import { TConfig } from '@src/config';
 import Services from '@src/services';
 
-type TRequest = {
-  url: string;
-  method?: string;
-  headers?: Record<string, string>;
-  timeout?: number;
-} & Partial<any>; // Для rest-параметра options
-
-type TResponse<T> = {
-  data: {
-    result: T;
-    error: {
-      data: {
-        issues: Array<{
-          path: Array<any>;
-          rule?: string;
-          accept: boolean;
-          message: string;
-        }>;
-      };
-    };
-  };
-  status: number;
-  headers: Record<string, any>;
-};
+import { TRequest, TResponse } from './types';
 
 class APIService {
   services: Services;

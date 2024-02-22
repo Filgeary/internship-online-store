@@ -1,6 +1,7 @@
 {
   "title": "Магазин",
   "menu.main": "Главная",
+  "menu.community": "Сообщество",
   "basket.title": "Корзина",
   "basket.open": "Перейти",
   "basket.close": "Закрыть",

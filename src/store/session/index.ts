@@ -151,6 +151,13 @@ class SessionState extends StoreModule<TSessionState, TSessionConfig> {
   resetErrors() {
     this.setState({ ...this.initState(), errors: null });
   }
+
+  /**
+   * Сброс ожидания
+   */
+  resetWaiting() {
+    this.setState({ ...this.getState(), waiting: false });
+  }
 }
 
 export default SessionState;

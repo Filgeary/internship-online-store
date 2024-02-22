@@ -1,6 +1,7 @@
 {
   "title": "Shop",
   "menu.main": "Main",
+  "menu.community": "Community",
   "basket.title": "Cart",
   "basket.open": "Open",
   "basket.close": "Close",
