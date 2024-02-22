@@ -1,0 +1,152 @@
+.SelectAutocomplete {
+  position: relative;
+  display: inline-block;
+  width: 240px;
+  min-height: 30px;
+  margin: 0;
+
+  font-family: sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  color: #191f4d;
+  border-radius: 4px;
+}
+
+/* reset button styles */
+.SelectAutocomplete-control,
+.SelectAutocomplete-option {
+  appearance: none;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border: none;
+  font: inherit;
+  color: inherit;
+}
+
+.SelectAutocomplete-control {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+
+  border: 1px solid #ccc;
+  background-color: #fff;
+  cursor: pointer;
+}
+.SelectAutocomplete-control_open {
+  border-bottom: 1px solid #fff;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.SelectAutocomplete-option {
+  overflow: hidden;
+  display: flex;
+  flex-grow: 1;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 8px;
+  padding: 6px;
+
+  cursor: pointer;
+}
+li > .SelectAutocomplete-option:hover {
+  background: #dbdfff;
+}
+.SelectAutocomplete-option_selected {
+  color: #fff;
+  background: #808dff;
+}
+.SelectAutocomplete-option_active {
+  color: #191f4d;
+  background: #dbdfff;
+}
+
+.SelectAutocomplete-value {
+  display: flex;
+  place-items: center;
+  place-content: center;
+  width: 18px;
+  height: 18px;
+  padding: 4px;
+
+  font-weight: 700;
+  font-size: 8px;
+  text-align: center;
+  color: #fff;
+  background: #6f7eff;
+  border-radius: 3px;
+}
+
+.SelectAutocomplete-label {
+  margin: 0;
+  padding: 0;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.SelectAutocomplete-icon {
+  margin-right: 4px;
+  width: 20px;
+  height: 20px;
+
+  transform: rotate(0deg);
+  transition: all 0.2s ease;
+}
+
+.SelectAutocomplete-icon_open {
+  transform: rotate(-180deg);
+  transition: all 0.2s ease;
+}
+
+.SelectAutocomplete-comboboxWrapper {
+  position: absolute;
+  overflow: hidden;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  z-index: 10;
+
+  border: 1px solid #ccc;
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+  font-family: sans-serif;
+  font-size: 16px;
+  box-shadow: 0 8px 8px 0 rgba(60, 60, 63, 0.25);
+  background: #fff;
+}
+
+.SelectAutocomplete-input {
+  width: 100%;
+  min-height: 30px;
+  margin: 0;
+  padding: 6px;
+  border: none;
+  outline: none;
+  font: inherit;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 13px;
+  color: #191f4d;
+
+  &::placeholder {
+    color: hsl(233, 9%, 72%);
+  }
+}
+
+.SelectAutocomplete-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 124px;
+  overflow-y: auto;
+}
+
+.SelectAutocomplete-listItem {
+  display: flex;
+  cursor: pointer;
+}

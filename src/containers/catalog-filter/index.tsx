@@ -1,13 +1,26 @@
-import { memo, useCallback, useMemo } from 'react';
+import { memo, useCallback, useMemo, useState } from 'react';
 
 import Input from '@src/components/input';
 import Select from '@src/components/select';
+import SelectAutocomplete from '@src/components/select-autocomplete';
 import SideLayout from '@src/components/side-layout';
 import useSelector from '@src/hooks/use-selector';
 import useStore from '@src/hooks/use-store';
 import useTranslate from '@src/hooks/use-translate';
 import listToTree from '@src/utils/list-to-tree';
 import treeToList from '@src/utils/tree-to-list';
+
+const countries = [
+  { code: '', title: 'Все' },
+  { code: 'US', title: 'United States' },
+  { code: 'CN', title: 'China' },
+  { code: 'IN', title: 'India' },
+  { code: 'BR', title: 'Brazil' },
+  { code: 'RU', title: 'Russia' },
+  { code: 'FR', title: 'France' },
+  { code: 'DE', title: 'Germany' },
+  { code: 'GB', title: 'United Kingdom | Great Britain' },
+].map(item => ({ _id: String(item.code), value: item.code, title: item.title }));
 
 type Props = {
   catalogSliceName?: 'catalog' | `catalog${number}`;
@@ -16,6 +29,7 @@ type Props = {
 function CatalogFilter({ catalogSliceName = 'catalog' }: Props) {
   const store = useStore();
   const { t } = useTranslate();
+  const [selectedItem, setSelectedItem] = useState(() => countries[0]);
 
   const select = useSelector(state => ({
     sort: state[catalogSliceName].params.sort,
@@ -45,6 +59,11 @@ function CatalogFilter({ catalogSliceName = 'catalog' }: Props) {
       (category: string) => store.actions[catalogSliceName].setParams({ category, page: 1 }),
       [catalogSliceName, store],
     ),
+    // Фильтр по стране
+    onFilterByCountry: (country: (typeof countries)[0]) => {
+      console.log('🚀 => CatalogFilter => country:', country);
+      setSelectedItem(country);
+    },
   };
 
   const options = {
@@ -80,6 +99,11 @@ function CatalogFilter({ catalogSliceName = 'catalog' }: Props) {
         options={options.sort}
         value={select.sort}
         onChange={callbacks.onSort}
+      />
+      <SelectAutocomplete
+        options={countries}
+        onSelected={callbacks.onFilterByCountry}
+        selectedItem={selectedItem}
       />
       <Input
         name='query'
