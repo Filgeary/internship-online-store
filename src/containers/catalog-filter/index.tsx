@@ -1,4 +1,4 @@
-import { memo, useCallback, useMemo, useState } from 'react';
+import { memo, useCallback, useMemo } from 'react';
 
 import Input from '@src/components/input';
 import Select from '@src/components/select';
@@ -10,17 +10,7 @@ import useTranslate from '@src/hooks/use-translate';
 import listToTree from '@src/utils/list-to-tree';
 import treeToList from '@src/utils/tree-to-list';
 
-const countries = [
-  { code: '', title: 'Все' },
-  { code: 'US', title: 'United States' },
-  { code: 'CN', title: 'China' },
-  { code: 'IN', title: 'India' },
-  { code: 'BR', title: 'Brazil' },
-  { code: 'RU', title: 'Russia' },
-  { code: 'FR', title: 'France' },
-  { code: 'DE', title: 'Germany' },
-  { code: 'GB', title: 'United Kingdom | Great Britain' },
-].map(item => ({ _id: String(item.code), value: item.code, title: item.title }));
+import type { ISelectOption } from '@src/types';
 
 type Props = {
   catalogSliceName?: 'catalog' | `catalog${number}`;
@@ -29,13 +19,15 @@ type Props = {
 function CatalogFilter({ catalogSliceName = 'catalog' }: Props) {
   const store = useStore();
   const { t } = useTranslate();
-  const [selectedItem, setSelectedItem] = useState(() => countries[0]);
 
   const select = useSelector(state => ({
     sort: state[catalogSliceName].params.sort,
     query: state[catalogSliceName].params.query,
     category: state[catalogSliceName].params.category,
+    madeIn: state[catalogSliceName].params.madeIn,
     categories: state.categories.list,
+    countries: state.countries.list,
+    waitingCountries: state.countries.waiting,
   }));
 
   const callbacks = {
@@ -60,10 +52,17 @@ function CatalogFilter({ catalogSliceName = 'catalog' }: Props) {
       [catalogSliceName, store],
     ),
     // Фильтр по стране
-    onFilterByCountry: (country: (typeof countries)[0]) => {
-      console.log('🚀 => CatalogFilter => country:', country);
-      setSelectedItem(country);
-    },
+    onFilterByCountry: useCallback(
+      (country: ISelectOption) => {
+        console.log('🚀 => CatalogFilter => country:', country);
+        store.actions[catalogSliceName].setParams({ madeIn: country._id, page: 1 });
+      },
+      [catalogSliceName, store],
+    ),
+    // Загрузка стран
+    onLoadCountries: useCallback(async () => {
+      if (select.countries.length === 0) await store.actions.countries.load();
+    }, [select.countries.length, store]),
   };
 
   const options = {
@@ -86,6 +85,13 @@ function CatalogFilter({ catalogSliceName = 'catalog' }: Props) {
       ],
       [select.categories],
     ),
+    countries: useMemo(
+      () => [
+        { _id: '', value: '', title: 'Все' },
+        ...select.countries.map(item => ({ _id: item._id, value: item.code, title: item.title })),
+      ],
+      [select.countries],
+    ),
   };
 
   return (
@@ -101,9 +107,11 @@ function CatalogFilter({ catalogSliceName = 'catalog' }: Props) {
         onChange={callbacks.onSort}
       />
       <SelectAutocomplete
-        options={countries}
+        options={options.countries}
         onSelected={callbacks.onFilterByCountry}
-        selectedItem={selectedItem}
+        selectedItem={options.countries.find(item => item._id === select.madeIn) || null}
+        isPending={select.waitingCountries}
+        onOpen={callbacks.onLoadCountries}
       />
       <Input
         name='query'

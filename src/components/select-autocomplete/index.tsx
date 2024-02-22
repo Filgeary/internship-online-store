@@ -1,25 +1,24 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 import { cn as bem } from '@bem-react/classname';
-import { useEffect, useRef, useState } from 'react';
+import { memo, useEffect, useRef, useState } from 'react';
 
 import IconChevronDown from '../icon-chevron-down';
+import Spinner from '../spinner';
+
+import type { ISelectOption } from '@src/types';
 
 import './style.css';
 
-interface IOption {
-  _id: string;
-  value: string;
-  title: string;
-}
-
 type Props = {
-  options: IOption[];
-  onSelected: (item: IOption) => void;
-  selectedItem: IOption | null;
+  options: ISelectOption[];
+  onSelected: (item: ISelectOption) => void;
+  selectedItem: ISelectOption | null;
+  isPending?: boolean;
+  onOpen?: () => void;
 };
 
-const SelectAutocomplete = ({ options, selectedItem, onSelected }: Props) => {
+const SelectAutocomplete = ({ options, selectedItem, onSelected, isPending, onOpen }: Props) => {
   const cn = bem('SelectAutocomplete');
 
   const [isOpen, setIsOpen] = useState(false);
@@ -29,6 +28,11 @@ const SelectAutocomplete = ({ options, selectedItem, onSelected }: Props) => {
 
   const inputRef = useRef<HTMLInputElement>(null);
   const listItemsRefs = useRef<HTMLLIElement[]>([]);
+
+  // call callbacks on open
+  useEffect(() => {
+    if (isOpen) onOpen?.();
+  }, [isOpen, onOpen]);
 
   // filter items & set active index
   useEffect(() => {
@@ -68,7 +72,7 @@ const SelectAutocomplete = ({ options, selectedItem, onSelected }: Props) => {
     setInputValue(event.target.value);
   };
 
-  const handleSelectItem = (item: IOption) => {
+  const handleSelectItem = (item: ISelectOption) => {
     onSelected(item);
     handleReset();
     setIsOpen(false);
@@ -99,7 +103,7 @@ const SelectAutocomplete = ({ options, selectedItem, onSelected }: Props) => {
       scrollToActiveItem(activeIndex - 1);
       inputRef.current?.focus(); // Maintain focus on input
     } else if (key === 'Escape' || key === 'Tab') {
-      // Handle Escape or Tab to close the menu
+      // Handle Escape & Tab to close the combobox
       setIsOpen(false);
       handleReset();
     }
@@ -136,35 +140,37 @@ const SelectAutocomplete = ({ options, selectedItem, onSelected }: Props) => {
             ref={inputRef}
           />
 
-          {filteredItems.length > 0 && (
-            <ul className={cn('list')}>
-              {filteredItems.map((item, index) => (
-                <li
-                  key={item._id}
-                  className={cn('listItem')}
-                  ref={elem => (elem ? (listItemsRefs.current[index] = elem) : null)}
-                >
-                  <div
-                    className={cn('option', {
-                      active: index === activeIndex,
-                      selected: item._id === selectedItem?._id,
-                    })}
-                    onClick={() => handleSelectItem(item)}
-                    role='option'
-                    aria-selected={index === activeIndex}
-                    tabIndex={-1}
+          <Spinner active={Boolean(isPending)}>
+            {filteredItems.length > 0 && (
+              <ul className={cn('list')}>
+                {filteredItems.map((item, index) => (
+                  <li
+                    key={item._id}
+                    className={cn('listItem')}
+                    ref={elem => (elem ? (listItemsRefs.current[index] = elem) : null)}
                   >
-                    <span className={cn('value')}>{item.value || ''}</span>
-                    <span className={cn('label')}>{item.title}</span>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          )}
+                    <div
+                      className={cn('option', {
+                        active: index === activeIndex,
+                        selected: item._id === selectedItem?._id,
+                      })}
+                      onClick={() => handleSelectItem(item)}
+                      role='option'
+                      aria-selected={index === activeIndex}
+                      tabIndex={-1}
+                    >
+                      <span className={cn('value')}>{item.value || ''}</span>
+                      <span className={cn('label')}>{item.title}</span>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </Spinner>
         </div>
       )}
     </div>
   );
 };
 
-export default SelectAutocomplete;
+export default memo(SelectAutocomplete);

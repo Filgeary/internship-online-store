@@ -33,6 +33,8 @@ function CatalogList({
     limit: state[catalogSliceName].params.limit,
     sort: state[catalogSliceName].params.sort,
     query: state[catalogSliceName].params.query,
+    category: state[catalogSliceName].params.category,
+    madeIn: state[catalogSliceName].params.madeIn,
     count: state[catalogSliceName].count,
     waiting: state[catalogSliceName].waiting,
   }));
@@ -55,9 +57,11 @@ function CatalogList({
           limit: String(select.limit),
           sort: select.sort,
           query: select.query,
+          category: select.category,
+          madeIn: select.madeIn,
         })}`;
       },
-      [select.limit, select.sort, select.query],
+      [select.limit, select.sort, select.query, select.category, select.madeIn],
     ),
   };
 

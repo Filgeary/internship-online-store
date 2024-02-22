@@ -20,6 +20,12 @@ export type TVerboseError = {
   message: string;
 };
 
+export interface ISelectOption {
+  _id: string;
+  value: string;
+  title: string;
+}
+
 export type TRecursiveObjectProps<T> = {
   [P in keyof T]: T[P] extends object ? TRecursiveObjectProps<T[P]> : T[P];
 };
