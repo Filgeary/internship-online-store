@@ -7,7 +7,6 @@
 .Select-layout-wrap-list {
   box-sizing: border-box;
   width: 240px;
-  position: absolute;
   box-shadow: 0px 5px 10px 2px rgba(34, 60, 80, 0.2);
   background-color: rgba(255, 255, 255, 1);
 }
@@ -77,6 +76,10 @@
   /* background: #e5e6e9; */
   background-image: url("../../assets/images/rectangle.png");
   border-radius: 8px;
+}
+
+.Select-layout-item_selected {
+  background-color: rgba(128, 141, 255, 1);
 }
 
 .Select-layout-item {

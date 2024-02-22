@@ -2,6 +2,7 @@ export interface IСountry {
     title: string
    _id: string
    code: string
+   selected?: boolean
   }
 
 export interface ICountriesInitState {
