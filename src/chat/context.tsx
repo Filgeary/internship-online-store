@@ -32,9 +32,9 @@ export function ChatProvider({ children }: ChatProviderProps) {
 export const useChat = (): TChatContext => {
   const ctx = useContext(ChatContext);
 
-  // if (!ctx) {
-  //   throw new Error('Компоненты, использующие сервис чата должны быть обёрнуты в <ChatProvider />');
-  // }
+  if (!ctx) {
+    throw new Error('Компоненты, использующие сервис чата должны быть обёрнуты в <ChatProvider />');
+  }
 
   return ctx;
 };

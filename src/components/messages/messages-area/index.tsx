@@ -19,7 +19,9 @@ function MessagesArea() {
           message={message}
           me={message.author._id === userId}
           sended={message.author._id === userId && message.sended === true}
-          viewed={message.author._id === userId && !message.sended}
+          exists={
+            message.author._id === userId && !message.sended /* Проверка на отсутствие поля */
+          }
         />
       ))}
     </div>

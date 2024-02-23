@@ -38,7 +38,10 @@ const config = {
     baseUrl: '',
   },
   redux: {},
-  chat: {},
+  chat: {
+    // URL для чата (с протоколом websocket)
+    url: 'ws://localhost:8010/chat',
+  },
 };
 
 export type TConfig = typeof config;

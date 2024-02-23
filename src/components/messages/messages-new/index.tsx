@@ -6,9 +6,12 @@ import { cn as bem } from '@bem-react/classname';
 
 type MessagesNewProps = {
   onSubmit: (data: string) => any;
+  minLength?: number;
 };
 
 function MessagesNew(props: MessagesNewProps) {
+  const { minLength = 10 } = props;
+
   const cn = bem('MessagesNew');
   const [message, setMessage] = useState('');
 
@@ -49,7 +52,7 @@ function MessagesNew(props: MessagesNewProps) {
   };
 
   const options = {
-    isSubmitDisabled: message.length < 10,
+    isSubmitDisabled: message.length < minLength,
   };
 
   return (

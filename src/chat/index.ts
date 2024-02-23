@@ -6,7 +6,6 @@ class ChatService {
   services: Services;
   config: TConfig['chat'];
   ws: WebSocket;
-  url = 'ws://localhost:8010/chat';
   messages: TMessage[];
   listeners: ((...args: any[]) => void)[];
   userId: string;
@@ -23,7 +22,7 @@ class ChatService {
    * Открыть соединение с сервером
    */
   auth(token: string, userId: string) {
-    this.ws = new WebSocket(this.url);
+    this.ws = new WebSocket(this.config.url);
     this.userId = userId;
 
     this.ws.addEventListener('open', () => {

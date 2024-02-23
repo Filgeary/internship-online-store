@@ -7,24 +7,26 @@ type MessageProps = {
   message: TMessage;
   me: boolean;
   sended?: boolean;
-  viewed?: boolean;
+  exists?: boolean;
 };
 
 function Message(props: MessageProps) {
-  const { message, me, sended = false, viewed = false } = props;
+  const { message, me, sended = false, exists = false } = props;
 
   const cn = bem('Message');
 
   const options = {
     title: (() => {
       if (sended) return 'Отправлено';
-      if (viewed) return 'Получено';
+      if (exists) return 'Получено';
     })(),
+    avatar: message.author.profile.avatar.url || 'https://loremflickr.com/100/100',
   };
 
   return (
-    <article className={cn({ me, sended, viewed })} title={options.title}>
+    <article className={cn({ me, sended, exists })} title={options.title}>
       <div className={cn('header')}>
+        <img className={cn('avatar')} src={options.avatar} alt={options.title} />
         <h4 className={cn('username')}>{message.author.profile.name}</h4>
         <span className={cn('date')}>{dateFormat(new Date(message.dateCreate))}</span>
       </div>
