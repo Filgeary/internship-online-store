@@ -3,6 +3,7 @@
 import { cn as bem } from '@bem-react/classname';
 import { memo, useEffect, useRef, useState } from 'react';
 
+import { useClickOutside } from '@src/hooks/use-click-outside';
 import IconChevronDown from '../icon-chevron-down';
 import Spinner from '../spinner';
 
@@ -28,6 +29,7 @@ const SelectAutocomplete = ({ options, selectedItem, onSelected, isPending, onOp
 
   const inputRef = useRef<HTMLInputElement>(null);
   const listItemsRefs = useRef<HTMLLIElement[]>([]);
+  const comboboxWrapperRef = useRef<HTMLDivElement>(null);
 
   // call callbacks on open
   useEffect(() => {
@@ -59,14 +61,29 @@ const SelectAutocomplete = ({ options, selectedItem, onSelected, isPending, onOp
     setActiveIndex(-1);
   };
 
-  const handleToggleMenu = () => {
-    setIsOpen(!isOpen);
+  const handleOpen = () => {
+    setIsOpen(true);
     handleReset();
 
     setTimeout(() => {
       inputRef.current?.focus();
     }, 0);
   };
+
+  const handleClose = () => {
+    setIsOpen(false);
+    handleReset();
+  };
+
+  const handleToggleMenu = () => {
+    if (isOpen) {
+      handleClose();
+    } else {
+      handleOpen();
+    }
+  };
+
+  useClickOutside(comboboxWrapperRef, handleClose);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
@@ -129,7 +146,10 @@ const SelectAutocomplete = ({ options, selectedItem, onSelected, isPending, onOp
       </div>
 
       {isOpen && (
-        <div className={cn('comboboxWrapper')}>
+        <div
+          className={cn('comboboxWrapper')}
+          ref={comboboxWrapperRef}
+        >
           <input
             type='text'
             value={inputValue}
