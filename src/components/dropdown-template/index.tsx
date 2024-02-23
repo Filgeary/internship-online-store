@@ -26,7 +26,6 @@ function DropdownTemplate(props: DropdownTemplateProps) {
     },
     onKeyEnter: () => {
       if (open && menuRef.current?.children[index]) {
-
         (menuRef.current?.children[index] as HTMLLIElement).click();
       }
     },
