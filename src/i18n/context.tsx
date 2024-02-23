@@ -3,19 +3,13 @@ import translate from './translate';
 
 import { TUserTranslateFn } from './types';
 
-/**
- * @type {React.Context<{}>}
- */
-
 export type TI18nContextState = {
   lang: TLangs;
   setLang: (value: TLangs) => void;
   t: TUserTranslateFn;
 };
 
-export const I18nContext = createContext<TI18nContextState>(
-  {} as TI18nContextState
-);
+export const I18nContext = createContext<TI18nContextState>({} as TI18nContextState);
 
 type I18nProviderProps = {
   children?: React.ReactNode;
@@ -23,8 +17,6 @@ type I18nProviderProps = {
 
 /**
  * Обертка над провайдером контекста, чтобы управлять изменениями в контексте
- * @param children
- * @return {JSX.Element}
  */
 export function I18nProvider({ children }: I18nProviderProps): JSX.Element {
   const [lang, setLang] = useState<TLangs>('ru');

@@ -88,6 +88,7 @@
   max-height: 24px;
   overflow-y: auto;
   width: 100%;
+  padding: 0 5px;
 }
 
 .Autocomplete-code-action {

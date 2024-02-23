@@ -1,4 +1,4 @@
-import { TMessage } from '@src/containers/messages-wrapper/types';
+import { TMessage } from '@src/chat/types';
 
 export type TMessagesContext = {
   messages: TMessage[];

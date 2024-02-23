@@ -31,6 +31,7 @@
   opacity: 1;
 }
 
+.Message_viewed::before,
 .Message_viewed::after {
   opacity: 1;
 }

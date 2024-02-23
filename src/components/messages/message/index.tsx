@@ -1,6 +1,6 @@
-import { TMessage } from '@src/containers/messages-wrapper/types';
 import './style.css';
 import { cn as bem } from '@bem-react/classname';
+import { TMessage } from '@src/chat/types';
 import dateFormat from '@src/utils/date-format';
 
 type MessageProps = {
@@ -15,8 +15,15 @@ function Message(props: MessageProps) {
 
   const cn = bem('Message');
 
+  const options = {
+    title: (() => {
+      if (sended) return 'Отправлено';
+      if (viewed) return 'Получено';
+    })(),
+  };
+
   return (
-    <article className={cn({ me, sended, viewed })}>
+    <article className={cn({ me, sended, viewed })} title={options.title}>
       <div className={cn('header')}>
         <h4 className={cn('username')}>{message.author.profile.name}</h4>
         <span className={cn('date')}>{dateFormat(new Date(message.dateCreate))}</span>

@@ -41,7 +41,6 @@ function Modal({ children, ...props }: ModalProps) {
   useOnClickInside(modalRef, { triggerByEsc: true }, closeHandler);
 
   useEffect(() => {
-    console.log(modalRef.current);
     if (!modalRef.current.contains(document.activeElement)) {
       modalRef.current?.focus();
     }

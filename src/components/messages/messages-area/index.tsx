@@ -11,8 +11,6 @@ function MessagesArea() {
 
   const { messages, userId } = useMessagesContext();
 
-  console.log('@', messages, userId);
-
   return (
     <div className={cn()}>
       {messages.map((message) => (
@@ -20,8 +18,8 @@ function MessagesArea() {
           key={message._id}
           message={message}
           me={message.author._id === userId}
-          sended={true}
-          viewed={true}
+          sended={message.author._id === userId && message.sended === true}
+          viewed={message.author._id === userId && !message.sended}
         />
       ))}
     </div>

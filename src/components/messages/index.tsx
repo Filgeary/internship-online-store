@@ -1,3 +1,4 @@
+import './style.css';
 import React, { createContext, memo, useContext } from 'react';
 
 import { cn as bem } from '@bem-react/classname';
@@ -5,8 +6,8 @@ import { cn as bem } from '@bem-react/classname';
 import MessagesArea from './messages-area';
 import MessagesNew from './messages-new';
 import messagesTitle from './messages-title';
-import { TMessage } from '@src/containers/messages-wrapper/types';
 import { TMessagesContext } from './types';
+import { TMessage } from '@src/chat/types';
 
 const MessagesContext = createContext<TMessagesContext>(null);
 
