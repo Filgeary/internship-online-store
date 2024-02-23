@@ -3,12 +3,14 @@ import Store from './store';
 import createStoreRedux from './store-redux';
 
 import { TConfig } from './config';
+import ChatService from './chat';
 
 class Services {
   config: TConfig;
   _api: APIService;
   _store: Store;
   _redux: ReturnType<typeof createStoreRedux>;
+  _chat: ChatService;
 
   constructor(config: TConfig) {
     this.config = config;
@@ -44,6 +46,16 @@ class Services {
       this._redux = createStoreRedux(this, this.config.redux);
     }
     return this._redux;
+  }
+
+  /**
+   * Сервис чата
+   */
+  get chat() {
+    if (!this._chat) {
+      this._chat = new ChatService(this, this.config.chat);
+    }
+    return this._chat;
   }
 }
 

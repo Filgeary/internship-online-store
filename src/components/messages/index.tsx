@@ -1,4 +1,4 @@
-import React, { createContext, memo, useContext, useEffect, useRef, useState } from 'react';
+import React, { createContext, memo, useContext } from 'react';
 
 import { cn as bem } from '@bem-react/classname';
 
@@ -6,10 +6,11 @@ import MessagesArea from './messages-area';
 import MessagesNew from './messages-new';
 import messagesTitle from './messages-title';
 import { TMessage } from '@src/containers/messages-wrapper/types';
+import { TMessagesContext } from './types';
 
-const MessagesContext = createContext(null);
+const MessagesContext = createContext<TMessagesContext>(null);
 
-export const useMessagesContext = () => {
+export const useMessagesContext = (): TMessagesContext => {
   const ctx = useContext(MessagesContext);
 
   if (!ctx) {
@@ -21,19 +22,18 @@ export const useMessagesContext = () => {
 
 type MessagesProps = {
   children: React.ReactNode;
+  userId: string;
   messages: TMessage[];
 };
 
 function Messages(props: MessagesProps) {
-  const { children } = props;
+  const { children, messages, userId } = props;
 
   const cn = bem('Messages');
 
   return (
     <div className={cn()}>
-      <MessagesContext.Provider value={{ messages: props.messages }}>
-        {children}
-      </MessagesContext.Provider>
+      <MessagesContext.Provider value={{ messages, userId }}>{children}</MessagesContext.Provider>
     </div>
   );
 }

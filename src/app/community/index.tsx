@@ -6,8 +6,6 @@ import LocaleSelect from '@src/containers/locale-select';
 import Navigation from '@src/containers/navigation';
 import TopHead from '@src/containers/top-head';
 import useTranslate from '@src/hooks/use-translate';
-import SideLayout from '@src/components/side-layout';
-import Messages from '@src/components/messages';
 import MessagesWrapper from '@src/containers/messages-wrapper';
 
 function Community() {
@@ -16,7 +14,7 @@ function Community() {
   return (
     <PageLayout>
       <TopHead />
-      <Head title={t('title')}>
+      <Head title={t('title.community')}>
         <LocaleSelect />
       </Head>
       <Navigation />

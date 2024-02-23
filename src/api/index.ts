@@ -8,10 +8,6 @@ class APIService {
   config: TConfig['api'];
   defaultHeaders: Record<string, string>;
 
-  /**
-   * @param services {Services} Менеджер сервисов
-   * @param config {Object}
-   */
   constructor(services: Services, config = {}) {
     this.services = services;
     this.config = config as TConfig['api'];

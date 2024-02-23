@@ -38,6 +38,7 @@ const config = {
     baseUrl: '',
   },
   redux: {},
+  chat: {},
 };
 
 export type TConfig = typeof config;
