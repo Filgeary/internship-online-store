@@ -16,7 +16,7 @@ export default function DropdownSelected(props: DropdownSelectedProps) {
   }
 
   const amountForShow = props.open ? props.selected.length : 7;
-  
+
   const callbacks = {
     onShow: (e: MouseEvent<HTMLDivElement>) => {
       e.stopPropagation();

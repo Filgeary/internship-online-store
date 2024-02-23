@@ -5,13 +5,13 @@ import DropdownTemplate from "@src/components/dropdown-template";
 import Spinner from "@src/components/spinner";
 import Input from "@src/components/input";
 import CountriesList from "@src/components/countries-list";
-import { Country } from "@src/store/countries/type";
 import DropdownSelected from "@src/components/dropdown-selected";
+import { Country } from "@src/store/countries/type";
+import { getPathArr } from "@src/utils/get-path-arr";
 
 function Dropdown() {
   const store = useStore();
   const [search, setSearch] = useState('');
-  const [selected, setSelected] = useState<string[]>([]);
 
   const select = useSelector((state) => ({
     countries: state.countries.list,
@@ -22,8 +22,6 @@ function Dropdown() {
 
   useEffect(() => {
     store.actions.countries.loadById(select.madeIn);
-    const madeIn = select.madeIn.split("|").filter((item) => item);
-    setSelected(madeIn);
   }, [select.madeIn])
 
   const callbacks = {
@@ -42,13 +40,12 @@ function Dropdown() {
     ),
     removeSelectedItem: useCallback(
       (_id: string, e: React.MouseEvent<HTMLDivElement>) => {
-        const filtered = selected.filter((item) => item !== _id);
-        setSelected(filtered);
-        callbacks.onSelectMany(filtered);
+        const madeIn = select.madeIn.split("|").filter((item) => item !== _id);
+        callbacks.onSelectMany(madeIn);
         store.actions.countries.removeSelectedItem(_id);
         e.stopPropagation();
       },
-      [store, selected]
+      [store, select.madeIn]
     ),
   };
 
@@ -89,8 +86,7 @@ function Dropdown() {
             focusInd={focusInd}
             countries={options.countriesList}
             onSelect={callbacks.onSelectMany}
-            selected={selected}
-            setSelected={setSelected}
+            selected={getPathArr(select.madeIn)}
             ref={menuRef}
           />
         </Spinner>

@@ -9,3 +9,7 @@ export interface DropdownTemplateProps {
     menuRef: RefObject<HTMLUListElement>
   ) => JSX.Element;
 }
+
+export type ChevronProps = {
+  classValue: string
+}

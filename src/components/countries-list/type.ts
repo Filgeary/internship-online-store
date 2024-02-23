@@ -5,5 +5,4 @@ export interface CountriesListProps {
   onSelect: (_id: string[]) => void;
   focusInd: number;
   selected: string[];
-  setSelected: React.Dispatch<React.SetStateAction<string[]>>;
 }

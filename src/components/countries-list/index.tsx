@@ -6,21 +6,16 @@ import './style.css';
 
 function CountriesList(props: CountriesListProps, ref: LegacyRef<HTMLUListElement>) {
   const cn = bem("CountriesList");
-
   const callbacks = {
     onSelect: useCallback((_id: string) => {
-      if (props.selected.length === 10) return;
       if (!_id) {
         props.onSelect([_id]);
-        props.setSelected([]);
         return
       }
       if (!props.selected.includes(_id)) {
-        props.setSelected((prev) => [...prev, _id]);
         props.onSelect([...props.selected, _id]);
       } else {
         const filterSelected = props.selected.filter((item) => item !== _id);
-        props.setSelected(filterSelected);
         props.onSelect(filterSelected);
       }
     }, [props.selected])

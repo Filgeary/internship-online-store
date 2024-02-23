@@ -43,7 +43,7 @@ class CountriesState extends StoreModule<InitialStateCountries> {
     );
 
     const res = await this.services.api.request({
-      url: `/api/v1/countries?search[query]=${value}&fields=items(_id,title,code),count&limit=*`,
+      url: `/api/v1/countries?search[query]=${value}&fields=items(_id,title,code)&limit=*`,
     });
 
     if (res.status === 200) {
@@ -60,8 +60,9 @@ class CountriesState extends StoreModule<InitialStateCountries> {
 
   async loadById(ids: string) {
     this.setState({ ...this.getState(), waiting: true });
+    
     const res = await this.services.api.request({
-      url: `/api/v1/countries/?search[ids]=${ids}&fields=*`,
+      url: `/api/v1/countries/?search[ids]=${ids}&fields=items(_id,title,code)&limit=*`,
     });
 
     this.setState(
