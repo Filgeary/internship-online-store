@@ -103,7 +103,7 @@ li > .SelectAutocomplete-option:hover {
   transition: all 0.2s ease;
 }
 
-.SelectAutocomplete-comboboxWrapper {
+.SelectAutocomplete-menuWrapper {
   position: absolute;
   overflow: hidden;
   top: 100%;

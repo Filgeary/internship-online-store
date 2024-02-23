@@ -29,7 +29,7 @@ const SelectAutocomplete = ({ options, selectedItem, onSelected, isPending, onOp
 
   const inputRef = useRef<HTMLInputElement>(null);
   const listItemsRefs = useRef<HTMLLIElement[]>([]);
-  const comboboxWrapperRef = useRef<HTMLDivElement>(null);
+  const menuWrapperRef = useRef<HTMLDivElement>(null);
 
   // call callbacks on open
   useEffect(() => {
@@ -83,7 +83,7 @@ const SelectAutocomplete = ({ options, selectedItem, onSelected, isPending, onOp
     }
   };
 
-  useClickOutside(comboboxWrapperRef, handleClose);
+  useClickOutside(menuWrapperRef, handleClose);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
@@ -147,8 +147,8 @@ const SelectAutocomplete = ({ options, selectedItem, onSelected, isPending, onOp
 
       {isOpen && (
         <div
-          className={cn('comboboxWrapper')}
-          ref={comboboxWrapperRef}
+          className={cn('menuWrapper')}
+          ref={menuWrapperRef}
         >
           <input
             type='text'
