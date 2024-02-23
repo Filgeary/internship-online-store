@@ -54,7 +54,6 @@ function CatalogFilter({ catalogSliceName = 'catalog' }: Props) {
     // Фильтр по стране
     onFilterByCountry: useCallback(
       (country: ISelectOption) => {
-        console.log('🚀 => CatalogFilter => country:', country);
         store.actions[catalogSliceName].setParams({ madeIn: country._id, page: 1 });
       },
       [catalogSliceName, store],
@@ -110,6 +109,7 @@ function CatalogFilter({ catalogSliceName = 'catalog' }: Props) {
         options={options.countries}
         onSelected={callbacks.onFilterByCountry}
         selectedItem={options.countries.find(item => item._id === select.madeIn) || null}
+        defaultSelectedItem={options.countries[0]}
         isPending={select.waitingCountries}
         onOpen={callbacks.onLoadCountries}
       />

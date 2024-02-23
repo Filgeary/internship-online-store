@@ -5,6 +5,7 @@ import { memo, useEffect, useRef, useState } from 'react';
 
 import { useClickOutside } from '@src/hooks/use-click-outside';
 import IconChevronDown from '../icon-chevron-down';
+import { SelectFieldOption } from '../select-field-option';
 import Spinner from '../spinner';
 
 import type { ISelectOption } from '@src/types';
@@ -15,11 +16,19 @@ type Props = {
   options: ISelectOption[];
   onSelected: (item: ISelectOption) => void;
   selectedItem: ISelectOption | null;
+  defaultSelectedItem: ISelectOption | null;
   isPending?: boolean;
   onOpen?: () => void;
 };
 
-const SelectAutocomplete = ({ options, selectedItem, onSelected, isPending, onOpen }: Props) => {
+const SelectAutocomplete = ({
+  options,
+  selectedItem,
+  defaultSelectedItem,
+  onSelected,
+  isPending,
+  onOpen,
+}: Props) => {
   const cn = bem('SelectAutocomplete');
 
   const [isOpen, setIsOpen] = useState(false);
@@ -27,9 +36,9 @@ const SelectAutocomplete = ({ options, selectedItem, onSelected, isPending, onOp
   const [filteredItems, setFilteredItems] = useState(options);
   const [activeIndex, setActiveIndex] = useState(-1); // To track selected item in list
 
+  const wrapperRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const listItemsRefs = useRef<HTMLLIElement[]>([]);
-  const menuWrapperRef = useRef<HTMLDivElement>(null);
 
   // call callbacks on open
   useEffect(() => {
@@ -83,7 +92,7 @@ const SelectAutocomplete = ({ options, selectedItem, onSelected, isPending, onOp
     }
   };
 
-  useClickOutside(menuWrapperRef, handleClose);
+  useClickOutside(wrapperRef, handleClose);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
@@ -127,17 +136,23 @@ const SelectAutocomplete = ({ options, selectedItem, onSelected, isPending, onOp
   };
 
   return (
-    <div className={cn()}>
+    <div
+      className={cn()}
+      ref={wrapperRef}
+    >
       <div
         className={cn('control', { open: isOpen })}
         onClick={handleToggleMenu}
-        onKeyDown={evt => evt.key === 'Enter' && handleToggleMenu()}
+        onKeyDown={evt => evt.key === 'Enter' && handleOpen()}
         tabIndex={0}
         role='button'
       >
-        <div className={cn('option')}>
-          <span className={cn('value')}>{selectedItem?.value || ''}</span>
-          <span className={cn('label')}>{selectedItem?.title || 'Все'}</span>
+        <div
+          className={cn('option')}
+          title={selectedItem?.title || defaultSelectedItem?.title}
+        >
+          <span className={cn('value')}>{selectedItem?.value || defaultSelectedItem?.value}</span>
+          <span className={cn('label')}>{selectedItem?.title || defaultSelectedItem?.title}</span>
         </div>
 
         <div className={cn('icon', { open: isOpen })}>
@@ -146,10 +161,7 @@ const SelectAutocomplete = ({ options, selectedItem, onSelected, isPending, onOp
       </div>
 
       {isOpen && (
-        <div
-          className={cn('menuWrapper')}
-          ref={menuWrapperRef}
-        >
+        <div className={cn('menuWrapper')}>
           <input
             type='text'
             value={inputValue}
@@ -169,19 +181,12 @@ const SelectAutocomplete = ({ options, selectedItem, onSelected, isPending, onOp
                     className={cn('listItem')}
                     ref={elem => (elem ? (listItemsRefs.current[index] = elem) : null)}
                   >
-                    <div
-                      className={cn('option', {
-                        active: index === activeIndex,
-                        selected: item._id === selectedItem?._id,
-                      })}
-                      onClick={() => handleSelectItem(item)}
-                      role='option'
-                      aria-selected={index === activeIndex}
-                      tabIndex={-1}
-                    >
-                      <span className={cn('value')}>{item.value || ''}</span>
-                      <span className={cn('label')}>{item.title}</span>
-                    </div>
+                    <SelectFieldOption
+                      item={item}
+                      onSelectItem={handleSelectItem}
+                      isActive={activeIndex === index}
+                      isSelected={item._id === selectedItem?._id}
+                    />
                   </li>
                 ))}
               </ul>
