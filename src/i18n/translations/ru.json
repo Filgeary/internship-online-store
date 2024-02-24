@@ -1,5 +1,11 @@
 {
   "title": "Магазин",
+  "basket.articles": {
+    "one": "товар",
+    "few": "товара",
+    "many": "товаров",
+    "other": "товара"
+  },
   "menu.main": "Главная",
   "basket.title": "Корзина",
   "basket.open": "Перейти",
@@ -9,12 +15,6 @@
   "basket.total": "Итого",
   "basket.unit": "шт",
   "basket.delete": "Удалить",
-  "basket.articles": {
-    "one": "товар",
-    "few": "товара",
-    "many": "товаров",
-    "other": "товара"
-  },
   "adding.title": "Количество товара",
   "adding.cancel": "Отмена",
   "adding.ok": "Ок",

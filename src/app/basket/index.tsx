@@ -27,7 +27,7 @@ function Basket({close}: BasketPropsType) {
     closeModal: useCallback(() => close(), [store]),
     // открытие каталога в модалке
     catalogOpen: useCallback(() => {
-      store.actions.modals.open("catalogModal")
+      store.actions.modals.open('catalogModal')
         .then(async result =>  {
           if(result) {
             for(const item of result) {

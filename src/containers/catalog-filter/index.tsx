@@ -1,4 +1,4 @@
-import {memo, useCallback, useMemo} from "react";
+import {memo, useCallback, useMemo, useState} from "react";
 import useTranslate from "../../hooks/use-translate";
 import useStore from "../../hooks/use-store";
 import useSelector from "../../hooks/use-selector";
@@ -10,6 +10,9 @@ import listToTree from "../../utils/list-to-tree";
 import { ExtendedModulesKeys, ModulesKeys } from "../../store/types";
 import { CategoryType } from "../../store/categories/types";
 import Selector from "../../components/selector";
+import { CountryType } from "../../store/countries/types";
+import SelectorItem from "../../components/selector-item";
+import SelectorItemMulti from "../../components/selector-item-multi";
 
 export type CatalogFilterPropsType<T extends ModulesKeys> = {
   storeSlice?: ExtendedModulesKeys<T>
@@ -20,6 +23,8 @@ function CatalogFilter({
 }: CatalogFilterPropsType<'catalog'>) {
 
   const store = useStore();
+  const [countriesFilter, setCountriesFilter] = useState("");
+  const [selectedCountries, setSelectedCountries] = useState<string[]>([''])
 
   const select = useSelector(state => ({
     sort: state[storeSlice].params.sort,
@@ -40,7 +45,10 @@ function CatalogFilter({
     // Фильтр по категории
     onCategory: useCallback((category: string) => store.actions[storeSlice].setParams({category, page: 1}), [store]),
     //Фильтр по стране
-    onCountry: useCallback((madeIn: string) => store.actions[storeSlice].setParams({ madeIn }), [store]) ,
+    onCountry: useCallback((madeIn: string[]) => {
+      store.actions[storeSlice].setParams({ madeIn: madeIn.join("|") });
+      setSelectedCountries(madeIn)
+    }, [store]),
   };
 
   const options = {
@@ -56,19 +64,49 @@ function CatalogFilter({
         {value: item._id, title: '- '.repeat(level) + item.title}
       ))
     ]), [select.categories]),
-    countries: useMemo(() => ([
-      {_id: '', title: 'Все', code: ''},
-      ...select.countries
-    ]), [select.countries])
+    countries: useMemo(() =>{
+      const countries = select.countries.filter(c => c.title.toLocaleLowerCase().includes(countriesFilter.toLocaleLowerCase()));
+      return [ {_id: '', title: 'Все', code: ''}, ...countries]
+    }, [select.countries, countriesFilter]),
+    selectedCountries: useMemo(() => {
+      let countries: CountryType[] = [];
+      if(selectedCountries.length === 1) {
+        const country = select.countries.find(c => c._id === selectedCountries[0]);
+        countries.push(country || {_id: '', title: 'Все', code: ''})
+      } else {
+        countries = select.countries.filter(c => !!selectedCountries.find(i => i === c._id) )
+      }
+      return countries
+    }, [selectedCountries])
   };
 
   const {t} = useTranslate();
+
+  const renders = {
+    dropdownItem: useCallback((item: CountryType, isSelected?: boolean, isHovered?: boolean) => (
+      <SelectorItem item={item} isSelected={isSelected} isHovered={isHovered} />
+    ), []),
+    selectedOneItem: useCallback((item: CountryType) => (
+      <SelectorItem item={item} />
+    ), []),
+    selectedMultiItem: useCallback((item: CountryType)=>(
+      <SelectorItemMulti item={item}/>
+    ),[])
+  }
+
 
   return (
     <SideLayout padding='medium'>
       <Select options={options.categories} value={select.category} onChange={callbacks.onCategory}/>
       <Select options={options.sort} value={select.sort} onChange={callbacks.onSort}/>
-      <Selector options={options.countries} selected={select.country} onChange={callbacks.onCountry}/>
+      <Selector options={options.countries}
+                selected={options.selectedCountries}
+                selectOneRender={renders.selectedOneItem}
+                selectMultiRender={renders.selectedMultiItem}
+                onChange={callbacks.onCountry}
+                dropdownItem={renders.dropdownItem}
+                filter={countriesFilter}
+                onChangeFilter={setCountriesFilter}/>
       <Input value={select.query} onChange={callbacks.onSearch} placeholder={'Поиск'}
              delay={1000}/>
       <button onClick={callbacks.onReset}>{t('filter.reset')}</button>

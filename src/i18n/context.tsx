@@ -1,6 +1,6 @@
 import {createContext, useMemo, useState} from "react";
 import translate from "./translate";
-import { Dictionary, LanguagesKeys } from "./types";
+import { Dictionary, LanguagesKeys, Translations } from "./types";
 
 /**
  * @type {React.Context<{}>}
@@ -8,7 +8,7 @@ import { Dictionary, LanguagesKeys } from "./types";
 export const I18nContext = createContext<{
     lang: LanguagesKeys;
     setLang: (value: LanguagesKeys) => void;
-    t: (text: keyof Dictionary, number?: number) => string;
+    t: (text: keyof Translations[LanguagesKeys], number?: number) => string;
   }
 >(null);
 
@@ -27,7 +27,7 @@ export function I18nProvider({children}) {
     // Функция для смены локали
     setLang,
     // Функция для локализации текстов с замыканием на код языка
-    t: (text: keyof Dictionary, number?: number) => translate(lang, text, number)
+    t: (text: keyof Translations[LanguagesKeys], number?: number) => translate(lang, text, number)
   }), [lang]);
 
   return (

@@ -1,8 +1,8 @@
 import { memo } from "react";
-import { SelectorItemPropsType } from "./type";
+import { SelectorItemMultiPropsType } from "./type";
 import styles from "./style.module.css";
 
-function SelectorItem(props: SelectorItemPropsType) {
+function SelectorItemMulti(props: SelectorItemMultiPropsType) {
 
   let itemClasses = props.isSelected ? `${styles.Item} ${styles.ItemSelected}` : styles.Item;
   itemClasses += props.isHovered ? ` ${styles.ItemHover}` : '';
@@ -12,11 +12,8 @@ function SelectorItem(props: SelectorItemPropsType) {
       <div className={styles.ItemIcon}>
         <div className={styles.ItemIconText}>{props.item.code}</div>
       </div>
-      <div className={styles.ItemText}>
-        {props.item.title.length < 18 ? props.item.title : `${props.item.title.substring(0, 18)}...`}
-      </div>
     </div>
   );
 }
 
-export default memo(SelectorItem);
+export default memo(SelectorItemMulti);

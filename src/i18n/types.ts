@@ -5,9 +5,30 @@ export type LanguagesKeys= keyof LanguageDictionarys;
 
 
 export type Translations = {
-  [key in LanguagesKeys]: LanguageDictionarys[key]
+  [key in LanguagesKeys]: FlatDictionary<LanguageDictionarys[key]>
 }
 
+/**
+ * Сборка типа для плоского справочника с рукурсивным разбором объектов на строки
+ */
+type FlatDictionary<T> = T extends object
+  ? {[key in keyof T]: T[key] | FlatDictionary<keyof T[key]>}
+  : never;
+
+  // let a: FlatDictionary<LanguageDictionarys['ru']>
+  //  a: {
+  //   "title": string;
+  //   "basket.articles": {
+  //       one: string;
+  //       few: string;
+  //       many: string;
+  //       other: string;
+  //   };
+  //   "menu.main": string;
+  //   "basket.title": string;
+  //   "basket.open": string;
+  //
+  // a['basket.articles'].few
 
 export type Dictionary = {
   "title": string,

@@ -10,11 +10,16 @@ import { LanguagesKeys, Translations } from './types';
  */
 export default function translate<T extends LanguagesKeys>(
   lang: T,
-  text: string,
+  text: keyof Translations[T],
   plural?: number): string {
-  let result = translations[lang] && (text in translations[lang])
-    ? translations[lang][text as keyof Translations[T]]
-    : text;
+
+  const tr: Translations = translations;
+
+  type a = typeof tr['en']['basket.articles']
+
+  let result = tr[lang] && (text in tr[lang])
+    ? tr[lang][text]
+    : text as string;
 
   if (typeof plural !== 'undefined'){
     const key = new Intl.PluralRules(lang).select(plural);
@@ -23,6 +28,6 @@ export default function translate<T extends LanguagesKeys>(
     }
   }
 
-  return result as string;
+  return result;
 }
 

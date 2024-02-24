@@ -1,7 +1,14 @@
+import { ReactNode } from "react";
 import { CountryType } from "../../store/countries/types";
 
 export type SelectorPropsType = {
-  selected: string;
+  selected: CountryType[];
+  selectOneRender: (item: CountryType) => ReactNode;
+  selectMultiRender: (item: CountryType) => ReactNode;
   options: CountryType[];
-  onChange: (id: string) => void;
+  dropdownItem: (item: CountryType, isSelected?: boolean, isHovered?: boolean) => ReactNode;
+  onChange: (id: string[]) => void;
+  filter: string;
+  onChangeFilter: (text: string) => void;
 }
+

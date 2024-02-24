@@ -1,101 +1,158 @@
-import { ChangeEvent, memo, useState, KeyboardEvent, useRef, useEffect } from "react";
+import {
+  ChangeEvent,
+  memo,
+  useState,
+  KeyboardEvent,
+  useRef,
+  useEffect,
+  MouseEvent,
+} from "react";
 import { SelectorPropsType } from "./types";
 import chevron from "./chevron.svg";
-import SelectorItem from "../selector-item";
+import cross from './cross.svg';
 import styles from "./style.module.css";
 
 function Selector(props: SelectorPropsType) {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [search, setSearch] = useState("");
   const [hovered, setHovered] = useState<string | null>(null);
+  const [multiSelection, setMultiSelection] = useState<string[]>([]);
 
   const selectorRef = useRef(null);
   // Эффект для закрытия при клике вне области выпадающего меню
   useEffect(() => {
     const onClickOutside = (e: PointerEvent) => {
-      if(selectorRef.current && !selectorRef.current.contains(e.target)) {
+      if (selectorRef.current && !selectorRef.current.contains(e.target)) {
         setIsExpanded(false);
       }
-    }
-    document.addEventListener('click', onClickOutside, true);
-    return () => document.removeEventListener('click', onClickOutside, true);
-
-  }, [selectorRef])
+    };
+    document.addEventListener("click", onClickOutside, true);
+    return () => document.removeEventListener("click", onClickOutside, true);
+  }, [selectorRef]);
 
   const itemRefs = useRef([]);
-  const countries = props.options.filter(c => c.title.toLocaleLowerCase().includes(search.toLocaleLowerCase()));
+  const countries = [...props.options];
 
   const callbacks = {
+    excludeFromSelection: (e: MouseEvent<HTMLDivElement>, id: string) => {
+      e.stopPropagation();
+      props.onChange(props.selected.map(i => {
+        if(i._id !== id) {
+          return i._id;
+        }
+      } ))
+    },
+    cancelAllSelections: (e: MouseEvent<HTMLImageElement>) => {
+      e.stopPropagation();
+      props.onChange(['']);
+    },
     onSearchChange: (e: ChangeEvent<HTMLInputElement>) => {
-      setSearch(e.currentTarget.value);
+      props.onChangeFilter(e.currentTarget.value);
       setHovered(null);
     },
     expand: () => {
+      if (isExpanded && multiSelection.length > 0) {
+        props.onChange(multiSelection);
+        setMultiSelection([]);
+      }
       setIsExpanded(!isExpanded);
       setHovered(null);
-      setSearch('');
+      props.onChangeFilter("");
     },
-    onSelectionChange: (id: string) => {
-      props.onChange(id);
-      callbacks.expand();
+    onSelectionChange: (e: MouseEvent<HTMLDivElement>, id: string) => {
+      if (e?.ctrlKey) {
+        setMultiSelection([...multiSelection, id]);
+      } else {
+        props.onChange([id]);
+        callbacks.expand();
+      }
     },
     onKeyboardExpand: (e: KeyboardEvent<HTMLDivElement>) => {
-      if(e.key === 'Enter')
-        callbacks.expand();
+      if (e.key === "Enter") callbacks.expand();
     },
     onKeyUp: (e: KeyboardEvent<HTMLDivElement>) => {
-      if(e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      if (e.key === "ArrowDown" || e.key === "ArrowUp") {
         e.stopPropagation();
-        if(e.key === 'ArrowDown' && hovered === null) {
+        if (e.key === "ArrowDown" && hovered === null) {
           setHovered(countries[0]._id);
           return;
         }
-        if(e.key === 'ArrowUp' && hovered === null) {
+        if (e.key === "ArrowUp" && hovered === null) {
           setHovered(countries[props.options.length - 1]._id);
-          itemRefs.current[countries.length - 1].scrollIntoView({ behavior: "smooth", block: "center", inline: "start" });
+          itemRefs.current[countries.length - 1].scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+            inline: "start",
+          });
           return;
         }
 
-        const currentItem = countries.findIndex(el => el._id === hovered);
-        const nextItem = e.key === 'ArrowDown' ? countries[currentItem + 1] : countries[currentItem - 1]
-        if(nextItem) {
+        const currentItem = countries.findIndex((el) => el._id === hovered);
+        const nextItem =
+          e.key === "ArrowDown"
+            ? countries[currentItem + 1]
+            : countries[currentItem - 1];
+        if (nextItem) {
           setHovered(nextItem._id);
-          itemRefs.current[currentItem].scrollIntoView({ behavior: "smooth", block: "center", inline: "start" });
+          itemRefs.current[currentItem].scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+            inline: "start",
+          });
           return;
         }
       }
-      if(e.key === 'Escape') callbacks.expand();
-      if(e.key === 'Enter' && hovered !== null) callbacks.onSelectionChange(hovered);
-    }
-  };
+      if (e.key === "Escape") callbacks.expand();
+      if (e.key === "Enter" && hovered !== null){
+        callbacks.onSelectionChange(null, hovered);
+      }
 
-  const selectedCountry = props.options.find(c => c._id === props.selected) || props.options[0];
+    },
+  };
 
   return (
     <div ref={selectorRef}>
-      <div className={styles.Selector} onClick={callbacks.expand} onKeyUp={callbacks.onKeyboardExpand} tabIndex={0}>
-        <SelectorItem item={selectedCountry} />
-        <img
-          className={isExpanded ? `${styles.Chevron} ${styles.Open}` : styles.Chevron}
-          src={chevron}
-        />
+      <div
+        className={styles.Selector}
+        onClick={callbacks.expand}
+        onKeyUp={callbacks.onKeyboardExpand}
+        tabIndex={0}
+      >
+        {props.selected.length === 1 ? (
+          props.selectOneRender(props.selected[0])
+        ) : (
+          <div className={styles.SelectorMulti}>
+            {props.selected.map(i => (
+              <div key={i._id} onClick={(e) => callbacks.excludeFromSelection(e, i._id)}>
+                {props.selectMultiRender(i)}
+              </div>
+            ))}
+          </div>
+        )}
+        <img src={cross} className={styles.Cross} onClick={callbacks.cancelAllSelections}/>
+        <img className={ isExpanded ? `${styles.Chevron} ${styles.Open}` : styles.Chevron }
+          src={chevron}/>
       </div>
       {isExpanded && (
         <div className={styles.Dropdown}>
-          <input className={styles.DropdownInput}
-                 placeholder="Поиск"
-                 autoFocus
-                 value={search}
-                 onChange={callbacks.onSearchChange}
-                 onKeyUp={callbacks.onKeyUp}
+          <input
+            className={styles.DropdownInput}
+            placeholder="Поиск"
+            autoFocus
+            value={props.filter}
+            onChange={callbacks.onSearchChange}
+            onKeyUp={callbacks.onKeyUp}
           />
-          <div className={styles.DropdownList} >
+          <div className={styles.DropdownList}>
             {countries.map((i, index) => (
-              <div key={i._id} onClick={(e) => callbacks.onSelectionChange(i._id)}
-                               onMouseEnter={() => setHovered(i._id) }
-                               ref={(e) => itemRefs.current[index] = e}
+              <div
+                key={i._id}
+                onClick={(e) => callbacks.onSelectionChange(e, i._id)}
+                onMouseEnter={() => setHovered(i._id)}
+                ref={(e) => (itemRefs.current[index] = e)}
               >
-                <SelectorItem item={i} isSelected={props.selected === i._id} isHovered={i._id === hovered}/>
+                {props.dropdownItem(i,
+                  !!multiSelection.find(s => s === i._id) || !!props.selected.find(s => s._id === i._id),
+                  i._id === hovered)}
               </div>
             ))}
           </div>

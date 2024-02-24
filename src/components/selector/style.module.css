@@ -3,12 +3,32 @@
   align-items: center;
   width: 240px;
   height: 30px;
+  border-radius: 3px;
+  border: 1px solid #E5E6E9;
+}
+
+.SelectorMulti {
+  display: flex;
+  margin-right: auto;
+  max-width: 196px;
+  overflow-y: hidden;
 }
 
 .Chevron {
   width: 20px;
   height: 20px;
   transition: transform 0.5s;
+}
+
+.Cross {
+  width: 10px;
+  height: 10px;
+  padding: 2px;
+  border: 1px solid transparent;
+}
+
+.Cross:hover {
+  border: 1px solid #E5E6E9;
 }
 
 .Open {
