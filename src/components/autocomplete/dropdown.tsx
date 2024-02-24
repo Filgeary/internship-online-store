@@ -20,7 +20,11 @@ function Dropdown(props: Props) {
 
   useEffect(() => {
     function foreignClickOrFocus(e: MouseEvent | FocusEvent) {
-      if (e.target !== refs.button.current && e.target !== refs.dropdown.current) {
+      if (
+        !(refs.button.current as Node).contains(e.target as Node)
+        && 
+        !(refs.dropdown.current as Node).contains(e.target as Node)
+      ) {
         props.collapseDropdown(e.type === 'focusin')
       }
     }

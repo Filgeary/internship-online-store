@@ -17,7 +17,6 @@
   justify-content: flex-start;
   gap: 6px;
   overflow: hidden;
-  pointer-events: none;
 }
 
 .ButtonView-code {
@@ -34,7 +33,6 @@
   background-color: #6F7EFF;
   box-sizing: border-box;
   border-top: 1px;
-  pointer-events: none;
 }
 
 .ButtonView-title {
@@ -43,12 +41,10 @@
   overflow: hidden;
   text-wrap: nowrap;
   text-overflow: ellipsis;
-  pointer-events: none;
 }
 
 .ButtonView-arrow {
   transition: all 0.15s linear;
-  pointer-events: none;
 }
 
 .ButtonView-arrow_rotated {

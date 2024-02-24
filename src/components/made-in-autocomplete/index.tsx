@@ -1,6 +1,6 @@
 import { memo, useCallback } from "react"
 import Autocomplete from "../autocomplete"
-import { ButtonViewBuilderProps, InputViewBuilderProps, ListElementViewBuilderProps, ListViewBuilderProps,  } from "../autocomplete/types"
+import { ButtonViewBuilderProps, InputViewBuilderProps, ListElementViewBuilderProps, ListViewBuilderProps, Option,  } from "../autocomplete/types"
 import { MadeInOption, MadeInAutocompleteProps } from "./types"
 import ListView from "./list-view";
 import InputView from "./input-view";
@@ -29,13 +29,38 @@ function MadeInAutocomplete(
       <ListElementView {...optionProps}/>
     ), [props.options, props.value]),
 
-    buttonViewBuilder: useCallback((buttonProps: ButtonViewBuilderProps) => (
-      <ButtonView {...buttonProps} value={props.value} multiple={props.multiple} t={t}/>
+    buttonViewBuilder: useCallback((buttonProps: ButtonViewBuilderProps<MadeInOption>) => props.multiple ? (
+      <ButtonView {...buttonProps} 
+        onRemoveSelected={buttonProps.onRemoveSelected as (e: React.MouseEvent<HTMLElement, MouseEvent>, option: Option) => void} 
+        value={props.value} 
+        multiple={props.multiple} t={t}/>
+      ) : (
+        <ButtonView {...buttonProps} 
+          onRemoveSelected={buttonProps.onRemoveSelected as (e: React.MouseEvent<HTMLElement, MouseEvent>, option: Option) => void} 
+          value={props.value} 
+          multiple={props.multiple} t={t}/>
       ), [props.value, t]),
 
     optionsBuilder: useCallback((inputValue: string) => {
       return props.options.filter((option) => option.title.toLowerCase().includes(inputValue.trim().toLowerCase()))
     }, [props.options])
+  }
+
+  if (props.multiple) {
+    return (
+      <Autocomplete
+        options={props.options}
+        value={props.value}
+        onSelect={props.onSelect}
+        inputViewBuilder={renders.inputViewBuilder}
+        listViewBuilder={renders.listViewBuilder}
+        listElementViewBuilder={renders.listElementViewBuilder as (optionProps: ListElementViewBuilderProps<Option>) => JSX.Element}
+        optionsBuilder={renders.optionsBuilder}
+        buttonViewBuilder={renders.buttonViewBuilder}
+        dropdownClassName={cn('dropdown')}
+        multiple={props.multiple}
+      />
+    )
   }
 
   return (
@@ -45,10 +70,11 @@ function MadeInAutocomplete(
       onSelect={props.onSelect}
       inputViewBuilder={renders.inputViewBuilder}
       listViewBuilder={renders.listViewBuilder}
-      listElementViewBuilder={renders.listElementViewBuilder}
+      listElementViewBuilder={renders.listElementViewBuilder as (optionProps: ListElementViewBuilderProps<Option>) => JSX.Element}
       optionsBuilder={renders.optionsBuilder}
       buttonViewBuilder={renders.buttonViewBuilder}
       dropdownClassName={cn('dropdown')}
+      multiple={props.multiple}
     />
   )
 }

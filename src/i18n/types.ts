@@ -1,3 +1,4 @@
+import type I18nService from '.'
 import * as translations from './translations'
 
 type Translations = typeof translations
@@ -55,3 +56,4 @@ type AllForms<T extends object> =
 export type TranslateKey = AllForms<Translations[LangCodes]>
 export type StringTranslateKey = StringForms<Translations[LangCodes]>
 export type PluralTranslateKey = Exclude<TranslateKey, StringTranslateKey>
+export type TranslateFn = I18nService['translate']

@@ -41,18 +41,20 @@ function CatalogFilter(props: CatalogFilterProps) {
     onCategory: useCallback((category: IQueryParams['category']) => store.actions[props.catalogModuleName].setParams({category, page: 1}), [store]),
     // Фильтр по стране изготовления
     onMadeIn: useCallback((option: MadeInOption) => {
-      const selected = select.madeIn.split('|')
-      const foundIndex =  selected.findIndex(_id =>_id === option.value)
-      const madeIn = (foundIndex !== -1 
+      const selected = select.madeIn ? select.madeIn.split('|') : undefined
+      if (!selected) return store.actions[props.catalogModuleName].setParams({madeIn: option.value, page: 1});
+      const foundIndex = selected.findIndex(_id =>_id === option.value)
+      const madeInArray = ((foundIndex !== -1) 
         ? [
             ...selected.slice(0, foundIndex),
             ...selected.slice(foundIndex + 1)
         ] : [
           ...selected, option.value
         ]
-      ).join('|')
+      )
+      const madeIn = madeInArray.join('|')
       store.actions[props.catalogModuleName].setParams({madeIn, page: 1})
-    }, [store, select.madeIn]),
+    }, [store, select.madeIn, props.catalogModuleName]),
     // Для теста
     onMadeInSingle: useCallback((option: MadeInOption) => {
       setSingleValue(prev => prev?.value === option.value ? undefined : option)

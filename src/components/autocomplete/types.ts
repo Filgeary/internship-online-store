@@ -1,4 +1,4 @@
-import { ReactElement, RefObject, ReactNode } from "react"
+import type { ReactElement, RefObject, ReactNode, MouseEvent } from "react"
 
 export type Option = {
   title: string,
@@ -24,10 +24,11 @@ export type ListElementViewBuilderProps<O extends Option = Option> = {
   listElementRef: RefObject<HTMLLIElement> | undefined
 }
 
-export type ButtonViewBuilderProps = {
+export type ButtonViewBuilderProps<O extends Option = Option> = {
   toggleDropdown: () => void,
   isDropdownCollapsed: boolean
   buttonRef: RefObject<HTMLButtonElement>,
+  onRemoveSelected: (e: MouseEvent<HTMLElement>, option: O) => void
 }
 
 type ViewProps<O extends Option> = {
@@ -57,3 +58,7 @@ type MultipleOptionsProps<O extends Option> = {
 export type OptionsProps<O extends Option> = OptionsBaseProps<O> & (SingleOptionProps<O> | MultipleOptionsProps<O>)
 
 export type AutocompleteProps<O extends Option> = OptionsProps<O> & ViewProps<O>
+
+
+
+

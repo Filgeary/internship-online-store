@@ -29,7 +29,7 @@ type Single<O extends Option> = {
 type Props<O extends Option> = BaseProps<O> & (Multiple<O> | Single<O>)
 
 function List<O extends Option>(props: Props<O>) {
-  const {refs} = props
+  const {refs, multiple, value} = props
   const triggerMouseEnterRef = useRef<boolean>(true)
   const [hoveredItem, setHoveredItem] = useState<{index: number, hovered: boolean} | null>(null)
   const listRef = useRef<HTMLUListElement>(null)
@@ -76,6 +76,7 @@ function List<O extends Option>(props: Props<O>) {
           if (!props.multiple && props.value?.value != founded.value) {
             props.collapseDropdown(true)
           }
+          console.log(2)
           props.onSelect(founded)
         break
         // Навигация вниз
@@ -124,20 +125,42 @@ function List<O extends Option>(props: Props<O>) {
     return () => refs.input.current?.removeEventListener('input', onChange)
   }, [props.options])
 
+  if (multiple) {
+    return props.listViewBuilder({
+      children: buildedOptions.map((option, i) => (
+        <ListElement
+          hovered={typeof hoveredItem?.index === 'number' && (hoveredItem.index === i) && hoveredItem.hovered}
+          // active={typeof hoveredItem?.index === 'number' && (hoveredItem.index === i)}
+          index={i}
+          listElementRef={typeof hoveredItem?.index === 'number' && (hoveredItem.index === i) ? listElementRef : undefined}
+          onSelect={callbacks.onSelect as (option: Option) => void}
+          option={option}
+          onMouseEnterListElement={callbacks.onMouseEnterListElement}
+          listElementViewBuilder={props.listElementViewBuilder}
+          value={value}
+          key={option.value}
+          multiple={multiple}
+        />
+      )),
+      listRef,
+      onMouseLeaveList: callbacks.onMouseLeaveList
+    })
+  }
+
   return props.listViewBuilder({
     children: buildedOptions.map((option, i) => (
       <ListElement
         hovered={typeof hoveredItem?.index === 'number' && (hoveredItem.index === i) && hoveredItem.hovered}
-        active={typeof hoveredItem?.index === 'number' && (hoveredItem.index === i)}
+        // active={typeof hoveredItem?.index === 'number' && (hoveredItem.index === i)}
         index={i}
         listElementRef={typeof hoveredItem?.index === 'number' && (hoveredItem.index === i) ? listElementRef : undefined}
-        onSelect={callbacks.onSelect}
+        onSelect={callbacks.onSelect as (option: Option) => void}
         option={option}
         onMouseEnterListElement={callbacks.onMouseEnterListElement}
         listElementViewBuilder={props.listElementViewBuilder}
-        value={props.value}
+        value={value}
         key={option.value}
-        multiple={props.multiple}
+        multiple={multiple}
       />
     )),
     listRef,

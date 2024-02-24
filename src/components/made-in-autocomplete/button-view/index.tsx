@@ -25,9 +25,9 @@ function ButtonView<O extends MadeInOption>(props: Props<O>) {
   const render = {
     infoInner: multiple 
       ? value.length > 1 
-        ? value.map(option => <div className={cn('code')}>{option.code}</div>)
+        ? value.map(option => <div className={cn('code')} onClick={(e) => props.onRemoveSelected(e, option)}>{option.code}</div>)
         : <>
-          <div className={cn('code')}>{value[0]?.code}</div>
+          <div className={cn('code')} onClick={(e) => props.onRemoveSelected(e, value[0])}>{value[0]?.code}</div>
           <span className={cn('title')}>{value[0]?.title || props.t('made-in-autocomplete.all')}</span>
         </>
       : <>

@@ -26,9 +26,9 @@ type Props<O extends Option> = BaseProps<O> & (SingleValue<O> | MultipleValue<O>
 function ListElement<O extends Option>(props: Props<O>) {
 
   const callbacks = {
-    onMouseEnterListElement: useCallback(() => props.onMouseEnterListElement(props.index), [props.index]),
+    onMouseEnterListElement: useCallback(() => props.onMouseEnterListElement(props.index), [props.index, props.onMouseEnterListElement]),
 
-    onClickListElement: useCallback(() => props.onSelect(props.option), [props.option]),
+    onClickListElement: useCallback(() => props.onSelect(props.option), [props.option,  props.onSelect]),
   }
 
   const render = {
