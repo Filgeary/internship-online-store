@@ -31,16 +31,33 @@
   border-radius: 3px;
 }
 
+.Select-layout-list-codes {
+  padding: 8px;
+  word-wrap: break-word;
+}
+
+.Select-layout-code-text {
+  width: 18px;
+  margin-right: 10px;
+  font-size: 10px;
+  background-color:rgba(111, 126, 255, 1);
+  color: rgba(255, 255, 255, 1);
+  padding: 2px;
+  border-radius: 3px;
+  white-space: nowrap;
+}
+
 .Select-layout-code_select {
   width: 18px;
 }
 
 .Select-layout-text {
-  width: 70%;
+  width: 80%;
   display: block;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  cursor: pointer;
 }
 
 .Select-layout-wrap-input {
@@ -80,6 +97,7 @@
 
 .Select-layout-item_selected {
   background-color: rgba(128, 141, 255, 1);
+  border-bottom: 1px solid rgb(234, 234, 236);
 }
 
 .Select-layout-item {
@@ -89,12 +107,13 @@
   font-weight: 400;
   font-size: 15px;
   padding-left: 5px;
-  /* background-color: #808dff; */
+  cursor: pointer;
 }
 
-.Select-layout-item:hover {
+.Select-layout-item:not(.Select-layout-item_selected):hover {
   background-color: rgba(219, 223, 255, 1);
   overflow-y: auto;
+  cursor: pointer;
 }
 
 .Select-layout-item_hover {

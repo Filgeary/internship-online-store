@@ -1,4 +1,4 @@
-import { memo, useCallback, useState } from "react"
+import { memo, useCallback, useState, useRef } from "react"
 import { StoreState } from "@src/store/types"
 import useStore from "@src/hooks/use-store"
 import useSelector from "@src/hooks/use-selector"
@@ -10,38 +10,73 @@ function SelectCustom() {
   const store = useStore()
   const [isOpen, setIsOpen] = useState(false)
   const [value, setValue] = useState("Все")
+  const [valueInput, setValueInput] = useState("")
   const [code, setCode] = useState("  ")
+  const [codes, setCodes] = useState<string[]>([])
+  const selected = useRef<string[]>([]) as unknown
 
   const select = useSelector((state: StoreState) => ({
     countries: state.countries.list,
     waiting: state.countries.waiting,
   }))
 
-  const { selectedIndex, selectorRef, setSelectedIndex } = useSelectCustom(
+  const { selectedIndex, selectorRef, setSelectedIndex, handleKeyDown, handleMouseEnter } = useSelectCustom(
     select.countries,
-    isOpen
+    isOpen,
   )
 
   const callbacks = {
     // Поиск
     onSearch: useCallback(
-      (query: string) => store.actions.countries.search(query),
+      (query: string) => {
+        setValueInput(query)
+        setCodes([])
+        const selectedId = selected as React.MutableRefObject<string[]>
+        selectedId.current = []
+        if(query === 'все') {
+          store.actions.countries.load()
+        } else store.actions.countries.search(query)
+      },
       [store]
     ),
     // Фильтр по странам
     onCountry: useCallback(
-      (_id: string) =>
-        store.actions.catalog.setParams({ madeIn: _id, page: 1 }, false, false),
+      (_id: string) => {
+        const selectedId = selected as React.MutableRefObject<string[]>
+         const params = selectedId.current.join('|')
+        store.actions.catalog.setParams({ madeIn: params, page: 1 }, false, false)
+      },
       [store]
     ),
     // Выбор страны
     onSelected: useCallback((id: string) => store.actions.countries.selectСountry(id), [store]),
+    // Перемещение скролла 
+    onCodes: useCallback((code: string) =>{
+      if(selectorRef.current) {
+        const countriesCurrent = selectorRef.current as unknown
+        const countriesRef = countriesCurrent as HTMLElement
+        const liElements = countriesRef.querySelectorAll('.Select-layout-code');
+        liElements.forEach(li => {
+          if (li.textContent === code) {
+            li.scrollIntoView({ behavior: 'smooth', block: "center" });
+          }
+        })
+      }
+    }, [codes]),
     // Во время открытия и закрытия списка стран
     onSelect: useCallback(() => {
-      // if (isOpen) store.actions.countries.load();
       setIsOpen(!isOpen);
-      if (!isOpen) document.body.style.overflow = "hidden";
-      if (isOpen) document.body.style.overflow = "visible";
+      if (isOpen) {
+        // store.actions.countries.load()
+        document.body.style.overflow = "visible";
+      };
+      if (!isOpen) {
+        document.body.style.overflow = "hidden";
+        document.removeEventListener("keydown", handleKeyDown)
+        const countriesCurrent = selectorRef.current as unknown
+        const countriesRef = countriesCurrent as HTMLElement
+        countriesRef && countriesRef.removeEventListener('mouseenter', handleMouseEnter)
+      }
     }, [isOpen]),
   }
 
@@ -49,13 +84,13 @@ function SelectCustom() {
     input: useCallback(
       () => (
         <Input
-          value=""
+          value={valueInput}
           onChange={callbacks.onSearch}
           placeholder="Поиск"
           theme="transparent"
         />
       ),
-      [store]
+      [store, setValueInput, valueInput]
     ),
   }
 
@@ -71,10 +106,15 @@ function SelectCustom() {
         input={renders.input}
         code={code}
         setValue={setValue}
+        setValueInput={setValueInput}
         setCode={setCode}
+        codes={codes} 
+        setCodes={setCodes}
         setSelectedIndex={setSelectedIndex}
         selectedIndex={selectedIndex}
         ref={selectorRef}
+        selected={selected}
+        onCodes={callbacks.onCodes}
       ></SelectLayout>
     </>
   )
