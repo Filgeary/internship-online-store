@@ -2,8 +2,7 @@
   display: flex;
   flex-direction: column;
   height: 30px;
-  /*   border: 1px solid #dbdfff;
- */
+  border: 1px solid #dbdfff;
   width: 240px;
   margin: 0;
   transition: background-color 0.4s;
@@ -15,6 +14,8 @@
   color: #191f4d;
   background-color: #ffffff;
   position: relative;
+  box-shadow: 0px 1px 8px -1px #dbdfff;
+  z-index: 9999;
 }
 
 .SelectBox-group {
@@ -23,20 +24,22 @@
   align-items: center;
 }
 .SelectBox-content {
+  box-sizing: border-box;
   position: absolute;
   top: 30px;
   left: 0;
-  height: 120px;
+  max-height: 160px;
   width: 240px;
+  padding: 6px;
   background-color: #ffffff;
-  z-index: 9999;
-  box-sizing: border-box;
-  padding: 0 6px;
+  box-shadow: 0px 1px 8px -1px #dbdfff;
 }
 .SelectBox-box {
-  height: 100%;
   overflow-y: scroll;
   overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+  max-height: 120px;
 }
 
 .SelectBox-select {
@@ -73,13 +76,17 @@
 
 .SelectBox-country {
   transition: color 0.4s;
+  white-space: nowrap;
 }
 
 .SelectBox-search {
-  width: 240px;
-  height: 30px;
+  width: 100%;
+  box-sizing: border-box;
+  font-size: 14px;
+  padding: 6px;
   border: none;
   outline: none;
+  font-style: italic;
 }
 .SelectBox:hover {
   background-color: #dbdfff;
@@ -87,7 +94,6 @@
   color: black;
 }
 
-
 .arrowUp {
-    transform: rotate(180deg);
-  }
+  transform: rotate(180deg);
+}

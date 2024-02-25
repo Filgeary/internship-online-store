@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import "./style.css";
 
 export type TItemSelectProps = {
-  onSelect: (e: any) => void;
+  onSelect: (id: string) => void;
   item: any;
   selected: any;
   onSetItem: (e: any) => void;
@@ -30,19 +30,12 @@ function ItemSelect(props: TItemSelectProps) {
     >
       <div className={cn("flag")}>{props.item.code}</div>
       <div className={cn("country")}>
-        {props.item.title.length < 21
+        {props.item.title.length <= 21
           ? props.item.title
           : `${props.item.title.substring(0, 21)}...`}
       </div>
     </div>
   );
 }
-
-ItemSelect.defaultProps = {
-  onRemove: () => {},
-  labelCurr: "₽",
-  labelUnit: "шт",
-  labelDelete: "Удалить",
-};
 
 export default memo(ItemSelect);

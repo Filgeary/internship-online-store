@@ -2,42 +2,123 @@ import { TMadeIn } from "@src/store/article/types";
 import ItemSelect from "../item-select";
 import "./style.css";
 import { cn as bem } from "@bem-react/classname";
-import { Key, SetStateAction, memo, useRef, useState } from "react";
+import {
+  Key,
+  SetStateAction,
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import useStore from "@src/hooks/use-store";
+import { TItem } from "@src/store/catalog/types";
+import { TCountries } from "@src/store/countries";
+import Input from "../input";
+import Spinner from "../spinner";
 
 type Props = {
-  options: TMadeIn[];
-  value: any;
-  onSelect: (e: any) => void;
+  options: TCountries[];
+  value: string | null;
+  onSelect: (id: string) => void;
+  onSearch: (value: string) => void;
+  waiting: boolean;
 };
 
-function SelectBox(props: Props) {
+function SelectBox({ options, value, onSelect, onSearch, waiting }: Props) {
+  const store = useStore();
   const cn = bem("SelectBox");
-  const [open, setOpen] = useState<boolean>();
-  const [item, setItem] = useState<any>({ title: "Все", code: "" });
-  const [search, setSearch] = useState<string>("");
 
-  const countries = props.options.filter((el) =>
-    el.title.toLocaleLowerCase().includes(search.toLocaleLowerCase())
-  );
+  const [open, setOpen] = useState<boolean>();
+  const [search, setSearch] = useState<string>("");
+  const [item, setItem] = useState<any>({ title: "Все", code: "" });
 
   const arrowRef = useRef<HTMLDivElement>(null);
+  const selectBox = useRef<HTMLDivElement>(null);
+  const selectItem = useRef<HTMLInputElement>(null);
+
+  const useClickOutside = (ref: React.RefObject<any>, handler: Function) => {
+    useEffect(() => {
+      const listener = (event: Event) => {
+        if (!ref.current || ref.current.contains(event.target)) {
+          return;
+        }
+        handler();
+      };
+
+      document.addEventListener("mousedown", listener);
+      document.addEventListener("touchstart", listener);
+
+      return () => {
+        document.removeEventListener("mousedown", listener);
+        document.removeEventListener("touchstart", listener);
+      };
+    }, [ref, handler]);
+  };
 
   const handleClick = () => {
     setOpen(!open);
     arrowRef.current?.classList.add("arrowUp");
   };
 
-  const onSearchCountry = (e: { target: { value: any } }) => {
+  const onSearchCountries = (e: {
+    target: { value: string };
+    preventDefault: () => void;
+  }) => {
     setSearch(e.target.value);
+    onSearch(e.target.value);
+    e.preventDefault();
   };
 
-  
+  const resetSearch = () => {
+    setSearch("");
+    onSearch("");
+    setOpen(!open);
+  };
+
+  const onSelectCountries = (id: string) => {
+    onSelect(id);
+    resetSearch();
+  };
+
+  const openSelect = (e: { stopPropagation?: any; key?: any }) => {
+    e.stopPropagation();
+    const { key } = e;
+    if (key === "Enter") {
+      handleClick();
+    }
+  };
+
+  const closeSelect = (e: { stopPropagation?: any; key?: any }) => {
+    e.stopPropagation();
+    const { key } = e;
+    if (key === "Escape" || key === "Tab") {
+      setOpen(!open);
+    } else if (key === "ArrowDown") {
+     
+    }
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  useClickOutside(selectBox, handleClose);
   return (
-    <div className={cn()}>
-      <div className={cn("select")} onClick={handleClick}>
+    <div className={cn()} ref={selectBox}>
+      <div
+        className={cn("select")}
+        onClick={handleClick}
+        tabIndex={0}
+        onKeyDown={openSelect}
+      >
         <div className={cn("group")}>
           <div className={cn("flag")}>{item.code}</div>
-          <div className={cn("country")}>{item.title}</div>
+          <div className={cn("country")}>
+            {item.title.length <= 21
+              ? item.title
+              : `${item.title.substring(0, 21)}...`}
+          </div>
         </div>
         <div
           className={
@@ -67,22 +148,25 @@ function SelectBox(props: Props) {
             type="text"
             className={cn("search")}
             placeholder="Поиск"
-            onChange={onSearchCountry}
+            onChange={onSearchCountries}
+            onKeyDown={closeSelect}
+            value={search}
+            autoFocus
+            ref={selectItem}
           />
           <div className={cn("box")}>
-            {countries ? (
-              countries.map((el: { _id: Key | null | undefined }) => (
-                <ItemSelect
-                  key={el._id}
-                  item={el}
-                  selected={item}
-                  onSelect={props.onSelect}
-                  onSetItem={setItem}
-                />
-              ))
-            ) : (
-              <div>Ничего не найдено!</div>
-            )}
+            <Spinner active={waiting}>
+              {options &&
+                options.map((el: { _id: Key | null | undefined }) => (
+                  <ItemSelect
+                    key={el._id}
+                    item={el}
+                    selected={item}
+                    onSelect={onSelectCountries}
+                    onSetItem={setItem}
+                  />
+                ))}
+            </Spinner>
           </div>
         </div>
       )}

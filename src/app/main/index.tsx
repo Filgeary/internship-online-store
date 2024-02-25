@@ -19,7 +19,7 @@ function Main() {
       await Promise.all([
         store.actions.catalog.initParams(),
         store.actions.categories.load(),
-        store.actions.madeIn.load()
+        store.actions.countries.load()
       ]);
     },
     [],

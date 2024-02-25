@@ -7,7 +7,6 @@ import Controls from "@src/components/controls";
 import useInit from "@src/hooks/use-init";
 import useStore from "@src/hooks/use-store";
 import { TArticle } from "@src/store/article/types";
-import { TItem } from "@src/store/catalog/types";
 
 export type TCatalogModal = {
   closeModal: (name: string, data: {} | number | null) => void;

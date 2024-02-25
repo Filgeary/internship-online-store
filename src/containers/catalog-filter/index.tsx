@@ -1,4 +1,4 @@
-import { memo, useCallback, useMemo } from "react";
+import { memo, useCallback, useMemo, useState } from "react";
 import useTranslate from "@src/hooks/use-translate";
 import useStore from "@src/hooks/use-store";
 import useSelector from "@src/hooks/use-selector";
@@ -7,8 +7,9 @@ import Input from "@src/components/input";
 import SideLayout from "@src/components/side-layout";
 import treeToList from "@src/utils/tree-to-list";
 import listToTree from "@src/utils/list-to-tree";
-import { TKey } from "@src/store/types";
+
 import SelectBox from "@src/components/select-box";
+import { TCountries } from "@src/store/countries";
 
 export type TCatalogFilter = {
   storeName: "catalog";
@@ -16,6 +17,7 @@ export type TCatalogFilter = {
 
 function CatalogFilter(props: TCatalogFilter) {
   const store = useStore();
+  const [search, setSearch] = useState<string>();
 
   const select = useSelector((state) => ({
     sort: state[props.storeName].params.sort,
@@ -23,7 +25,9 @@ function CatalogFilter(props: TCatalogFilter) {
     category: state[props.storeName].params.category,
     madeIn: state[props.storeName].params.madeIn,
     categories: state.categories.list,
-    countries: state.madeIn.list,
+    countries: state.countries.list,
+    selected: state.countries.selected,
+    waiting: state.countries.waiting,
   }));
 
   const callbacks = {
@@ -54,6 +58,13 @@ function CatalogFilter(props: TCatalogFilter) {
         store.actions[props.storeName].setParams({ madeIn, page: 1 }),
       [store]
     ),
+    onSearchCountry: useCallback(
+      (value: string) => {
+        setSearch(value);
+        store.actions.countries.search(value);
+      },
+      [store]
+    ),
   };
 
   const options = {
@@ -79,10 +90,13 @@ function CatalogFilter(props: TCatalogFilter) {
       ],
       [select.categories]
     ),
-    countries: useMemo(
-      () => [{ title: "Все", _id: "", code: "" }, ...select.countries],
-      [select.countries]
-    ),
+
+    countries: useMemo<TCountries[]>(() => {
+      if (search) {
+        return select.countries;
+      }
+      return [{ _id: "", code: "", title: "Все" }, ...select.countries];
+    }, [select.countries, search]),
   };
 
   const { t } = useTranslate();
@@ -93,6 +107,8 @@ function CatalogFilter(props: TCatalogFilter) {
         options={options.countries}
         value={select.madeIn}
         onSelect={callbacks.onMadeIn}
+        onSearch={callbacks.onSearchCountry}
+        waiting={select.waiting}
       />
       <Select
         options={options.categories}
