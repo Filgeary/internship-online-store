@@ -180,6 +180,7 @@ const SelectAutocomplete = ({
                     key={item._id}
                     className={cn('listItem')}
                     ref={elem => (elem ? (listItemsRefs.current[index] = elem) : null)}
+                    onMouseEnter={() => setActiveIndex(index)}
                   >
                     <SelectFieldOption
                       item={item}
