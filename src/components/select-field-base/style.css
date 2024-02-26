@@ -1,0 +1,46 @@
+.SelectFieldBase-option {
+  overflow: hidden;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 8px;
+  padding: 6px;
+
+  cursor: pointer;
+}
+li > .SelectFieldBase-option:hover {
+  background: #dbdfff;
+}
+.SelectFieldBase-option_selected {
+  color: #fff;
+  background: #808dff;
+}
+.SelectFieldBase-option_active {
+  color: #191f4d;
+  background: #dbdfff;
+}
+
+.SelectFieldBase-value {
+  display: flex;
+  place-items: center;
+  place-content: center;
+  width: 18px;
+  height: 18px;
+  padding: 4px;
+
+  font-weight: 700;
+  font-size: 8px;
+  text-align: center;
+  color: #fff;
+  background: #6f7eff;
+  border-radius: 3px;
+}
+
+.SelectFieldBase-label {
+  margin: 0;
+  padding: 0;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

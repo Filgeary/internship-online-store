@@ -7,10 +7,13 @@ import SideLayout from '@src/components/side-layout';
 import useSelector from '@src/hooks/use-selector';
 import useStore from '@src/hooks/use-store';
 import useTranslate from '@src/hooks/use-translate';
+import { diff } from '@src/utils/diff';
 import listToTree from '@src/utils/list-to-tree';
 import treeToList from '@src/utils/tree-to-list';
 
 import type { ISelectOption } from '@src/types';
+
+const IS_MULTI_SELECT = true;
 
 type Props = {
   catalogSliceName?: 'catalog' | `catalog${number}`;
@@ -53,10 +56,38 @@ function CatalogFilter({ catalogSliceName = 'catalog' }: Props) {
     ),
     // Фильтр по стране
     onFilterByCountry: useCallback(
-      (country: ISelectOption) => {
-        store.actions[catalogSliceName].setParams({ madeIn: country._id, page: 1 });
+      (country: ISelectOption[]) => {
+        store.actions[catalogSliceName].setParams({ madeIn: country.at(0)?._id, page: 1 });
       },
       [catalogSliceName, store],
+    ),
+    // Фильтр по множеству странам, также работает при Unselect
+    onFilterByCountries: useCallback(
+      (countriesParams: ISelectOption[]) => {
+        let filteredCountriesIds = [] as string[];
+
+        // check if default country was selected
+        if (countriesParams.some(({ _id }) => _id === '')) {
+          filteredCountriesIds = [];
+        } else {
+          filteredCountriesIds = [
+            ...diff(
+              select.madeIn.split('|'),
+              countriesParams.map(({ _id }) => _id),
+            ),
+          ];
+
+          if (filteredCountriesIds.length > 1) {
+            filteredCountriesIds = filteredCountriesIds.filter(Boolean); // filter default country
+          }
+        }
+
+        store.actions[catalogSliceName].setParams({
+          madeIn: filteredCountriesIds.join('|'),
+          page: 1,
+        });
+      },
+      [catalogSliceName, store, select.madeIn],
     ),
     // Загрузка стран
     onLoadCountries: useCallback(async () => {
@@ -93,6 +124,15 @@ function CatalogFilter({ catalogSliceName = 'catalog' }: Props) {
     ),
   };
 
+  const memoSelectedItems = useMemo(() => {
+    let filteredItems = options.countries.filter(item => select.madeIn.includes(item._id));
+    if (filteredItems.length > 1) {
+      filteredItems = filteredItems.filter(item => item._id !== '');
+    }
+
+    return filteredItems;
+  }, [options.countries, select.madeIn]);
+
   return (
     <SideLayout padding='medium'>
       <Select
@@ -107,11 +147,12 @@ function CatalogFilter({ catalogSliceName = 'catalog' }: Props) {
       />
       <SelectAutocomplete
         options={options.countries}
-        onSelected={callbacks.onFilterByCountry}
-        selectedItem={options.countries.find(item => item._id === select.madeIn) || null}
+        onSelected={IS_MULTI_SELECT ? callbacks.onFilterByCountries : callbacks.onFilterByCountry}
+        selectedItems={memoSelectedItems}
         defaultSelectedItem={options.countries[0]}
         isPending={select.waitingCountries}
         onOpen={callbacks.onLoadCountries}
+        isMulti={IS_MULTI_SELECT}
       />
       <Input
         name='query'

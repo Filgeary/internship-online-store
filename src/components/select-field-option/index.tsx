@@ -8,7 +8,7 @@ import './style.css';
 
 type Props = {
   item: ISelectOption;
-  onSelectItem: (item: ISelectOption) => void;
+  onSelectItem: (item: ISelectOption[]) => void;
   isActive: boolean;
   isSelected: boolean;
 };
@@ -24,7 +24,7 @@ export function SelectFieldOption({ item, onSelectItem, isActive, isSelected }: 
         active: isActive,
         selected: isSelected,
       })}
-      onClick={() => onSelectItem(item)}
+      onClick={() => onSelectItem([item])}
       role='option'
       aria-selected={isActive}
       tabIndex={-1}

@@ -24,6 +24,7 @@ const config: TConfig = {
       profile: {},
       categories: {},
       locale: {},
+      countries: {},
     },
   },
   api: {

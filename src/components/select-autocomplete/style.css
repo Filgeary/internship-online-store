@@ -28,8 +28,7 @@
   position: relative;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 8px;
+  /* gap: 8px; */
 
   border: 1px solid #ccc;
   background-color: #fff;
@@ -45,55 +44,8 @@
   border-bottom: 1px solid #ccc;
 }
 
-.SelectAutocomplete-option {
-  overflow: hidden;
-  display: flex;
-  flex-grow: 1;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 8px;
-  padding: 6px;
-
-  cursor: pointer;
-}
-li > .SelectAutocomplete-option:hover {
-  background: #dbdfff;
-}
-.SelectAutocomplete-option_selected {
-  color: #fff;
-  background: #808dff;
-}
-.SelectAutocomplete-option_active {
-  color: #191f4d;
-  background: #dbdfff;
-}
-
-.SelectAutocomplete-value {
-  display: flex;
-  place-items: center;
-  place-content: center;
-  width: 18px;
-  height: 18px;
-  padding: 4px;
-
-  font-weight: 700;
-  font-size: 8px;
-  text-align: center;
-  color: #fff;
-  background: #6f7eff;
-  border-radius: 3px;
-}
-
-.SelectAutocomplete-label {
-  margin: 0;
-  padding: 0;
-
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
 .SelectAutocomplete-icon {
+  margin-left: auto;
   margin-right: 4px;
   width: 20px;
   height: 20px;

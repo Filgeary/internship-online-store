@@ -6,6 +6,7 @@ import { memo, useEffect, useRef, useState } from 'react';
 import { useClickOutside } from '@src/hooks/use-click-outside';
 import { useOverflowWindowHeight } from '@src/hooks/use-overflow-window-height';
 import IconChevronDown from '../icon-chevron-down';
+import SelectFieldBase from '../select-field-base';
 import { SelectFieldOption } from '../select-field-option';
 import Spinner from '../spinner';
 
@@ -17,20 +18,22 @@ const MIN_MENU_HEIGHT = 155;
 
 type Props = {
   options: ISelectOption[];
-  onSelected: (item: ISelectOption) => void;
-  selectedItem: ISelectOption | null;
+  onSelected: (items: ISelectOption[]) => void;
+  selectedItems: ISelectOption[] | null;
   defaultSelectedItem: ISelectOption | null;
   isPending?: boolean;
   onOpen?: () => void;
+  isMulti?: boolean;
 };
 
 const SelectAutocomplete = ({
   options,
-  selectedItem,
+  selectedItems,
   defaultSelectedItem,
   onSelected,
   isPending,
   onOpen,
+  isMulti,
 }: Props) => {
   const cn = bem('SelectAutocomplete');
 
@@ -108,10 +111,12 @@ const SelectAutocomplete = ({
     setInputValue(event.target.value);
   };
 
-  const handleSelectItem = (item: ISelectOption) => {
-    onSelected(item);
-    handleReset();
-    setIsOpen(false);
+  const handleSelectItem = (items: ISelectOption[]) => {
+    onSelected(items);
+    if (!isMulti) {
+      handleReset();
+      setIsOpen(false);
+    }
   };
 
   const scrollToActiveItem = (index: number) => {
@@ -127,7 +132,7 @@ const SelectAutocomplete = ({
 
     if (key === 'Enter' && activeIndex >= 0) {
       // Handle Enter to select active item
-      handleSelectItem(filteredItems[activeIndex]);
+      handleSelectItem([filteredItems[activeIndex]]);
     } else if (key === 'ArrowDown' && activeIndex < filteredItems.length - 1) {
       // Handle ArrowDown to move down
       setActiveIndex(activeIndex + 1);
@@ -157,13 +162,12 @@ const SelectAutocomplete = ({
         tabIndex={0}
         role='button'
       >
-        <div
-          className={cn('option')}
-          title={selectedItem?.title || defaultSelectedItem?.title}
-        >
-          <span className={cn('value')}>{selectedItem?.value || defaultSelectedItem?.value}</span>
-          <span className={cn('label')}>{selectedItem?.title || defaultSelectedItem?.title}</span>
-        </div>
+        <SelectFieldBase
+          selectedItems={selectedItems}
+          defaultSelectedItem={defaultSelectedItem}
+          isMulti={isMulti}
+          onUnselect={handleSelectItem}
+        />
 
         <div className={cn('icon', { open: isOpen })}>
           <IconChevronDown />
@@ -200,7 +204,7 @@ const SelectAutocomplete = ({
                       item={item}
                       onSelectItem={handleSelectItem}
                       isActive={activeIndex === index}
-                      isSelected={item._id === selectedItem?._id}
+                      isSelected={Boolean(selectedItems?.some(x => x._id === item._id))}
                     />
                   </li>
                 ))}
