@@ -5,7 +5,8 @@ import { cn as bem } from '@bem-react/classname';
 
 import MessagesArea from './messages-area';
 import MessagesNew from './messages-new';
-import messagesTitle from './messages-title';
+import MessagesTitle from './messages-title';
+
 import { TMessagesContext } from './types';
 import { TMessage } from '@src/chat/types';
 
@@ -41,7 +42,7 @@ function Messages(props: MessagesProps) {
 
 export default {
   Root: memo(Messages),
-  Title: memo(messagesTitle),
+  Title: memo(MessagesTitle),
   Area: memo(MessagesArea),
   New: memo(MessagesNew),
 };

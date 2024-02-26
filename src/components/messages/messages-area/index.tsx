@@ -1,9 +1,10 @@
 import './style.css';
 import { memo } from 'react';
 
+import { cn as bem } from '@bem-react/classname';
+
 import Message from '../message';
 
-import { cn as bem } from '@bem-react/classname';
 import { useMessagesContext } from '..';
 
 function MessagesArea() {

@@ -1,7 +1,9 @@
 import './style.css';
+
 import { cn as bem } from '@bem-react/classname';
-import { TMessage } from '@src/chat/types';
+
 import dateFormat from '@src/utils/date-format';
+import { TMessage } from '@src/chat/types';
 
 type MessageProps = {
   message: TMessage;

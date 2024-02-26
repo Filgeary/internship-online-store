@@ -14,6 +14,10 @@ export type TAutocompleteContext = {
     isMultiple: boolean;
     active: TOption | TOption[];
   };
+  options: {
+    isMultipleSelected: boolean;
+    showActiveCodes: boolean;
+  };
   callbacks: {
     setActive: (item: TOption) => void;
     removeActive: (item: TOption) => void;

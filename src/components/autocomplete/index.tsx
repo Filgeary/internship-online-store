@@ -19,10 +19,13 @@ import useOnClickOutside from '@src/hooks/use-on-click-outside';
 import AutocompleteOption from './autocomplete-option';
 import AutocompleteSearch from './autocomplete-search';
 import AutocompleteList from './autocomplete-list';
-import AutocompleteField from './autocomplete-field';
+
 import simplifyName from '@src/utils/simplify-name';
-import AutocompleteCode from './autocomplete-code';
 import sliceLongString from '@src/utils/slice-long-string';
+
+import AutocompleteField from './autocomplete-field';
+import AutocompleteVariants from './autocomplete-variants';
+
 import { TAutocompleteContext, TOption } from './types';
 
 type AutocompleteProps = {
@@ -60,7 +63,7 @@ function Autocomplete(props: AutocompleteProps) {
     disabled = false,
     onFirstDropAll = false,
     isMultiple = false,
-    max = 10,
+    max = Infinity,
     showActiveCodes = false,
   } = props;
 
@@ -173,12 +176,13 @@ function Autocomplete(props: AutocompleteProps) {
     activeCode: Array.isArray(values.active) ? values.active[0]?.code : values.active.code,
     restLength: selected.slice(1).length,
     isMultipleSelected: Array.isArray(values.active) && values.active.length > 1,
+    showActiveCodes,
   };
 
   // Отображение, понятное пользователю
   const views = {
     activeTitle: options.activeTitle
-      ? simplifyName(sliceLongString(options.activeTitle), options.restLength)
+      ? simplifyName(sliceLongString(options.activeTitle, 10), options.restLength)
       : props.placeholder,
     activeCode: options.activeCode,
   };
@@ -262,26 +266,7 @@ function Autocomplete(props: AutocompleteProps) {
         className={cn('row')}
       >
         <div className={cn('inner')}>
-          {options.isMultipleSelected && showActiveCodes ? (
-            <div className={cn('codes-list')}>
-              {Array.isArray(values.active) &&
-                values.active.map((option, index) => (
-                  <AutocompleteCode
-                    key={option?._id ?? index}
-                    code={option?.code}
-                    onClick={(e) => helpers.deleteByCodeClick(e, option)}
-                    className={cn('code-action')}
-                    title={option?.title && sliceLongString(option.title)}
-                  />
-                ))}
-            </div>
-          ) : (
-            <AutocompleteField
-              isDisabled={true}
-              code={views.activeCode}
-              title={views.activeTitle}
-            />
-          )}
+          <AutocompleteField isDisabled={true} code={views.activeCode} title={views.activeTitle} />
 
           <div className={cn('marker')}>
             <img className={cn('marker-image')} src={Arrow} alt='' aria-hidden='true' />
@@ -297,6 +282,7 @@ function Autocomplete(props: AutocompleteProps) {
               value={{
                 values,
                 helpers,
+                options,
                 callbacks,
                 listRef,
                 searchRef,
@@ -318,4 +304,5 @@ export default {
   Search: memo(AutocompleteSearch),
   List: memo(AutocompleteList),
   Option: memo(AutocompleteOption),
+  Variants: memo(AutocompleteVariants),
 };

@@ -39,6 +39,7 @@ class ChatService {
     this.ws.addEventListener('message', (event) => {
       const method = JSON.parse(event.data).method;
       const methodCapitalize = method[0].toUpperCase() + method.slice(1);
+      console.log('[WebSocket_chat] method:', methodCapitalize);
 
       // @ts-ignore
       this['on' + methodCapitalize](event.data);
@@ -104,6 +105,7 @@ class ChatService {
    * Действия при методе `post`
    */
   onPost(messageRaw: string) {
+    console.log('[WebSocket_chat] new message');
     const jsonObj = JSON.parse(messageRaw);
     const message = jsonObj.payload;
     if (this.userId === jsonObj.payload.author._id) {

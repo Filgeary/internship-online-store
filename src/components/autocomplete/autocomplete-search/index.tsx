@@ -3,6 +3,7 @@ import './style.css';
 import { cn as bem } from '@bem-react/classname';
 import { useAutocompleteContext } from '..';
 import React, { memo } from 'react';
+import AutocompleteVariants from '../autocomplete-variants';
 
 type SearchProps = {
   placeholder?: string;
@@ -12,7 +13,7 @@ type SearchProps = {
 function AutocompleteSearch(props: SearchProps) {
   const cn = bem('AutocompleteSearch');
 
-  const { values, callbacks, searchRef, listRef } = useAutocompleteContext();
+  const { values, options, callbacks, searchRef, listRef } = useAutocompleteContext();
 
   const handlers = {
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -34,6 +35,7 @@ function AutocompleteSearch(props: SearchProps) {
         type='text'
         placeholder={props.placeholder}
       />
+      {options.isMultipleSelected && options.showActiveCodes && <AutocompleteVariants />}
     </div>
   );
 }
