@@ -78,10 +78,6 @@ if (process.env.NODE_ENV === 'development') {
         secure: false,
         changeOrigin: true,
       },
-      "/chat": {
-        target: "ws://example.front.ylab.io",
-        ws: true,
-      },
     },
   };
 }

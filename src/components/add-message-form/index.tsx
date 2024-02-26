@@ -17,7 +17,7 @@ export const AddMessageForm: FC<AddMessageFormProps> = (props) => {
       }
     }
   };
-
+  
   return (
     <div className={cn()}>
       <form onSubmit={callbacks.onSubmit} className={cn('form')}>
@@ -27,7 +27,7 @@ export const AddMessageForm: FC<AddMessageFormProps> = (props) => {
           onChange={callbacks.onChange}
           className={cn("input")}
         ></input>
-        {message && <button type='submit' className={cn("button")}>{props.labelSend}</button>}
+        {message && props.connection && <button type='submit' className={cn("button")}>{props.labelSend}</button>}
       </form>
     </div>
   );

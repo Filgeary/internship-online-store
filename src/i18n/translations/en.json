@@ -47,6 +47,6 @@
   "chat": {
     "title": "Chat",
     "send": "Send",
-    "placeholder": "Type your message"
+    "placeholder": "Type message..."
   }
 }

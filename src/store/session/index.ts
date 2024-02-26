@@ -49,7 +49,6 @@ class SessionState extends StoreModule<InitialStateSession, InitConfigSession> {
           },
           "Успешная авторизация"
         );
-
         // Запоминаем токен, чтобы потом автоматически аутентифицировать юзера
         window.localStorage.setItem("token", res.data.result!.token);
 
@@ -57,40 +56,40 @@ class SessionState extends StoreModule<InitialStateSession, InitConfigSession> {
         this.services.api.setHeader(
           this.config.tokenHeader,
           res.data.result!.token
-        );
+          );
 
-        if (onSuccess) onSuccess();
-      } else {
-        this.setState(
-          {
-            ...this.getState(),
-            errors: simplifyErrors(res.data.error.data.issues),
-            waiting: false,
-          },
-          "Ошибка авторизации"
-        );
+          if (onSuccess) onSuccess();
+        } else {
+          this.setState(
+            {
+              ...this.getState(),
+              errors: simplifyErrors(res.data.error.data.issues),
+              waiting: false,
+            },
+            "Ошибка авторизации"
+            );
+          }
+        } catch (e) {
+          console.error(e);
+        }
       }
-    } catch (e) {
-      console.error(e);
-    }
-  }
 
-  /**
-   * Отмена авторизации (выход)
-   * @returns {Promise<void>}
-   */
-  async signOut(): Promise<void> {
-    try {
-      await this.services.api.request({
-        url: "/api/v1/users/sign",
-        method: "DELETE",
-      });
-      // Удаляем токен
-      window.localStorage.removeItem("token");
-      // Удаляем заголовок
-      this.services.api.setHeader(this.config.tokenHeader, null);
-    } catch (error) {
-      console.error(error);
+      /**
+       * Отмена авторизации (выход)
+       * @returns {Promise<void>}
+      */
+     async signOut(): Promise<void> {
+       try {
+         await this.services.api.request({
+           url: "/api/v1/users/sign",
+           method: "DELETE",
+          });
+          // Удаляем токен
+          window.localStorage.removeItem("token");
+          // Удаляем заголовок
+          this.services.api.setHeader(this.config.tokenHeader, null);
+        } catch (error) {
+          console.error(error);
     }
     this.setState({ ...this.initState(), waiting: false });
   }
@@ -98,15 +97,15 @@ class SessionState extends StoreModule<InitialStateSession, InitConfigSession> {
   /**
    * По токену восстановление сессии
    * @return {Promise<void>}
-   */
-  async remind(): Promise<void> {
-    const token = localStorage.getItem("token");
-    if (token) {
-      // Устанавливаем токен в АПИ
-      this.services.api.setHeader(this.config.tokenHeader, token);
-      // Проверяем токен выбором своего профиля
-      const res = await this.services.api.request({
-        url: "/api/v1/users/self",
+  */
+ async remind(): Promise<void> {
+   const token = localStorage.getItem("token");
+   if (token) {
+     // Устанавливаем токен в АПИ
+     this.services.api.setHeader(this.config.tokenHeader, token);
+     // Проверяем токен выбором своего профиля
+     const res = await this.services.api.request({
+       url: "/api/v1/users/self",
       });
 
       if (res.data.error) {

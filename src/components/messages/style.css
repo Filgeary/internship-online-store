@@ -1,0 +1,26 @@
+.Messages {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+  height: 65vh;
+}
+
+.Messages-content {
+  display: flex;
+  flex-direction: column;
+  /* justify-content: flex-end; */
+  flex: auto;
+  width: 80%;
+  overflow-y: auto;
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.Messages-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.Messages-content::-webkit-scrollbar-thumb {
+  background-color: #E5E6E9;
+  border-radius: 5px;
+}

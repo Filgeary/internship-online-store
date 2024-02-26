@@ -1,5 +1,5 @@
 import Services from "@src/services";
-import type { ConfigApi, RequestArgs, ResponseApi } from "./type";
+import type { ConfigApi } from "./type";
 
 class APIService {
   services: Services;

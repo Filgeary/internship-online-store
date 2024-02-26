@@ -39,5 +39,5 @@ export type ConfigStore = {
 export type Config = {
   store: ConfigStore;
   api: ConfigApi;
-  ws: ConfigWS;
+  ws: ConfigWS
 }

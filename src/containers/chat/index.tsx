@@ -1,50 +1,46 @@
 import { AddMessageForm } from "@src/components/add-message-form";
+import { Messages } from "@src/components/messages";
 import useSelector from "@src/hooks/use-selector";
+import useStore from "@src/hooks/use-store";
 import useTranslate from "@src/hooks/use-translate";
-import { useEffect } from "react";
-import {v4 as uuidv4} from 'uuid';
-
-const wsChannel = new WebSocket("ws://example.front.ylab.io/chat");
+import { useCallback, useEffect } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 export const Chat = () => {
   const { t } = useTranslate();
+  const store = useStore();
 
   const select = useSelector(state => ({
-    token: state.session.token
+    token: state.session.token,
+    userId: state.session.user._id,
+    connection: state.chat.connection,
+    messages: state.chat.messages
   }))
 
   useEffect(() => {
-    wsChannel.addEventListener('open', () => {
-      wsChannel.send(
-        JSON.stringify({
-          method: "auth",
-          payload: {
-            token: select.token,
-          },
-        })
-      )
-    })
-  }, [wsChannel])
+    store.actions.chat.auth(select.token!);
+    setTimeout(() => {
+      store.actions.chat.onMessage();
+      store.actions.chat.getLastMessages()
+    }, 1000);
+    return () => store.actions.chat.close();
+  }, [])
 
   const callbacks = {
     onSubmit: (message: string) => {
-      wsChannel.send(
-        JSON.stringify({
-          method: "post",
-          payload: {
-            _key: uuidv4(),
-            text: message,
-          },
-        })
-      );
-    }
+      store.actions.chat.sendMessage(message);
+    },
   }
 
   return (
-    <AddMessageForm
-      labelSend={t("chat.send")}
-      labelPlaceholder={t("chat.placeholder")}
-      onSubmit={callbacks.onSubmit}
-    />
+    <>
+      <Messages messages={select.messages} userId={select.userId!}/>
+      <AddMessageForm
+        labelSend={t("chat.send")}
+        labelPlaceholder={t("chat.placeholder")}
+        onSubmit={callbacks.onSubmit}
+        connection={select.connection}
+      />
+    </>
   );
 }

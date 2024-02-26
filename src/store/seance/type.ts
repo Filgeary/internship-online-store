@@ -1,5 +1,5 @@
 export type ConfigWS = {
-  baseUrl: string;
+  url: string;
 };
 
 export type InitialStateSeance = {
@@ -14,7 +14,6 @@ export type MessageType = {
   text: string;
   author: Author;
   dateCreate: string;
-  sended?: boolean;
 };
 
 export type Author = {
