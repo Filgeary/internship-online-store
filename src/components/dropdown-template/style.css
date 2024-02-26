@@ -25,7 +25,8 @@
   align-items: center;
   padding: 0 6px;
   gap: 6px;
-  overflow: hidden;
+  overflow-y: auto;
+  max-height: 42px;
 
   span {
     text-overflow: ellipsis;

@@ -38,11 +38,12 @@ function ModalCatalog() {
       labelClose={t("modal.close")}
       onClose={callbacks.onClose}
       title={t("modal.catalog")}
-      isClose={false} >
-      <SideLayout side="between" padding="medium">
-        <CatalogFilter storeName={storeName} />
+      isClose={true}
+    >
+      <SideLayout side="end" padding="medium">
         <button onClick={callbacks.onAddToBasket}>{t("modal.add")}</button>
       </SideLayout>
+      <CatalogFilter storeName={storeName} />
       <CatalogListSelectable storeName={storeName} />
     </ModalLayout>
   );

@@ -23,10 +23,16 @@ const config: Config = {
       catalog: {
         ignoreURL: false,
       },
+      ws: {
+        baseUrl: "ws://example.front.ylab.io/chat",
+      },
     },
   },
   api: {
     baseUrl: "",
+  },
+  ws: {
+    baseUrl: "ws://example.front.ylab.io/chat",
   },
 };
 

@@ -8,72 +8,76 @@ import CountriesList from "@src/components/countries-list";
 import DropdownSelected from "@src/components/dropdown-selected";
 import { Country } from "@src/store/countries/type";
 import { getPathArr } from "@src/utils/get-path-arr";
+import { DropdownType } from "./type";
 
-function Dropdown() {
+function Dropdown(props: DropdownType) {
   const store = useStore();
   const [search, setSearch] = useState('');
+  const [selected, setSelected] = useState<Country[]>([]);
+  const [countries, setCountries] = useState<Country[]>([]);
 
   const select = useSelector((state) => ({
-    countries: state.countries.list,
-    selected: state.countries.selected,
     waiting: state.countries.waiting,
-    madeIn: state.catalog.params.madeIn
   }));
 
   useEffect(() => {
-    store.actions.countries.loadById(select.madeIn);
-  }, [select.madeIn])
+    setCountries(props.options);
+  }, [props.options]);
+
+  useEffect(() => {
+    const ids = getPathArr(props.value);
+    const countries = props.options.filter((item) => ids.includes(item._id));
+    setSelected(countries);
+  }, [props.value, props.options]);
 
   const callbacks = {
     onSearch: useCallback(
-      (value: string) => {
+      (
+        value: string,
+        setFocusInd: React.Dispatch<React.SetStateAction<number>>
+      ) => {
         setSearch(value);
-        store.actions.countries.search(value);
+        setFocusInd(-1);
+        const filteredCountries = props.options.filter(
+          (item) =>
+            item.code.toLowerCase().includes(value.toLowerCase()) ||
+            item.title.toLowerCase().includes(value.toLowerCase())
+        );
+        setCountries(filteredCountries);
       },
-      [store]
-    ),
-    onSelectMany: useCallback(
-      (ids: string[]) => {
-        store.actions.catalog.setParams({ madeIn: ids.join("|"), page: 1 });
-      },
-      [store]
+      [store, countries]
     ),
     removeSelectedItem: useCallback(
       (_id: string, e: React.MouseEvent<HTMLDivElement>) => {
-        const madeIn = select.madeIn.split("|").filter((item) => item !== _id);
-        callbacks.onSelectMany(madeIn);
-        store.actions.countries.removeSelectedItem(_id);
+        const madeIn = props.value.split("|").filter((item) => item !== _id);
+        props.onChange(madeIn);
+        const filterSelected = selected.filter((item) => item._id != _id);
+        setSelected(filterSelected);
         e.stopPropagation();
       },
-      [store, select.madeIn]
+      [store, props.value]
     ),
   };
-
-  const options = {
-    countriesList: useMemo<Country[]>(() => {
-      if(search) {
-        return select.countries;
-      }
-      return [{_id: '', code: '', title: "Все"}, ...select.countries]
-    }, [select.countries, search])
-  }
 
   const renders = {
     selectedItem: useCallback(
       (open: boolean) => (
         <DropdownSelected
           open={open}
-          selected={select.selected}
+          selected={selected}
           removeSelectedItem={callbacks.removeSelectedItem}
         />
       ),
-      [select.selected]
+      [selected]
     ),
-    input: (searchRef: RefObject<HTMLInputElement>) => (
+    input: (
+      searchRef: RefObject<HTMLInputElement>,
+      setFocusInd: React.Dispatch<React.SetStateAction<number>>
+    ) => (
       <Input
-        value={""}
+        value={search}
         name={"search-value"}
-        onChange={callbacks.onSearch}
+        onChange={(value) => callbacks.onSearch(value, setFocusInd)}
         placeholder="Поиск"
         theme="search"
         ref={searchRef}
@@ -84,14 +88,14 @@ function Dropdown() {
         <Spinner active={select.waiting}>
           <CountriesList
             focusInd={focusInd}
-            countries={options.countriesList}
-            onSelect={callbacks.onSelectMany}
-            selected={getPathArr(select.madeIn)}
+            countries={countries}
+            onSelect={props.onChange}
+            selected={getPathArr(props.value)}
             ref={menuRef}
           />
         </Spinner>
       ),
-      [select.countries, select.madeIn]
+      [countries, props.value]
     ),
   };
 
@@ -100,7 +104,7 @@ function Dropdown() {
       renderSelectedItem={renders.selectedItem}
       renderInput={renders.input}
       renderOptions={renders.options}
-      countOfOptions={options.countriesList.length} />
+      countOfOptions={countries.length} />
   );
 }
 

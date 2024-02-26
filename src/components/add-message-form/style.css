@@ -1,0 +1,27 @@
+.MessageForm {
+  padding: 20px;
+}
+
+.MessageForm-form {
+  display: flex;
+  gap: 15px;
+  background-color: #fff;
+  box-shadow: 0px 0px 5px 1px rgba(34, 60, 80, 0.2);
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.MessageForm-input {
+  all: unset;
+  flex: auto;
+  padding: 10px;
+}
+
+.MessageForm-button{
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  background-color: #6F7EFF;
+  color: #fff;
+  font-size: 16px;
+}

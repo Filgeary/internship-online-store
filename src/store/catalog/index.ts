@@ -127,7 +127,7 @@ class CatalogState extends StoreModule<InitialStateCatalog, InitConfigCatalog> {
         "search[madeIn]": "",
       }
     );
-
+    
     const res = await this.services.api.request({
       url: `/api/v1/articles?${new URLSearchParams(apiParams)}`,
     });

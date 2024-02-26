@@ -20,7 +20,7 @@ function CountriesList(props: CountriesListProps, ref: LegacyRef<HTMLUListElemen
       }
     }, [props.selected])
   }
-
+  
   return (
     <ul className={cn()} ref={ref}>
       {props.countries.map((country, index) => (

@@ -21,16 +21,7 @@ class Store {
     this.config = config;
     this.listeners = []; // Слушатели изменений состояния
     this.state = initState;
-    /** @type {{
-     * basket: BasketState,
-     * catalog: CatalogState,
-     * modals: ModalsState,
-     * article: ArticleState,
-     * locale: LocaleState,
-     * categories: CategoriesState,
-     * session: SessionState,
-     * profile: ProfileState
-     * }} */
+
     this.actions = {} as TActions;
     const keys = Object.keys(modules) as keyModules[];
     for (const name of keys) {

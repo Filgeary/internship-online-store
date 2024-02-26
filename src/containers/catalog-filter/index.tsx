@@ -1,4 +1,4 @@
-import {memo, useCallback, useMemo} from "react";
+import { memo, useCallback, useMemo } from "react";
 import useTranslate from "@src/hooks/use-translate";
 import useStore from "@src/hooks/use-store";
 import useSelector from "@src/hooks/use-selector";
@@ -9,6 +9,7 @@ import treeToList from "@src/utils/tree-to-list";
 import listToTree from "@src/utils/list-to-tree";
 import Dropdown from "../dropdown";
 import { StoreNames } from "./type";
+import { Country } from "@src/store/countries/type";
 
 function CatalogFilter(props: StoreNames) {
   const store = useStore();
@@ -17,7 +18,9 @@ function CatalogFilter(props: StoreNames) {
     sort: state[props.storeName]!.params.sort,
     query: state[props.storeName]!.params.query,
     category: state[props.storeName]!.params.category,
+    madeIn: state[props.storeName]!.params.madeIn,
     categories: state.categories.list,
+    countries: state.countries.list,
   }));
 
   const callbacks = {
@@ -41,6 +44,13 @@ function CatalogFilter(props: StoreNames) {
     onCategory: useCallback(
       (category: string) =>
         store.actions[props.storeName]!.setParams({ category, page: 1 }),
+      [store]
+    ),
+    onCountry: useCallback(
+      (ids: string[]) => {
+        console.log(ids.join("|"));
+        store.actions[props.storeName]!.setParams({ madeIn: ids.join("|"), page: 1 });
+      },
       [store]
     ),
   };
@@ -68,6 +78,10 @@ function CatalogFilter(props: StoreNames) {
       ],
       [select.categories]
     ),
+    countries: useMemo<Country[]>(
+      () => [{ _id: "", code: "", title: "Все" }, ...select.countries],
+      [select.countries]
+    ),
   };
 
   const { t } = useTranslate();
@@ -88,8 +102,9 @@ function CatalogFilter(props: StoreNames) {
         value={select.query}
         onChange={callbacks.onSearch}
         placeholder={"Поиск"}
-        name={""} />
-        <Dropdown />
+        name={""}
+      />
+      <Dropdown options={options.countries} value={select.madeIn} onChange={callbacks.onCountry} />
       <button onClick={callbacks.onReset}>{t("filter.reset")}</button>
     </SideLayout>
   );

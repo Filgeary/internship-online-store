@@ -1,9 +1,7 @@
 import type { Profile } from "../profile/type";
 
 export interface InitialStateSession {
-  errors: {
-    other?: string[]
-  } | null,
+  errors?: any,
   exists: boolean,
   token: string | null,
   user: Partial<Profile>,

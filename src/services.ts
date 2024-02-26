@@ -1,11 +1,13 @@
 import APIService from "./api";
-import { Config } from "./config";
+import { Config } from "./types/type";
 import Store from "./store";
+import WSService from "./ws";
 
 class Services {
   config: Config;
   private _api?: APIService;
   private _store?: Store;
+  private _ws?: WSService;
 
   constructor(config: Config) {
     this.config = config;
@@ -31,6 +33,17 @@ class Services {
       this._store = new Store(this, this.config.store);
     }
     return this._store;
+  }
+
+  /**
+   * Сервис для websokets
+   * @returns {WSService}
+   */
+  get ws(): WSService {
+    if (!this._ws) {
+      this._ws = new WSService(this, this.config.ws);
+    }
+    return this._ws;
   }
 }
 

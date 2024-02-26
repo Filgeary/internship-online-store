@@ -1,6 +1,7 @@
 .DropdownSelected {
   display: flex;
   gap: 6px;
+  overflow-x: hidden;
 }
 
 .DropdownSelected-more {

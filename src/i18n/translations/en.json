@@ -43,5 +43,10 @@
     "close": "Close",
     "catalog": "List of products",
     "add": "Add selected products"
+  },
+  "chat": {
+    "title": "Chat",
+    "send": "Send",
+    "placeholder": "Type your message"
   }
 }

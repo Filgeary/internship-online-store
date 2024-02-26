@@ -69,16 +69,20 @@ let config = {
 if (process.env.NODE_ENV === 'development') {
   config.devtool = 'inline-source-map';
   config.devServer = {
-    static: path.join(__dirname, 'dist'),
+    static: path.join(__dirname, "dist"),
     port: 8010,
     historyApiFallback: true,
     proxy: {
-      '/api/**': {
-        target: 'http://example.front.ylab.io',
+      "/api/**": {
+        target: "http://example.front.ylab.io",
         secure: false,
         changeOrigin: true,
-      }
-    }
+      },
+      "/chat": {
+        target: "ws://example.front.ylab.io",
+        ws: true,
+      },
+    },
   };
 }
 
