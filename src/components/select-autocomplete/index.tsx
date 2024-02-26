@@ -4,6 +4,7 @@ import { cn as bem } from '@bem-react/classname';
 import { memo, useEffect, useRef, useState } from 'react';
 
 import { useClickOutside } from '@src/hooks/use-click-outside';
+import { useOverflowWindowHeight } from '@src/hooks/use-overflow-window-height';
 import IconChevronDown from '../icon-chevron-down';
 import { SelectFieldOption } from '../select-field-option';
 import Spinner from '../spinner';
@@ -11,6 +12,8 @@ import Spinner from '../spinner';
 import type { ISelectOption } from '@src/types';
 
 import './style.css';
+
+const MIN_MENU_HEIGHT = 155;
 
 type Props = {
   options: ISelectOption[];
@@ -37,8 +40,15 @@ const SelectAutocomplete = ({
   const [activeIndex, setActiveIndex] = useState(-1); // To track selected item in list
 
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const menuWrapperRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const listItemsRefs = useRef<HTMLLIElement[]>([]);
+
+  const { isOverflow, derivedHeight } = useOverflowWindowHeight(
+    menuWrapperRef,
+    [options, isOpen, isPending],
+    MIN_MENU_HEIGHT,
+  );
 
   // call callbacks on open
   useEffect(() => {
@@ -141,7 +151,7 @@ const SelectAutocomplete = ({
       ref={wrapperRef}
     >
       <div
-        className={cn('control', { open: isOpen })}
+        className={cn('control', { open: isOpen, flip: isOverflow })}
         onClick={handleToggleMenu}
         onKeyDown={evt => evt.key === 'Enter' && handleOpen()}
         tabIndex={0}
@@ -161,7 +171,11 @@ const SelectAutocomplete = ({
       </div>
 
       {isOpen && (
-        <div className={cn('menuWrapper')}>
+        <div
+          className={cn('menuWrapper')}
+          ref={menuWrapperRef}
+          style={isOverflow ? { top: -derivedHeight } : {}}
+        >
           <input
             type='text'
             value={inputValue}

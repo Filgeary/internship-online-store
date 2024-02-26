@@ -41,6 +41,10 @@
   border-bottom-right-radius: 0;
 }
 
+.SelectAutocomplete-control_flip {
+  border-bottom: 1px solid #ccc;
+}
+
 .SelectAutocomplete-option {
   overflow: hidden;
   display: flex;
