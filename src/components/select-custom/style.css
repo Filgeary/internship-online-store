@@ -1,0 +1,113 @@
+.SelectCustom {
+    position: relative;
+}
+
+.SelectCustom-selectButton {
+    position: relative;
+    display: flex;
+    width: 240px;
+    min-height: 30px;
+    background: #fff;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 1px 5px 1px rgba(60, 60, 63, 0.25);
+    /* border: solid #000 1px; */
+}
+
+.SelectCustom-selectButton-selectedItems {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.SelectCustom-selectedItem {
+    /* Запрет переноса текста на новую строку */
+    /* white-space: nowrap; */
+    /* Скрытие текста, выходящего за границы элемента */ 
+    /* overflow: hidden;  */
+    /* Отображение троеточия для обрезанного текста */
+    /* text-overflow: ellipsis;  */
+}
+
+/* .SelectCustom-selectButton-selectedItems > * {
+    display: inline-block;
+    width: auto;
+} */
+.SelectCustom-selectButton-arrow {
+    margin: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.SelectCustom-selectButton-arrow_open {
+    transform: rotate(180deg);
+}
+
+.SelectCustom-search {
+    padding: 10px;
+}
+
+.SelectCustom-input {
+    font-weight: 400;
+    font-size: 13px;
+    width: 100%;
+    border: none;
+}
+
+.SelectCustom-input::placeholder {
+    font-style: italic;
+    color: #cccdd4;
+}
+
+.SelectCustom-input:focus{
+    border: none;
+    outline: none;
+}
+
+.SelectCustom-optionsWrapper {
+    position: absolute;
+    z-index: 999;
+    width: 240px;
+    box-sizing: border-box;
+    box-shadow: 0 8px 8px 0 rgba(60, 60, 63, 0.25);
+    background: #fff;
+    padding: 5px;
+    overflow: hidden;
+    transition: all .2s;
+}
+
+.SelectCustom-optionsWrapper:focus {
+    outline: none;
+    border: none;
+    box-shadow: 0 8px 8px 0 rgba(0, 0, 255, 0.25);
+}
+
+.SelectCustom-optionsWrapper_direction_down {
+    top: 100%;
+    bottom: auto;
+}
+
+.SelectCustom-optionsWrapper_direction_up {
+    bottom: 100%;
+    top: auto;
+}
+
+.SelectCustom-options {
+    max-height: 100px;
+    overflow: scroll;
+    overflow-x: hidden;
+    gap: 6px;
+}
+
+.SelectCustom-options::-webkit-scrollbar {
+    width: 8px;
+}
+
+.SelectCustom-options::-webkit-scrollbar-track {
+    background: none;
+}
+
+.SelectCustom-options::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    background: #e5e6e9;
+}

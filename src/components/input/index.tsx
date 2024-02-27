@@ -5,12 +5,12 @@ import debounce from 'lodash.debounce';
 import './style.css';
 
 interface InputProps {
-  value: string,
+  value?: string,
   name: string,
   type: string,
   placeholder: string,
   onChange: (value: any, name: string) => void,
-  theme: "big",
+  theme?: "big",
 }
 
 function Input(props: InputProps) {

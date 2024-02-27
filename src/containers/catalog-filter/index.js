@@ -8,6 +8,7 @@ import SideLayout from "@src/components/side-layout";
 import treeToList from "@src/utils/tree-to-list";
 import listToTree from "@src/utils/list-to-tree";
 import PropTypes from 'prop-types';
+import { CountriesFilter } from "../countries-filter";
 
 function CatalogFilter({ stateName }) {
 
@@ -15,6 +16,7 @@ function CatalogFilter({ stateName }) {
 
   const select = useSelector(state => ({
     sort: state[stateName].params.sort,
+    params: state[stateName].params,
     query: state[stateName].params.query,
     category: state[stateName].params.category,
     categories: state.categories.list,
@@ -52,6 +54,7 @@ function CatalogFilter({ stateName }) {
     <SideLayout padding='medium'>
       <Select options={options.categories} value={select.category} onChange={callbacks.onCategory}/>
       <Select options={options.sort} value={select.sort} onChange={callbacks.onSort}/>
+      <CountriesFilter stateName={stateName}/>
       <Input value={select.query} onChange={callbacks.onSearch} placeholder={'Поиск'}
              delay={1000}/>
       <button onClick={callbacks.onReset}>{t('filter.reset')}</button>

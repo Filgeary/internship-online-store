@@ -27,5 +27,6 @@
   "couter-modal.form.title": "Enter the quantity of the product:",
   "catalog-modal.title": "Catalog",
   "catalog-modal.selected": "Selected",
-  "catalog-modal.add": "Add highlighted products"
+  "catalog-modal.add": "Add highlighted products",
+  "catalog1": "1products"
 }

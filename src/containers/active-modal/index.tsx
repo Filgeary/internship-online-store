@@ -1,6 +1,4 @@
 import { memo, useCallback } from "react";
-import CounterModal from "@src/app/counter-modal";
-import Basket from "@src/app/basket";
 import * as modals from "@src/app/export-modals";
 import useSelector from "@src/hooks/use-selector";
 import useStore from "@src/hooks/use-store";
@@ -20,7 +18,7 @@ function ActiveModal() {
   // }
 
   const callbacks = {
-    closeModal: useCallback((_id, result) => {
+    closeModal: useCallback((_id: string, result: unknown) => {
         store.actions.modals.close(_id, result);
       },
       [store]

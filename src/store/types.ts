@@ -9,7 +9,7 @@ export type BasicStoreModules = {
 }
 
 // Шаблон для ключей StoreModules
-type StoreModuleNameTemplate<T extends BasicStoreModuleKeys> = T | `${T}${number}`;
+export type StoreModuleNameTemplate<T extends BasicStoreModuleKeys> = T | `${T}${number}`;
 
 // Ключи(имена) модулей
 export type StoreModuleKeys = StoreModuleNameTemplate<BasicStoreModuleKeys>;
@@ -26,4 +26,8 @@ export type StoreBasicInitStates = {
 }
 export type StoreInitStates = {
     [Key in BasicStoreModuleKeys as StoreModuleNameTemplate<Key>]: StoreBasicInitStates[Key]
+}
+
+export type StoreConfigs = {
+    [Key in BasicStoreModuleKeys]: ReturnType<BasicStoreModules[Key]["initConfig"]>
 }

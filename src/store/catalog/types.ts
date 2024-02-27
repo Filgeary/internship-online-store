@@ -23,7 +23,13 @@ export interface ICatalogItem {
 export interface ICatalogStateValidParams {
   page: number;
   limit: number;
-  sort?: string | null;
-  query?: string | null;
-  category?: string | null;
+  sort?: string;
+  query?: string;
+  category?: string;
+  madeIn: string;
+}
+
+export interface ICatalogConfig {
+  readParams: boolean,
+  saveParams: boolean
 }

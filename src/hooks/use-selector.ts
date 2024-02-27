@@ -10,7 +10,7 @@ type TSelectorFunc<T> = (state: StoreInitStates) => T;
  * @param selectorFunc {Function}
  * @return {*}
  */
-export default function useSelector<T>(selectorFunc: TSelectorFunc<T>): T {
+export default function useSelector<SelectedProps>(selectorFunc: TSelectorFunc<SelectedProps>): SelectedProps {
   const store = useStore();
 
   const [state, setState] = useState(() => selectorFunc(store.getState()));

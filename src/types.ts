@@ -1,18 +1,11 @@
-import { BasicStoreModuleKeys } from "./store/types";
+import { StoreConfigs } from "./store/types";
 
 export type ConfigStoreModules = {
-  session: {
-    tokenHeader: string;
-  };
-  catalog: {
-    readParams: boolean,
-    saveParams: boolean
-  };
   catalogModal: {
     readParams: boolean;
     saveParams: boolean;
   };
-} & Record<BasicStoreModuleKeys, object>;
+} & StoreConfigs;
 
 export interface StoreConfig {
   log: boolean;
@@ -25,10 +18,11 @@ export interface ApiConfig {
 
 export interface ReduxConfig {}
 
-export interface Config {
+export interface IConfig {
   store: StoreConfig;
   api: ApiConfig;
   redux: ReduxConfig;
 }
 
 export type StoreConfigModulesKeys = keyof ConfigStoreModules;
+

@@ -1,12 +1,11 @@
 import StoreModule from "../module";
 import exclude from "@src/utils/exclude";
-import { ICatalogInitState, ICatalogResponseApi, ICatalogStateValidParams } from "./types";
-import { ConfigStoreModules } from "@src/types";
+import { ICatalogConfig, ICatalogInitState, ICatalogResponseApi, ICatalogStateValidParams } from "./types";
 
 /**
  * Состояние каталога - параметры фильтра исписок товара
  */
-class CatalogState extends StoreModule<ICatalogInitState, ConfigStoreModules["catalog" | "catalogModal"]> {
+class CatalogState extends StoreModule<ICatalogInitState, ICatalogConfig> {
 
   /**
    * Начальное состояние
@@ -20,10 +19,18 @@ class CatalogState extends StoreModule<ICatalogInitState, ConfigStoreModules["ca
         limit: 10,
         sort: 'order',
         query: '',
-        category: ''
+        category: '',
+        madeIn: '',
       },
       count: 0,
       waiting: false
+    }
+  }
+
+  initConfig(): ICatalogConfig {
+    return {
+      readParams: false,
+      saveParams: false
     }
   }
 
@@ -45,17 +52,17 @@ class CatalogState extends StoreModule<ICatalogInitState, ConfigStoreModules["ca
    * @return {Promise<void>}
    */
   async initParams(newParams = {}) {
-    console.log(this.name);
     let validParams = {} as ICatalogStateValidParams;
     if (this.config.readParams !== false) {
       const urlParams = new URLSearchParams(window.location.search);
       if (urlParams.has('page')) validParams.page = Number(urlParams.get('page')) || 1;
       if (urlParams.has('limit')) validParams.limit = Math.min(Number(urlParams.get('limit')) || 10, 50);
-      if (urlParams.has('sort')) validParams.sort = urlParams.get('sort');
-      if (urlParams.has('query')) validParams.query = urlParams.get('query');
-      if (urlParams.has('category')) validParams.category = urlParams.get('category');
+      if (urlParams.has('sort')) validParams.sort = urlParams.get('sort') ?? '';
+      if (urlParams.has('query')) validParams.query = urlParams.get('query') ?? '';
+      if (urlParams.has('category')) validParams.category = urlParams.get('category') ?? '';
+      if (urlParams.has('madeIn')) validParams.madeIn = urlParams.get('madeIn') ?? '';
     }
-    console.log({...this.initState().params, ...validParams, ...newParams});
+    console.log(validParams);
     await this.setParams({...this.initState().params, ...validParams, ...newParams}, true);
   }
 
@@ -77,7 +84,7 @@ class CatalogState extends StoreModule<ICatalogInitState, ConfigStoreModules["ca
    * @param [replaceHistory] {Boolean} Заменить адрес (true) или новая запись в истории браузера (false)
    * @returns {Promise<void>}
    */
-  async setParams(newParams = {}, replaceHistory = false) {
+  async setParams(newParams: Partial<ICatalogStateValidParams> = {}, replaceHistory = false) {
     const params = {...this.getState().params, ...newParams};
 
     // Установка новых параметров и признака загрузки
@@ -104,11 +111,13 @@ class CatalogState extends StoreModule<ICatalogInitState, ConfigStoreModules["ca
       fields: 'items(*),count',
       sort: params.sort,
       'search[query]': params.query,
-      'search[category]': params.category
+      'search[category]': params.category,
+      'search[madeIn]': params.madeIn
     }, {
       skip: 0,
       'search[query]': '',
-      'search[category]': ''
+      'search[category]': '',
+      'search[madeIn]': ''
     });
 
     const res = await this.services.api.request<ICatalogResponseApi>({url: `/api/v1/articles?${new URLSearchParams(apiParams)}`});

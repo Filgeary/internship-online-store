@@ -1,13 +1,12 @@
 import Services from "@src/services";
 import Store from ".";
-import { ConfigStoreModules } from "@src/types";
 import { StoreModuleKeys } from "./types";
 
 /**
  * Базовый класс для модулей хранилища
  * Для группировки действий над внешним состоянием
  */
-class StoreModule<InitState, Config extends ConfigStoreModules | object = object> {
+class StoreModule<InitState extends object, Config extends object = object> {
   protected store: Store;
   protected name: StoreModuleKeys;
   protected config: Partial<Config>;
@@ -25,8 +24,12 @@ class StoreModule<InitState, Config extends ConfigStoreModules | object = object
     this.services = store.services;
   }
 
+  initConfig(): Config {
+    return {} as Config;
+  }
+
   initState(): InitState {
-    return {} as InitState
+    return {} as InitState;
   }
 
   getState() {

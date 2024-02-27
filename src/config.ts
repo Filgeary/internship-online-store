@@ -1,11 +1,11 @@
-import { Config } from "./types";
+import { IConfig } from "./types";
 
 const isProduction = process.env.NODE_ENV === 'production';
 
 /**
  * Настройки сервисов
  */
-const config : Config = {
+const config : IConfig = {
   store: {
     // Логировать установку состояния?
     log: !isProduction,

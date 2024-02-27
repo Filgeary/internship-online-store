@@ -40,3 +40,7 @@ export interface ISessionUser {
     name: string;
   };
 }
+
+export interface ISessionConfig {
+  tokenHeader: string;
+}

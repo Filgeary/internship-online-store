@@ -1,12 +1,11 @@
 import StoreModule from "../module";
 import simplifyErrors from "@src/utils/simplify-errors";
-import { ISessionInitState, ISessionResponseRemind, ISessionResponseSignIn, ISessionSignInData } from "./types";
-import { ConfigStoreModules } from "@src/types";
+import { ISessionConfig, ISessionInitState, ISessionResponseRemind, ISessionResponseSignIn, ISessionSignInData } from "./types";
 
 /**
  * Сессия
  */
-class SessionState extends StoreModule<ISessionInitState, ConfigStoreModules["session"]> {
+class SessionState extends StoreModule<ISessionInitState, ISessionConfig> {
   /**
    * Начальное состояние
    * @return {Object}
@@ -19,6 +18,12 @@ class SessionState extends StoreModule<ISessionInitState, ConfigStoreModules["se
       waiting: true,
       exists: false
     };
+  }
+
+  initConfig(): ISessionConfig {
+    return {
+      tokenHeader: "X-Token"
+    }
   }
 
   /**

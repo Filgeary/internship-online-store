@@ -1,0 +1,37 @@
+.CountryOption {
+  display: flex;
+  align-items: center;
+  font-weight: 400;
+  font-size: 15px;
+  color: #191f4d;
+  background: #fff;
+  text-wrap: wrap;
+  line-height: 1.5;
+  cursor: pointer;
+  gap: 6px;
+  padding: 6px;
+}
+
+.CountryOption_selected {
+  background: #808dff;
+  color: #fff;
+}
+
+.CountryOption_hovered {
+  background: #dbdfff;
+  color: #191f4d;
+}
+
+.CountryOption-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 3px;
+  width: 18px;
+  height: 18px;
+  background: #6f7eff;
+  padding: 1px;
+  font-weight: 700;
+  font-size: 8px;
+  color: #fff;
+}

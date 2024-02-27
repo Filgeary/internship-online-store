@@ -5,8 +5,8 @@ import './style.css';
 
 interface PageLayoutProps {
   children: React.ReactNode,
-  head: React.ReactNode,
-  footer: React.ReactNode
+  head?: React.ReactNode,
+  footer?: React.ReactNode
 }
 
 function PageLayout({head, footer, children}: PageLayoutProps) {

@@ -29,12 +29,6 @@ function Article() {
     dispatch(articleActions.load(params.id));
   }, [params.id]);
 
-  useWaitModal("counter-modal", (result) => {
-    if (result > 0) {
-      store.actions.basket.addActiveItem(result);
-    }
-  }, [store]);
-
   const select = useSelector(state => ({
     article: state.article.data,
     waiting: state.article.waiting,
@@ -45,8 +39,10 @@ function Article() {
   const callbacks = {
     // Добавление в корзину c вызовом Модалки для ввода количества
     addToBasket: useCallback(_id => {
-      store.actions.basket.setActiveItemId(_id);
-      dispatch(modalsActions.open("counter-modal"));
+      store.actions.modals.open("counterModal")
+        .then((result) => {
+          store.actions.basket.addToBasket(_id, result);
+        });
     }, [store]),
   }
 
