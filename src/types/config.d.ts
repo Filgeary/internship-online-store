@@ -3,6 +3,7 @@ import { ModulesKeys, ModulesType } from "../store/types";
 export type ConfigType = {
   store: ConfigStoreType;
   api: ConfigApiType;
+  chat: ConfigChatType;
   redux?: any;
 }
 
@@ -17,6 +18,10 @@ export type ConfigModulesType = {
 export type ConfigStoreType = {
   log: boolean,
   modules: ConfigModulesType,
+}
+
+export type ConfigChatType = {
+  url: string;
 }
 
 

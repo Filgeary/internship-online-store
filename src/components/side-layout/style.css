@@ -28,6 +28,18 @@
   padding: 20px;
 }
 
+.SideLayout_direction_row {
+  flex-direction: row;
+}
+
+.SideLayout_direction_column {
+  flex-direction: column;
+}
+
+.SideLayout_alignItems_stretch {
+  align-items: stretch;
+}
+
 .SideLayout-item {
   margin: 0 5px;
 }

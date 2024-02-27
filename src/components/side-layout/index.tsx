@@ -4,10 +4,10 @@ import {cn as bem} from '@bem-react/classname';
 import './style.css';
 import { SideLayoutPropsType } from "./type";
 
-function SideLayout({children, side, padding}: SideLayoutPropsType) {
+function SideLayout({children, side, padding, direction, alignItems}: SideLayoutPropsType) {
   const cn = bem('SideLayout');
   return (
-    <div className={cn({side, padding})}>
+    <div className={cn({side, padding, direction, alignItems})}>
       {React.Children.map(children, (child) => (
         <div key={child.key} className={cn('item')}>{child}</div>
       ))}

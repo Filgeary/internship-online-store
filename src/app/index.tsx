@@ -7,6 +7,7 @@ import Login from "./login";
 import Profile from "./profile";
 import Protected from "../containers/protected";
 import Modals from '../containers/modals';
+import Chat from './chat';
 
 /**
  * Приложение
@@ -26,6 +27,7 @@ function App() {
         <Route path={'/articles/:id'} element={<Article/>}/>
         <Route path={"/login"} element={<Login/>}/>
         <Route path={"/profile"} element={<Protected redirect='/login'><Profile/></Protected>}/>
+        <Route path={"/chat"} element={<Protected redirect='/login'><Chat/></Protected>}/>
       </Routes>
 
       <Modals />

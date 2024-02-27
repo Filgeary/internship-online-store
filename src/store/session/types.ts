@@ -4,6 +4,7 @@ export type SessionStateType ={
   token: string | null;
   errors: SessionErrorType | null;
   user: {
+    _id: string,
     profile: {
       name: string
     }

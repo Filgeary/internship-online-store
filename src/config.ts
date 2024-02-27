@@ -22,6 +22,9 @@ const config: ConfigType = {
   },
   api: {
     baseUrl: ''
+  },
+  chat: {
+    url: "ws://example.front.ylab.io/chat"
   }
 }
 

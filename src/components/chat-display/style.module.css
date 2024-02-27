@@ -1,0 +1,23 @@
+.Wrapper {
+  padding: 10px;
+  height: 60vh;
+  overflow-y: auto;
+  border: 1px solid black;
+  border-radius: 10px;
+}
+
+.Wrapper::-webkit-scrollbar {
+  width: 8px;
+  background-color: transparent;
+}
+
+.Wrapper::-webkit-scrollbar-thumb {
+  width: 8px;
+  height: 60px;
+  border-radius: 5px;
+  background: #E5E6E9;
+}
+
+.Wrapper::-webkit-scrollbar-track {
+  background-color: transparent;
+}

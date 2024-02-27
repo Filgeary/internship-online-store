@@ -1,13 +1,15 @@
 import APIService from "./api";
-import { ConfigType } from "./config";
+import ChatService from "./chat";
 import Store from "./store";
 import createStoreRedux from "./store-redux";
+import { ConfigType } from "./types/config";
 
 class Services {
   config: ConfigType;
   private _api: APIService;
   private _store: Store;
   private _redux: ReturnType<typeof createStoreRedux>;
+  private _chat: ChatService;
 
   constructor(config: ConfigType) {
     this.config = config;
@@ -43,6 +45,15 @@ class Services {
       this._redux = createStoreRedux(this, this.config.redux);
     }
     return this._redux;
+  }
+  /**
+   * Chat service
+   */
+  get chat() {
+    if(!this._chat) {
+      this._chat = new ChatService(this, this.config.chat);
+    }
+    return this._chat;
   }
 }
 
