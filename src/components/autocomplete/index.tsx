@@ -81,6 +81,7 @@ function Autocomplete(props: AutocompleteProps) {
   const listRef = useRef<Scrollbar>(null);
   const searchRef = useRef<HTMLInputElement>(null);
   const dropRef = useRef<HTMLDivElement>(null);
+  const firstActiveOptionRef = useRef<HTMLDivElement | null>(null);
   const firstOptionRef = useRef<HTMLDivElement | null>(null);
 
   const helpers = {
@@ -95,8 +96,7 @@ function Autocomplete(props: AutocompleteProps) {
       return handler;
     },
 
-    deleteByCodeClick: (e: React.MouseEvent, option: TOption) => {
-      e.stopPropagation();
+    deleteOption: (option: TOption) => {
       callbacks.removeActive(option);
     },
   };
@@ -197,6 +197,8 @@ function Autocomplete(props: AutocompleteProps) {
       if (e.code.startsWith('Arrow')) e.preventDefault();
 
       // Более оптимизированный подход (список не ререндерится)
+      // Подход с useMemo - много занимает по памяти
+      // Подход с useState - ререндеры при перемещении
       switch (e.code) {
         case 'ArrowDown': {
           let nextElement = document.activeElement.nextElementSibling as HTMLElement;
@@ -204,8 +206,13 @@ function Autocomplete(props: AutocompleteProps) {
             nextElement = nextElement.nextElementSibling as HTMLElement;
           }
 
-          if (!nextElement) firstOptionRef.current?.focus();
-          else nextElement?.focus();
+          if (!nextElement) {
+            if (document.activeElement === searchRef.current && firstActiveOptionRef.current) {
+              firstActiveOptionRef.current?.focus();
+            } else {
+              firstOptionRef.current?.focus();
+            }
+          } else nextElement?.focus();
 
           break;
         }
@@ -215,8 +222,25 @@ function Autocomplete(props: AutocompleteProps) {
             prevElement = prevElement.previousElementSibling as HTMLElement;
           }
 
-          if (!prevElement) searchRef.current?.focus();
-          else prevElement?.focus();
+          if (!prevElement) {
+            if (document.activeElement === searchRef.current) return;
+
+            if (
+              firstActiveOptionRef.current &&
+              document.activeElement !== firstActiveOptionRef.current
+            ) {
+              let nextActiveElem = firstActiveOptionRef.current.nextElementSibling as HTMLElement;
+              // Ищем последний пункт
+              while (
+                nextActiveElem &&
+                nextActiveElem?.hasAttribute('tabindex') &&
+                nextActiveElem.nextElementSibling
+              ) {
+                nextActiveElem = nextActiveElem.nextElementSibling as HTMLElement;
+              }
+              nextActiveElem?.focus();
+            } else searchRef.current?.focus();
+          } else prevElement?.focus();
 
           break;
         }
@@ -228,7 +252,7 @@ function Autocomplete(props: AutocompleteProps) {
     return () => {
       wrapperRef.current?.removeEventListener('keydown', listener);
     };
-  }, [disabled, isOpen]);
+  }, [disabled, isOpen, values.active]);
 
   useEffect(() => {
     if (isOpen) props.onOpen();
@@ -287,6 +311,7 @@ function Autocomplete(props: AutocompleteProps) {
                 listRef,
                 searchRef,
                 firstOptionRef,
+                firstActiveOptionRef,
                 disabled,
               }}
             >

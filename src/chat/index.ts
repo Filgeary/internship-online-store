@@ -1,6 +1,6 @@
 import { TConfig } from '@src/config';
 import Services from '@src/services';
-import { TAuthor, TMessage } from './types';
+import { TAuthor, TListeners, TMessage } from './types';
 
 class ChatService {
   services: Services;
@@ -39,10 +39,10 @@ class ChatService {
     this.ws.addEventListener('message', (event) => {
       const method = JSON.parse(event.data).method;
       const methodCapitalize = method[0].toUpperCase() + method.slice(1);
+      const methodName = ('on' + methodCapitalize) as TListeners;
       console.log('[WebSocket_chat] method:', methodCapitalize);
 
-      // @ts-ignore
-      this['on' + methodCapitalize](event.data);
+      this[methodName](event.data);
     });
   }
 

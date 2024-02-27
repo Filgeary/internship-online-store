@@ -6,15 +6,3 @@
   max-height: 50px;
   overflow-y: auto;
 }
-
-.AutocompleteVariants-variant {
-  cursor: pointer;
-
-  &:hover {
-    opacity: 0.8;
-  }
-
-  &:active {
-    opacity: 0.5;
-  }
-}

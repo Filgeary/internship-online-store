@@ -1,3 +1,4 @@
+import React from 'react';
 import { Scrollbar } from 'react-scrollbars-custom';
 
 export type TOption = {
@@ -27,10 +28,11 @@ export type TAutocompleteContext = {
   };
   helpers: {
     onSpaceDown: (...handlers: ((...args: any[]) => void)[]) => React.KeyboardEventHandler;
-    deleteByCodeClick: (e: React.MouseEvent, option: TOption) => void;
+    deleteOption: (option: TOption) => void;
   };
   listRef: React.RefObject<Scrollbar>;
   searchRef: React.RefObject<HTMLInputElement>;
   firstOptionRef: React.MutableRefObject<HTMLDivElement | null>;
+  firstActiveOptionRef: React.MutableRefObject<HTMLDivElement | null>;
   disabled: boolean;
 };

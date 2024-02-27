@@ -17,3 +17,5 @@ export type TAuthor = {
     };
   };
 };
+
+export type TListeners = 'onAuth' | 'onLast' | 'onPost';

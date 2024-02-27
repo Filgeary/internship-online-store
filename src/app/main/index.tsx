@@ -35,7 +35,7 @@ function Main() {
       <Catalog stateName={options.stateName as 'catalog'}>
         <CatalogFilter />
         <CatalogList />
-        {/* <CatalogFilter /> */}
+        <CatalogFilter />
       </Catalog>
     </PageLayout>
   );
