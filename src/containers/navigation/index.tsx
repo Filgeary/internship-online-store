@@ -34,7 +34,13 @@ function Navigation() {
   };
 
   const options = {
-    menu: useMemo(() => [{ key: 1, title: t('menu.main'), link: '/' }], [t]),
+    menu: useMemo(
+      () => [
+        { key: 1, title: t('menu.main'), link: '/' },
+        { key: 2, title: 'Chat', link: '/chat' },
+      ],
+      [t],
+    ),
   };
 
   return (
