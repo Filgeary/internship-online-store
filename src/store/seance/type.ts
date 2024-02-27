@@ -5,8 +5,9 @@ export type ConfigWS = {
 export type InitialStateSeance = {
   ws: WebSocket | null;
   connection: boolean;
-  messages: MessageType[]
-}
+  messages: MessageType[];
+  timeId: string | number | NodeJS.Timeout | undefined;
+};
 
 export type MessageType = {
   _id: string;

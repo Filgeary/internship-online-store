@@ -3,13 +3,13 @@ import { cn as bem } from "@bem-react/classname";
 import { useClickOutside } from '@src/hooks/use-click-outside';
 import { checkPosition } from '@src/utils/check-position';
 import { DropdownTemplateProps } from './type';
-import { ChevronDown } from '../icons/arrow/arrow';
 import './style.css';
+import { ChevronDown } from '../icons/arrow/arrow';
 
 function DropdownTemplate(props: DropdownTemplateProps) {
   const cn = bem("Dropdown");
   const [open, setOpen] = useState(false);
-  const [focusInd, setFocusInd] = useState(-1);
+  const [focusInd, setFocusInd] = useState({index: -1, mouse: true});
   const selectContainer = useClickOutside<HTMLDivElement>(() => setOpen(false));
   const searchRef = useRef<HTMLInputElement>(null);
   const menuRef = useRef<HTMLUListElement>(null);
@@ -22,21 +22,20 @@ function DropdownTemplate(props: DropdownTemplateProps) {
     onKeyEscape: () => {
       if (open) {
         setOpen(!open);
-        setFocusInd(0);
+        setFocusInd({index: -1, mouse: true});
       }
     },
     onKeyEnter: () => {
-      if (open && menuRef.current?.children[focusInd]) {
-        (menuRef.current?.children[focusInd] as HTMLLIElement).click();
+      if (open && menuRef.current?.children[focusInd.index]) {
+        (menuRef.current?.children[focusInd.index] as HTMLLIElement).click();
       }
     },
     onKeyArrowDown: useCallback(() => {
-      if (focusInd < props.countOfOptions && menuRef.current?.children.length) {
-        setFocusInd(prev => prev + 1);
-        console.log(focusInd)
-        if (menuRef.current?.children[focusInd + 1]) {
+      if (focusInd.index < props.countOfOptions && menuRef.current?.children.length) {
+        setFocusInd(prev => ({...prev, index: prev.index + 1, mouse: false}));
+        if (menuRef.current?.children[focusInd.index + 1]) {
           (
-            menuRef.current?.children[focusInd + 1] as HTMLLIElement
+            menuRef.current?.children[focusInd.index + 1] as HTMLLIElement
           ).scrollIntoView({
             behavior: "smooth",
             block: "center",
@@ -44,7 +43,7 @@ function DropdownTemplate(props: DropdownTemplateProps) {
           });
         }
       } else {
-        setFocusInd(0);
+        setFocusInd({index: 0, mouse: false});
         if (menuRef.current?.children[0]) {
           (menuRef.current?.children[0] as HTMLLIElement).scrollIntoView({
             behavior: "smooth",
@@ -55,10 +54,10 @@ function DropdownTemplate(props: DropdownTemplateProps) {
       }
     }, [focusInd]),
     onKeyArrowUp: () => {
-      if (focusInd > -1 && menuRef.current?.children.length) {
-        setFocusInd(prev => prev - 1);
-        if (menuRef.current?.children[focusInd - 1]) {
-          (menuRef.current?.children[focusInd - 1] as HTMLLIElement).scrollIntoView({
+      if (focusInd.index > -1 && menuRef.current?.children.length) {
+        setFocusInd(prev => ({...prev, index: prev.index - 1, mouse: false}));
+        if (menuRef.current?.children[focusInd.index - 1]) {
+          (menuRef.current?.children[focusInd.index - 1] as HTMLLIElement).scrollIntoView({
             behavior: "smooth",
             block: "center",
             inline: "nearest",
@@ -66,7 +65,7 @@ function DropdownTemplate(props: DropdownTemplateProps) {
         }
       } else {
         const index = menuRef.current?.children.length! - 1;
-        setFocusInd(index);
+        setFocusInd({index, mouse: false});
         if (menuRef.current?.children[index]) {
           (menuRef.current?.children[index] as HTMLLIElement).scrollIntoView({
             behavior: "smooth",
@@ -121,7 +120,7 @@ function DropdownTemplate(props: DropdownTemplateProps) {
       </div>
       <div className={cn("menu__wrapper", { open, position })}>
         {props.renderInput(searchRef, setFocusInd)}
-        {props.renderOptions(focusInd, menuRef)}
+        {props.renderOptions(focusInd, setFocusInd, menuRef)}
       </div>
     </div>
   );

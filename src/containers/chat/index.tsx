@@ -1,10 +1,9 @@
+import { useEffect } from "react";
 import { AddMessageForm } from "@src/components/add-message-form";
 import { Messages } from "@src/components/messages";
 import useSelector from "@src/hooks/use-selector";
 import useStore from "@src/hooks/use-store";
 import useTranslate from "@src/hooks/use-translate";
-import { useCallback, useEffect } from "react";
-import { v4 as uuidv4 } from "uuid";
 
 export const Chat = () => {
   const { t } = useTranslate();
@@ -14,6 +13,7 @@ export const Chat = () => {
     token: state.session.token,
     userId: state.session.user._id,
     connection: state.chat.connection,
+    ws: state.chat.ws,
     messages: state.chat.messages
   }))
 
@@ -23,14 +23,12 @@ export const Chat = () => {
       store.actions.chat.onMessage();
       store.actions.chat.getLastMessages()
     }, 1000);
-    return () => store.actions.chat.close();
+    // store.actions.chat.onClose();
+    return () => {
+      store.actions.chat.close()
+    };
   }, [])
 
-  // useEffect(() => {
-  //   if (!select.connection) {
-  //     store.actions.chat.auth(select.token!);
-  //   }
-  // }, [select.connection]);
 
   const callbacks = {
     onSubmit: (message: string) => {

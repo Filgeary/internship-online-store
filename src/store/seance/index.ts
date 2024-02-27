@@ -8,6 +8,7 @@ class SeanceState extends StoreModule<InitialStateSeance, ConfigWS> {
       ws: null,
       connection: false,
       messages: [],
+      timeId: ''
     };
   }
 
@@ -16,9 +17,10 @@ class SeanceState extends StoreModule<InitialStateSeance, ConfigWS> {
   }
 
   connection() {
+    const ws = new WebSocket(this.config.url);
     this.setState({
       ...this.getState(),
-      ws: new WebSocket(this.config.url),
+      ws,
     });
   }
 
@@ -34,13 +36,32 @@ class SeanceState extends StoreModule<InitialStateSeance, ConfigWS> {
         })
       );
     });
+    this.onPong()
   }
 
+  //Подписка на close
+  onClose() {
+    this.getState().ws?.addEventListener('close', () => {
+      console.log('close')
+    })
+  }
+
+  //убрать отключение сервером через минуту
+  onPong() {
+    const timeId = setInterval(() => {
+      console.log(this.getState().ws?.readyState);
+      this.getState().ws?.send(JSON.stringify({type: 'pong'}))
+    }, 55000);
+    this.setState({
+      ...this.getState(),
+      timeId
+    })
+  }
+
+  //обработка всех отправок
   onMessage() {
     this.getState().ws?.addEventListener("message", (e) => {
-      const connection = JSON.parse(e.data).payload.result;
       const result = JSON.parse(e.data).payload;
-      console.log(connection, this.getState().ws?.readyState)
       if (this.getState().ws?.readyState) {
         this.setState({
           ...this.getState(),
@@ -48,6 +69,7 @@ class SeanceState extends StoreModule<InitialStateSeance, ConfigWS> {
         });
       }
       if (result) {
+        console.log(result)
         if(result.items) {
           const messages = [...result.items];
           this.setState({
@@ -77,6 +99,7 @@ class SeanceState extends StoreModule<InitialStateSeance, ConfigWS> {
     );
   }
 
+  //получить последние сообщения, если не указать дату, придут последние 10 сообщений
   getLastMessages(fromDate?: string) {
     this.getState().ws?.send(
       JSON.stringify({
@@ -88,6 +111,7 @@ class SeanceState extends StoreModule<InitialStateSeance, ConfigWS> {
     );
   }
 
+  //получение старых сообщений начиная с конкретного сообщения(id)
   getOldMessages(fromId?: string) {
     this.getState().ws?.send(
       JSON.stringify({
@@ -98,7 +122,7 @@ class SeanceState extends StoreModule<InitialStateSeance, ConfigWS> {
       })
     );
   }
-
+  //очистить все сообщения
   clearAll() {
     this.getState().ws?.send(
       JSON.stringify({
@@ -109,7 +133,9 @@ class SeanceState extends StoreModule<InitialStateSeance, ConfigWS> {
   }
 
   close() {
-    this.getState().ws?.close();
+    if(this.getState().timeId) clearInterval(this.getState().timeId);
+    // this.getState().ws?.removeEventListener("close", this.connection);
+    this.getState().ws?.close()
   }
 }
 

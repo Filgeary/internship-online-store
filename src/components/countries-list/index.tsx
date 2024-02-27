@@ -1,4 +1,4 @@
-import { LegacyRef, forwardRef, memo, useCallback } from "react";
+import { LegacyRef, forwardRef, memo, useCallback, useRef } from "react";
 import { cn as bem } from "@bem-react/classname";
 import ItemCountry from "../item-country";
 import { CountriesListProps } from "./type";
@@ -18,20 +18,32 @@ function CountriesList(props: CountriesListProps, ref: LegacyRef<HTMLUListElemen
         const filterSelected = props.selected.filter((item) => item !== _id);
         props.onSelect(filterSelected);
       }
-    }, [props.selected])
+    }, [props.selected]),
+    onMouseEnter: (index: number) => {
+      if(!props.focusInd.mouse) {
+        props.setFocusInd({index, mouse: true})
+        return
+      }
+      props.setFocusInd({index, mouse: true});
+    },
+    onMouseLeave: () => {
+      props.setFocusInd({index: -1, mouse: false})
+    }
   }
-  
+
   return (
     <ul className={cn()} ref={ref}>
       {props.countries.map((country, index) => (
         <li
           className={cn("item", {
             selected: props.selected.includes(country._id),
-            highlight: props.focusInd === index,
+            highlight: props.focusInd.index === index,
           })}
           onClick={() => callbacks.onSelect(country._id)}
           tabIndex={index}
           key={country._id}
+          onMouseEnter={() => callbacks.onMouseEnter(index)}
+          onMouseLeave={callbacks.onMouseLeave}
         >
           <ItemCountry title={country.title} code={country.code} />
         </li>

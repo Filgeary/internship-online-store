@@ -5,10 +5,24 @@ export interface DropdownTemplateProps {
   renderSelectedItem: (open: boolean) => JSX.Element;
   renderInput: (
     searchRef: RefObject<HTMLInputElement>,
-    setFocusInd: React.Dispatch<React.SetStateAction<number>>
+    setFocusInd: React.Dispatch<
+      React.SetStateAction<{
+        index: number;
+        mouse: boolean;
+      }>
+    >
   ) => JSX.Element;
   renderOptions: (
-    focusInd: number,
+    focusInd: {
+      index: number;
+      mouse: boolean;
+    },
+    setFocusInd: React.Dispatch<
+      React.SetStateAction<{
+        index: number;
+        mouse: boolean;
+      }>
+    >,
     menuRef: RefObject<HTMLUListElement>
   ) => JSX.Element;
 }

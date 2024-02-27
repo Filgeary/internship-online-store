@@ -34,10 +34,15 @@ function Dropdown(props: DropdownType) {
     onSearch: useCallback(
       (
         value: string,
-        setFocusInd: React.Dispatch<React.SetStateAction<number>>
+        setFocusInd: React.Dispatch<
+          React.SetStateAction<{
+            index: number;
+            mouse: boolean;
+          }>
+        >
       ) => {
         setSearch(value);
-        setFocusInd(-1);
+        setFocusInd({index: -1, mouse: false});
         const filteredCountries = props.options.filter(
           (item) =>
             item.code.toLowerCase().includes(value.toLowerCase()) ||
@@ -72,7 +77,12 @@ function Dropdown(props: DropdownType) {
     ),
     input: (
       searchRef: RefObject<HTMLInputElement>,
-      setFocusInd: React.Dispatch<React.SetStateAction<number>>
+      setFocusInd: React.Dispatch<
+        React.SetStateAction<{
+          index: number;
+          mouse: boolean;
+        }>
+      >
     ) => (
       <Input
         value={search}
@@ -84,10 +94,23 @@ function Dropdown(props: DropdownType) {
       />
     ),
     options: useCallback(
-      (focusInd: number, menuRef: RefObject<HTMLUListElement>) => (
+      (
+        focusInd: {
+          index: number;
+          mouse: boolean;
+        },
+        setFocusInd: React.Dispatch<
+          React.SetStateAction<{
+            index: number;
+            mouse: boolean;
+          }>
+        >,
+        menuRef: RefObject<HTMLUListElement>
+      ) => (
         <Spinner active={select.waiting}>
           <CountriesList
             focusInd={focusInd}
+            setFocusInd={setFocusInd}
             countries={countries}
             onSelect={props.onChange}
             selected={getPathArr(props.value)}
@@ -104,7 +127,7 @@ function Dropdown(props: DropdownType) {
       renderSelectedItem={renders.selectedItem}
       renderInput={renders.input}
       renderOptions={renders.options}
-      countOfOptions={countries.length} />
+      countOfOptions={countries.length - 1} />
   );
 }
 

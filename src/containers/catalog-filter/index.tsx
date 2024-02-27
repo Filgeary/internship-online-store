@@ -48,7 +48,6 @@ function CatalogFilter(props: StoreNames) {
     ),
     onCountry: useCallback(
       (ids: string[]) => {
-        console.log(ids.join("|"));
         store.actions[props.storeName]!.setParams({ madeIn: ids.join("|"), page: 1 });
       },
       [store]
