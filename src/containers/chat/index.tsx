@@ -26,6 +26,12 @@ export const Chat = () => {
     return () => store.actions.chat.close();
   }, [])
 
+  // useEffect(() => {
+  //   if (!select.connection) {
+  //     store.actions.chat.auth(select.token!);
+  //   }
+  // }, [select.connection]);
+
   const callbacks = {
     onSubmit: (message: string) => {
       store.actions.chat.sendMessage(message);

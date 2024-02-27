@@ -3,7 +3,7 @@ import { cn as bem } from "@bem-react/classname";
 import { useClickOutside } from '@src/hooks/use-click-outside';
 import { checkPosition } from '@src/utils/check-position';
 import { DropdownTemplateProps } from './type';
-import { ChevronDown } from './arrow';
+import { ChevronDown } from '../icons/arrow/arrow';
 import './style.css';
 
 function DropdownTemplate(props: DropdownTemplateProps) {

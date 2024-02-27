@@ -1,4 +1,4 @@
-import { ChevronProps } from "./type";
+import { ChevronProps } from "../../dropdown-template/type";
 
 export const ChevronDown = (props: ChevronProps) => (
   <svg

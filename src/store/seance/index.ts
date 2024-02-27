@@ -40,11 +40,11 @@ class SeanceState extends StoreModule<InitialStateSeance, ConfigWS> {
     this.getState().ws?.addEventListener("message", (e) => {
       const connection = JSON.parse(e.data).payload.result;
       const result = JSON.parse(e.data).payload;
-      
-      if (connection) {
+      console.log(connection, this.getState().ws?.readyState)
+      if (this.getState().ws?.readyState) {
         this.setState({
           ...this.getState(),
-          connection,
+          connection: true,
         });
       }
       if (result) {

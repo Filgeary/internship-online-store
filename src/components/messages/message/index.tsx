@@ -1,10 +1,10 @@
-import { FC } from "react";
+import { FC, memo } from "react";
 import { cn as bem } from "@bem-react/classname";
 import { dateFormat } from "@src/utils/date-format";
 import { MessagePropsType } from "./type";
 import './style.css';
 
-export const Message: FC<MessagePropsType> = (props) => {
+const Message: FC<MessagePropsType> = (props) => {
   const cn = bem("Message");
 
   const time = dateFormat(new Date(props.message.dateCreate));
@@ -25,3 +25,5 @@ export const Message: FC<MessagePropsType> = (props) => {
     </article>
   );
 };
+
+export default memo(Message)

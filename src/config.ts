@@ -31,9 +31,6 @@ const config: Config = {
   api: {
     baseUrl: "",
   },
-  ws: {
-    url: "ws://example.front.ylab.io/chat",
-  },
 };
 
 export default config;
