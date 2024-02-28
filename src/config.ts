@@ -18,6 +18,9 @@ const config = {
   api: {
     baseUrl: ''
   },
+  socket: {
+    baseUrl: ''
+  },
   redux: {}
 }
 

@@ -37,6 +37,11 @@ class StoreModule<State, Config = object> {
     return {} as State;
   }
 
+  initConfig(): Config {
+    return {} as Config;
+  }
+
+
   getState() {
     return this.store.getState()[this.name] as State;
   }

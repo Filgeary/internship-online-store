@@ -1,4 +1,5 @@
 import APIService from "./api"
+import WebSocketService from "./socket"
 import Store from "./store"
 import createStoreRedux from "./store-redux"
 import { IConfig } from "./config"
@@ -6,6 +7,7 @@ import { IConfig } from "./config"
 class Services {
   config: IConfig
   private _api?: APIService
+  private _socket?: WebSocketService
   private _store?: Store
   private _redux?: any
 
@@ -24,6 +26,17 @@ class Services {
     }
     return this._api;
   }
+
+  /**
+   * Сервис WebSocket
+   * @returns {WebSocketService}
+   */
+   get socket(): WebSocketService {
+      if (!this._socket) {
+       this._socket = new WebSocketService(this, this.config.api);
+      }
+      return this._socket;
+     }
 
   /**
    * Сервис Store

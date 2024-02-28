@@ -10,6 +10,7 @@ import Login from "./login";
 import Profile from "./profile";
 import Protected from "@src/containers/protected";
 import Modals from '@src/containers/modals';
+import Chat from './chat'
 import {useSelector as useSelectorRedux} from 'react-redux';
 
 /**
@@ -32,6 +33,7 @@ function App() {
         <Route path={'/articles/:id'} element={<Article/>}/>
         <Route path={"/login"} element={<Login/>}/>
         <Route path={"/profile"} element={<Protected redirect='/login'><Profile/></Protected>}/>
+        <Route path={"/chat"} element={<Protected redirect='/login'><Chat/></Protected>}/>
       </Routes>
 
       {activeModal && <Modals/>}

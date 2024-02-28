@@ -44,4 +44,7 @@ interface IResponseSessionError {
   
   export type IResponseDataSession = IResponseSessionSuccess & IResponseSessionError
   
+  export type InitConfigSession = {
+    tokenHeader: "X-Token";
+  };
   

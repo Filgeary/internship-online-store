@@ -1,19 +1,28 @@
-.Input{
+.Input {
   font-size: 16px;
   padding: 2px;
 }
 
-.Input_theme_big{
+.Input_theme_big {
   width: 300px;
 }
 
-.Input_theme_transparent{
+.Input_theme_transparent {
   width: 217px;
   border: none;
   outline: 0;
 }
 
-.Input_theme_transparent::placeholder{
+.Input_theme_transparent::placeholder {
   color: rgba(204, 205, 212, 1);
   font-style: italic;
+}
+
+.Input_theme_message {
+  width: 99%;
+  border-radius: 10px;
+  border: 0;
+  min-height: 50px;
+  padding: 5px;
+  margin-top: 20px;
 }

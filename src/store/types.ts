@@ -30,15 +30,25 @@ export interface IResult {
 export type ImportModules = typeof modules
 export type IKeysModules = keyof ImportModules
 
-export type IExtendedModules<T extends keyof ImportModules> = T | `${T}-${string}`
+export type IExtendedModules<T extends IKeysModules> = T | `${T}-${string}`
 
 export type StoreState = {
   [key in IKeysModules as IExtendedModules<key>]: ReturnType<Actions[key]['initState']>
 }
 
+export type ConfigModules = {
+  [Key in IKeysModules as IExtendedModules<Key>]?: ReturnType<TActions[Key]["initConfig"]>;
+};
+
+
 export type Actions = {
   [key in IKeysModules as IExtendedModules<key>]: InstanceType<ImportModules[key]>
 }
+
+export type TActions = {
+  [Key in IKeysModules as IExtendedModules<Key>]: Actions[Key];
+};
+
 
 
 

@@ -1,13 +1,13 @@
 import StoreModule from "../module"
 import simplifyErrors from "@src/utils/simplify-errors"
-import { ISessionInitState, IResponseDataSession, IResponseSessionRemind} from "./types"
+import { ISessionInitState, IResponseDataSession, IResponseSessionRemind, InitConfigSession } from "./types"
 import { IConfig } from "@src/config"
 
 /**
  * Сессия
  */
-class SessionState extends StoreModule<ISessionInitState> {
-  config!: IConfig["store"]["modules"]["session"]
+class SessionState extends StoreModule<ISessionInitState, InitConfigSession> {
+  // config!: IConfig["store"]["modules"]["session"]
   /**
    * Начальное состояние
    * @return {Object}
@@ -21,12 +21,16 @@ class SessionState extends StoreModule<ISessionInitState> {
       exists: false
     };
   }
+
+  initConfig(): InitConfigSession {
+    return {} as InitConfigSession
+  }
   
   /**
    * Авторизация (вход)
    * @param data
    * @param onSuccess
-   * @returns {Promise<void>}
+   * @returns Promise<void>
    */
   async signIn(data: {login: string, password: string}, onSuccess: () => void) {
     this.setState(this.initState(), 'Авторизация');
@@ -68,7 +72,7 @@ class SessionState extends StoreModule<ISessionInitState> {
 
   /**
    * Отмена авторизации (выход)
-   * @returns {Promise<void>}
+   * @returns Promise<void>
    */
   async signOut() {
     try {

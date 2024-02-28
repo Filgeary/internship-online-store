@@ -1,7 +1,7 @@
 import * as modules from './exports'
 import { IConfig } from '../config'
 import Services from '../services' 
-import type { Actions, StoreState, ImportModules, IKeysModules } from './types.ts';
+import type { Actions, StoreState, ImportModules, IKeysModules, TActions } from './types.ts';
 
 /**
  * Хранилище состояния приложения
@@ -32,8 +32,9 @@ class Store {
      * categories: CategoriesState,
      * session: SessionState,
      * profile: ProfileState,
-     * catalog-modal: CatalogModalState
-     * countries
+     * catalog-modal: CatalogModalState,
+     * countries: CountriesState,
+     * chat: ChatState
      * }} */
     this.actions = {} as Actions;
     const keys = Object.keys(modules) as IKeysModules[];
@@ -44,10 +45,22 @@ class Store {
 
   create<Key extends IKeysModules>(name: Key) {
     const b = modules[name] as ImportModules[Key];
-    const a = new b(this, name, {} as any) as Actions[Key];
+    const a = new b(this, name, this.config?.modules.session || {}) as Actions[Key];
     this.actions[name] = a;
     this.state[name] = this.actions[name].initState() as StoreState[Key];
   }
+
+  // create<Key extends IKeysModules>(name: Key) {
+  //   const module = modules[name] as ImportModules[Key];
+  //   const newModule = new module(
+  //     this,
+  //     name,
+  //     this.config?.modules.session || {}
+  //   ) as TActions[Key];
+  //   this.actions[name] = newModule;
+  //   this.state[name] = this.actions[name].initState() as StoreState[Key];
+  // }
+
 
   /**
    * Удаление копии стейта
