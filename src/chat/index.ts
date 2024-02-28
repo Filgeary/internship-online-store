@@ -1,5 +1,9 @@
 import { TConfig } from '@src/config';
 import Services from '@src/services';
+import excludeArray from '@src/utils/exclude-array';
+
+import shallowEqual from 'shallowequal';
+
 import { TAuthor, TListeners, TMessage, TResponse } from './types';
 
 class ChatService {
@@ -11,6 +15,7 @@ class ChatService {
   userId: string;
   token: string;
   lastDate: string;
+  needUpdate: boolean = false;
 
   constructor(services: Services, config = {}) {
     this.services = services;
@@ -24,8 +29,6 @@ class ChatService {
    * Открыть соединение с сервером
    */
   auth(token: string, userId: string, reconnectCount: number = 0) {
-    console.log('Переподключась');
-    console.log('Переподключаться заканчиваю:', reconnectCount < 10);
     if (this.ws && this.ws.readyState === 1 && reconnectCount < 10) return;
 
     this.ws = new WebSocket(this.config.url);
@@ -53,8 +56,16 @@ class ChatService {
     };
 
     this.ws.onclose = (event) => {
-      console.log('Соединение закрыто успешно:', event.wasClean);
-      if (!event.wasClean) this.auth(token, userId, reconnectCount + 1);
+      // Если подключение закрыто не успешно
+      if (!event.wasClean) {
+        this.auth(token, userId, reconnectCount + 1);
+        setTimeout(() => {
+          if (this.ws.readyState === 1) {
+            this.requestLastMessages();
+            this.needUpdate = true;
+          }
+        }, 1500);
+      }
     };
   }
 
@@ -125,7 +136,10 @@ class ChatService {
   onLast(responseRaw: string) {
     const jsonObj: TResponse<{ items: TMessage[] }> = JSON.parse(responseRaw);
     const messages = jsonObj.payload.items;
-    this.messages = messages;
+    if (!this.needUpdate) this.messages = messages;
+    else this.messages = [...this.messages, ...excludeArray(this.messages, messages, shallowEqual)];
+
+    this.needUpdate = false;
     this.lastDate = messages.at(-1).dateCreate;
 
     this.callAllListeners();
@@ -149,6 +163,8 @@ class ChatService {
     } else {
       this.messages = [...this.messages, message];
     }
+    this.lastDate = message.dateCreate;
+
     this.callAllListeners();
   }
 

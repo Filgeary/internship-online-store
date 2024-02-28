@@ -11,7 +11,6 @@ function MessagesArea() {
   const cn = bem('MessagesArea');
 
   const messagesAreaRef = useRef<HTMLDivElement | null>(null);
-  const topIndicatorRef = useRef<HTMLDivElement | null>(null);
 
   const [previousHeight, setPreviousHeight] = useState(0);
 
@@ -22,6 +21,12 @@ function MessagesArea() {
     messagesAreaRef.current?.scrollHeight >
     messagesAreaRef.current?.clientHeight + messagesAreaRef.current?.scrollTop + 5;
 
+  const handlers = {
+    onScroll: () => {
+      if (messagesAreaRef.current.scrollTop === 0) onScrollTop();
+    },
+  };
+
   useEffect(() => {
     const previousScrollPosition = messagesAreaRef.current.scrollHeight - previousHeight;
 
@@ -31,25 +36,8 @@ function MessagesArea() {
     setPreviousHeight(messagesAreaRef.current.scrollHeight);
   }, [messages, scrollingNow]);
 
-  useEffect(() => {
-    const topIndicatorNode = topIndicatorRef.current;
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          onScrollTop();
-        }
-      });
-    });
-
-    observer.observe(topIndicatorNode);
-
-    return () => observer.unobserve(topIndicatorNode);
-  }, []);
-
   return (
-    <div className={cn()} ref={messagesAreaRef}>
-      <div className={cn('indicator')} ref={topIndicatorRef}></div>
+    <div className={cn()} ref={messagesAreaRef} onScroll={handlers.onScroll}>
       {messages.map((message) => (
         <Message
           key={message._id}

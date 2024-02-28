@@ -20,7 +20,6 @@ function MessagesWrapper() {
     },
 
     getOldMessages: () => {
-      console.log('here');
       chatService.requestOldMessages();
     },
   };
