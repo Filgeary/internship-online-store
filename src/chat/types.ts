@@ -2,7 +2,7 @@ export type TMessage = {
   _id: string;
   _key: string;
   text: string;
-  author: TAuthor;
+  author: TProfile | TAuthor;
   dateCreate: string;
   sended?: boolean;
 };
@@ -19,3 +19,6 @@ export type TAuthor = {
 };
 
 export type TListeners = 'onAuth' | 'onLast' | 'onPost';
+export type TResponse<T> = {
+  payload: T;
+};

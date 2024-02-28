@@ -26,6 +26,7 @@ type MessagesProps = {
   children: React.ReactNode;
   userId: string;
   messages: TMessage[];
+  onScrollTop: () => void;
 };
 
 function Messages(props: MessagesProps) {
@@ -35,7 +36,9 @@ function Messages(props: MessagesProps) {
 
   return (
     <div className={cn()}>
-      <MessagesContext.Provider value={{ messages, userId }}>{children}</MessagesContext.Provider>
+      <MessagesContext.Provider value={{ messages, userId, onScrollTop: props.onScrollTop }}>
+        {children}
+      </MessagesContext.Provider>
     </div>
   );
 }

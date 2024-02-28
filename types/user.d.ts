@@ -30,6 +30,9 @@ declare global {
     birthday: string;
     position: string;
     street: string;
+    avatar?: {
+      url: string;
+    };
   };
 
   export type TSession = {

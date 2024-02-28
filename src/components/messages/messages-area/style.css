@@ -1,6 +1,19 @@
 .MessagesArea {
-  padding: 10px 0;
+  padding: 10px 15px !important;
   display: flex;
   flex-direction: column;
   row-gap: 15px;
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.MessagesArea-thumb-y {
+  background: #e5e6e9;
+}
+
+.MessagesArea-indicator {
+  display: block;
+  width: 100%;
+  min-height: 50px;
+  background: red;
 }

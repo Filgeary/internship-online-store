@@ -28,7 +28,7 @@ function MessagesNew(props: MessagesNewProps) {
 
   const handlers = {
     submit: (e: React.FormEvent<HTMLFormElement>) => {
-      e?.preventDefault();
+      e.preventDefault();
 
       callbacks.sendMessage(message);
     },
@@ -37,7 +37,7 @@ function MessagesNew(props: MessagesNewProps) {
       if (e.code === 'Enter') {
         e.preventDefault();
 
-        if (e.ctrlKey) {
+        if (e.ctrlKey || e.shiftKey) {
           setMessage(message + '\n');
           return;
         }

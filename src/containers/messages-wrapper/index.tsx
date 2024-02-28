@@ -1,7 +1,9 @@
 import Messages from '@src/components/messages';
+
 import { useAppSelector } from '@src/hooks/use-selector';
 import { useEffect } from 'react';
 import { useChat } from '@src/chat/context';
+import useTranslate from '@src/hooks/use-translate';
 
 function MessagesWrapper() {
   const select = useAppSelector((state) => ({
@@ -10,22 +12,31 @@ function MessagesWrapper() {
   }));
   const { chatService, messages } = useChat();
 
+  const { t } = useTranslate();
+
   const handlers = {
     sendNewMessage: (data: string) => {
-      //@ts-ignore
       chatService.sendMessage(data, select.user);
+    },
+
+    getOldMessages: () => {
+      console.log('here');
+      chatService.requestOldMessages();
     },
   };
 
   useEffect(() => {
     chatService.auth(select.token, select.user._id);
-
     return () => chatService.close();
   }, []);
 
   return (
-    <Messages.Root userId={select.user._id} messages={messages}>
-      <Messages.Title>Чат сообщества</Messages.Title>
+    <Messages.Root
+      onScrollTop={handlers.getOldMessages}
+      userId={select.user._id}
+      messages={messages}
+    >
+      <Messages.Title>{t('titleInner.community')}</Messages.Title>
       <Messages.Area />
       <Messages.New onSubmit={handlers.sendNewMessage} />
     </Messages.Root>
