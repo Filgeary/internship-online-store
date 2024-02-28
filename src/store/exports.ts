@@ -7,3 +7,4 @@ export { default as categories } from './categories';
 export { default as session } from './session';
 export { default as profile } from './profile';
 export { default as manufacturer } from './made-in';
+export { default as chat } from './chat';

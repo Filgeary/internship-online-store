@@ -28,7 +28,7 @@ function Main() {
     <>
       <PageLayout>
         <TopHead/>
-        <Head title={t("title")}>
+        <Head title={t("shop")}>
           <LocaleSelect/>
         </Head>
         <Navigation/>

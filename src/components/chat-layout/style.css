@@ -1,0 +1,16 @@
+.ChatLayout {
+  background-color: #699D73;
+  background: linear-gradient(118deg, rgba(2,0,36,1) 0%, rgba(105,157,115,1) 0%, rgba(207,197,89,1) 100%);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+
+}
+
+.ChatLayout-head {
+  background-color: #fff;
+  box-shadow: 0px 8px 8px 0px rgba(60, 60, 63, 0.25);
+  flex: 0 0 auto;
+  z-index: 1;
+}

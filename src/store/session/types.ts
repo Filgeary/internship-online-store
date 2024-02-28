@@ -4,6 +4,7 @@ export interface RemindResponse {
     name: string,
     phome: string,
   }
+  _id: string
 }
 
 export interface IUser extends RemindResponse{}

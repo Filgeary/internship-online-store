@@ -2,12 +2,14 @@ import APIService from "./api";
 import { Config } from "./config";
 import I18nService from "./i18n";
 import Store from "./store";
+import WebSocketService from "./web-socket";
 
 class Services {
 
   private _api: APIService
   private _store: Store
   private _i18n: I18nService
+  private _webSocket: WebSocketService
   private config: Config
 
   constructor(config: Config) {
@@ -46,6 +48,17 @@ class Services {
         this._i18n = new I18nService(this, this.config.i18n);
       }
       return this._i18n
+    }
+
+        /**
+   * Сервис webSocket
+   * @returns {WebSocketService}
+   */
+    get webSocket(): WebSocketService {
+      if (!this._webSocket) {
+        this._webSocket = new WebSocketService(this, this.config.webSocket);
+      }
+      return this._webSocket
     }
 }
 
