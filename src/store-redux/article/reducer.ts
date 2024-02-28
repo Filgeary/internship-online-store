@@ -16,9 +16,11 @@ function reducer(
       return { ...state, data: {}, waiting: true };
 
     case "article/load-success":
+      console.log(`Информация о товаре "${action.payload.data.title}" загружена`);
       return { ...state, data: action.payload.data, waiting: false };
 
     case "article/load-error":
+      console.log("Ошибка загрузки информации о товаре");
       return { ...state, data: {}, waiting: false }; //@todo текст ошибки сохранить?
 
     default:

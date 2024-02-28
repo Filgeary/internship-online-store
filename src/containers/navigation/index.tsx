@@ -9,9 +9,11 @@ import { useDispatch } from "react-redux";
 import modalsActions from "@src/store-redux/modals/actions";
 import { useSelector as useSelectorRedux } from "react-redux";
 import useInit from "@src/hooks/use-init";
+import { useLocation } from "react-router-dom";
 
 function Navigation() {
   const store = useStore();
+  const location = useLocation();
   const dispatch = useDispatch();
   const activeModal = useSelectorRedux((state: any) => state.modals);
   const select = useSelector((state) => ({
@@ -48,18 +50,26 @@ function Navigation() {
   const { t } = useTranslate();
 
   const options = {
-    menu: useMemo(() => [{ key: 1, title: t("menu.main"), link: "/" }], [t]),
+    menu: useMemo(
+      () => [
+        { key: 1, title: t("menu.main"), link: "/" },
+        { key: 2, title: t("menu.chat"), link: "/chat" },
+      ],
+      [t]
+    ),
   };
 
   return (
     <SideLayout side="between">
       <Menu items={options.menu} onNavigate={callbacks.onNavigate} />
-      <BasketTool
-        onOpen={callbacks.openModalBasket}
-        amount={select.amount}
-        sum={select.sum}
-        t={t}
-      />
+      {location.pathname === "/" && (
+        <BasketTool
+          onOpen={callbacks.openModalBasket}
+          amount={select.amount}
+          sum={select.sum}
+          t={t}
+        />
+      )}
     </SideLayout>
   );
 }

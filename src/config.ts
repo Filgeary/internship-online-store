@@ -1,7 +1,3 @@
-import { object } from "prop-types";
-import { session } from "./store/exports";
-import { TKey, TKeyModules } from "./store/types";
-
 const isProduction = process.env.NODE_ENV === "production";
 
 /**
@@ -17,6 +13,9 @@ const config = {
         // Названия токена в АПИ
         tokenHeader: "X-Token",
       },
+      chat: {
+        baseUrl: "ws://example.front.ylab.io/chat",
+      },
     },
   },
   api: {
@@ -25,18 +24,21 @@ const config = {
   redux: {},
 };
 
-
 export type TConfig = typeof config;
 
 export type TConfigStore = {
   store: {
     log: boolean;
-    modules : any ;
-};
-api: {
+    modules: any;
+  };
+  api: {
     baseUrl: string;
+  };
+  redux: {};
+  chat: {
+    baseUrl: string;
+  };
 };
-redux: {};
-}
+
 
 export default config;

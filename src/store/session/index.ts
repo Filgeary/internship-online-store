@@ -1,9 +1,10 @@
 import { TConfig } from "@src/config";
 import StoreModule from "../module";
 import simplifyErrors from "@src/utils/simplify-errors";
+import { TUser } from '@src/store/profile/types';
 
 type TSessionState = {
-  user?: { userName?: string } ;
+  user: TUser ;
   token?: string | null;
   errors?: any;
   waiting?: boolean;
@@ -24,7 +25,7 @@ class SessionState extends StoreModule<TSessionState, TConfigSession> {
    */
   initState(): TSessionState {
     return {
-      user: {},
+      user: {} as TUser,
       token: null,
       errors: null,
       waiting: true,

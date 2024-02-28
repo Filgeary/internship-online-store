@@ -7,6 +7,7 @@ import Login from "./login";
 import Profile from "./profile";
 import Protected from "@src/containers/protected";
 import Modals from "@src/containers/modals";
+import Chat from "./chat-page";
 
 /**
  * Приложение
@@ -29,6 +30,14 @@ function App(): React.ReactElement {
           element={
             <Protected redirect="/login">
               <Profile />
+            </Protected>
+          }
+        />
+        <Route
+          path={"/chat"}
+          element={
+            <Protected redirect="/login">
+              <Chat />
             </Protected>
           }
         />

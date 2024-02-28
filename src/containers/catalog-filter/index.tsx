@@ -7,9 +7,8 @@ import Input from "@src/components/input";
 import SideLayout from "@src/components/side-layout";
 import treeToList from "@src/utils/tree-to-list";
 import listToTree from "@src/utils/list-to-tree";
-
-import SelectBox from "@src/components/select-box";
 import { TCountries } from "@src/store/countries";
+import SelectCustom from "@src/components/select-custom";
 
 export type TCatalogFilter = {
   storeName: "catalog";
@@ -103,7 +102,7 @@ function CatalogFilter(props: TCatalogFilter) {
 
   return (
     <SideLayout padding="medium">
-      <SelectBox
+      <SelectCustom
         options={options.countries}
         value={select.madeIn}
         onSelect={callbacks.onMadeIn}

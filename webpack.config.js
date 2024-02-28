@@ -1,23 +1,23 @@
-process.env.NODE_ENV = process.env.NODE_ENV || 'development';
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const HtmlWebPackPlugin = require('html-webpack-plugin');
-const webpack = require('webpack');
+process.env.NODE_ENV = process.env.NODE_ENV || "development";
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const HtmlWebPackPlugin = require("html-webpack-plugin");
+const webpack = require("webpack");
 const path = require("path");
 
 let config = {
-  context: path.join(__dirname, '/src'), // Директория с исходным кодом приложения
-  entry: 'index.tsx', // Главный файл приложения
+  context: path.join(__dirname, "/src"), // Директория с исходным кодом приложения
+  entry: "index.tsx", // Главный файл приложения
   output: {
-    path: path.join(__dirname, 'dist'), // Куда делать оброку
-    filename: '[name].js', // Шаблон для названия файлов
+    path: path.join(__dirname, "dist"), // Куда делать оброку
+    filename: "[name].js", // Шаблон для названия файлов
     clean: true, // Очистить ./dist перед сборкой
   },
   mode: process.env.NODE_ENV,
   resolve: {
-    extensions: ['.ts', '.tsx','.js', '.jsx'], // расширения по умолчанию если не указаны в import
-    modules: ['./', 'node_modules'], // Где искать файлы подключаемых модулей (пакетов)
+    extensions: [".ts", ".tsx", ".js", ".jsx"], // расширения по умолчанию если не указаны в import
+    modules: ["./", "node_modules"], // Где искать файлы подключаемых модулей (пакетов)
     alias: {
-      '@src': path.resolve(__dirname, './src'),
+      "@src": path.resolve(__dirname, "./src"),
     },
   },
   module: {
@@ -26,59 +26,59 @@ let config = {
       {
         test: /\.(ts|js)x?$/,
         exclude: /node_modules/,
-        use: [{loader: 'babel-loader'}],
+        use: [{ loader: "babel-loader" }],
       },
       // Правила обработки подключаемых файлов
       {
         test: /\.css$/,
         use: [
-          {loader: MiniCssExtractPlugin.loader, options: {}},
-          {loader: 'css-loader', options: {url: true, import: true}},
-        ]
+          { loader: MiniCssExtractPlugin.loader, options: {} },
+          { loader: "css-loader", options: { url: true, import: true } },
+        ],
       },
       {
         test: /\.less$/,
         use: [
           { loader: MiniCssExtractPlugin.loader, options: {} },
-          { loader: 'css-loader', options: { url: true, import: true } },
-          { loader: 'less-loader', options: { lessOptions: {} } },
+          { loader: "css-loader", options: { url: true, import: true } },
+          { loader: "less-loader", options: { lessOptions: {} } },
         ],
       },
       {
         test: /\.(svg|png|swf|jpg|otf|eot|ttf|woff|woff2)(\?.*)?$/,
-        type: 'asset',
+        type: "asset",
       },
-    ]
+    ],
   },
   plugins: [
     new MiniCssExtractPlugin(), // Плагин для вытаскивания собранных стилей в отдельный файл
     new HtmlWebPackPlugin({
-      template: './index.html',
-      filename: './index.html',
-      title: 'Simple SPA',
-      base: '/',
+      template: "./index.html",
+      filename: "./index.html",
+      title: "Simple SPA",
+      base: "/",
     }),
     new webpack.DefinePlugin({
-      'process.env': {
+      "process.env": {
         NODE_ENV: JSON.stringify(process.env.NODE_ENV),
       },
     }),
   ],
-}
+};
 
-if (process.env.NODE_ENV === 'development') {
-  config.devtool = 'inline-source-map';
+if (process.env.NODE_ENV === "development") {
+  config.devtool = "inline-source-map";
   config.devServer = {
-    static: path.join(__dirname, 'dist'),
+    static: path.join(__dirname, "dist"),
     port: 8010,
     historyApiFallback: true,
     proxy: {
-      '/api/**': {
-        target: 'http://example.front.ylab.io',
+      "/api/**": {
+        target: "http://example.front.ylab.io",
         secure: false,
         changeOrigin: true,
-      }
-    }
+      },
+    },
   };
 }
 

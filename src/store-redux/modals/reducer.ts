@@ -17,6 +17,8 @@ function reducer(
 ) {
   switch (action.type) {
     case "modal/open":
+      console.log(`Открыто модальное окно "${action.payload.name}"`);
+      
       return {
         ...state,
         list: [...state.list, action.payload.name],
@@ -24,6 +26,7 @@ function reducer(
       };
 
     case "modal/close":
+      console.log(`Закрыто модальное окно "${action.payload.name}"`);
       return {
         ...state,
         list: state.list.filter((el) => el !== action.payload.name),

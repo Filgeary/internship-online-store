@@ -27,10 +27,9 @@ function TopHead() {
       store.actions.session.signOut();
     }, []),
   };
-
   return (
     <SideLayout side="end" padding="small">
-      {select.exists ? <Link to="/profile">{select.user?.userName}</Link> : ""}
+      {select.exists ? <Link to="/profile">{select.user?.profile.name}</Link> : ""}
       {select.exists ? (
         <button onClick={callbacks.onSignOut}>{t("session.signOut")}</button>
       ) : (

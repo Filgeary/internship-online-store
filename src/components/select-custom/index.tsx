@@ -26,7 +26,7 @@ type Props = {
   waiting: boolean;
 };
 
-function SelectBox({ options, value, onSelect, onSearch, waiting }: Props) {
+function SelectCustom({ options, value, onSelect, onSearch, waiting }: Props) {
   const store = useStore();
   const cn = bem("SelectBox");
 
@@ -174,4 +174,4 @@ function SelectBox({ options, value, onSelect, onSearch, waiting }: Props) {
   );
 }
 
-export default memo(SelectBox);
+export default memo(SelectCustom);
