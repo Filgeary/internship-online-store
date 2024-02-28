@@ -13,6 +13,7 @@ class ChatState extends StoreModule<IChatState> {
   initState(): IChatState {
     return {
       messages: [],
+      message: '',
       connected: false,
     };
   }
@@ -46,8 +47,7 @@ class ChatState extends StoreModule<IChatState> {
           {
             ...this.getState(),
             messages: [...this.getState().messages, message],
-          },
-          "Сообщение загружено"
+          }
         );
       };
       

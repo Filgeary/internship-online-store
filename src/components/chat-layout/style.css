@@ -43,3 +43,51 @@
   width: 70%;
   color: white;
 }
+
+.Chat-input {
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+  position: relative;
+}
+
+.Chat-button {
+  position: absolute;
+  right: 1%;
+  top: 44%;
+  color: #fff;
+  line-height: 32px;
+  border: 1px solid #271739;
+  text-align: center;
+  width: 100px;
+  border-radius: 16px;
+  background: transparent;
+  background-image: -webkit-linear-gradient(#271739, #9f01fb);
+  background-image: -moz-linear-gradient(#271739, #9701fb);
+  background-image: -o-linear-gradient(#271739, #9701fb);
+  -moz-box-shadow: inset 0px -2px 0 #9701fb;
+  -webkit-box-shadow: inset 0px -2px 0 #9701fb;
+  -o-box-shadow: inset 0px -2px 0 #9701fb;
+  box-shadow: inset 0px -1px 2px #9701fb;
+  display: block;
+  text-decoration: none;
+  font-size: 14px;
+  padding: 0px;
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.Chat-button:before {
+  content: ".";
+  color:transparent;
+  line-height: 16px;
+  width: 90px;
+  margin-top: 0px;
+  margin-bottom: -17px;
+  margin-left: 5px;
+  background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.2) );
+  background-image:-moz-linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.2));
+  background-image: -o-linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.2));
+  border-radius:16px; 
+  display:block;
+}
