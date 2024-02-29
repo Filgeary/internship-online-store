@@ -68,6 +68,8 @@
 .Message-text {
   font-size: 14px;
   line-height: 1.5;
+  overflow-wrap: break-word;
+  hyphens: auto;
 }
 
 .Message-avatar {

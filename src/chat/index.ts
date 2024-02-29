@@ -2,8 +2,6 @@ import { TConfig } from '@src/config';
 import Services from '@src/services';
 import excludeArray from '@src/utils/exclude-array';
 
-import shallowEqual from 'shallowequal';
-
 import { TAuthor, TListeners, TMessage, TResponse } from './types';
 
 class ChatService {
@@ -137,7 +135,26 @@ class ChatService {
     const jsonObj: TResponse<{ items: TMessage[] }> = JSON.parse(responseRaw);
     const messages = jsonObj.payload.items;
     if (!this.needUpdate) this.messages = messages;
-    else this.messages = [...this.messages, ...excludeArray(this.messages, messages, shallowEqual)];
+    else {
+      const res = excludeArray(this.messages, messages, (obj1: TMessage[], obj2: TMessage[]) => {
+        const keys = Object.keys(obj1);
+
+        for (const key of keys) {
+          const val1 = obj1[key as keyof TMessage[]];
+          const val2 = obj2[key as keyof TMessage[]];
+
+          // Для null
+          if (val1 === val2) continue;
+
+          // Для вложенных объектов, их сравнивать вглубь не будем
+          if (typeof val1 === 'object' && typeof val2 === 'object') continue;
+          if (val1 !== val2) return false;
+        }
+
+        return true;
+      });
+      this.messages = [...this.messages, ...res];
+    }
 
     this.needUpdate = false;
     this.lastDate = messages.at(-1).dateCreate;
