@@ -17,13 +17,13 @@ function ChatMessages() {
 
   const handleScroll = () => {
     if (!ulRef.current) return
-    if (ulRef.current.scrollTop === 0) store.actions.chat.getOldMessages()
+    if (ulRef.current.scrollTop <= 2000) store.actions.chat.getOldMessages()
     previousScrollPosition.current = ulRef.current.scrollHeight - ulRef.current.scrollTop
   };
 
   useEffect(() => {
     if (!ulRef.current || !select.messages.length) return
-    if (ulRef.current.scrollTop === 0) store.actions.chat.getOldMessages()
+    if (ulRef.current.scrollTop <= 2000) store.actions.chat.getOldMessages()
   }, [select.messages])
 
   useLayoutEffect(() => {
@@ -34,8 +34,6 @@ function ChatMessages() {
   useLayoutEffect(() => {
     if (!ulRef?.current) return
     if (!lastLiRef?.current) return
-    console.log(ulRef.current.scrollTop + ulRef.current.offsetHeight)
-    console.log(ulRef.current.scrollHeight)
     if (ulRef.current.scrollTop + ulRef.current.offsetHeight > ulRef.current.scrollHeight - 100) {
       lastLiRef.current.scrollIntoView({
         block: 'center',
@@ -50,10 +48,11 @@ function ChatMessages() {
       select.messages.map((m, i) => (
         <ChatMessage
           liRef={i === (select.messages.length - 1) ? lastLiRef : undefined}
-          authorName={m.author.username}
+          authorName={m.author.profile.name}
           text={m.text}
           key={m._key}
           isViewerOwn={m.author._id === select.viewerId}
+          receivedFromServer={m.receivedFromServer}
         />
       ))
     }

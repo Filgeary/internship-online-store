@@ -8,6 +8,7 @@ type Message = {
   text: string
   _id: string
   _key: string
+  receivedFromServer?: true
 }
 
 export interface ChatState {

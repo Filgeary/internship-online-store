@@ -36,7 +36,7 @@ class Store {
       this.actions[name] = new modules[name] (
         this, 
         name, 
-        //@ts-ignore
+        // @ts-ignore
         config
       ) as Actions[Name]
       if (initState?.[name]) {
@@ -89,7 +89,7 @@ class Store {
       console.group(
         `%c${'store.setState'} %c${description}`,
         `color: ${'#777'}; font-weight: normal`,
-        `color: ${'#333'}; font-weight: bold`,
+        `color: ${'#fff'}; font-weight: bold`,
       );
       console.log(`%c${'prev:'}`, `color: ${'#d77332'}`, this.getState());
       console.log(`%c${'next:'}`, `color: ${'#2fa827'}`, newState);

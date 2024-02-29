@@ -1,187 +1,174 @@
 import Services from "@src/services";
-import { WebSocketConfig } from "./types"
+import { ModuleNames, Modules, WebSocketConfig } from "./types"
 import { v4 as uuidv4 } from 'uuid';
+// import EventModule from "./module";
+import * as EventModules from './exports'
+
+// type ActiveClient = {
+//   _id: string,
+
+// }
+
 
 class WebSocketService {
 
   services: Services
-  isListening: boolean
   connection: WebSocket | undefined
   config: WebSocketConfig
-  lastMessagesListeners: Function[]
-  authEventListeners: Function[]
-  connectionMethodListeners: Function[]
-  postMessageListeners: Function[]
-  oldMessagesListeners: Function[]
-  connectionListeners: {
-    open: (e: Event) => void,
-    message: (e: Event) => void,
-    close: (e: Event) => void,
-    error: (e: Event) => void,
-  }
+  events: Modules
+  activeClients: number
+  sessionClients: number
+  onInitSessionCallbacks: Function[]
+  reconnectSessionCallbacks: Function[]
+  isAuthorized: boolean
+
 
   
 
   constructor(services: Services, config: WebSocketConfig) {
     this.services = services;
     this.config = config
-    this.isListening = false
-    this.authEventListeners = []
-    this.lastMessagesListeners = []
-    this.connectionMethodListeners = []
-    this.postMessageListeners = []
-    this.oldMessagesListeners = []
+    this.onInitSessionCallbacks = []
+    this.reconnectSessionCallbacks = []
+    this.isAuthorized = false
+    const methods = Object.keys(EventModules) as (keyof Modules)[]
+    let events = {} as Modules
+    this.activeClients = 0
+    this.sessionClients = 0
+    const create = <Method extends keyof Modules>(method: Method) => {
+      events[method] = new EventModules[method](
+        services,
+        //@ts-ignore
+        method, 
+      ) as Modules[Method]
+    }
+    for (const method of methods) {
+      create(method)
+    }
+    this.events = events
   }
 
-  startListening() {
-    if (this.connection) return
+  establishConnection() {
+    console.log('Устанавливаем соединение с: ' + this.config.url)
     this.connection = new WebSocket(this.config.url)
+    this.connection.onopen = this.handleOpen.bind(this)
+    this.connection.onmessage = this.handleMessage.bind(this)
+    this.connection.onclose = this.handleClose.bind(this)
+    this.connection.onerror = this.handleError.bind(this)
+  }
 
-    const onConnect = () => {
-      if (!this.connection) return 
-      this.connection.send(JSON.stringify({
-        method: 'auth',
-        payload: {
-          token: this.services.store.getState().session.token
-        }
-      }))
+  addClient({needSession, onInitSession, onReconnectSession }:{
+    needSession: boolean,
+    onInitSession?: Function,
+    onReconnectSession?: Function
+  }) {
+    this.activeClients += 1
+    if (needSession) {
+      this.sessionClients += 1
     }
-
-    const onClose = () => {
-      this.restartListening()
-    }
-    const onError = () => {
-      this.restartListening()
-    }
-
-    const onMessage = (e: any) => {
-      const data = JSON.parse(e.data)
-      if (data.method === 'auth') {
-        if (data?.payload?.result) {
-          this.onSuccessAuth()
-        } else {
-          this.onErrorAuth()
-        }
-      } else if (data.method === 'last') {
-        this.onLastMessagesEvent(data.payload.items)
-      } else if (data.method === 'post') {
-        this.onPostMessage(data.payload)
-      } else if (data.method === 'old') {
-        this.onOldMessage(data.payload.items)
+    if (onInitSession) {
+      if (this.isAuthorized) {
+        onInitSession()
+      } else {
+        this.onInitSessionCallbacks.push(onInitSession)
       }
     }
+    if (onReconnectSession) {
+      this.reconnectSessionCallbacks.push(onReconnectSession)
+    }
+    if (!this.connection) {
+      this.establishConnection()
+    }
+    alert('client: ' + this.activeClients)
 
-    this.connection.addEventListener('open', onConnect)
-    this.connection.addEventListener('message', onMessage)
-    this.connection.addEventListener('close', onClose)
-    this.connection.addEventListener('error', onError)
-    this.connectionListeners = {
-      open: onConnect,
-      message: onMessage,
-      close: onClose,
-      error: onError
+    return () => {
+      this.activeClients -= 1
+      if (needSession) {
+        this.sessionClients -= 1
+      }
+      if (onReconnectSession) {
+        this.reconnectSessionCallbacks = this.reconnectSessionCallbacks
+        .filter(func => func === onReconnectSession)
+      }
+      if (this.activeClients === 0) this.killConnection()
+      alert('client: ' + this.activeClients)
     }
   }
 
-  stopListening() {
+  killConnection() {
+    console.log('Убиваем соединение c ' + this.config.url)
     if (!this.connection) return
-    this.connection.removeEventListener('open', this.connectionListeners?.open)
-    this.connection.removeEventListener('message', this.connectionListeners?.message)
-    this.connection.removeEventListener('close', this.connectionListeners?.close)
-    this.connection.removeEventListener('error', this.connectionListeners?.error)
+    this.connection.onopen = null
+    this.connection.onmessage = null
+    this.connection.onclose = null
+    this.connection.onerror = null
     this.connection.close()
     this.connection = undefined
+    this.isAuthorized = false
   }
 
-  subscribeOnLastMessagesEvent(listener: Function): () => void {
-    this.lastMessagesListeners.push(listener)
-    return () => {
-      this.lastMessagesListeners = this.lastMessagesListeners.filter(item => item !== listener);
+  handleOpen() {
+    console.log('Соединение установлено')
+    if (this.sessionClients) {
+      this.emitSignIn()
     }
   }
 
-  subscribeOnAuthEvent(listener: Function): () => void {
-    this.authEventListeners.push(listener)
-    return () => {
-      this.authEventListeners = this.authEventListeners.filter(item => item !== listener);
+  handleMessage(e: MessageEvent) {
+    const data = JSON.parse(e.data)
+    if (data.method === 'auth') {
+      this.handleSignInResult(data.payload.result)
+    } 
+
+    if ((Object.keys(this.events)).includes(data.method)) {
+      this.events[data.method as ModuleNames].handleEvent(data.payload)
     }
   }
 
-  restartListening() {
-    this.stopListening()
+  handleClose() {
+    this.reestablishConnection()
+  }
+
+  handleError() {
+    this.reestablishConnection()
+  }
+
+
+  emitSignIn() {
+    this.connection?.send(JSON.stringify({
+      method: 'auth',
+      payload: {
+        token: this.services.store.getState().session.token
+      }
+    }))
+  }
+
+  handleSignInResult(result: boolean) {
+    if (result) {
+      this.isAuthorized = true
+      this.onInitSessionCallbacks = this.onInitSessionCallbacks.filter(cb => {
+        cb()
+        return false
+      })
+      this.reconnectSessionCallbacks.map(cb => cb())
+    } else {
+      this.reestablishConnection()
+    }
+  }
+
+
+  reestablishConnection() {
+    this.killConnection()
     setTimeout(() => {
-      console.log('trying restart')
-      this.startListening()
+      this.establishConnection()
     }, 1000)
   }
 
-  sendLastEvent() {
-    console.log('sended last')
+  emitEvent(method: string, payload: object) {
     this.connection?.send(JSON.stringify({
-      method: 'last',
-      payload: {}
+      method, payload
     }))
-  }
-
-  postMessage(text: string) {
-    this.connection?.send(JSON.stringify({
-      method: 'post',
-      payload: {
-        _key: uuidv4(),
-        text
-      }
-  
-    }))
-  }
-
-  onPostMessage(message: any) {
-    for (const listener of this.postMessageListeners) listener(message);
-  }
-
-  subscribeOnPostMessageEvent(listener: Function): () => void {
-    this.postMessageListeners.push(listener)
-    return () => {
-      this.postMessageListeners = this.postMessageListeners.filter(item => item !== listener);
-    }
-  }
-
-  onLastMessagesEvent(messages: any) {
-    console.log(messages)
-    for (const listener of this.lastMessagesListeners) listener(messages);
-  }
-
-  onSuccessAuth() {
-    console.log('Success auth')
-    for (const listener of this.authEventListeners) listener();
-  }
-  
-
-  onErrorAuth() {
-    console.log('Auth ERROR!')
-    this.restartListening()
-  }
-
-
-
-  getOldMessages(fromId: string) {
-    this.connection?.send(JSON.stringify({
-      method: 'old',
-      payload: {
-        fromId
-      }
-    }))
-  }
-
-  onOldMessage(messages: any) {
-    for (const listener of this.oldMessagesListeners) listener(messages);
-  }
-
-  subscribeOnOldMessageEvent(listener: Function): () => void {
-    this.oldMessagesListeners.push(listener)
-    return () => {
-      this.oldMessagesListeners = this.oldMessagesListeners.filter(item => item !== listener);
-    }
-  }
+  }  
 
 }
 

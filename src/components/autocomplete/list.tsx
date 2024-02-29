@@ -76,7 +76,7 @@ function List<O extends Option>(props: Props<O>) {
           if (!props.multiple && props.value?.value != founded.value) {
             props.collapseDropdown(true)
           }
-          console.log(2)
+
           props.onSelect(founded)
         break
         // Навигация вниз

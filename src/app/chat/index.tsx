@@ -6,15 +6,14 @@ import ChatMessageCreator from "@src/containers/chat-message-creator";
 import ChatMessages from "@src/containers/chat-messages";
 import TopHead from "@src/containers/top-head";
 import useInit from "@src/hooks/use-init";
-import useServices from "@src/hooks/use-services";
 import useStore from "@src/hooks/use-store";
 import useTranslate from "@src/hooks/use-translate";
+import useUnmount from "@src/hooks/use-unmount";
 import { memo, useCallback, useMemo } from "react";
 
 function Chat() {
   const {t} = useTranslate();
   const store = useStore();
-  const services = useServices()
 
   const options = {
     menu: useMemo(() => ([
@@ -34,6 +33,10 @@ function Chat() {
   useInit(() => {
     store.actions.chat.startListening()
   }, [])
+
+  useUnmount(() => {
+    store.actions.chat.stopListening({resetState: true})
+  })
 
   return (
     <ChatLayout

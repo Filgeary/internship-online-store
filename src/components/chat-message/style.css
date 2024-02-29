@@ -4,6 +4,7 @@
   border-radius: 10px;
   padding: 10px;
   list-style-type: none;
+  word-break: break-word;
 }
 
 .ChatMessage_alignHorizontal_start {
@@ -25,4 +26,12 @@
 .ChatMessage-text {
   margin: 0;
   font-size: 14px;
+  white-space: pre-line;
+}
+
+.ChatMessage-flex {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  justify-content: space-between;
 }
