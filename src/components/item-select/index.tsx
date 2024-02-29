@@ -1,38 +1,43 @@
 import { memo } from "react";
-import numberFormat from "@src/utils/number-format";
 import { cn as bem } from "@bem-react/classname";
-import { Link } from "react-router-dom";
 import "./style.css";
+import { TCountries } from "@src/store/countries";
+import useSelector from "@src/hooks/use-selector";
 
 export type TItemSelectProps = {
-  onSelect: (id: string) => void;
-  item: any;
-  selected: any;
-  onSetItem: (e: any) => void;
+  onSelect: (item: TCountries) => void;
+  item: TCountries;
+  onReset: () => void;
+  select?:boolean
 };
 
 function ItemSelect(props: TItemSelectProps) {
   const cn = bem("ItemSelect");
+  const selected: TCountries[] = useSelector(
+    (state) => state.countries.selected || []
+  );
+  const select = selected.find((el) => el._id === props.item._id);
 
   const callbacks = {
     onSelect: () => {
-      props.onSetItem(props.item);
-      props.onSelect(props.item._id);
+      if (props.item.title !== "Все") {
+        props.onSelect(props.item);
+      } else {
+        props.onReset();
+      }
     },
   };
 
   return (
     <div
-      className={
-        props.selected._id === props.item._id ? cn() + " " + "selected" : cn()
-      }
+      className={!!select ? cn("selected") : cn()}
       onClick={callbacks.onSelect}
     >
       <div className={cn("flag")}>{props.item.code}</div>
       <div className={cn("country")}>
-        {props.item.title.length <= 21
+        {props.item.title?.length <= 21
           ? props.item.title
-          : `${props.item.title.substring(0, 21)}...`}
+          : `${props.item.title?.substring(0, 21)}...`}
       </div>
     </div>
   );

@@ -1,44 +1,101 @@
-import { TMadeIn } from "@src/store/article/types";
 import ItemSelect from "../item-select";
 import "./style.css";
 import { cn as bem } from "@bem-react/classname";
-import {
-  Key,
-  SetStateAction,
-  memo,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import useStore from "@src/hooks/use-store";
-import { TItem } from "@src/store/catalog/types";
 import { TCountries } from "@src/store/countries";
-import Input from "../input";
 import Spinner from "../spinner";
+import useInit from "@src/hooks/use-init";
 
 type Props = {
   options: TCountries[];
-  value: string | null;
-  onSelect: (id: string) => void;
+  selected: TCountries[];
+  onSelect: (id: string[]) => void;
   onSearch: (value: string) => void;
+  onLoad: () => void;
   waiting: boolean;
+  onSelectCountry: (item: TCountries) => void;
+  onReset: () => void;
 };
 
-function SelectCustom({ options, value, onSelect, onSearch, waiting }: Props) {
+function SelectCustom({
+  options,
+  selected,
+  onSelect,
+  onSearch,
+  waiting,
+  onLoad,
+  onSelectCountry,
+  onReset,
+}: Props) {
   const store = useStore();
   const cn = bem("SelectBox");
-
+  const [scroll, setScroll] = useState(true);
   const [open, setOpen] = useState<boolean>();
   const [search, setSearch] = useState<string>("");
-  const [item, setItem] = useState<any>({ title: "Все", code: "" });
 
-  const arrowRef = useRef<HTMLDivElement>(null);
   const selectBox = useRef<HTMLDivElement>(null);
   const selectItem = useRef<HTMLInputElement>(null);
+  const scrollRef = useRef<HTMLDivElement | null>(null);
+  const ref = useRef<HTMLDivElement | null>(null);
+  const [scrollHeightSelect, setScrollHeightSelect] = useState<number>(0);
 
-  const useClickOutside = (ref: React.RefObject<any>, handler: Function) => {
+  useInit(() => {
+    onSelect(selected.map((el) => el._id));
+  }, [selected]);
+  useInit(() => {
+    if (scroll) {
+      scrollRef.current?.scrollTo(0, scrollHeightSelect - 120);
+    }
+  }, [options]);
+
+  const callbacks = {
+    onScroll: () => {
+      if (
+        scrollRef.current!.scrollHeight -
+          scrollRef.current!.scrollTop -
+          scrollRef.current!.clientHeight <
+          1 &&
+        search.length < 1
+      ) {
+        onLoad();
+        setScrollHeightSelect(scrollRef.current!.scrollHeight);
+      }
+    },
+    onSearchCountries: (e: {
+      target: { value: string };
+      preventDefault: () => void;
+    }) => {
+      setSearch(e.target.value);
+      onSearch(e.target.value);
+      e.preventDefault();
+    },
+    onOpenSelect: (e: { stopPropagation?: any; key?: any }) => {
+      e.stopPropagation();
+      const { key } = e;
+      if (key === "Enter") {
+        setOpen(true);
+      }
+    },
+    onOpen: () => {
+      setOpen(!open);
+    },
+    onCloseSelect: (e: { stopPropagation?: any; key?: any }) => {
+      e.stopPropagation();
+      const { key } = e;
+      if (key === "Escape" || key === "Tab") {
+        setOpen(false);
+      }
+    },
+    onClose: () => {
+      setOpen(false);
+    },
+    onSelectCountries: (item: TCountries) => {
+      onSelectCountry(item);
+    },
+  };
+
+  (function (ref: React.RefObject<any>, handler: Function) {
     useEffect(() => {
       const listener = (event: Event) => {
         if (!ref.current || ref.current.contains(event.target)) {
@@ -55,76 +112,27 @@ function SelectCustom({ options, value, onSelect, onSearch, waiting }: Props) {
         document.removeEventListener("touchstart", listener);
       };
     }, [ref, handler]);
-  };
-
-  const handleClick = () => {
-    setOpen(!open);
-    arrowRef.current?.classList.add("arrowUp");
-  };
-
-  const onSearchCountries = (e: {
-    target: { value: string };
-    preventDefault: () => void;
-  }) => {
-    setSearch(e.target.value);
-    onSearch(e.target.value);
-    e.preventDefault();
-  };
-
-  const resetSearch = () => {
-    setSearch("");
-    onSearch("");
-    setOpen(!open);
-  };
-
-  const onSelectCountries = (id: string) => {
-    onSelect(id);
-    resetSearch();
-  };
-
-  const openSelect = (e: { stopPropagation?: any; key?: any }) => {
-    e.stopPropagation();
-    const { key } = e;
-    if (key === "Enter") {
-      handleClick();
-    }
-  };
-
-  const closeSelect = (e: { stopPropagation?: any; key?: any }) => {
-    e.stopPropagation();
-    const { key } = e;
-    if (key === "Escape" || key === "Tab") {
-      setOpen(!open);
-    } else if (key === "ArrowDown") {
-     
-    }
-  };
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  useClickOutside(selectBox, handleClose);
+  })(selectBox, callbacks.onClose);
   return (
     <div className={cn()} ref={selectBox}>
       <div
         className={cn("select")}
-        onClick={handleClick}
+        onClick={callbacks.onOpen}
         tabIndex={0}
-        onKeyDown={openSelect}
+        onKeyDown={callbacks.onOpenSelect}
       >
         <div className={cn("group")}>
-          <div className={cn("flag")}>{item.code}</div>
+          {/* <div className={cn("flag")}>{item.code}</div>
           <div className={cn("country")}>
             {item.title.length <= 21
               ? item.title
               : `${item.title.substring(0, 21)}...`}
-          </div>
+          </div> */}
         </div>
         <div
           className={
             open ? cn("arrow") + " " + "arrowUp" : cn("arrow") + " " + {}
           }
-          ref={arrowRef}
         >
           <svg
             width="12"
@@ -142,31 +150,36 @@ function SelectCustom({ options, value, onSelect, onSearch, waiting }: Props) {
           </svg>
         </div>
       </div>
+
       {open && (
         <div className={cn("content")}>
           <input
             type="text"
             className={cn("search")}
             placeholder="Поиск"
-            onChange={onSearchCountries}
-            onKeyDown={closeSelect}
+            onChange={callbacks.onSearchCountries}
+            onKeyDown={callbacks.onCloseSelect}
             value={search}
             autoFocus
             ref={selectItem}
           />
-          <div className={cn("box")}>
+          <div
+            className={cn("box")}
+            onScroll={callbacks.onScroll}
+            ref={scrollRef}
+          >
             <Spinner active={waiting}>
               {options &&
-                options.map((el: { _id: Key | null | undefined }) => (
+                options.map((el) => (
                   <ItemSelect
                     key={el._id}
                     item={el}
-                    selected={item}
-                    onSelect={onSelectCountries}
-                    onSetItem={setItem}
+                    onSelect={callbacks.onSelectCountries}
+                    onReset={onReset}
                   />
                 ))}
             </Spinner>
+            <div ref={ref} />
           </div>
         </div>
       )}

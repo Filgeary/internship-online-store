@@ -19,7 +19,11 @@ class ChatState extends StoreModule<TChatState, TConfigWS> {
     this.setState({
       ...this.getState(),
       ws,
-    });
+      fromId:""
+    },
+    "Ожидание установки соединения"
+    );
+
   }
 
   auth(token: string) {
@@ -51,7 +55,9 @@ class ChatState extends StoreModule<TChatState, TConfigWS> {
     this.setState({
       ...this.getState(),
       timeId,
-    });
+    },
+    "OnPong"
+    );
   }
 
   //обработка всех сообщений
@@ -64,7 +70,9 @@ class ChatState extends StoreModule<TChatState, TConfigWS> {
           ...this.getState(),
           connection: true,
           waiting: true,
-        });
+        },
+        "Соединение установлено"
+        );
       }
       if (result) {
         if (result.items) {
@@ -85,14 +93,18 @@ class ChatState extends StoreModule<TChatState, TConfigWS> {
             fromId,
             messages,
             waiting: false,
-          });
+          },
+          "Сообщения загружены"
+          );
         } else {
           const messages = [...this.getState().messages, result];
           this.setState({
             ...this.getState(),
             messages,
             waiting: false,
-          });
+          },
+          ""
+          );
         }
       }
     });

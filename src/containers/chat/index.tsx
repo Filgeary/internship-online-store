@@ -1,6 +1,6 @@
-import { SetStateAction, memo, useState } from "react";
+import { memo, useState } from "react";
 import useStore from "@src/hooks/use-store";
-import useTranslate from "@src/hooks/use-translate";
+
 import useInit from "@src/hooks/use-init";
 import useSelector from "@src/hooks/use-selector";
 import ChatFrame from "@src/components/chat-frame";
@@ -13,17 +13,16 @@ const Chat = () => {
     connection: state.chat.connection,
     ws: state.chat.ws,
     messages: state.chat.messages,
-    waiting:state.chat.waiting
+    waiting: state.chat.waiting,
   }));
 
   useInit(
     () => {
       store.actions.chat.auth(select.token!);
       setTimeout(() => {
-        store.actions.chat.onMessage();
         store.actions.chat.getLastMessages();
+        store.actions.chat.onMessage();
       }, 1000);
-      // store.actions.chat.onClose();
       return () => {
         store.actions.chat.close();
       };
@@ -36,15 +35,15 @@ const Chat = () => {
   const callbacks = {
     onSend: (message: string) => {
       store.actions.chat.sendMessage(message);
-      setMessage('')
+      setMessage("");
     },
-    onChange:(e: { target: { value: string }; })=>{
-        setMessage(e.target.value);
+    onChange: (e: { target: { value: string } }) => {
+      setMessage(e.target.value);
     },
-    onLoadOld:()=>{
-        store.actions.chat.getOldMessages()
-    }
-  }
+    onLoadOld: () => {
+      store.actions.chat.getOldMessages();
+    },
+  };
 
   return (
     <>

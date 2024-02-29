@@ -36,7 +36,7 @@ const ChatFrame = (props: TChatFrameProps) => {
         scrollRef.current!.scrollHeight -
           scrollRef.current!.scrollTop -
           scrollRef.current!.clientHeight <
-        10
+        1
       ) {
         setScroll(true);
       }

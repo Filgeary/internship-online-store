@@ -53,10 +53,14 @@ function CatalogFilter(props: TCatalogFilter) {
       [store]
     ),
     onMadeIn: useCallback(
-      (madeIn: string) =>
-        store.actions[props.storeName].setParams({ madeIn, page: 1 }),
+      (id: string[]) =>
+        store.actions[props.storeName].setParams({
+          madeIn: id.join("|"),
+          page: 1,
+        }),
       [store]
     ),
+
     onSearchCountry: useCallback(
       (value: string) => {
         setSearch(value);
@@ -64,6 +68,19 @@ function CatalogFilter(props: TCatalogFilter) {
       },
       [store]
     ),
+    onLoadCounties: useCallback(() => {
+      store.actions.countries.loadSkip();
+    }, [store]),
+
+    onSelectCountry: useCallback(
+      (item: TCountries) => {
+        store.actions.countries.selectCountry(item);
+      },
+      [store]
+    ),
+    onResetSelectCountry: useCallback(() => {
+      store.actions.countries.resetSelectCountry();
+    }, [store]),
   };
 
   const options = {
@@ -94,7 +111,10 @@ function CatalogFilter(props: TCatalogFilter) {
       if (search) {
         return select.countries;
       }
-      return [{ _id: "", code: "", title: "Все" }, ...select.countries];
+      return [
+        { _id: "", code: "", title: "Все", _key: "" },
+        ...select.countries,
+      ];
     }, [select.countries, search]),
   };
 
@@ -104,10 +124,13 @@ function CatalogFilter(props: TCatalogFilter) {
     <SideLayout padding="medium">
       <SelectCustom
         options={options.countries}
-        value={select.madeIn}
+        selected={select.selected}
         onSelect={callbacks.onMadeIn}
         onSearch={callbacks.onSearchCountry}
         waiting={select.waiting}
+        onLoad={callbacks.onLoadCounties}
+        onSelectCountry={callbacks.onSelectCountry}
+        onReset={callbacks.onResetSelectCountry}
       />
       <Select
         options={options.categories}
