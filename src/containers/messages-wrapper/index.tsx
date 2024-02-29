@@ -10,7 +10,7 @@ function MessagesWrapper() {
     token: state.session.token,
     user: state.session.user,
   }));
-  const { chatService, messages } = useChat();
+  const { chatService, messages, waiting } = useChat();
 
   const { t } = useTranslate();
 
@@ -34,6 +34,7 @@ function MessagesWrapper() {
       onScrollTop={handlers.getOldMessages}
       userId={select.user._id}
       messages={messages}
+      loading={waiting}
     >
       <Messages.Title>{t('titleInner.community')}</Messages.Title>
       <Messages.Area />

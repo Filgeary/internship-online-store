@@ -13,28 +13,29 @@ function MessagesArea() {
   const messagesAreaRef = useRef<HTMLDivElement | null>(null);
 
   const [previousHeight, setPreviousHeight] = useState(0);
+  const [onTop, setOnTop] = useState(false);
 
   const { messages, userId, onScrollTop } = useMessagesContext();
 
-  // +5, т.к. значения не всегда будут идеально совпадать
-  const scrollingNow =
-    messagesAreaRef.current?.scrollHeight >
-    messagesAreaRef.current?.clientHeight + messagesAreaRef.current?.scrollTop + 5;
-
   const handlers = {
     onScroll: () => {
-      if (messagesAreaRef.current.scrollTop === 0) onScrollTop();
+      if (messagesAreaRef.current.scrollTop === 0) {
+        onScrollTop();
+        setOnTop(true);
+      } else {
+        setOnTop(false);
+      }
     },
   };
 
   useEffect(() => {
     const previousScrollPosition = messagesAreaRef.current.scrollHeight - previousHeight;
 
-    if (scrollingNow) messagesAreaRef.current.scrollTop = previousScrollPosition;
+    if (onTop) messagesAreaRef.current.scrollTop = previousScrollPosition;
     else messagesAreaRef.current.scrollTop = messagesAreaRef.current.scrollHeight;
 
     setPreviousHeight(messagesAreaRef.current.scrollHeight);
-  }, [messages, scrollingNow]);
+  }, [messages]);
 
   return (
     <div className={cn()} ref={messagesAreaRef} onScroll={handlers.onScroll}>

@@ -14,6 +14,11 @@ class ChatService {
   token: string;
   lastDate: string;
   needUpdate: boolean = false;
+  waiting: boolean = false;
+  state: {
+    messages: TMessage[];
+    waiting: boolean;
+  };
 
   constructor(services: Services, config = {}) {
     this.services = services;
@@ -21,6 +26,10 @@ class ChatService {
 
     this.messages = [];
     this.listeners = [];
+    this.state = {
+      messages: [],
+      waiting: false,
+    };
   }
 
   /**
@@ -28,6 +37,8 @@ class ChatService {
    */
   auth(token: string, userId: string, reconnectCount: number = 0) {
     if (this.ws && this.ws.readyState === 1 && reconnectCount < 10) return;
+    this.waiting = true;
+    this.callAllListeners();
 
     this.ws = new WebSocket(this.config.url);
     this.userId = userId;
@@ -88,6 +99,8 @@ class ChatService {
       sended: true,
     };
     this.messages = [...this.messages, newMessage];
+    this.waiting = true;
+
     this.callAllListeners();
 
     this.ws.send(JSON.stringify(bodyObj));
@@ -102,6 +115,8 @@ class ChatService {
       payload: {},
     };
     this.ws.send(JSON.stringify(bodyObj));
+    this.waiting = true;
+    this.callAllListeners();
   }
 
   /**
@@ -157,6 +172,7 @@ class ChatService {
     }
 
     this.needUpdate = false;
+    this.waiting = false;
     this.lastDate = messages.at(-1).dateCreate;
 
     this.callAllListeners();
@@ -182,6 +198,7 @@ class ChatService {
     }
     this.lastDate = message.dateCreate;
 
+    this.waiting = false;
     this.callAllListeners();
   }
 
@@ -230,6 +247,7 @@ class ChatService {
    * Вызов всех функций-подписчиков
    */
   callAllListeners() {
+    this.state = { messages: this.messages, waiting: this.waiting };
     this.listeners.forEach((fn) => fn());
   }
 
@@ -237,7 +255,7 @@ class ChatService {
    * Для получения снапшота
    */
   getSnapshot() {
-    return this.messages;
+    return this.state;
   }
 }
 

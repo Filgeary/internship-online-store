@@ -9,6 +9,7 @@ import MessagesTitle from './messages-title';
 
 import { TMessagesContext } from './types';
 import { TMessage } from '@src/chat/types';
+import Spinner from '../spinner';
 
 const MessagesContext = createContext<TMessagesContext>(null);
 
@@ -27,18 +28,22 @@ type MessagesProps = {
   userId: string;
   messages: TMessage[];
   onScrollTop: () => void;
+  loading?: boolean;
 };
 
 function Messages(props: MessagesProps) {
-  const { children, messages, userId } = props;
+  const { children, messages, userId, loading } = props;
 
   const cn = bem('Messages');
 
   return (
     <div className={cn()}>
-      <MessagesContext.Provider value={{ messages, userId, onScrollTop: props.onScrollTop }}>
-        {children}
-      </MessagesContext.Provider>
+      {loading && 'Загрузка'}
+      <Spinner active={loading}>
+        <MessagesContext.Provider value={{ messages, userId, onScrollTop: props.onScrollTop }}>
+          {children}
+        </MessagesContext.Provider>
+      </Spinner>
     </div>
   );
 }
