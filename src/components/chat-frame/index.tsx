@@ -24,6 +24,8 @@ const ChatFrame = (props: TChatFrameProps) => {
   useInit(() => {
     if (scroll) {
       ref.current?.scrollIntoView({ behavior: "smooth" });
+    } else {
+      scrollRef.current?.scrollTo(0, 1000);
     }
   }, [props.messages]);
 

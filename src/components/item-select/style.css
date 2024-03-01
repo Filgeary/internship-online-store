@@ -30,7 +30,7 @@
   background-color: #808dff;
 }
 
-.ItemSelect-selectedList{
+.ItemSelect-selectedList {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -52,12 +52,17 @@
   color: black;
 }
 
+.ItemSelect:focus {
+  background-color: #dbdfff;
+  color: black;
+}
+
 .ItemSelect-hovered {
   background-color: #dbdfff;
   color: black;
 }
 
-.ItemSelect-group{
+.ItemSelect-group {
   display: flex;
   gap: 6px;
 }
@@ -82,10 +87,9 @@
   transition: color 0.4s;
   text-overflow: ellipsis;
   white-space: nowrap;
-  overflow: hidden;  
-
+  overflow: hidden;
 }
 
-.ItemSelect-count{
+.ItemSelect-count {
   padding: 0 2px;
 }

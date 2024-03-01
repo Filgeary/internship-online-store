@@ -2,7 +2,6 @@ import ItemSelect from "../item-select";
 import "./style.css";
 import { cn as bem } from "@bem-react/classname";
 import { memo, useEffect, useRef, useState } from "react";
-import useStore from "@src/hooks/use-store";
 import { TCountries } from "@src/store/countries";
 import Spinner from "../spinner";
 import useInit from "@src/hooks/use-init";
@@ -28,7 +27,6 @@ function SelectCustom({
   onSelectCountry,
   onReset,
 }: Props) {
-  const store = useStore();
   const cn = bem("SelectBox");
   const [scroll, setScroll] = useState(true);
   const [open, setOpen] = useState<boolean>();
@@ -38,11 +36,13 @@ function SelectCustom({
   const selectItem = useRef<HTMLInputElement>(null);
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const ref = useRef<HTMLDivElement | null>(null);
+  const divRef = useRef<HTMLDivElement | null>(null);
   const [scrollHeightSelect, setScrollHeightSelect] = useState<number>(0);
 
   useInit(() => {
     onSelect(selected.map((el) => el._id));
   }, [selected]);
+
   useInit(() => {
     if (scroll) {
       scrollRef.current?.scrollTo(0, scrollHeightSelect - 120);
@@ -70,20 +70,13 @@ function SelectCustom({
       onSearch(e.target.value);
       e.preventDefault();
     },
-    onOpenSelect: (e: { stopPropagation?: any; key?: any }) => {
-      e.stopPropagation();
-      const { key } = e;
-      if (key === "Enter") {
-        setOpen(true);
-      }
-    },
     onOpen: () => {
       setOpen(!open);
     },
     onCloseSelect: (e: { stopPropagation?: any; key?: any }) => {
       e.stopPropagation();
       const { key } = e;
-      if (key === "Escape" || key === "Tab") {
+      if (key === "Escape" /* || key === "Tab" */) {
         setOpen(false);
       }
     },
@@ -92,6 +85,21 @@ function SelectCustom({
     },
     onSelectCountries: (item: TCountries) => {
       onSelectCountry(item);
+    },
+    onOpenSelect: (e: any) => {
+      e.stopPropagation();
+      const { key } = e;
+      if (key === "Enter") {
+        setOpen(true);
+      }
+    },
+    onKeyUp: (e: any) => {
+      if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+        e.stopPropagation();
+        selectItem.current?.blur();
+        (scrollRef.current!.childNodes[0] as HTMLLIElement).tabIndex;
+        // divRef.current?.focus();
+      }
     },
   };
 
@@ -172,17 +180,17 @@ function SelectCustom({
 
       {open && (
         <div className={cn("dropdown")}>
-          <div className={cn('selected')}>
-           {selected.slice(1).map((el)=>(
-             <ItemSelect
-             key={el._id}
-             item={el}
-             onSelect={callbacks.onSelectCountries}
-             onReset={onReset}
-             selected={selected}
-             selectedList={true}
-           />
-           ))}
+          <div className={cn("selected")}>
+            {selected.slice(1).map((el) => (
+              <ItemSelect
+                key={el._id}
+                item={el}
+                onSelect={callbacks.onSelectCountries}
+                onReset={onReset}
+                selected={selected}
+                selectedList={true}
+              />
+            ))}
           </div>
           <div className={cn("content")}>
             <input
@@ -194,6 +202,7 @@ function SelectCustom({
               value={search}
               autoFocus
               ref={selectItem}
+              onKeyUp={callbacks.onKeyUp}
             />
             <div
               className={cn("box")}
@@ -203,13 +212,14 @@ function SelectCustom({
               <Spinner active={waiting}>
                 {options &&
                   options.map((el) => (
-                    <ItemSelect
-                      key={el._id}
-                      item={el}
-                      onSelect={callbacks.onSelectCountries}
-                      onReset={onReset}
-                      selected={selected}
-                    />
+                    <div key={el._id} ref={divRef} className={cn("item")}>
+                      <ItemSelect
+                        item={el}
+                        onSelect={callbacks.onSelectCountries}
+                        onReset={onReset}
+                        selected={selected}
+                      />
+                    </div>
                   ))}
               </Spinner>
               <div ref={ref} />

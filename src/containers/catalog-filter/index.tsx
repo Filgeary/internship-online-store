@@ -80,7 +80,7 @@ function CatalogFilter(props: TCatalogFilter) {
       [store]
     ),
     onResetSelectCountry: useCallback(() => {
-      store.actions.countries.resetSelectCountry();
+      store.actions.countries.load();
     }, [store]),
   };
 

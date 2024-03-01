@@ -1,5 +1,3 @@
-import { TMadeIn } from "../article/types";
-import { TItem } from "../catalog/types";
 import StoreModule from "../module";
 
 export type TCountries = {
@@ -134,17 +132,6 @@ class CountriesState extends StoreModule<TCountriesState> {
       );
     }
   }
-
-  resetSelectCountry() {
-    this.setState(
-      {
-        ...this.getState(),
-        selected: [],
-      },
-      "Сброс выделенных стран"
-    );
-  }
-
 }
 
 export default CountriesState;
