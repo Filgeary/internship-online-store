@@ -10,6 +10,7 @@ import listToTree from "@src/utils/list-to-tree";
 import { TCountries } from "@src/store/countries";
 import SelectCustom from "@src/components/select-custom";
 
+
 export type TCatalogFilter = {
   storeName: "catalog";
 };
@@ -42,10 +43,10 @@ function CatalogFilter(props: TCatalogFilter) {
       [store]
     ),
     // Сброс
-    onReset: useCallback(
-      () => store.actions[props.storeName].resetParams(),
-      [store]
-    ),
+    onReset: useCallback(() => {
+      store.actions[props.storeName].resetParams();
+      callbacks.onResetSelectCountry();
+    }, [store]),
     // Фильтр по категории
     onCategory: useCallback(
       (category: string) =>

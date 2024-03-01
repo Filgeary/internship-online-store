@@ -113,6 +113,7 @@ function SelectCustom({
       };
     }, [ref, handler]);
   })(selectBox, callbacks.onClose);
+
   return (
     <div className={cn()} ref={selectBox}>
       <div
@@ -121,14 +122,32 @@ function SelectCustom({
         tabIndex={0}
         onKeyDown={callbacks.onOpenSelect}
       >
-        <div className={cn("group")}>
-          {/* <div className={cn("flag")}>{item.code}</div>
-          <div className={cn("country")}>
-            {item.title.length <= 21
-              ? item.title
-              : `${item.title.substring(0, 21)}...`}
-          </div> */}
-        </div>
+        {selected.length === 1 ? (
+          <ItemSelect
+            key={selected[0]._id}
+            item={selected[0]}
+            onSelect={() => {}}
+            onReset={() => {}}
+            selected={selected}
+          />
+        ) : selected.length > 1 ? (
+          <ItemSelect
+            key={selected[0]._id}
+            item={selected[0]}
+            onSelect={() => {}}
+            onReset={() => {}}
+            selected={selected}
+            count={`+${selected.length - 1}`}
+          />
+        ) : (
+          <ItemSelect
+            key={options[0]._id}
+            item={options[0]}
+            onSelect={() => {}}
+            onReset={() => {}}
+            selected={selected}
+          />
+        )}
         <div
           className={
             open ? cn("arrow") + " " + "arrowUp" : cn("arrow") + " " + {}
@@ -152,34 +171,49 @@ function SelectCustom({
       </div>
 
       {open && (
-        <div className={cn("content")}>
-          <input
-            type="text"
-            className={cn("search")}
-            placeholder="Поиск"
-            onChange={callbacks.onSearchCountries}
-            onKeyDown={callbacks.onCloseSelect}
-            value={search}
-            autoFocus
-            ref={selectItem}
-          />
-          <div
-            className={cn("box")}
-            onScroll={callbacks.onScroll}
-            ref={scrollRef}
-          >
-            <Spinner active={waiting}>
-              {options &&
-                options.map((el) => (
-                  <ItemSelect
-                    key={el._id}
-                    item={el}
-                    onSelect={callbacks.onSelectCountries}
-                    onReset={onReset}
-                  />
-                ))}
-            </Spinner>
-            <div ref={ref} />
+        <div className={cn("dropdown")}>
+          <div className={cn('selected')}>
+           {selected.slice(1).map((el)=>(
+             <ItemSelect
+             key={el._id}
+             item={el}
+             onSelect={callbacks.onSelectCountries}
+             onReset={onReset}
+             selected={selected}
+             selectedList={true}
+           />
+           ))}
+          </div>
+          <div className={cn("content")}>
+            <input
+              type="text"
+              className={cn("search")}
+              placeholder="Поиск"
+              onChange={callbacks.onSearchCountries}
+              onKeyDown={callbacks.onCloseSelect}
+              value={search}
+              autoFocus
+              ref={selectItem}
+            />
+            <div
+              className={cn("box")}
+              onScroll={callbacks.onScroll}
+              ref={scrollRef}
+            >
+              <Spinner active={waiting}>
+                {options &&
+                  options.map((el) => (
+                    <ItemSelect
+                      key={el._id}
+                      item={el}
+                      onSelect={callbacks.onSelectCountries}
+                      onReset={onReset}
+                      selected={selected}
+                    />
+                  ))}
+              </Spinner>
+              <div ref={ref} />
+            </div>
           </div>
         </div>
       )}
