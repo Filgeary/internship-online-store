@@ -20,6 +20,7 @@
   "homepage": "https://github.com/ylabio/react-webinar-3#readme",
   "dependencies": {
     "@bem-react/classname": "^1.6.0",
+    "dompurify": "^3.0.9",
     "eslint-plugin-react-hooks": "^4.6.0",
     "lodash.debounce": "^4.0.8",
     "lodash.throttle": "^4.1.1",
@@ -37,6 +38,7 @@
     "@babel/core": "^7.22.5",
     "@babel/preset-env": "^7.22.5",
     "@babel/preset-react": "^7.22.5",
+    "@types/dompurify": "^3.0.5",
     "@types/jest": "^29.5.12",
     "@types/lodash.debounce": "^4.0.9",
     "@types/react": "^18.2.55",

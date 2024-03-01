@@ -4,6 +4,7 @@ import { cn as bem } from '@bem-react/classname';
 
 import dateFormat from '@src/utils/date-format';
 import { TMessage } from '@src/chat/types';
+import SanitizeHtml from '@src/components/sanitize-html';
 
 type MessageProps = {
   message: TMessage;
@@ -34,7 +35,7 @@ function Message(props: MessageProps) {
       </div>
 
       <div className={cn('content')}>
-        <p className={cn('text')}>{message.text}</p>
+        <SanitizeHtml className={cn('text')} as={'p'} html={message.text} />
       </div>
     </article>
   );
