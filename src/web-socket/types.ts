@@ -16,12 +16,18 @@ type ClientWithSessionOptions = {
   needSession: true,
   onSessionInit?: Function | undefined,
   onSessionReconnect?: Function,
+  subscriptions: {
+    [K in keyof Modules]?: Parameters<Modules[K]['subscribe']>[0]
+  }
 }
 
 type ClientWithoutSessionOptions  = {
   needSession?: never,
   onSessionInit?: never,
   onSessionReconnect?: never,
+  subscriptions: {
+    [K in keyof Modules]?: Parameters<Modules[K]['subscribe']>[0]
+  }
 }
 
 export type ClientOptions = ClientWithSessionOptions | ClientWithoutSessionOptions

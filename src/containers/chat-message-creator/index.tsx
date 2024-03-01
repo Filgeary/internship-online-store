@@ -27,7 +27,7 @@ function ChatMessageCreator() {
 
   const addClient = () => {
     if (remove) return
-    const removeClient = services.webSocket.addClient({})
+    const removeClient = services.webSocket.addClient({subscriptions: {}})
     setRemoveClient(() => removeClient)
   }
 
@@ -40,7 +40,7 @@ function ChatMessageCreator() {
 
   const addClientSession = () => {
     if (remove) return
-    const removeClient = services.webSocket.addClient({needSession: true})
+    const removeClient = services.webSocket.addClient({needSession: true, subscriptions: {}})
     setRemoveClientSession(() => removeClient)
   }
 
@@ -66,7 +66,7 @@ function ChatMessageCreator() {
       <button onClick={removeClient}>Удалить клиента</button>
       <button onClick={addClientSession}>Добавить клиента с сессией</button>
       <button onClick={removeClientSession}>Удалить клиента с сессией</button>
-      <button onClick={() => alert(services.webSocket.connection?.readyState)}>Текущее состояние соединения</button>
+      <button onClick={() => console.log(services.webSocket.events)}>Log modules</button>
     </>
   )
 }

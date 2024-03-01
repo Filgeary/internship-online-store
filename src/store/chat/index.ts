@@ -28,16 +28,7 @@ class ChatModule extends StoreModule<ChatState, ChatConfig> {
 
   startListening() {
     if (this.removeClientFunction) return
-    const unsubscribeLast = this.services.webSocket.events.last.subscribe((messages) => {
-      this.setLastMessages(messages)
-    })
-    const unsubscribePost = this.services.webSocket.events.post.subscribe((message) => {
-      this.setNewMessage(message)
-    })
-    const unsubscribeOld = this.services.webSocket.events.old.subscribe((oldMessages) => {
-      this.setOldMessages(oldMessages)
-    })
-    const removeClient = this.services.webSocket.addClient({
+    this.removeClientFunction  = this.services.webSocket.addClient({
       needSession: true,
       onSessionInit: () => {
         console.log('Запрашиваем последние 10 сообщений...')
@@ -45,14 +36,13 @@ class ChatModule extends StoreModule<ChatState, ChatConfig> {
       },
       onSessionReconnect: () => {
         this.getLastMessages()
+      },
+      subscriptions: {
+        last: (messages) => this.setLastMessages(messages),
+        old: (oldMessages) => this.setOldMessages(oldMessages),
+        post: (message) => this.setNewMessage(message)
       }
     })
-    this.removeClientFunction = () => {
-      unsubscribeLast()
-      unsubscribeOld()
-      unsubscribePost()
-      removeClient()
-    }
   }
 
   stopListening(options?: {

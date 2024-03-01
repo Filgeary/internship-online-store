@@ -41,6 +41,19 @@ class WebSocketService {
   }
 
   public addClient(options: ClientOptions) {
+    //Подписки на модули
+    const subscriptionsKeys = Object.keys(options.subscriptions) as ModuleNames[]
+    const unsubscribeModules: Function[] = []
+    for (let key of subscriptionsKeys) {
+      const subscriptionsKey = key as ModuleNames
+      if (options.subscriptions[subscriptionsKey]) {
+        unsubscribeModules.push(
+          //@ts-ignore
+          this.events[subscriptionsKey].subscribe(options.subscriptions[subscriptionsKey])
+        )
+      }
+    }
+
     //Вызываем инициализирующую функцию, требующую сессию,
     //если сессия активна
     if (options.onSessionInit && this.isAuthorized) {
@@ -61,6 +74,7 @@ class WebSocketService {
 
     //Возвращаем функцию удаления клиента из массива
     return () => {
+      unsubscribeModules.forEach(f => f())
       this.clients = this.clients.filter(cl => cl !== client); 
       //Если клиентов нет, разрываем соединение
       if (!this.clients.length) this.killConnection();
