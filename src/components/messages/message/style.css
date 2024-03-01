@@ -70,6 +70,7 @@
   line-height: 1.5;
   overflow-wrap: break-word;
   hyphens: auto;
+  white-space: break-spaces;
 }
 
 .Message-avatar {

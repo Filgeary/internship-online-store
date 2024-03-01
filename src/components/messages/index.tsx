@@ -1,5 +1,5 @@
 import './style.css';
-import React, { createContext, memo, useContext } from 'react';
+import React, { createContext, memo, useContext, useRef } from 'react';
 
 import { cn as bem } from '@bem-react/classname';
 
@@ -39,11 +39,9 @@ function Messages(props: MessagesProps) {
   return (
     <div className={cn()}>
       {loading && 'Загрузка'}
-      <Spinner active={loading}>
-        <MessagesContext.Provider value={{ messages, userId, onScrollTop: props.onScrollTop }}>
-          {children}
-        </MessagesContext.Provider>
-      </Spinner>
+      <MessagesContext.Provider value={{ messages, userId, onScrollTop: props.onScrollTop }}>
+        {children}
+      </MessagesContext.Provider>
     </div>
   );
 }

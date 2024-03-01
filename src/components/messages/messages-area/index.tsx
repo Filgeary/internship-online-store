@@ -1,5 +1,5 @@
 import './style.css';
-import { memo, useEffect, useRef, useState } from 'react';
+import { memo, useEffect, useLayoutEffect, useRef, useState } from 'react';
 
 import { cn as bem } from '@bem-react/classname';
 
@@ -10,10 +10,11 @@ import { useMessagesContext } from '..';
 function MessagesArea() {
   const cn = bem('MessagesArea');
 
-  const messagesAreaRef = useRef<HTMLDivElement | null>(null);
-
   const [previousHeight, setPreviousHeight] = useState(0);
   const [onTop, setOnTop] = useState(false);
+  const [initScrolling, setInitScrolling] = useState(false);
+
+  const messagesAreaRef = useRef<HTMLDivElement>();
 
   const { messages, userId, onScrollTop } = useMessagesContext();
 
@@ -28,13 +29,26 @@ function MessagesArea() {
     },
   };
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const previousScrollPosition = messagesAreaRef.current.scrollHeight - previousHeight;
+    const lastMessageAuthorId = messages.at(-1)?.author._id;
+
+    const scrollableDistance =
+      messagesAreaRef.current.scrollTop + messagesAreaRef.current.clientHeight;
+    const scrollingNow = messagesAreaRef.current.scrollHeight === scrollableDistance;
 
     if (onTop) messagesAreaRef.current.scrollTop = previousScrollPosition;
-    else messagesAreaRef.current.scrollTop = messagesAreaRef.current.scrollHeight;
+    else if (!scrollingNow || lastMessageAuthorId === userId) {
+      messagesAreaRef.current.scrollTop = messagesAreaRef.current.scrollHeight;
+    }
 
     setPreviousHeight(messagesAreaRef.current.scrollHeight);
+  }, [messages]);
+
+  useEffect(() => {
+    if (initScrolling || messages.length === 0) return;
+    messagesAreaRef.current.scrollTop = messagesAreaRef.current.scrollHeight;
+    setInitScrolling(true);
   }, [messages]);
 
   return (
