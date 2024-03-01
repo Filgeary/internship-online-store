@@ -1,0 +1,17 @@
+.MessagesUtils {
+  padding: 15px 0;
+}
+
+.MessagesUtils-inner {
+  display: flex;
+  column-gap: 10px;
+}
+
+.MessagesUtils-action {
+  padding: 4px 13px;
+  cursor: pointer;
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+}

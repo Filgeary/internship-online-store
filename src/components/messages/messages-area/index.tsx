@@ -14,9 +14,7 @@ function MessagesArea() {
   const [onTop, setOnTop] = useState(false);
   const [initScrolling, setInitScrolling] = useState(false);
 
-  const messagesAreaRef = useRef<HTMLDivElement>();
-
-  const { messages, userId, onScrollTop } = useMessagesContext();
+  const { messages, userId, onScrollTop, setOnBottom, messagesAreaRef } = useMessagesContext();
 
   const handlers = {
     onScroll: () => {
@@ -25,6 +23,15 @@ function MessagesArea() {
         setOnTop(true);
       } else {
         setOnTop(false);
+      }
+
+      if (
+        messagesAreaRef.current.scrollTop + messagesAreaRef.current.clientHeight + 5 >=
+        messagesAreaRef.current.scrollHeight
+      ) {
+        setOnBottom(true);
+      } else {
+        setOnBottom(false);
       }
     },
   };
@@ -37,9 +44,13 @@ function MessagesArea() {
       messagesAreaRef.current.scrollTop + messagesAreaRef.current.clientHeight;
     const scrollingNow = messagesAreaRef.current.scrollHeight === scrollableDistance;
 
-    if (onTop) messagesAreaRef.current.scrollTop = previousScrollPosition;
-    else if (!scrollingNow || lastMessageAuthorId === userId) {
-      messagesAreaRef.current.scrollTop = messagesAreaRef.current.scrollHeight;
+    if (onTop) {
+      messagesAreaRef.current.scrollTop = previousScrollPosition;
+    } else if (!scrollingNow || lastMessageAuthorId === userId) {
+      messagesAreaRef.current.scrollTo({
+        top: messagesAreaRef.current.scrollHeight,
+        behavior: 'smooth',
+      });
     }
 
     setPreviousHeight(messagesAreaRef.current.scrollHeight);

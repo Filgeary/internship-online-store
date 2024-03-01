@@ -1,15 +1,15 @@
 import './style.css';
-import React, { createContext, memo, useContext, useRef } from 'react';
+import React, { createContext, memo, useContext, useRef, useState } from 'react';
 
 import { cn as bem } from '@bem-react/classname';
 
 import MessagesArea from './messages-area';
 import MessagesNew from './messages-new';
 import MessagesTitle from './messages-title';
+import MessagesUtils from './messages-utils';
 
-import { TMessagesContext } from './types';
 import { TMessage } from '@src/chat/types';
-import Spinner from '../spinner';
+import { TMessagesContext } from './types';
 
 const MessagesContext = createContext<TMessagesContext>(null);
 
@@ -34,12 +34,24 @@ type MessagesProps = {
 function Messages(props: MessagesProps) {
   const { children, messages, userId, loading } = props;
 
+  const [onBottom, setOnBottom] = useState(false);
+  const messagesAreaRef = useRef<HTMLDivElement>(null);
+
   const cn = bem('Messages');
 
   return (
     <div className={cn()}>
       {loading && 'Загрузка'}
-      <MessagesContext.Provider value={{ messages, userId, onScrollTop: props.onScrollTop }}>
+      <MessagesContext.Provider
+        value={{
+          messages,
+          userId,
+          onScrollTop: props.onScrollTop,
+          onBottom,
+          setOnBottom,
+          messagesAreaRef,
+        }}
+      >
         {children}
       </MessagesContext.Provider>
     </div>
@@ -51,4 +63,5 @@ export default {
   Title: memo(MessagesTitle),
   Area: memo(MessagesArea),
   New: memo(MessagesNew),
+  Utils: memo(MessagesUtils),
 };

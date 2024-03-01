@@ -38,6 +38,7 @@ function MessagesWrapper() {
     >
       <Messages.Title>{t('titleInner.community')}</Messages.Title>
       <Messages.Area />
+      <Messages.Utils />
       <Messages.New onSubmit={handlers.sendNewMessage} />
     </Messages.Root>
   );
