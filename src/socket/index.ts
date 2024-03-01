@@ -2,9 +2,9 @@ import type { IConfig } from "../config"
 import Services from "../services"
 
 class WebSocketService {
-    services: Services;
-    config: IConfig["socket"];
-    socket?: WebSocket;
+    services: Services
+    config: IConfig["socket"]
+    socket?: WebSocket
   
     constructor(services: Services, config: IConfig["socket"] = {} as IConfig["socket"]) {
       this.services = services;
@@ -25,7 +25,7 @@ class WebSocketService {
      * Отправка данных по WebSocket соединению
      * @param data Данные для отправки
      */
-    send(method: string, payload: any): void {
+    send(method: string, payload: Record<string, string>): void {
         const data = JSON.stringify({
             method,
             payload: {
@@ -34,7 +34,7 @@ class WebSocketService {
           }); 
 
       if (this.socket) {
-        this.socket.send(JSON.stringify(data));
+        this.socket.send(data);
       } else {
         console.error("WebSocket connection is not open.");
       }

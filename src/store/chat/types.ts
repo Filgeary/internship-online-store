@@ -19,4 +19,20 @@ export interface IChatState {
   messages: IChat[]
   message: string
   connected: boolean
+  clearChat: boolean
 }
+
+export interface IResponseLatestMessages {
+  method: string
+  payload: {
+    items: IChat[]
+  }
+}
+
+export interface IResponseNewMessages {
+  method: string
+  payload: IChat
+}
+
+export type TMessages = IResponseLatestMessages | IResponseNewMessages
+

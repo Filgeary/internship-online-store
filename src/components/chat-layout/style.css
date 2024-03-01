@@ -7,19 +7,27 @@
   color: #fff;
   line-height: 32px;
   text-align: center;
-  width: 99.6%;
-  border-radius: 10px;
-  background-color: #a675b3;
+  /* width: 99.6%;
+  border-radius: 10px; */
+  background-color: #8475b3;
   text-decoration: none;
   font-size: 14px;
   padding: 10px;
   margin: auto;
   min-height: calc(100vh - 190px);
   padding-bottom: 30px;
+  box-shadow: inset rgba(0, 0, 0, 0.6) 0 -3px 8px,
+    inset rgba(111, 106, 139, 0.7) 0 3px 8px, rgba(0, 0, 0, 0.8) 0 3px 8px -3px;
+}
+
+.Chat-title {
+  font-size: 30px;
 }
 
 .Chat-wrap-message {
   position: relative;
+  width: 100%;
+  list-style-type: none;
 }
 
 .Chat-wrap-message_right {
@@ -28,10 +36,13 @@
 }
 
 .Chat-message {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
   color: #fff;
   line-height: 32px;
   text-align: start;
-  width: 100px;
   border-radius: 16px;
   background-color: #271739;
   text-decoration: none;
@@ -40,8 +51,64 @@
   word-wrap: break-word;
   line-height: 20px;
   margin: 20px 0 20px 0;
-  width: 70%;
+  max-width: 50%;
+  width: 100%;
   color: white;
+  box-shadow: inset rgba(0, 0, 0, 0.6) 0 -3px 8px,
+    inset rgba(111, 106, 139, 0.7) 0 3px 8px, rgba(0, 0, 0, 0.8) 0 3px 8px -3px;
+}
+
+.Chat-img {
+  width: 50px;
+  border-radius: 30px 30px 3px 30px;
+  position: absolute;
+  top: -27px;
+  left: -23px;
+}
+
+.Chat-text {
+  overflow: hidden;
+  word-wrap: break-word;
+  margin-left: 25px;
+}
+
+.Chat-wrap_1 {
+  position: absolute;
+  bottom: 5px;
+  right: 35px;
+}
+
+.Chat-wrap_2 {
+  position: absolute;
+  bottom: 5px;
+  right: 25px;
+}
+
+.Chat-check {
+  position: absolute;
+  background: rgb(253, 253, 253);
+}
+
+.Chat-wrap-check {
+  width: 10%;
+  position: relative;
+  background: rgb(248, 247, 247);
+}
+
+#check-part-1 {
+  width: 8px;
+  height: 2px;
+  top: 4px;
+  left: 3px;
+  transform: rotate(48deg);
+}
+
+#check-part-2 {
+  width: 15px;
+  height: 2px;
+  transform: rotate(-50deg);
+  left: 7px;
+  top: 0;
 }
 
 .Chat-input {
@@ -79,15 +146,41 @@
 
 .Chat-button:before {
   content: ".";
-  color:transparent;
+  color: transparent;
   line-height: 16px;
   width: 90px;
   margin-top: 0px;
   margin-bottom: -17px;
   margin-left: 5px;
-  background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.2) );
-  background-image:-moz-linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.2));
-  background-image: -o-linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.2));
-  border-radius:16px; 
-  display:block;
+  background-image: -webkit-linear-gradient(
+    rgba(255, 255, 255, 0.9),
+    rgba(255, 255, 255, 0.2)
+  );
+  background-image: -moz-linear-gradient(
+    rgba(255, 255, 255, 0.9),
+    rgba(255, 255, 255, 0.2)
+  );
+  background-image: -o-linear-gradient(
+    rgba(255, 255, 255, 0.9),
+    rgba(255, 255, 255, 0.2)
+  );
+  border-radius: 16px;
+  display: block;
+}
+
+.Chat-wrap-button {
+  width: 100%;
+  justify-content: center;
+  display: flex;
+}
+
+.Chat-button_button_bottom {
+  position: relative;
+  margin-right: 40px;
+  width: 200px;
+  margin-top: 20px;
+}
+
+.Chat-button_button_bottom:before {
+  width: 188px;
 }
