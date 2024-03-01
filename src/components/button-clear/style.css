@@ -1,0 +1,15 @@
+.clear {
+  margin: 10px 0;
+  padding: 8px;
+  border-radius: 10px;
+  border: none;
+  background-color: #6F7EFF;
+  color: #fff;
+  font-size: 12px;
+  transition: hover 0.3s;
+  transform: translateX(-200px);
+}
+
+.clear:hover {
+  background-color: #4454e8;
+}

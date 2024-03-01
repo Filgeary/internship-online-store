@@ -2,11 +2,11 @@ export type ConfigWS = {
   url: string;
 };
 
-export type InitialStateSeance = {
+export type InitialStateChat = {
   ws: WebSocket | null;
-  connection: boolean;
   messages: MessageType[];
-  timeId: string | number | NodeJS.Timeout | undefined;
+  fromId?: string,
+  keyofMessageSentByMe: string,
 };
 
 export type MessageType = {
@@ -15,7 +15,9 @@ export type MessageType = {
   text: string;
   author: Author;
   dateCreate: string;
+  status?: StatusType
 };
+export type StatusType = 'sent' | 'read';
 
 export type Author = {
   _id: string;
@@ -27,4 +29,3 @@ export type Author = {
     };
   };
 }
-

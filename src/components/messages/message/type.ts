@@ -1,6 +1,7 @@
-import { MessageType } from "@src/store/seance/type"
+import { MessageType } from "@src/store/chat/type"
 
 export type MessagePropsType = {
   message: MessageType,
-  self: boolean
+  self: boolean,
+  changeStatus: () => void
 }

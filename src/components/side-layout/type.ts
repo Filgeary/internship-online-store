@@ -2,7 +2,8 @@ import { ReactNode } from "react";
 
 export interface SideLayoutProps {
   children: ReactNode;
-  side?: "start" | "end" | "between" | 'top';
+  side?: "start" | "end" | "between" | 'top' | 'center';
   padding?: "small" | "medium";
-  minHeight?: number
+  minHeight?: number,
+  direction?: 'row' | 'column'
 }

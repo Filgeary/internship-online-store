@@ -1,6 +1,8 @@
-import { MessageType } from "@src/store/seance/type"
+import { MessageType } from "@src/store/chat/type"
 
 export type MessagesPropType = {
   messages: MessageType[],
-  userId: string
+  userId: string,
+  loadOldMessages: () => void,
+  changeStatus: () => void
 }
