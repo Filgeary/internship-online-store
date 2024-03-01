@@ -76,7 +76,7 @@ class ChatState extends StoreModule<TChatState, TConfigWS> {
       }
       if (result) {
         if (result.items) {
-          let fromId = result.items[0]._id;
+          let fromId = result.items[0]?._id;
           let items;
           if (this.getState().messages.length > 0) {
             let one = this.getState().messages.shift()!;
@@ -145,14 +145,14 @@ class ChatState extends StoreModule<TChatState, TConfigWS> {
     );
   }
 
-  clearAll() {
+  /* clearAll() {
     this.getState().ws?.send(
       JSON.stringify({
         method: "clear",
         payload: {},
       })
     );
-  }
+  } */
 
   close() {
     if (this.getState().timeId) clearInterval(this.getState().timeId);
