@@ -1,13 +1,14 @@
 import Services from "@src/services";
 import EventModule from "../module";
-import { ModuleNames } from "../types";
+import { ReceivedMessage } from "../types";
+
 
 type RecievedPayload = {
-  items: any[]
+  items: ReceivedMessage[]
 }
 
 class Old extends EventModule {
-  listeners: ((messages: any) => void)[]
+  listeners: ((messages: ReceivedMessage[]) => void)[]
 
   constructor(...args: [Services, 'old']) {
     super(...args)
@@ -26,7 +27,7 @@ class Old extends EventModule {
     }
   }
 
-  subscribe(listener: (messages: any) => void): () => void {
+  subscribe(listener: (messages: ReceivedMessage[]) => void): () => void {
     this.listeners.push(listener)
     return () => {
       this.listeners = this.listeners.filter(item => item !== listener);

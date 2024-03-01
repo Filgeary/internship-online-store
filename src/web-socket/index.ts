@@ -1,40 +1,24 @@
 import Services from "@src/services";
-import { ModuleNames, Modules, WebSocketConfig } from "./types"
+import { Client, ClientOptions, ModuleNames, Modules, WebSocketConfig } from "./types"
 import { v4 as uuidv4 } from 'uuid';
-// import EventModule from "./module";
 import * as EventModules from './exports'
-
-// type ActiveClient = {
-//   _id: string,
-
-// }
-
 
 class WebSocketService {
 
   services: Services
   connection: WebSocket | undefined
   config: WebSocketConfig
+  clients: Client[]
   events: Modules
-  activeClients: number
-  sessionClients: number
-  onInitSessionCallbacks: Function[]
-  reconnectSessionCallbacks: Function[]
   isAuthorized: boolean
-
-
-  
 
   constructor(services: Services, config: WebSocketConfig) {
     this.services = services;
     this.config = config
-    this.onInitSessionCallbacks = []
-    this.reconnectSessionCallbacks = []
     this.isAuthorized = false
+    this.clients = []
     const methods = Object.keys(EventModules) as (keyof Modules)[]
     let events = {} as Modules
-    this.activeClients = 0
-    this.sessionClients = 0
     const create = <Method extends keyof Modules>(method: Method) => {
       events[method] = new EventModules[method](
         services,
@@ -49,72 +33,72 @@ class WebSocketService {
   }
 
   establishConnection() {
-    console.log('Устанавливаем соединение с: ' + this.config.url)
-    this.connection = new WebSocket(this.config.url)
-    this.connection.onopen = this.handleOpen.bind(this)
-    this.connection.onmessage = this.handleMessage.bind(this)
-    this.connection.onclose = this.handleClose.bind(this)
-    this.connection.onerror = this.handleError.bind(this)
+    this.connection = new WebSocket(this.config.url);
+    this.connection.onopen = this.handleOpen.bind(this);
+    this.connection.onmessage = this.handleMessage.bind(this);
+    this.connection.onclose = this.handleClose.bind(this);
+    this.connection.onerror = this.handleError.bind(this);
   }
 
-  addClient({needSession, onInitSession, onReconnectSession }:{
-    needSession: boolean,
-    onInitSession?: Function,
-    onReconnectSession?: Function
-  }) {
-    this.activeClients += 1
-    if (needSession) {
-      this.sessionClients += 1
-    }
-    if (onInitSession) {
-      if (this.isAuthorized) {
-        onInitSession()
-      } else {
-        this.onInitSessionCallbacks.push(onInitSession)
-      }
-    }
-    if (onReconnectSession) {
-      this.reconnectSessionCallbacks.push(onReconnectSession)
-    }
-    if (!this.connection) {
-      this.establishConnection()
-    }
-    alert('client: ' + this.activeClients)
+  public addClient(options: ClientOptions) {
+    //Вызываем инициализирующую функцию, требующую сессию,
+    //если сессия активна
+    if (options.onSessionInit && this.isAuthorized) {
+      options.onSessionInit();
+      options.onSessionInit = undefined;
+    };
+    //Переподключаемся для авторизации или установления соединения
+    if (!this.isAuthorized && options.needSession || !this.connection) {
+      this.reestablishConnection();
+    } 
+    //Добавляем клиента в массив
+    const client = { _id: uuidv4(), ...options };
+    this.clients.push(client);
 
+    console.log('Клиент ' + client._id + ' добавлен');
+    console.log('Клиенты webSocketService:');
+    console.log(this.clients);
+
+    //Возвращаем функцию удаления клиента из массива
     return () => {
-      this.activeClients -= 1
-      if (needSession) {
-        this.sessionClients -= 1
-      }
-      if (onReconnectSession) {
-        this.reconnectSessionCallbacks = this.reconnectSessionCallbacks
-        .filter(func => func === onReconnectSession)
-      }
-      if (this.activeClients === 0) this.killConnection()
-      alert('client: ' + this.activeClients)
-    }
+      this.clients = this.clients.filter(cl => cl !== client); 
+      //Если клиентов нет, разрываем соединение
+      if (!this.clients.length) this.killConnection();
+      //Если нет клиентов, требующих сессию
+      if (!this.clients.reduce((acc,cl) => cl.needSession ? ++acc : acc, 0) && this.clients.length) {
+        this.reestablishConnection();
+      };
+      console.log('Клиент ' + client._id + ' удален');
+      console.log('Клиенты webSocketService:');
+      console.log(this.clients);
+    };
   }
 
   killConnection() {
-    console.log('Убиваем соединение c ' + this.config.url)
-    if (!this.connection) return
-    this.connection.onopen = null
-    this.connection.onmessage = null
-    this.connection.onclose = null
-    this.connection.onerror = null
-    this.connection.close()
-    this.connection = undefined
-    this.isAuthorized = false
+    if (!this.connection) return;
+    this.connection.onopen = null;
+    this.connection.onmessage = null;
+    this.connection.onclose = null;
+    this.connection.onerror = null;
+    this.connection.close();
+    this.connection = undefined;
+    this.isAuthorized = false;
+    console.log('Соединение разорвано');
+    console.log('Клиенты webSocketService:');
+    console.log(this.clients);
   }
 
-  handleOpen() {
-    console.log('Соединение установлено')
-    if (this.sessionClients) {
+  private handleOpen() {
+    //Если есть клиенты, требующие сессию, авторизируем
+    if (this.clients.reduce((acc,cl) => cl.needSession ? ++acc : acc, 0)) {
       this.emitSignIn()
     }
+    console.log('Соединение установлено');
+    console.log('Клиенты webSocketService:');
+    console.log(this.clients);
   }
 
-  handleMessage(e: MessageEvent) {
+  private handleMessage(e: MessageEvent) {
     const data = JSON.parse(e.data)
     if (data.method === 'auth') {
       this.handleSignInResult(data.payload.result)
@@ -125,17 +109,18 @@ class WebSocketService {
     }
   }
 
-  handleClose() {
+  private handleClose() {
     this.reestablishConnection()
   }
 
-  handleError() {
+  private handleError() {
     this.reestablishConnection()
   }
 
 
-  emitSignIn() {
-    this.connection?.send(JSON.stringify({
+  private emitSignIn() {
+    if (!this.connection) this.reestablishConnection();
+    this.connection!.send(JSON.stringify({
       method: 'auth',
       payload: {
         token: this.services.store.getState().session.token
@@ -143,28 +128,39 @@ class WebSocketService {
     }))
   }
 
-  handleSignInResult(result: boolean) {
+  private handleSignInResult(result: boolean) {
     if (result) {
       this.isAuthorized = true
-      this.onInitSessionCallbacks = this.onInitSessionCallbacks.filter(cb => {
-        cb()
-        return false
+      this.clients.map(cl => {
+        if (cl.onSessionInit) {
+          cl.onSessionInit()
+          cl.onSessionInit = undefined
+        } else if (cl.onSessionReconnect) {
+          cl.onSessionReconnect()
+        }
+        return cl
       })
-      this.reconnectSessionCallbacks.map(cb => cb())
     } else {
-      this.reestablishConnection()
+      //Если есть клиенты, требующие сессию, повторяем событие auth
+      if (this.clients.reduce((acc,cl) => cl.needSession ? ++acc : acc, 0)) {
+        this.emitSignIn()
+      }
     }
   }
 
 
-  reestablishConnection() {
+  private reestablishConnection() {
     this.killConnection()
     setTimeout(() => {
       this.establishConnection()
     }, 1000)
+    console.log('Переустанавливаем соединение');
+    console.log('Клиенты webSocketService:');
+    console.log(this.clients);
   }
 
-  emitEvent(method: string, payload: object) {
+  public emitEvent(method: string, payload: object) {
+    //Todo может потеряться
     this.connection?.send(JSON.stringify({
       method, payload
     }))

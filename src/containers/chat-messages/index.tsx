@@ -53,6 +53,7 @@ function ChatMessages() {
           key={m._key}
           isViewerOwn={m.author._id === select.viewerId}
           receivedFromServer={m.receivedFromServer}
+          dateCreate={new Date(m.dateCreate)}
         />
       ))
     }

@@ -26,12 +26,27 @@ function ChatMessageCreator() {
   const [remove, setRemoveClient] = useState<any>()
 
   const addClient = () => {
-    const removeClient = services.webSocket.addClient({needSession: false})
+    if (remove) return
+    const removeClient = services.webSocket.addClient({})
     setRemoveClient(() => removeClient)
   }
 
   const removeClient = () => {
     remove()
+    setRemoveClient(undefined)
+  }
+
+  const [removeSession, setRemoveClientSession] = useState<any>()
+
+  const addClientSession = () => {
+    if (remove) return
+    const removeClient = services.webSocket.addClient({needSession: true})
+    setRemoveClientSession(() => removeClient)
+  }
+
+  const removeClientSession = () => {
+    removeSession()
+    setRemoveClientSession(undefined)
   }
 
   return (
@@ -49,6 +64,8 @@ function ChatMessageCreator() {
       <button onClick={() => store.actions.chat.startListening()}>Включить прослушивание событий</button>
       <button onClick={addClient}>Добавить клиента</button>
       <button onClick={removeClient}>Удалить клиента</button>
+      <button onClick={addClientSession}>Добавить клиента с сессией</button>
+      <button onClick={removeClientSession}>Удалить клиента с сессией</button>
       <button onClick={() => alert(services.webSocket.connection?.readyState)}>Текущее состояние соединения</button>
     </>
   )

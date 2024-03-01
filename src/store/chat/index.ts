@@ -1,13 +1,14 @@
+import { ReceivedMessage } from "@src/web-socket/types";
 import Store from "..";
 import StoreModule from "../module";
 import { ModuleNames } from "../types";
 import { ChatState, ChatConfig } from "./types";
 import { v4 as uuidv4 } from 'uuid';
+import { Message } from "@src/types";
 /**
  * Чат
  */
 class ChatModule extends StoreModule<ChatState, ChatConfig> {
-
   removeClientFunction: Function | undefined
 
   constructor(...params: [Store, ModuleNames, ChatConfig]) {
@@ -27,23 +28,22 @@ class ChatModule extends StoreModule<ChatState, ChatConfig> {
 
   startListening() {
     if (this.removeClientFunction) return
-    console.log('start list')
-    const unsubscribeLast =this.services.webSocket.events.last.subscribe((messages: any) => {
+    const unsubscribeLast = this.services.webSocket.events.last.subscribe((messages) => {
       this.setLastMessages(messages)
     })
-    const unsubscribePost = this.services.webSocket.events.post.subscribe((message: any) => {
+    const unsubscribePost = this.services.webSocket.events.post.subscribe((message) => {
       this.setNewMessage(message)
     })
-    const unsubscribeOld = this.services.webSocket.events.old.subscribe((oldMessages: any) => {
+    const unsubscribeOld = this.services.webSocket.events.old.subscribe((oldMessages) => {
       this.setOldMessages(oldMessages)
     })
     const removeClient = this.services.webSocket.addClient({
       needSession: true,
-      onInitSession: () => {
+      onSessionInit: () => {
         console.log('Запрашиваем последние 10 сообщений...')
         this.getLastMessages()
       },
-      onReconnectSession: () => {
+      onSessionReconnect: () => {
         this.getLastMessages()
       }
     })
@@ -69,11 +69,11 @@ class ChatModule extends StoreModule<ChatState, ChatConfig> {
     }
   }
 
-  setLastMessages(lastMessages: any) {
+  setLastMessages(lastMessages: ReceivedMessage[]) {
     let messages = this.getState().messages
     const filteredLastMessages = lastMessages
-      .filter((om: any) => !messages.find(m => m._id === om._id))
-      .map((m: any) => ({...m, receivedFromServer: true}))
+      .filter((om) => !messages.find(m => m._id === om._id))
+      .map((m) => ({...m, receivedFromServer: true})) as Message[]
     if (filteredLastMessages.length) {
       messages = [
         ...messages,
@@ -96,7 +96,7 @@ class ChatModule extends StoreModule<ChatState, ChatConfig> {
 
   }
 
-  setNewMessage(message: any) {
+  setNewMessage(message: ReceivedMessage) {
     let found = false
     let messages = this.getState().messages
       .map(m => {
@@ -105,8 +105,7 @@ class ChatModule extends StoreModule<ChatState, ChatConfig> {
           return {...message, receivedFromServer: true}
         } else return m
       })
-    if (!found) messages.push({...message, receivedFromServer: true})
-
+    if (!found) messages.push({...message, receivedFromServer: true} as Message)
     const unsended = messages.find(m => !m.receivedFromServer)
     if (unsended) {
       this.postMessage(unsended.text, unsended._key)
@@ -118,17 +117,16 @@ class ChatModule extends StoreModule<ChatState, ChatConfig> {
 
     this.setState({
       ...this.getState(),
-      messages
+      messages: messages as Message[]
     }, 'новое сообщение')
   }
 
-  setOldMessages(oldMessages: any) {
+  setOldMessages(oldMessages: ReceivedMessage[]) {
     const messages = this.getState().messages
-    // TODO
     if (messages?.[0]._id !== oldMessages[oldMessages.length - 1]._id) return
     const filteredOldMessages = oldMessages
       .filter((om: any) => !messages.find(m => m._id === om._id))
-      .map((m: any) => ({...m, receivedFromServer: true}))
+      .map((m: any) => ({...m, receivedFromServer: true})) as Message[]
     if (!filteredOldMessages.length) return
     this.setState({
       ...this.getState(),

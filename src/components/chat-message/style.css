@@ -2,9 +2,10 @@
   max-width: 500px;
   background-color: #fff;
   border-radius: 10px;
-  padding: 10px;
+  padding: 10px 10px 5px;
   list-style-type: none;
   word-break: break-word;
+  width: fit-content;
 }
 
 .ChatMessage_alignHorizontal_start {
@@ -27,6 +28,24 @@
   margin: 0;
   font-size: 14px;
   white-space: pre-line;
+  width: fit-content;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.ChatMessage-time {
+  font-size: 12px;
+  display: inline;
+  color: #7757D6;
+  white-space: nowrap;
+}
+
+.ChatMessage-status {
+  display: flex;
+  width: fit-content;
+  gap: 3px;
+  align-items: center;
+  margin-left: auto;
 }
 
 .ChatMessage-flex {
