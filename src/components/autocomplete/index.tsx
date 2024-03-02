@@ -76,6 +76,7 @@ function Autocomplete(props: AutocompleteProps) {
   const [selected, setSelected] = useState<string[]>(
     Array.isArray(props.value) ? props.value : [props.value]
   );
+  const [offset, setOffset] = useState(0);
 
   const wrapperRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<Scrollbar>(null);
@@ -154,6 +155,7 @@ function Autocomplete(props: AutocompleteProps) {
     search,
     isOpen,
     isMultiple,
+    dropOnTop,
 
     active: useMemo<TOption | TOption[]>(() => {
       if (isMultiple) {
@@ -278,6 +280,13 @@ function Autocomplete(props: AutocompleteProps) {
     }
   }, [selected]);
 
+  useEffect(() => {
+    const res = -(dropRef.current.clientHeight + wrapperRef.current.clientHeight);
+    console.log('Offset:', res);
+    if (values.dropOnTop) setOffset(res);
+    else setOffset(0);
+  }, [values.active, values.dropOnTop]);
+
   return (
     <div ref={wrapperRef} className={cn({ active: isOpen, smooth, disabled })}>
       <div
@@ -300,7 +309,7 @@ function Autocomplete(props: AutocompleteProps) {
 
       {/* Выпадашка */}
       <div className={cn('drop')} id={uid}>
-        <div ref={dropRef} className={cn('drop-inner', { top: dropOnTop })}>
+        <div style={{ top: offset }} ref={dropRef} className={cn('drop-inner', { top: dropOnTop })}>
           {isOpen && (
             <AutocompleteContext.Provider
               value={{
@@ -308,6 +317,8 @@ function Autocomplete(props: AutocompleteProps) {
                 helpers,
                 options,
                 callbacks,
+                wrapperRef,
+                dropRef,
                 listRef,
                 searchRef,
                 firstOptionRef,

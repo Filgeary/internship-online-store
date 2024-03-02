@@ -1,5 +1,5 @@
 import './style.css';
-import { memo, useContext, useEffect } from 'react';
+import { memo, useContext, useEffect, useState } from 'react';
 import { cn as bem } from '@bem-react/classname';
 
 import { AutocompleteContext } from '..';

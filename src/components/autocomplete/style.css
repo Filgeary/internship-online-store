@@ -67,9 +67,9 @@
   box-sizing: border-box;
 }
 
-.Autocomplete-drop-inner_top {
+/* .Autocomplete-drop-inner_top {
   top: -215px;
-}
+} */
 
 .Autocomplete-inner {
   display: flex;

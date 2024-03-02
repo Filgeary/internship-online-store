@@ -31,7 +31,7 @@ const useOnClickOutside: TUseOnClickOutside = (ref, { triggerByEsc }, ...handler
 
     return () => {
       document.removeEventListener('pointerdown', listener);
-      document.addEventListener('keydown', keyListener);
+      document.removeEventListener('keydown', keyListener);
     };
   }, [ref, handlers]);
 };

@@ -13,6 +13,7 @@ export type TAutocompleteContext = {
     selected: string[];
     isOpen: boolean;
     isMultiple: boolean;
+    dropOnTop: boolean;
     active: TOption | TOption[];
   };
   options: {
@@ -30,6 +31,8 @@ export type TAutocompleteContext = {
     onSpaceDown: (...handlers: ((...args: any[]) => void)[]) => React.KeyboardEventHandler;
     deleteOption: (option: TOption) => void;
   };
+  wrapperRef: React.RefObject<HTMLDivElement>;
+  dropRef: React.RefObject<HTMLDivElement>;
   listRef: React.RefObject<Scrollbar>;
   searchRef: React.RefObject<HTMLInputElement>;
   firstOptionRef: React.MutableRefObject<HTMLDivElement | null>;

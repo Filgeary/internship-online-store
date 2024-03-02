@@ -32,7 +32,7 @@ const useOnClickInside: TUseOnClickInside = (ref, { triggerByEsc }, ...handlers)
 
     return () => {
       refNode?.removeEventListener('pointerdown', listener);
-      refNode?.addEventListener('keydown', keyListener);
+      refNode?.removeEventListener('keydown', keyListener);
     };
   }, [ref, handlers]);
 };
