@@ -1,0 +1,7 @@
+.sanitize-img {
+  filter: blur(1px);
+
+  &:hover {
+    filter: none;
+  }
+}

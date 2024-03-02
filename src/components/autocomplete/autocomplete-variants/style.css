@@ -3,6 +3,6 @@
   flex-wrap: wrap;
   padding-top: 10px;
   gap: 5px;
-  max-height: 50px;
+  max-height: 20px;
   overflow-y: auto;
 }

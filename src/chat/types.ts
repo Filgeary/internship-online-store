@@ -5,6 +5,7 @@ export type TMessage = {
   author: TProfile | TAuthor;
   dateCreate: string;
   sended?: boolean;
+  alreadyDone?: boolean;
 };
 
 export type TAuthor = {

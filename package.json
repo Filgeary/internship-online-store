@@ -20,8 +20,10 @@
   "homepage": "https://github.com/ylabio/react-webinar-3#readme",
   "dependencies": {
     "@bem-react/classname": "^1.6.0",
+    "@fancyapps/ui": "^5.0.33",
     "dompurify": "^3.0.9",
     "eslint-plugin-react-hooks": "^4.6.0",
+    "html-to-react": "^1.7.0",
     "lodash.debounce": "^4.0.8",
     "lodash.throttle": "^4.1.1",
     "prop-types": "^15.8.1",

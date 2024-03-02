@@ -38,15 +38,14 @@ function MessagesArea() {
 
   useLayoutEffect(() => {
     const previousScrollPosition = messagesAreaRef.current.scrollHeight - previousHeight;
-    const lastMessageAuthorId = messages.at(-1)?.author._id;
 
     const scrollableDistance =
       messagesAreaRef.current.scrollTop + messagesAreaRef.current.clientHeight;
-    const scrollingNow = messagesAreaRef.current.scrollHeight === scrollableDistance;
+    const scrollingNow = messagesAreaRef.current.scrollHeight !== scrollableDistance;
 
     if (onTop) {
       messagesAreaRef.current.scrollTop = previousScrollPosition;
-    } else if (!scrollingNow || lastMessageAuthorId === userId) {
+    } else if (!scrollingNow) {
       messagesAreaRef.current.scrollTo({
         top: messagesAreaRef.current.scrollHeight,
         behavior: 'smooth',

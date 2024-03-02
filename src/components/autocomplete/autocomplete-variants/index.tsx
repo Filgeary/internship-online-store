@@ -1,11 +1,12 @@
-import { memo, useContext, useEffect } from 'react';
 import './style.css';
+import { memo, useContext, useEffect } from 'react';
+import { cn as bem } from '@bem-react/classname';
 
 import { AutocompleteContext } from '..';
-import { cn as bem } from '@bem-react/classname';
+import AutocompleteVariant from '../autocomplete-variant';
+
 import sliceLongString from '@src/utils/slice-long-string';
 import { TOption } from '../types';
-import AutocompleteVariant from '../autocomplete-variant';
 
 function AutocompleteVariants() {
   const { values, helpers, firstActiveOptionRef, firstOptionRef } = useContext(AutocompleteContext);
