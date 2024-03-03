@@ -2,7 +2,6 @@
   display: flex;
   flex-direction: column;
   height: 30px;
-  border: 1px solid #dbdfff;
   width: 240px;
   margin: 0;
   transition: background-color 0.4s;
@@ -23,7 +22,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 6px;
+  padding: 0 5px;
   box-sizing: border-box;
   transition: background-color 0.4s;
 }
@@ -48,10 +47,16 @@
 }
 .SelectCustom-dropdown {
   position: absolute;
-  top: 30px;
-  left: 0;
   box-shadow: 0px 1px 8px -1px #dbdfff;
+  bottom: 100%;
 }
+
+ .top {
+  top : 100%;
+} 
+ .bottom {
+  bottom: 100%;
+} 
 
 .SelectCustom-dropdown:focus {
   outline: none;
@@ -66,7 +71,7 @@
   box-sizing: border-box;
   max-height: 160px;
   width: 240px;
-  padding: 6px;
+  padding: 5px;
   background-color: #ffffff;
 }
 

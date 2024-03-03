@@ -35,7 +35,27 @@ function SelectCustom({
   const refOptions = useRef<HTMLDivElement>(null);
   const refInput = useRef<HTMLInputElement>(null);
   const refScrollList = useRef<HTMLDivElement | null>(null);
+  const refDropdown = useRef<HTMLDivElement | null>(null);
   const refSelect = useRef<Array<HTMLDivElement | null>>([]);
+
+  useInit(() => {
+    const html = document.querySelector("html");
+    if (html) {
+      html.style.overflow = open ? "hidden" : "auto";
+    }
+    if (
+      refOptions.current !== null &&
+      refDropdown.current !== null &&
+      window.innerHeight -
+        refOptions.current.offsetTop +
+        refOptions.current.offsetHeight <
+        refDropdown.current?.scrollHeight
+    ) {
+      refDropdown.current?.classList.replace("top", "bottom");
+    } else {
+      refDropdown.current?.classList.replace("bottom", "top");
+    }
+  }, [open]);
 
   useInit(() => {
     if (selected.length > 0) {
@@ -60,8 +80,8 @@ function SelectCustom({
       target: { value: string };
       preventDefault: () => void;
     }) => {
-      setSearch(e.target.value);
-      onSearch(e.target.value);
+      setSearch(e.target.value.trim());
+      onSearch(e.target.value.trim());
       e.preventDefault();
     },
 
@@ -199,9 +219,10 @@ function SelectCustom({
 
       {open && (
         <div
-          className={cn("dropdown")}
+          className={cn("dropdown") + " " + "top"}
           tabIndex={0}
           onKeyDown={callbacks.onCloseSelect}
+          ref={refDropdown}
         >
           <div className={cn("selected")}>
             {selected.slice(1).map((el) => (
