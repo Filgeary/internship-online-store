@@ -1,6 +1,7 @@
 import { TConfig } from '@src/config';
 import Services from '@src/services';
-import excludeArray from '@src/utils/exclude-array';
+
+import excludeExistingMessages from './utils/exclude-existing-messages';
 
 import { TAuthor, TListeners, TMessage, TResponse } from './types';
 
@@ -12,7 +13,7 @@ class ChatService {
   listeners: ((...args: any[]) => void)[];
   userId: string;
   token: string;
-  lastDate: string;
+  lastId: string;
   needUpdate: boolean = false;
   waiting: boolean = false;
   state: {
@@ -68,12 +69,7 @@ class ChatService {
       // Если подключение закрыто не успешно
       if (!event.wasClean) {
         this.auth(token, userId, reconnectCount + 1);
-        setTimeout(() => {
-          if (this.ws.readyState === 1) {
-            this.requestLastMessages();
-            this.needUpdate = true;
-          }
-        }, 1500);
+        this.needUpdate = true;
       }
     };
   }
@@ -127,6 +123,13 @@ class ChatService {
     if (!firstMessage) return;
 
     const fromId = firstMessage._id;
+    this.requestMessagesSinceId(fromId);
+  }
+
+  /**
+   * Запрос сообщений с определённого id
+   */
+  requestMessagesSinceId(fromId: string) {
     const bodyObj = JSON.stringify({
       method: 'old',
       payload: {
@@ -151,29 +154,16 @@ class ChatService {
     const messages = jsonObj.payload.items;
     if (!this.needUpdate) this.messages = messages;
     else {
-      const res = excludeArray(this.messages, messages, (obj1: TMessage[], obj2: TMessage[]) => {
-        const keys = Object.keys(obj1);
-
-        for (const key of keys) {
-          const val1 = obj1[key as keyof TMessage[]];
-          const val2 = obj2[key as keyof TMessage[]];
-
-          // Для null
-          if (val1 === val2) continue;
-
-          // Для вложенных объектов, их сравнивать вглубь не будем
-          if (typeof val1 === 'object' && typeof val2 === 'object') continue;
-          if (val1 !== val2) return false;
-        }
-
-        return true;
-      });
+      const res = excludeExistingMessages(this.messages, messages);
       this.messages = [...this.messages, ...res];
     }
 
+    const lastMessageInResponse = messages.find((message) => message._id === this.lastId);
+    if (!lastMessageInResponse) this.requestMessagesSinceId(messages[0]._id);
+
     this.needUpdate = false;
     this.waiting = false;
-    this.lastDate = messages.at(-1).dateCreate;
+    this.lastId = messages.at(-1)._id;
 
     this.callAllListeners();
   }
@@ -196,7 +186,7 @@ class ChatService {
     } else {
       this.messages = [...this.messages, message];
     }
-    this.lastDate = message.dateCreate;
+    this.lastId = message._id;
 
     this.waiting = false;
     this.callAllListeners();
@@ -210,7 +200,9 @@ class ChatService {
     const jsonObj = JSON.parse(responseRaw);
     const messages = jsonObj.payload.items.slice(0, -1);
 
-    this.messages = [...messages, ...this.messages];
+    const res = excludeExistingMessages(this.messages, messages);
+
+    this.messages = [...res, ...this.messages];
     this.callAllListeners();
   }
 

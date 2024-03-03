@@ -35,7 +35,11 @@ function Message(props: MessageProps) {
       </div>
 
       <div className={cn('content')}>
-        <SanitizeHtml className={cn('text')} as={'p'} html={message.text} />
+        <SanitizeHtml
+          className={cn('text')}
+          as={'div'}
+          html={message.text.replace(/\s\s+/gi, ' ')}
+        />
       </div>
     </article>
   );

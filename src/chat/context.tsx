@@ -1,6 +1,8 @@
-import useServices from '@src/hooks/use-services';
 import React, { createContext, useContext, useSyncExternalStore } from 'react';
+
+import useServices from '@src/hooks/use-services';
 import ChatService from '.';
+
 import { TMessage } from './types';
 
 type TChatContext = {

@@ -1,3 +1,4 @@
+import './style.css';
 import React, {
   createContext,
   memo,
@@ -10,7 +11,6 @@ import React, {
 } from 'react';
 import Arrow from '@src/assets/images/arrow.svg';
 
-import './style.css';
 import { cn as bem } from '@bem-react/classname';
 import { Scrollbar } from 'react-scrollbars-custom';
 
@@ -19,12 +19,11 @@ import useOnClickOutside from '@src/hooks/use-on-click-outside';
 import AutocompleteOption from './autocomplete-option';
 import AutocompleteSearch from './autocomplete-search';
 import AutocompleteList from './autocomplete-list';
+import AutocompleteField from './autocomplete-field';
+import AutocompleteVariants from './autocomplete-variants';
 
 import simplifyName from '@src/utils/simplify-name';
 import sliceLongString from '@src/utils/slice-long-string';
-
-import AutocompleteField from './autocomplete-field';
-import AutocompleteVariants from './autocomplete-variants';
 
 import { TAutocompleteContext, TOption } from './types';
 
@@ -282,7 +281,6 @@ function Autocomplete(props: AutocompleteProps) {
 
   useEffect(() => {
     const res = -(dropRef.current.clientHeight + wrapperRef.current.clientHeight);
-    console.log('Offset:', res);
     if (values.dropOnTop) setOffset(res);
     else setOffset(0);
   }, [values.active, values.dropOnTop]);

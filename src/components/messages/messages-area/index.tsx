@@ -1,5 +1,5 @@
 import './style.css';
-import { memo, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { memo, useEffect, useLayoutEffect, useState } from 'react';
 
 import { cn as bem } from '@bem-react/classname';
 
