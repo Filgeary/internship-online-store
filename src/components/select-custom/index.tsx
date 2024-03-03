@@ -1,67 +1,61 @@
 import ItemSelect from "../item-select";
-import "./style.css";
 import { cn as bem } from "@bem-react/classname";
-import { memo, useEffect, useRef, useState } from "react";
+import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { TCountries } from "@src/store/countries";
 import Spinner from "../spinner";
+import "./style.css";
 import useInit from "@src/hooks/use-init";
 
 type Props = {
   options: TCountries[];
   selected: TCountries[];
-  onSelect: (id: string[]) => void;
   onSearch: (value: string) => void;
   onLoad: () => void;
   waiting: boolean;
   onSelectCountry: (item: TCountries) => void;
   onReset: () => void;
+  onSelect: (id: string[]) => void;
 };
 
 function SelectCustom({
   options,
   selected,
-  onSelect,
   onSearch,
   waiting,
   onLoad,
   onSelectCountry,
   onReset,
+  onSelect,
 }: Props) {
-  const cn = bem("SelectBox");
-  const [scroll, setScroll] = useState(true);
+  const cn = bem("SelectCustom");
   const [open, setOpen] = useState<boolean>();
   const [search, setSearch] = useState<string>("");
+  const [hovered, setHovered] = useState<string | null>(null);
 
-  const selectBox = useRef<HTMLDivElement>(null);
-  const selectItem = useRef<HTMLInputElement>(null);
-  const scrollRef = useRef<HTMLDivElement | null>(null);
-  const ref = useRef<HTMLDivElement | null>(null);
-  const divRef = useRef<HTMLDivElement | null>(null);
-  const [scrollHeightSelect, setScrollHeightSelect] = useState<number>(0);
+  const refOptions = useRef<HTMLDivElement>(null);
+  const refInput = useRef<HTMLInputElement>(null);
+  const refScrollList = useRef<HTMLDivElement | null>(null);
+  const refSelect = useRef<Array<HTMLDivElement | null>>([]);
 
   useInit(() => {
-    onSelect(selected.map((el) => el._id));
+    if (selected.length > 0) {
+      onSelect(selected.map((el) => el._id));
+    }
   }, [selected]);
 
-  useInit(() => {
-    if (scroll) {
-      scrollRef.current?.scrollTo(0, scrollHeightSelect - 120);
-    }
-  }, [options]);
-
   const callbacks = {
-    onScroll: () => {
+    onReset: useCallback(() => onReset(), [selected]),
+    onScroll: useCallback(() => {
       if (
-        scrollRef.current!.scrollHeight -
-          scrollRef.current!.scrollTop -
-          scrollRef.current!.clientHeight <
-          1 &&
-        search.length < 1
+        refScrollList.current!.scrollHeight ===
+          refScrollList.current!.scrollTop +
+            refScrollList.current!.clientHeight &&
+        search.length === 0
       ) {
         onLoad();
-        setScrollHeightSelect(scrollRef.current!.scrollHeight);
       }
-    },
+    }, [options, refScrollList.current]),
+
     onSearchCountries: (e: {
       target: { value: string };
       preventDefault: () => void;
@@ -70,35 +64,66 @@ function SelectCustom({
       onSearch(e.target.value);
       e.preventDefault();
     },
-    onOpen: () => {
+
+    onOpen: useCallback(() => {
       setOpen(!open);
-    },
+    }, [open]),
+
     onCloseSelect: (e: { stopPropagation?: any; key?: any }) => {
+      const currentItem = options.findIndex((el) => el._id === hovered);
       e.stopPropagation();
       const { key } = e;
-      if (key === "Escape" /* || key === "Tab" */) {
+      if (key === "Escape" || key === "Tab") {
         setOpen(false);
+      } else if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+        e.stopPropagation();
+        if (e.key === "ArrowDown" && hovered === null) {
+          setHovered(options[0]._id);
+          return;
+        }
+        const nextItem =
+          e.key === "ArrowDown"
+            ? options[currentItem + 1]
+            : options[currentItem - 1];
+        if (nextItem) {
+          setHovered(nextItem._id);
+          refSelect.current[currentItem]?.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+            inline: "start",
+          });
+          return;
+        }
+      } else if (e.key === "Enter" && hovered !== null) {
+        if (options[currentItem]?.title === "Все") {
+          onReset();
+        } else {
+          callbacks.onSelectCountries(options[currentItem]);
+        }
       }
     },
-    onClose: () => {
+
+    onClose: useCallback(() => {
       setOpen(false);
-    },
-    onSelectCountries: (item: TCountries) => {
-      onSelectCountry(item);
-    },
+    }, [open]),
+
+    onSelectCountries: useCallback(
+      (item: TCountries) => {
+        if (selected.length === 1 && selected[0]._id === item._id) {
+          onSelectCountry(item);
+          onSelect([]);
+        } else {
+          onSelectCountry(item);
+        }
+      },
+      [selected]
+    ),
+
     onOpenSelect: (e: any) => {
       e.stopPropagation();
       const { key } = e;
       if (key === "Enter") {
         setOpen(true);
-      }
-    },
-    onKeyUp: (e: any) => {
-      if (e.key === "ArrowDown" || e.key === "ArrowUp") {
-        e.stopPropagation();
-        selectItem.current?.blur();
-        (scrollRef.current!.childNodes[0] as HTMLLIElement).tabIndex;
-        // divRef.current?.focus();
       }
     },
   };
@@ -120,10 +145,10 @@ function SelectCustom({
         document.removeEventListener("touchstart", listener);
       };
     }, [ref, handler]);
-  })(selectBox, callbacks.onClose);
+  })(refOptions, callbacks.onClose);
 
   return (
-    <div className={cn()} ref={selectBox}>
+    <div className={cn()} ref={refOptions}>
       <div
         className={cn("select")}
         onClick={callbacks.onOpen}
@@ -132,27 +157,21 @@ function SelectCustom({
       >
         {selected.length === 1 ? (
           <ItemSelect
-            key={selected[0]._id}
+            key={selected[0]?._id}
             item={selected[0]}
-            onSelect={() => {}}
-            onReset={() => {}}
             selected={selected}
           />
         ) : selected.length > 1 ? (
           <ItemSelect
-            key={selected[0]._id}
+            key={selected[0]?._id}
             item={selected[0]}
-            onSelect={() => {}}
-            onReset={() => {}}
             selected={selected}
             count={`+${selected.length - 1}`}
           />
         ) : (
           <ItemSelect
-            key={options[0]._id}
+            key={options[0]?._id}
             item={options[0]}
-            onSelect={() => {}}
-            onReset={() => {}}
             selected={selected}
           />
         )}
@@ -179,17 +198,16 @@ function SelectCustom({
       </div>
 
       {open && (
-        <div className={cn("dropdown")}>
+        <div
+          className={cn("dropdown")}
+          tabIndex={0}
+          onKeyDown={callbacks.onCloseSelect}
+        >
           <div className={cn("selected")}>
             {selected.slice(1).map((el) => (
-              <ItemSelect
-                key={el._id}
-                item={el}
-                onSelect={callbacks.onSelectCountries}
-                onReset={onReset}
-                selected={selected}
-                selectedList={true}
-              />
+              <div onClick={() => callbacks.onSelectCountries(el)} key={el._id}>
+                <ItemSelect item={el} selected={selected} selectedList={true} />
+              </div>
             ))}
           </div>
           <div className={cn("content")}>
@@ -198,31 +216,35 @@ function SelectCustom({
               className={cn("search")}
               placeholder="Поиск"
               onChange={callbacks.onSearchCountries}
-              onKeyDown={callbacks.onCloseSelect}
               value={search}
               autoFocus
-              ref={selectItem}
-              onKeyUp={callbacks.onKeyUp}
+              ref={refInput}
             />
             <div
               className={cn("box")}
+              ref={refScrollList}
               onScroll={callbacks.onScroll}
-              ref={scrollRef}
             >
               <Spinner active={waiting}>
                 {options &&
-                  options.map((el) => (
-                    <div key={el._id} ref={divRef} className={cn("item")}>
+                  options.map((el, i) => (
+                    <div
+                      key={el._id}
+                      ref={(e) => (refSelect.current[i] = e)}
+                      onClick={
+                        el.title === "Все"
+                          ? () => onReset()
+                          : () => callbacks.onSelectCountries(el)
+                      }
+                    >
                       <ItemSelect
                         item={el}
-                        onSelect={callbacks.onSelectCountries}
-                        onReset={onReset}
                         selected={selected}
+                        hovered={hovered}
                       />
                     </div>
                   ))}
               </Spinner>
-              <div ref={ref} />
             </div>
           </div>
         </div>

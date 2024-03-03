@@ -9,7 +9,7 @@ import treeToList from "@src/utils/tree-to-list";
 import listToTree from "@src/utils/list-to-tree";
 import { TCountries } from "@src/store/countries";
 import SelectCustom from "@src/components/select-custom";
-
+import useInit from "@src/hooks/use-init";
 
 export type TCatalogFilter = {
   storeName: "catalog";
@@ -31,6 +31,9 @@ function CatalogFilter(props: TCatalogFilter) {
   }));
 
   const callbacks = {
+    onSelectedCountriesId: useCallback(() => {
+      return select.selected.map((el) => el._id);
+    }, [select.selected]),
     // Сортировка
     onSort: useCallback(
       (sort: string) => store.actions[props.storeName].setParams({ sort }),
@@ -53,15 +56,17 @@ function CatalogFilter(props: TCatalogFilter) {
         store.actions[props.storeName].setParams({ category, page: 1 }),
       [store]
     ),
+    // Фильтр по странам
     onMadeIn: useCallback(
-      (id: string[]) =>
+      (madeIn: string[]) => {
         store.actions[props.storeName].setParams({
-          madeIn: id.join("|"),
+          madeIn: madeIn.join("|"),
           page: 1,
-        }),
+        });
+      },
       [store]
     ),
-
+    // поиск стран в фильтре
     onSearchCountry: useCallback(
       (value: string) => {
         setSearch(value);
@@ -69,17 +74,20 @@ function CatalogFilter(props: TCatalogFilter) {
       },
       [store]
     ),
+    // подгрузка еще 10 стран
     onLoadCounties: useCallback(() => {
       store.actions.countries.loadSkip();
     }, [store]),
-
+    // выбор стран
     onSelectCountry: useCallback(
       (item: TCountries) => {
         store.actions.countries.selectCountry(item);
       },
       [store]
     ),
+    // сброс выбора стран
     onResetSelectCountry: useCallback(() => {
+      callbacks.onMadeIn([]);
       store.actions.countries.load();
     }, [store]),
   };
@@ -124,9 +132,9 @@ function CatalogFilter(props: TCatalogFilter) {
   return (
     <SideLayout padding="medium">
       <SelectCustom
+        onSelect={callbacks.onMadeIn}
         options={options.countries}
         selected={select.selected}
-        onSelect={callbacks.onMadeIn}
         onSearch={callbacks.onSearchCountry}
         waiting={select.waiting}
         onLoad={callbacks.onLoadCounties}

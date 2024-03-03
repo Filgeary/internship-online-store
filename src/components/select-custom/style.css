@@ -1,4 +1,4 @@
-.SelectBox {
+.SelectCustom {
   display: flex;
   flex-direction: column;
   height: 30px;
@@ -17,53 +17,17 @@
   box-shadow: 0px 1px 8px -1px #dbdfff;
   z-index: 9999;
 }
-.SelectBox-selected{
-  display: flex;
-  flex-wrap: wrap;
-  background-color: #ffffff;
-  gap: 5px;
 
-}
-.SelectBox-dropdown{
-  position: absolute;
-  top: 30px;
-  left: 0;
-}
-.SelectBox-group {
-  display: flex;
-  gap: 6px;
-  align-items: center;
-}
-.SelectBox-content {
-  box-sizing: border-box;
-  max-height: 160px;
-  width: 240px;
-  padding: 6px;
-  background-color: #ffffff;
-  box-shadow: 0px 1px 8px -1px #dbdfff;
-}
-
-.SelectBox-item:focus .ItemSelect{
-  background-color: #dbdfff;
-  color: black;
-}
-.SelectBox-box {
-  overflow-y: scroll;
-  overflow-x: hidden;
-  margin: 0;
-  padding: 0;
-  max-height: 120px;
-}
-
-.SelectBox-select {
+.SelectCustom-select {
   height: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0 6px;
   box-sizing: border-box;
+  transition: background-color 0.4s;
 }
-.SelectBox-arrow {
+.SelectCustom-arrow {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -72,8 +36,57 @@
   box-sizing: border-box;
   transition: rotate 0.4s;
 }
+.arrowUp {
+  transform: rotate(180deg);
+}
 
-.SelectBox-flag {
+.SelectCustom-selected {
+  display: flex;
+  flex-wrap: wrap;
+  background-color: #ffffff;
+  gap: 5px;
+}
+.SelectCustom-dropdown {
+  position: absolute;
+  top: 30px;
+  left: 0;
+  box-shadow: 0px 1px 8px -1px #dbdfff;
+}
+
+.SelectCustom-dropdown:focus {
+  outline: none;
+}
+
+.SelectCustom-group {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.SelectCustom-content {
+  box-sizing: border-box;
+  max-height: 160px;
+  width: 240px;
+  padding: 6px;
+  background-color: #ffffff;
+}
+
+.SelectCustom-item:hover .ItemSelect {
+  background-color: #dbdfff;
+  color: black;
+}
+.hovered .ItemSelect {
+  background-color: #dbdfff;
+  color: black;
+}
+.SelectCustom-box {
+  overflow-y: scroll;
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+  max-height: 120px;
+}
+
+.SelectCustom-flag {
   width: 18px;
   height: 18px;
   box-sizing: border-box;
@@ -89,12 +102,12 @@
   border-radius: 3px;
 }
 
-.SelectBox-country {
+.SelectCustom-country {
   transition: color 0.4s;
   white-space: nowrap;
 }
 
-.SelectBox-search {
+.SelectCustom-search {
   width: 100%;
   box-sizing: border-box;
   font-size: 14px;
@@ -103,12 +116,13 @@
   outline: none;
   font-style: italic;
 }
-.SelectBox:hover {
+
+.SelectCustom-select:hover {
   background-color: #dbdfff;
   cursor: pointer;
   color: black;
-} 
-
-.arrowUp {
-  transform: rotate(180deg);
+}
+.SelectCustom-select:hover .ItemSelect {
+  background-color: #dbdfff;
+  color: black;
 }

@@ -118,9 +118,9 @@ class CountriesState extends StoreModule<TCountriesState> {
       this.setState(
         {
           ...this.getState(),
-          selected: [...selected, item],
+          selected: [...selected, item],      
         },
-        "Выбор стран(ы) для фильтрации"
+        "Выбор страны для фильтрации"
       );
     } else {
       this.setState(
@@ -128,7 +128,7 @@ class CountriesState extends StoreModule<TCountriesState> {
           ...this.getState(),
           selected: selected.filter((el) => el._id !== item._id),
         },
-        "Выбор стран(ы) для фильтрации"
+        "Выбор страны для фильтрации"
       );
     }
   }
