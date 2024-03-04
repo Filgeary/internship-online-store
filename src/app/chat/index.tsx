@@ -1,4 +1,4 @@
-import React, { memo, FC, useEffect, useCallback, useRef } from "react"
+import React, { memo, FC, useEffect, useCallback, useRef, useState } from "react"
 import ChatLayout from "@src/components/chat-layout"
 import PageLayout from "@src/components/page-layout"
 import Head from "@src/components/head"
@@ -6,24 +6,27 @@ import TopHead from "@src/containers/top-head"
 import Navigation from "@src/containers/navigation"
 import LocaleSelect from "@src/containers/locale-select"
 import useTranslate from "@src/hooks/use-translate"
-import useInit from "@src/hooks/use-init"
 import useStore from "@src/hooks/use-store" 
 import useSelector from "@src/hooks/use-selector"
+import Textarea from "@src/components/chat-layout/textarea"
+import MessageFont from "@src/components/chat-layout/message-font" 
 import { StoreState } from "@src/store/types"
-import { IUser } from "@src/store/profile/types"
 
 const Chat: FC = () => {
 
   const {t} = useTranslate() 
 
-  const store = useStore();
-  const lastMessageRef = useRef() as any;
+  const store = useStore()
+  const lastMessageRef = useRef() as any
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
+  const [isBold, setIsBold] = useState(false)
+  const [fontOpen, setFontOpen] = useState(false)
 
   const select = useSelector((state: StoreState) => ({
     messages: state.chat.messages,
     message: state.chat.message,
     name: state.session.user as any,
-    statusClearChat: state.chat.clearChat
+    statusClearChat: state.chat.statusClearChat
   }));
 
   const callbacks = {
@@ -31,6 +34,7 @@ const Chat: FC = () => {
     onMessage: useCallback(() => {
       store.actions.chat.newMessage()
       store.actions.chat.deleteMessage()
+      resetTextareaHeight()
     }, [store]),
     // Сохранение сообщения
     onChange: useCallback((value: string, name?: string)=> {store.actions.chat.setMessage(value)}, [store]),
@@ -44,8 +48,62 @@ const Chat: FC = () => {
     }, [store]),
     // Очистить чат
     clearChat: useCallback(() => {
-      store.actions.chat.deleteAllMessages()
+        store.actions.chat.deleteAllMessages()
     }, [store]),
+    // Регулирование высоты textarea
+    adjustTextareaHeight: useCallback(() => {
+      const textarea = textareaRef.current
+      if (textarea) {
+        textarea.style.height = 'auto';
+        textarea.style.height = `${textarea.scrollHeight}px`;
+    }
+    }, [store]),
+    // Добавление жирного шрифта
+    handleBold: useCallback(() => {
+      setIsBold(true)
+      setFontOpen(false)
+    }, [setIsBold]),
+    // Отмена жирного шрифта
+    handleNormal: useCallback(() => {
+      setIsBold(false)
+      setFontOpen(false)
+    }, [setIsBold]),
+    // Показать или скрыть шрифты
+    handleFont: useCallback(() => {
+      setFontOpen(!fontOpen)
+    }, [setFontOpen]),
+  }
+
+  const resetTextareaHeight = () => {
+    const textarea = textareaRef.current
+    if (textarea) {
+      textarea.style.height = 'auto';
+    }
+}
+
+  const renders = {
+    textarea: useCallback(
+      () => (
+        <Textarea
+          placeholder="Написать сообщение..." 
+          addMessage={callbacks.onChange} 
+          adjustTextareaHeight={callbacks.adjustTextareaHeight}
+          value={select.message}
+          ref={textareaRef}
+          isBold={isBold}
+        />
+      ),
+      [store, callbacks.onChange, select.message]
+    ),
+    font: useCallback(
+      () => (
+        <MessageFont
+        onClickBold={callbacks.handleBold}
+        onClickNormal={callbacks.handleNormal}
+        />
+      ),
+      [store, callbacks.onChange, select.message]
+    ),
   }
  
   useEffect(() => {
@@ -71,12 +129,14 @@ const Chat: FC = () => {
         onLastMessage={callbacks.onLastMessage}
         onNewMessage={callbacks.onNewMessage}
         clearChat={callbacks.clearChat}
-        onChange={callbacks.onChange} 
-        value={select.message}
         messages={select.messages}
         name={select.name.username}
         ref={lastMessageRef}
-        statusClearChat={select.statusClearChat}/>
+        statusClearChat={select.statusClearChat}
+        textarea={renders.textarea}
+        font={renders.font}
+        isfontOpen={fontOpen}
+        setFontOpen={setFontOpen}/>
     </PageLayout>
   );
 };

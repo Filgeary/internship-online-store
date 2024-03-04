@@ -1,0 +1,37 @@
+.Message-wrap_1 {
+  position: absolute;
+  bottom: 15px;
+  right: 35px;
+}
+
+.Message-wrap_2 {
+  position: absolute;
+  bottom: 15px;
+  right: 25px;
+}
+
+.Message-check {
+  position: absolute;
+  background: #9bff00;
+}
+
+.Message-wrap-check {
+  width: 10%;
+  background: rgb(248, 247, 247);
+}
+
+#check-part-1 {
+  width: 8px;
+  height: 2px;
+  top: 4px;
+  left: 3px;
+  transform: rotate(48deg);
+}
+
+#check-part-2 {
+  width: 15px;
+  height: 2px;
+  transform: rotate(-50deg);
+  left: 7px;
+  top: 0;
+}

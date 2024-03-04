@@ -1,30 +1,35 @@
-import React, { memo } from "react"
+import React, { memo, useState } from "react"
 import { cn as bem } from "@bem-react/classname"
-import Input from "@src/components/input"
 import { IChat } from "@src/store/chat/types"
 import Img from "../../assets/images/avatar.png"
-import "./style.css";
+import ChatButton from "./chat-button"
+import MessageCheck from "./message-check"
+import "./style.css"
 
 interface IChatLayout {
   onMessage: () => void
-  onChange: (value: string, name: string | undefined) => void
   onLastMessage: () => void
   onNewMessage: () => void
   clearChat: () => void
-  value: string
+  textarea: () => React.ReactNode
+  font: () => React.ReactNode
+  setFontOpen: React.Dispatch<React.SetStateAction<boolean>>
   messages: IChat[]
   name: string
   statusClearChat: boolean
+  isfontOpen: boolean
 }
 
 const ChatLayout = React.forwardRef<HTMLDivElement, IChatLayout>((props, ref) =>  {
     const {
         onMessage,
-        onChange,
         onLastMessage,
         onNewMessage,
         clearChat,
-        value,
+        textarea,
+        font,
+        setFontOpen,
+        isfontOpen,
         messages,
         name,
         statusClearChat
@@ -35,54 +40,36 @@ const ChatLayout = React.forwardRef<HTMLDivElement, IChatLayout>((props, ref) =>
     <div className={cn()}>
         {statusClearChat && <p className={cn("title")}>Сообщения удалены</p>}
         {messages.length < 1 && <p className={cn("title")}>Время ожидания сообщений</p>}
-        {messages?.map((item, index) => (
+        {messages?.map((item) => (
           <div 
           className={cn("wrap-message", { right: item.author.username === name})} 
           key={item._id}
           ref={ref}>
             <div className={cn("message")}>
                 <img className={cn("img")} src={Img} alt='Avatar'></img>
+                <p className={cn("name")}>{item.author.username}</p>
               <div className={cn("text")}>{item.text}</div>
-              <div className={cn("wrap-check")}>
-                <div className={cn("wrap_1")}>
-                  <span id="check-part-1" className={cn("check")}></span>
-                  <span id="check-part-2" className={cn("check")}></span>
-                </div>
-                <div className={cn("wrap_2")}>
-                  <span id="check-part-1" className={cn("check")}></span>
-                  <span id="check-part-2" className={cn("check")}></span>
-                </div>
-              </div>
+              <MessageCheck/>
             </div>
           </div>
         ))}
       <div className={cn("input")}>
-        <Input
-          name="message"
-          value={value}
-          onChange={onChange}
-          theme={"message"}
-          placeholder="Написать сообщение..."
-        />
+        <button className={cn("font")} onClick={() => setFontOpen(prev => !prev)}>шрифт</button>
+        {isfontOpen && font()}
+        {textarea()}
         <div>
           <button className={cn("button")} onClick={onMessage}>
             Отправить
           </button>
         </div>
       </div>
-      <div className={cn("wrap-button")}>
-        <button className={cn("button", {button_bottom: true})} onClick={onLastMessage}>
-            Старые сообщения
-        </button>
-        <button className={cn("button", {button_bottom: true})} onClick={clearChat}>
-            Очистить чат
-        </button>
-        <button className={cn("button", {button_bottom: true})} onClick={onNewMessage}>
-            Новые сообщения
-        </button>
-      </div>
+      <ChatButton 
+        onLastMessage={onLastMessage}
+        clearChat={clearChat}
+        onNewMessage={onNewMessage}
+        />
     </div>
-  );
-});
+  )
+})
 
-export default memo(ChatLayout);
+export default memo(ChatLayout)

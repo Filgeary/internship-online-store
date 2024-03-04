@@ -22,6 +22,7 @@
 
 .Chat-title {
   font-size: 30px;
+  margin-bottom: 50px;
 }
 
 .Chat-wrap-message {
@@ -36,9 +37,11 @@
 }
 
 .Chat-message {
+  min-height: 20px;
   position: relative;
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
   align-items: flex-end;
   color: #fff;
   line-height: 32px;
@@ -51,11 +54,17 @@
   word-wrap: break-word;
   line-height: 20px;
   margin: 20px 0 20px 0;
-  max-width: 50%;
+  max-width: 40%;
   width: 100%;
   color: white;
   box-shadow: inset rgba(0, 0, 0, 0.6) 0 -3px 8px,
     inset rgba(111, 106, 139, 0.7) 0 3px 8px, rgba(0, 0, 0, 0.8) 0 3px 8px -3px;
+}
+
+.Chat-name {
+  width: 100%;
+  color: #9bff00;
+  margin: 0 0 5px 20px;
 }
 
 .Chat-img {
@@ -69,46 +78,6 @@
 .Chat-text {
   overflow: hidden;
   word-wrap: break-word;
-  margin-left: 25px;
-}
-
-.Chat-wrap_1 {
-  position: absolute;
-  bottom: 5px;
-  right: 35px;
-}
-
-.Chat-wrap_2 {
-  position: absolute;
-  bottom: 5px;
-  right: 25px;
-}
-
-.Chat-check {
-  position: absolute;
-  background: rgb(253, 253, 253);
-}
-
-.Chat-wrap-check {
-  width: 10%;
-  position: relative;
-  background: rgb(248, 247, 247);
-}
-
-#check-part-1 {
-  width: 8px;
-  height: 2px;
-  top: 4px;
-  left: 3px;
-  transform: rotate(48deg);
-}
-
-#check-part-2 {
-  width: 15px;
-  height: 2px;
-  transform: rotate(-50deg);
-  left: 7px;
-  top: 0;
 }
 
 .Chat-input {
@@ -116,12 +85,31 @@
   display: flex;
   align-items: flex-end;
   position: relative;
+  background-color: white;
+  border-radius: 10px;
+  margin-top: 50px;
+}
+
+.Chat-font {
+  color: #271739;
+  width: 100px;
+  height: 25px;
+  position: absolute;
+  background-color: #9bff00;
+  top: -25px;
+  left: 10%;
+  padding: 0;
+  margin: 0;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  border: 0;
+  cursor: pointer;
 }
 
 .Chat-button {
   position: absolute;
   right: 1%;
-  top: 44%;
+  top: 30%;
   color: #fff;
   line-height: 32px;
   border: 1px solid #271739;
@@ -172,15 +160,4 @@
   width: 100%;
   justify-content: center;
   display: flex;
-}
-
-.Chat-button_button_bottom {
-  position: relative;
-  margin-right: 40px;
-  width: 200px;
-  margin-top: 20px;
-}
-
-.Chat-button_button_bottom:before {
-  width: 188px;
 }

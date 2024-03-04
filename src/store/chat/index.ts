@@ -16,7 +16,7 @@ class ChatState extends StoreModule<IChatState> {
       messages: [],
       message: "",
       connected: false,
-      clearChat: false
+      statusClearChat: false
     }
   }
 
@@ -59,7 +59,7 @@ class ChatState extends StoreModule<IChatState> {
             this.setState({
               ...this.getState(),
               messages: messages.payload.items,
-              clearChat: false
+              statusClearChat: false
             })
           }
         }
@@ -72,7 +72,7 @@ class ChatState extends StoreModule<IChatState> {
                 ...this.getState().messages,
                 messages.payload,
               ],
-              clearChat: false
+              statusClearChat: false
             })
           }
         }
@@ -87,11 +87,11 @@ class ChatState extends StoreModule<IChatState> {
         }
 
         if (messages.method === "clear") {
-          if ("items" in messages.payload) {
+          if (!("items" in messages.payload)) {
             this.setState({
               ...this.getState(),
               messages: [],
-              clearChat: true
+              statusClearChat: true
             })
           }
         }
@@ -128,7 +128,7 @@ class ChatState extends StoreModule<IChatState> {
    * Отправка нового сообщения
    */
   newMessage() {
-    if (this.getState().connected) {
+    if (this.services.socket.socket) {
       this.services.socket.send("post", {
         _key: generateUniqueId(),
         text: this.getState().message,
@@ -140,7 +140,7 @@ class ChatState extends StoreModule<IChatState> {
    * Запрос свежих сообщений
    */
   requestLatestMessages() {
-    if (this.getState().connected) {
+    if (this.services.socket.socket) {
       this.services.socket.send("last", {})
     }
   }
@@ -150,10 +150,9 @@ class ChatState extends StoreModule<IChatState> {
    */
   requestOldMessage() {
 
-    const lastIndex = this.getState().messages.length - 1
     const id = this.getState().messages[0]._id
 
-    if (this.getState().connected) {
+    if (this.services.socket.socket) {
       this.services.socket.send("old", {
         fromId: id,
       })

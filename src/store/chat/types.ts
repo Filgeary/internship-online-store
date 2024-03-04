@@ -19,7 +19,7 @@ export interface IChatState {
   messages: IChat[]
   message: string
   connected: boolean
-  clearChat: boolean
+  statusClearChat: boolean
 }
 
 export interface IResponseLatestMessages {
