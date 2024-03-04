@@ -26,9 +26,13 @@
 }
 
 .Chat-wrap-message {
+  box-sizing: border-box;
   position: relative;
   width: 100%;
   list-style-type: none;
+  display: flex;
+  justify-content: flex-start;
+  padding-left: 20px;
 }
 
 .Chat-wrap-message_right {
@@ -55,7 +59,7 @@
   line-height: 20px;
   margin: 20px 0 20px 0;
   max-width: 40%;
-  width: 100%;
+  /* width: 100%; */
   color: white;
   box-shadow: inset rgba(0, 0, 0, 0.6) 0 -3px 8px,
     inset rgba(111, 106, 139, 0.7) 0 3px 8px, rgba(0, 0, 0, 0.8) 0 3px 8px -3px;
@@ -78,6 +82,7 @@
 .Chat-text {
   overflow: hidden;
   word-wrap: break-word;
+  margin: 5px;
 }
 
 .Chat-input {

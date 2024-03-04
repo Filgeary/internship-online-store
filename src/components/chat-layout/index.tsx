@@ -48,7 +48,7 @@ const ChatLayout = React.forwardRef<HTMLDivElement, IChatLayout>((props, ref) =>
             <div className={cn("message")}>
                 <img className={cn("img")} src={Img} alt='Avatar'></img>
                 <p className={cn("name")}>{item.author.username}</p>
-              <div className={cn("text")}>{item.text}</div>
+              <p className={cn("text")} >{item.text}</p>
               <MessageCheck/>
             </div>
           </div>
