@@ -13,13 +13,19 @@ const ChatMessage = ({ item, incoming }: TChatMessageProps) => {
   const time = new Date(item.dateCreate).toLocaleTimeString();
 
   return (
-    <div className={incoming ? cn() : cn() + " " + cn("out")}>
-      <div className={cn("header")}>
-        <p className={cn("author")}>{`${item.author.profile.name}:`}</p>
-        <p className={cn("date")}>{`${date}, ${time}`}</p>
-      </div>
-      {item.text}
-    </div>
+    <>
+      {item.text && (
+        <div
+          className={incoming ? cn() + " " + cn("in") : cn() + " " + cn("out")}
+        >
+          <div className={cn("header")}>
+            <p className={cn("author")}>{`${item.author.profile.name}:`}</p>
+            <p className={cn("date")}>{`${date}, ${time}`}</p>
+          </div>
+          {item.text}
+        </div>
+      )}
+    </>
   );
 };
 

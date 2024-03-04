@@ -2,10 +2,12 @@ import APIService from "./api";
 import { TConfig } from "./config";
 import Store from "./store";
 import createStoreRedux from "./store-redux";
+import WSService from "./ws";
 
 class Services {
   config: TConfig;
   _api: APIService | null = null;
+  _ws: WSService | null = null;
   _store: Store | null = null;
   _redux: any;
 
@@ -22,6 +24,17 @@ class Services {
       this._api = new APIService(this, this.config.api);
     }
     return this._api;
+  }
+
+  /**
+   * Сервис WebSocket
+   * @returns {WSService}
+   */
+  get ws(): WSService {
+    if (!this._ws) {
+      this._ws = new WSService(this, this.config.chat);
+    }
+    return this._ws;
   }
 
   /**

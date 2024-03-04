@@ -1,163 +1,216 @@
 import StoreModule from "../module";
-import { TChatState, TConfigWS } from "./type";
+import { TChatState, TMessages } from "./type";
 import { v4 as uuidv4 } from "uuid";
 
-class ChatState extends StoreModule<TChatState, TConfigWS> {
+class ChatState extends StoreModule<TChatState> {
   initState(): TChatState {
     return {
-      ws: null,
       connection: false,
       messages: [],
-      timeId: "",
+      timeId: null,
       waiting: false,
       fromId: "",
     };
   }
-
-  connection() {
-    const ws = new WebSocket(this.config.baseUrl);
-    this.setState({
-      ...this.getState(),
-      ws,
-      fromId:""
-    },
-    "Ожидание установки соединения"
-    );
-
+  request() {
+    this.onConnect();
+    this.getState().timeId = setTimeout(() => this.getLastMessages(), 1000);
   }
 
-  auth(token: string) {
-    this.connection();
-    this.getState().ws?.addEventListener("open", (e) => {
-      this.getState().ws?.send(
-        JSON.stringify({
-          method: "auth",
-          payload: {
-            token,
-          },
-        })
-      );
-    });
-    this.onPong();
-  }
-
-  onClose() {
-    this.getState().ws?.addEventListener("close", () => {
-      console.log("close");
-    });
-  }
-
-  onPong() {
-    const timeId = setInterval(() => {
-      console.log(this.getState().ws?.readyState);
-      this.getState().ws?.send(JSON.stringify({ type: "pong" }));
-    }, 55000);
-    this.setState({
-      ...this.getState(),
-      timeId,
-    },
-    "OnPong"
-    );
-  }
-
-  //обработка всех сообщений
-  onMessage() {
-    this.getState().ws?.addEventListener("message", (e) => {
-      const result = JSON.parse(e.data).payload;
-
-      if (this.getState().ws?.readyState) {
-        this.setState({
+  onConnect() {
+    this.services.ws.connect("/chat");
+    const ws = this.services.ws.ws!;
+    ws.onopen = () => {
+      this.setState(
+        {
           ...this.getState(),
           connection: true,
-          waiting: true,
         },
         "Соединение установлено"
-        );
-      }
-      if (result) {
-        if (result.items) {
-          let fromId = result.items[0]?._id;
-          let items;
-          if (this.getState().messages.length > 0) {
-            let one = this.getState().messages.shift()!;
-            items = this.getState().messages.filter((el) => el._id !== one._id);
+      );
+
+      const token = localStorage.getItem("token") as string;
+      this.services.ws.send("auth", {
+        token: token,
+      });
+
+      ws.onmessage = (event: MessageEvent<any>) => {
+        const messages = JSON.parse(event.data) as TMessages;
+
+        if (messages.method === "last") {
+          this.setState(
+            {
+              ...this.getState(),
+              waiting: true,
+            },
+            "Ожидание загрузки сообщений"
+          );
+          this.messagesHandler(messages);
+        }
+
+        if (messages.method === "post") {
+          this.setState(
+            {
+              ...this.getState(),
+              waiting: true,
+            },
+            "Ожидание отправки сообщения"
+          );
+          if (!("items" in messages.payload)) {
+            this.setState(
+              {
+                ...this.getState(),
+                messages: [...this.getState().messages, messages.payload],
+                waiting: false,
+              },
+              "Сообщение отправлено"
+            );
           }
+        }
 
-          const messages = [
-            ...result.items,
-            ...(items ? items : this.getState().messages),
-          ];
+        if (messages.method === "old") {
+          this.setState(
+            {
+              ...this.getState(),
+              waiting: true,
+            },
+            "Ожидание загрузки сообщений"
+          );
+          this.messagesHandler(messages);
+        }
 
-          this.setState({
+        if (messages.method === "clear") {
+          this.setState(
+            {
+              ...this.getState(),
+              waiting: true,
+            },
+            "Ожидание очистки сообщений"
+          );
+          if (!("items" in messages.payload)) {
+            this.setState(
+              {
+                ...this.getState(),
+                messages: [],
+                waiting: false,
+              },
+              "Сообщения удалены"
+            );
+          }
+        }
+      };
+      ws.onclose = () => {
+        if (this.getState().connection) this.request();
+        this.setState(
+          {
+            ...this.getState(),
+            connection: false,
+            timeId: null,
+          },
+          "Соединение закрыто"
+        );
+      };
+
+      ws.onerror = () => {
+        console.log("Произошла ошибка");
+      };
+    };
+  }
+
+  /**
+   * Закрытие соединения
+   */
+  close() {
+    this.services.ws.close();
+
+    this.setState(
+      {
+        ...this.getState(),
+        connection: false,
+        timeId: null,
+      },
+      "Соединение закрыто"
+    );
+  }
+
+  /**
+   * Отправка нового сообщения
+   */
+  newMessage(message: string) {
+    if (this.services.ws.ws) {
+      this.services.ws.send("post", {
+        _key: uuidv4(),
+        text: message,
+      });
+    }
+  }
+
+  /**
+   * Запрос новых сообщений
+   */
+  getLastMessages() {
+    if (this.services.ws.ws) {
+      this.services.ws.send("last", {});
+    }
+  }
+
+  /**
+   * Запрос старых сообщений
+   */
+  getOldMessages() {
+    if (this.services.ws.ws) {
+      this.services.ws.send("old", {
+        fromId: this.getState().fromId,
+      });
+    }
+  }
+
+  messagesHandler(response: TMessages) {
+    if ("items" in response.payload) {
+      {
+        let fromId = response.payload.items[0]._id;
+        let items;
+        if (this.getState().messages.length > 0) {
+          let one = this.getState().messages.shift()!;
+          items = this.getState().messages.filter((el) => el._id !== one._id);
+        }
+
+        const messages = [
+          ...response.payload.items,
+          ...(items ? items : this.getState().messages),
+        ];
+
+        this.setState(
+          {
             ...this.getState(),
             fromId,
             messages,
             waiting: false,
           },
           "Сообщения загружены"
-          );
-        } else {
-          const messages = [...this.getState().messages, result];
-          this.setState({
-            ...this.getState(),
-            messages,
-            waiting: false,
-          },
-          ""
-          );
-        }
+        );
       }
-    });
-  }
-
-  sendMessage(text: string) {
-    this.getState().ws?.send(
-      JSON.stringify({
-        method: "post",
-        payload: {
-          _key: uuidv4(),
-          text,
+    } else {
+      const messages = [...this.getState().messages, response.payload];
+      this.setState(
+        {
+          ...this.getState(),
+          messages,
+          waiting: false,
         },
-      })
-    );
+        "Сообщение загружено"
+      );
+    }
   }
 
-  getLastMessages(fromDate?: string) {
-    this.getState().ws?.send(
-      JSON.stringify({
-        method: "last",
-        payload: {
-          fromDate,
-        },
-      })
-    );
-  }
-
-  getOldMessages() {
-    const fromId = this.getState().fromId;
-    this.getState().ws?.send(
-      JSON.stringify({
-        method: "old",
-        payload: {
-          fromId,
-        },
-      })
-    );
-  }
-
-  /* clearAll() {
-    this.getState().ws?.send(
-      JSON.stringify({
-        method: "clear",
-        payload: {},
-      })
-    );
+  /**
+   * Удаление всех сообщений
+   */
+  /*   clearAll() {
+    if (this.services.ws.ws) {
+      this.services.ws.send("clear", {});
+    }
   } */
-
-  close() {
-    if (this.getState().timeId) clearInterval(this.getState().timeId);
-    this.getState().ws?.close();
-  }
 }
 
 export default ChatState;

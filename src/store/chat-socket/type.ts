@@ -1,14 +1,9 @@
-export type TConfigWS = {
-  baseUrl: string;
-};
-
 export type TChatState = {
-  ws: WebSocket | null;
   connection: boolean;
   messages: TMessage[];
-  timeId: string | number | NodeJS.Timeout | undefined;
-  waiting:boolean,
-  fromId:string
+  timeId:  ReturnType<typeof setTimeout> | null 
+  waiting: boolean;
+  fromId: string;
 };
 
 export type TMessage = {
@@ -28,5 +23,18 @@ export type TAuthor = {
       url: string;
     };
   };
-}
+};
 
+export type TLastMessages = {
+  method: string;
+  payload: {
+    items: TMessage[];
+  };
+};
+
+export type TOldMessages = {
+  method: string;
+  payload: TMessage;
+};
+
+export type TMessages = TLastMessages | TOldMessages;

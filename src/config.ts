@@ -13,13 +13,14 @@ const config = {
         // Названия токена в АПИ
         tokenHeader: "X-Token",
       },
-      chat: {
-        baseUrl: "ws://example.front.ylab.io/chat",
-      },
+     
     },
   },
   api: {
     baseUrl: "",
+  },
+  chat: {
+    baseUrl: "ws://example.front.ylab.io",
   },
   redux: {},
 };
