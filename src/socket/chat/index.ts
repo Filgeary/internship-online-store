@@ -1,30 +1,26 @@
-import Services from "../services";
 import {
   PostMessageType,
   ServerResponce,
   ServerResponceMulti,
   ServerResponcePost,
-} from "../types/chat";
-import { ConfigChatType } from "../types/config";
+} from "../../types/chat";
 
-class ChatService {
-  private _services: Services;
-  private _config: ConfigChatType;
+class ChatWebSocket {
+  private _url: string;
   private _ws: WebSocket;
   private _token: string;
   private _listeners: ((e: ServerResponcePost | ServerResponceMulti) => void)[];
+  private _timerInterval: NodeJS.Timer;
 
-  constructor(services: Services, config: ConfigChatType) {
-    this._services = services;
-    this._config = config;
+  constructor(url: string, token: string) {
+    this._url = url;
+    this._token = token;
     this._listeners = [];
   }
 
-  setToken(token: string | null) {
-    this._token = token;
-  }
-
-  subscribe(listener: (e: ServerResponcePost | ServerResponceMulti) => void) {
+  private subscribe(
+    listener: (e: ServerResponcePost | ServerResponceMulti) => void
+  ) {
     this._listeners = [...this._listeners, listener];
 
     return () => {
@@ -35,20 +31,42 @@ class ChatService {
   /**
    * Первоначальный запрос всех данных
    */
-  initialRequest() {
+  openConnection( listener: (e: ServerResponcePost | ServerResponceMulti) => void) {
+    this.subscribe(listener);
     this.setConnection();
     this.onInitialRequest();
+  }
+
+  restoreConnection(listener: (e: ServerResponcePost | ServerResponceMulti) => void, fromDate: string) {
+    this.subscribe(listener);
+    this.setConnection();
+    this.onRestoreConnection(fromDate);
+  }
+
+  /**
+   * Закрытие соединения
+   */
+  closeConnection() {
+    this._ws.close(1000, "User request closing");
   }
 
   /**
    * Установка соединения с сервером чата
    */
   private setConnection() {
-    this._ws = new WebSocket(this._config.url);
+    this._ws = new WebSocket(this._url);
     this._ws.onopen = () => this.onOpenConnection();
     this._ws.onmessage = (e) => this.onMessageRecieve(e);
     this._ws.onclose = (e) => this.onConnectionClose(e);
     this._ws.onerror = (e) => console.log(e);
+
+    this._timerInterval = setInterval(() => this.ping(), 45000);
+  }
+
+  private ping() {
+      if (this._ws.readyState === 1) {
+        this._ws.send("ping");
+      }
   }
 
   /**
@@ -56,15 +74,17 @@ class ChatService {
    * @param message Отправка нового сообщения
    */
   sendMessage(message: PostMessageType) {
-    this._ws.send(
-      JSON.stringify({
-        method: "post",
-        payload: {
-          _key: message._key,
-          text: message.text,
-        },
-      })
-    );
+  //  setTimeout(() => {
+      this._ws.send(
+        JSON.stringify({
+          method: "post",
+          payload: {
+            _key: message._key,
+            text: message.text,
+          },
+        })
+      );
+  //  }, 3000)
   }
 
   requestOldMessages(fromId: string) {
@@ -73,9 +93,9 @@ class ChatService {
         method: "old",
         payload: {
           fromId,
-        }
+        },
       })
-    )
+    );
   }
 
   private onOpenConnection() {
@@ -108,20 +128,40 @@ class ChatService {
     }
   }
 
+  private onRestoreConnection(fromDate: string) {
+    if(this._ws.readyState === 1) {
+      this._ws.send(
+        JSON.stringify({
+          method: 'last',
+          payload: {
+            fromDate
+          },
+        })
+      );
+    } else {
+      setTimeout(() => this.onRestoreConnection(fromDate), 1000);
+    }
+  }
+
   private onConnectionClose(e: CloseEvent) {
     console.log(e);
+    if (e.wasClean) {
+      clearInterval(this._timerInterval);
+      return;
+    }
     if (e.code === 1006) {
       setTimeout(() => this.setConnection(), 1000);
     }
   }
 
   private onMessageRecieve(e: MessageEvent) {
-    console.log(e);
     const responce: ServerResponce = JSON.parse(e.data);
     switch (responce.method) {
       case "post":
-        for (const cb of this._listeners) {
-          cb(responce as ServerResponcePost);
+        if(!responce.error) {
+          for (const cb of this._listeners) {
+            cb(responce as ServerResponcePost);
+          }
         }
         break;
       case "old":
@@ -140,4 +180,4 @@ class ChatService {
   }
 }
 
-export default ChatService;
+export default ChatWebSocket;

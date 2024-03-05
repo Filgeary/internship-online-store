@@ -1,7 +1,6 @@
-import { memo, useCallback } from "react";
+import { memo, useCallback, useEffect } from "react";
 import SideLayout from "../../components/side-layout";
 import useStore from "../../hooks/use-store";
-import useInit from "../../hooks/use-init";
 import useSelector from "../../hooks/use-selector";
 import InputTextarea from "../../components/input-textarea";
 import ChatDisplay from "../../components/chat-display";
@@ -16,23 +15,26 @@ function ChatRoom() {
     user: state.session.user,
   }));
 
-  useInit(() => {
+  useEffect(() => {
     store.actions.chat.getMessages();
+
+    return () => store.actions.chat.closeConnection();
   }, []);
 
   const callbacks = {
     addMessage: useCallback((value: string) => {
       const newPost: ChatItemType = {
-        _id: '',
+        _id: "self" + self.crypto.randomUUID(),
         _key: self.crypto.randomUUID(),
         text: value,
-        dateCreate: Date.now().toString(),
+        dateCreate: new Date().toISOString(),
         author: {
-          _id: self.crypto.randomUUID(),
+          _id: select.user._id,
           profile: {
             name: select.user.profile.name,
           }
-        }
+        },
+        status: "pending",
       }
       store.actions.chat.sendMessage(newPost)
     }, [store]),
@@ -42,6 +44,7 @@ function ChatRoom() {
   const messages = select.list.map(item => (
     <ChatMessage key={item._id} item={item} self={item.author._id === select.user._id} />
   ))
+
 
   return (
     <SideLayout

@@ -73,7 +73,7 @@ class SessionState extends StoreModule<SessionStateType, SessionConfigType> {
           this.config.tokenHeader,
           res.data.result.token
         );
-        this.services.chat.setToken(res.data.result.token);
+        this.services.socketsFactory.setToken(res.data.result.token);
 
         if (onSuccess) onSuccess();
       } else {
@@ -105,7 +105,7 @@ class SessionState extends StoreModule<SessionStateType, SessionConfigType> {
       window.localStorage.removeItem("token");
       // Удаляем заголовок
       this.services.api.setHeader(this.config.tokenHeader, null);
-      this.services.chat.setToken(null);
+      this.services.socketsFactory.setToken(null);
     } catch (error) {
       console.error(error);
     }
@@ -122,7 +122,7 @@ class SessionState extends StoreModule<SessionStateType, SessionConfigType> {
       // Устанавливаем токен в АПИ
       this.services.api.setHeader(this.config.tokenHeader, token);
       // Устанавливаем токен в Chat
-      this.services.chat.setToken(token);
+      this.services.socketsFactory.setToken(token);
       // Проверяем токен выбором своего профиля
       const res = await this.services.api.request({
         url: "/api/v1/users/self",
@@ -132,7 +132,7 @@ class SessionState extends StoreModule<SessionStateType, SessionConfigType> {
         // Удаляем плохой токен
         window.localStorage.removeItem("token");
         this.services.api.setHeader(this.config.tokenHeader, null);
-        this.services.chat.setToken(null);
+        this.services.socketsFactory.setToken(null);
         this.setState(
           {
             ...this.getState(),

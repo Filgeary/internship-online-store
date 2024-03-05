@@ -17,21 +17,23 @@
 .ImageAndText {
   display: flex;
   flex-direction: row;
+  max-width: 70%;
 }
 
 .ImageAndTextSelf {
   display: flex;
   flex-direction: row-reverse;
+  max-width: 70%;
 }
 
-.ImageAndText img {
+.UserIcon {
   margin-top: auto;
   margin-right: 12px;
   width: 48px;
   height: 48px;
 }
 
-.ImageAndTextSelf img {
+.UserIconSelf {
   margin-top: auto;
   width: 48px;
   height: 48px;
@@ -54,7 +56,7 @@
   word-wrap: break-word;
   white-space: pre-line;
   position: relative;
-  background-color: #06C;
+  background-color: rgb(128, 141, 255);
   color: #FFF;
   padding: 5px 10px;
   border-radius: 10px 10px 0 10px;
@@ -78,7 +80,7 @@
   height: 8px;
   right: -8px;
   bottom: 0;
-  background: linear-gradient(225deg, rgba(255,255,255,1) 50%, rgba(0,102,204,1) 50%);
+  background: linear-gradient(225deg, rgba(255,255,255,1) 50%, rgb(128, 141, 255) 50%);
   z-index: 1;
 }
 
@@ -92,7 +94,7 @@
 }
 
 .UserNameSelf {
-  text-align: right;
+  text-align: left;
   color: #FFF;
   font-size: 14px;
   font-style: normal;
@@ -101,7 +103,7 @@
 }
 
 .MessageText {
-  overflow-wrap: break-word;
+  word-wrap: break-word;
   color: #000;
   font-size: 16px;
   font-style: normal;
@@ -110,7 +112,7 @@
 }
 
 .MessageTextSelf {
-  overflow-wrap: break-word;
+  word-wrap: break-word;
   color: #FFF;
   font-size: 16px;
   font-style: normal;
@@ -128,10 +130,17 @@
 
 .CreateTimeSelf {
   font-family: Montserrat;
-  color: #000;
+  text-align: right;
+  color: #FFF;
   font-size: 10px;
   font-weight: 600;
-  position: absolute;
+  /* position: absolute; */
   right: 10px;
   bottom: -12px;
+}
+
+.StatusIcon {
+  margin-left: 10px;
+  width: 8px;
+  height: 8px;
 }

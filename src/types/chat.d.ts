@@ -6,9 +6,10 @@ export type ChatItemType = {
   author: {
     _id: string;
    profile: {
-    name: string
+    name: string;
    };
   }
+  status?: "pending" | "sended";
 }
 
 export type PostMessageType = {
@@ -19,6 +20,7 @@ export type PostMessageType = {
 export type ServerResponce = {
   method: "post" | "last" | "old";
   payload: any;
+  error?: string;
 }
 
 export type ServerResponcePost = {
