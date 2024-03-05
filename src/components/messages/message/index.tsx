@@ -1,5 +1,5 @@
 import { FC, memo, useEffect } from "react";
-import { sanitize } from "dompurify";
+import DOMPurify from "dompurify";
 import { cn as bem } from "@bem-react/classname";
 import { dateFormat } from "@src/utils/date-format";
 import { MessagePropsType } from "./type";
@@ -20,7 +20,7 @@ const Message: FC<MessagePropsType> = ({ message, self, changeStatus }) => {
     <article className={cn({ self, notSelf: !self })}>
       {!self && <h5 className={cn("name")}>{message.author.username}</h5>}
       <div className={cn("text", { self, notSelf: !self })}>
-        <p dangerouslySetInnerHTML={{ __html: sanitize(message.text) }}></p>
+        <p dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(message.text) }}></p>
         <div className={cn("time")}>
           <span>{time}</span>
           {message.status === "pending" && self && (
