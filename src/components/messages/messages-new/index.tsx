@@ -8,10 +8,11 @@ import { useMessagesContext } from '..';
 type MessagesNewProps = {
   onSubmit: (data: string) => any;
   minLength?: number;
+  canSubmit?: boolean;
 };
 
 function MessagesNew(props: MessagesNewProps) {
-  const { minLength = 10 } = props;
+  const { minLength = 10, canSubmit = true } = props;
 
   const cn = bem('MessagesNew');
   const [message, setMessage] = useState('');
@@ -68,7 +69,7 @@ function MessagesNew(props: MessagesNewProps) {
   };
 
   const options = {
-    isSubmitDisabled: message.length < minLength,
+    isSubmitDisabled: message.length < minLength || !canSubmit,
   };
 
   return (

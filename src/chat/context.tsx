@@ -9,6 +9,7 @@ type TChatContext = {
   chatService: ChatService;
   messages: TMessage[];
   waiting: boolean;
+  connected: boolean;
 };
 
 const ChatContext = createContext<TChatContext>(null);
@@ -19,7 +20,7 @@ type ChatProviderProps = {
 
 export function ChatProvider({ children }: ChatProviderProps) {
   const chatService = useServices().chat;
-  const { messages, waiting } = useSyncExternalStore(
+  const { messages, waiting, connected } = useSyncExternalStore(
     (listener) => chatService.subscribe(listener),
     () => chatService.getSnapshot()
   );
@@ -28,6 +29,7 @@ export function ChatProvider({ children }: ChatProviderProps) {
     chatService,
     messages,
     waiting,
+    connected,
   };
 
   return <ChatContext.Provider value={ctxValue}>{children}</ChatContext.Provider>;

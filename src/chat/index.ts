@@ -16,9 +16,11 @@ class ChatService {
   lastId: string;
   needUpdate: boolean = false;
   waiting: boolean = false;
+  connected: boolean = false;
   state: {
     messages: TMessage[];
     waiting: boolean;
+    connected: boolean;
   };
 
   constructor(services: Services, config = {}) {
@@ -30,6 +32,7 @@ class ChatService {
     this.state = {
       messages: [],
       waiting: false,
+      connected: false,
     };
   }
 
@@ -39,12 +42,13 @@ class ChatService {
   auth(token: string, userId: string, reconnectCount: number = 0) {
     if (this.ws && this.ws.readyState === 1 && reconnectCount < 10) return;
     this.waiting = true;
-    this.callAllListeners();
 
     this.ws = new WebSocket(this.config.url);
+    this.connected = true;
     this.userId = userId;
     this.token = token;
 
+    this.callAllListeners();
     this.ws.onopen = () => {
       this.ws.send(
         JSON.stringify({
@@ -66,6 +70,9 @@ class ChatService {
     };
 
     this.ws.onclose = (event) => {
+      this.connected = false;
+      this.callAllListeners();
+
       // Если подключение закрыто не успешно
       if (!event.wasClean) {
         this.auth(token, userId, reconnectCount + 1);
@@ -239,7 +246,7 @@ class ChatService {
    * Вызов всех функций-подписчиков
    */
   callAllListeners() {
-    this.state = { messages: this.messages, waiting: this.waiting };
+    this.state = { messages: this.messages, waiting: this.waiting, connected: this.connected };
     this.listeners.forEach((fn) => fn());
   }
 

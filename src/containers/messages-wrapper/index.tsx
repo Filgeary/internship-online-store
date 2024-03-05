@@ -10,7 +10,7 @@ function MessagesWrapper() {
     token: state.session.token,
     user: state.session.user,
   }));
-  const { chatService, messages, waiting } = useChat();
+  const { chatService, messages, waiting, connected } = useChat();
 
   const { t } = useTranslate();
 
@@ -39,7 +39,7 @@ function MessagesWrapper() {
       <Messages.Title>{t('titleInner.community')}</Messages.Title>
       <Messages.Area />
       <Messages.Utils />
-      <Messages.New onSubmit={handlers.sendNewMessage} />
+      <Messages.New canSubmit={connected} onSubmit={handlers.sendNewMessage} />
     </Messages.Root>
   );
 }
