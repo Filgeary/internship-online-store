@@ -1,13 +1,11 @@
 import APIService from "./api";
 import { Config } from "./types/type";
 import Store from "./store";
-import ChatApiService from "./chat-api";
 
 class Services {
   config: Config;
   private _api?: APIService;
   private _store?: Store;
-  private _chat?: ChatApiService;
 
   constructor(config: Config) {
     this.config = config;
@@ -33,13 +31,6 @@ class Services {
       this._store = new Store(this, this.config.store);
     }
     return this._store;
-  }
-
-  get chat(): ChatApiService {
-    if (!this._chat) {
-      this._chat = new ChatApiService(this, this.config.chat);
-    }
-    return this._chat;
   }
 }
 

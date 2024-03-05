@@ -21,7 +21,9 @@ export const AddMessageForm: FC<AddMessageFormProps> = (props) => {
       setMessage(e.target.value),
     onSendMessage: useCallback(() => {
       if (message.trim() && props.connection) {
-        props.onSubmit(message);
+        props.onSubmit(message.trim());
+        setMessage("");
+      } else {
         setMessage("");
       }
     }, [message, props.connection]),
@@ -30,14 +32,14 @@ export const AddMessageForm: FC<AddMessageFormProps> = (props) => {
       callbacks.onSendMessage();
     },
     onKeyDown: (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-      if (e.key === "Enter") {
+      if (e.key === "Enter" && !e.shiftKey) {
         e.preventDefault();
-
-        if (e.shiftKey) {
-          e.preventDefault();
-          setMessage(prev => prev + "\n");
-        }
         callbacks.onSendMessage();
+
+        if (e.key === "Enter" && e.shiftKey) {
+          e.preventDefault();
+          setMessage((prev) => prev + "\n");
+        }
       }
     },
     onAddEmoji: (emoji: EmojiClickData) => {

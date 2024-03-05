@@ -57,7 +57,6 @@ class SessionState extends StoreModule<InitialStateSession, InitConfigSession> {
           this.config.tokenHeader,
           res.data.result!.token
         );
-        this.services.chat.setToken(res.data.result!.token);
         if (onSuccess) onSuccess();
       } else {
           this.setState(
@@ -131,7 +130,6 @@ class SessionState extends StoreModule<InitialStateSession, InitConfigSession> {
           },
           "Успешно вспомнили сессию"
         );
-        this.services.chat.setToken(token);
       }
     } else {
       // Если токена не было, то сбрасываем ожидание (так как по умолчанию true)

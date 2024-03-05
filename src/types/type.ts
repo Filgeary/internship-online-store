@@ -1,6 +1,5 @@
 import { ConfigApi } from "@src/api/type.ts";
 import * as modules from "../store/exports.ts";
-import { ConfigWS } from "@src/chat-api/type.ts";
 
 export type importModules = typeof modules;
 export type keyModules = keyof importModules;
@@ -39,5 +38,4 @@ export type ConfigStore = {
 export type Config = {
   store: ConfigStore;
   api: ConfigApi;
-  chat: ConfigWS
 }

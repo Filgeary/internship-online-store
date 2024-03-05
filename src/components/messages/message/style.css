@@ -19,7 +19,14 @@
 
   p {
     margin: 0;
+    white-space: break-spaces;
     hyphens: auto;
+
+    img {
+      max-width: 100%;
+      height: auto;
+      object-fit: contain;
+    }
   }
 }
 
@@ -45,6 +52,7 @@
 .Message-time {
   display: flex;
   justify-content: end;
+  align-items: center;
   gap: 5px;
   font-size: 12px;
   min-width: 52px;
@@ -52,4 +60,23 @@
   span {
     white-space: nowrap;
   }
+}
+
+.Message-loader {
+	width: 10px;
+  height: 10px;
+  border: 1.5px solid #ffffffde;
+  border-bottom-color: transparent;
+  border-radius: 50%;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
 }

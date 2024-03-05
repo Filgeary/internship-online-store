@@ -1,14 +1,28 @@
+import { KeysCopiedStores } from "@src/types/type";
+import Store from "..";
 import StoreModule from "../module";
 import { ConfigWS, InitialStateChat, MessageType, StatusType } from "./type";
 import { v4 as uuidv4 } from "uuid";
+import { Profile } from "../profile/type";
 
 class ChatState extends StoreModule<InitialStateChat, ConfigWS> {
+  ws: null | WebSocket;
+
+  constructor(
+    store: Store,
+    name: KeysCopiedStores,
+    config: {} | ConfigWS | undefined
+  ) {
+    super(store, name, config);
+    this.ws = null;
+  }
+
   initState(): InitialStateChat {
     return {
-      ws: null,
       messages: [],
-      keyofMessageSentByMe: '',
       fromId: "",
+      timeId: '',
+      connection: false,
     };
   }
 
@@ -16,23 +30,23 @@ class ChatState extends StoreModule<InitialStateChat, ConfigWS> {
     return {} as ConfigWS;
   }
 
-  connection(token: string) {
-    this.getState().ws?.close();
-    const ws = new WebSocket(this.config.url);
-    this.setState({
-      ...this.getState(),
-      ws,
-    });
-    this.getState().ws?.addEventListener("open", () => this.auth(token));
-    this.getState().ws?.addEventListener("message", (e) => this.onMessage(e));
-    this.getState().ws?.addEventListener("error", (e) => {
-      console.log(e);
-    });
-    this.getState().ws?.addEventListener("close", (e) => this.reconnect(e, token));
+  createChannel(token: string) {
+    this.ws = new WebSocket(this.config.url);
+    this.ws.onopen = () => this.auth(token);
+    this.ws.onmessage = (e) => this.onMessage(e);
+    this.ws.onclose = (e) => this.reconnect(e, token);
+    this.ws.onerror = (e) => {
+      if (navigator.onLine) this.initConnection(token)
+    };
+  }
+
+  initConnection(token: string) {
+    this.onClose();
+    this.createChannel(token);
   }
 
   auth(token: string) {
-    this.getState().ws?.send(
+    this.ws?.send(
       JSON.stringify({
         method: "auth",
         payload: {
@@ -42,32 +56,51 @@ class ChatState extends StoreModule<InitialStateChat, ConfigWS> {
     );
   }
 
+  onAuth(connection: boolean) {
+    new Promise((resolve) => {
+      this.setState({
+      ...this.getState(),
+      connection,
+    });
+    resolve(connection);
+  }).then(res => {
+    if(res) {
+      this.getLastMessages();
+    }
+    this.onPong();
+  })
+  }
+
   //обработка всех отправок
   onMessage(e: MessageEvent) {
     const result = JSON.parse(e.data);
-    switch(result.method) {
-      case 'post': {
+    switch (result.method) {
+      case "auth": {
+        this.onAuth(result.payload.result);
+        break;
+      }
+      case "post": {
         this.onPostMessage(result.payload);
-        break
+        break;
       }
-      case 'last': {
-        this.onLastMessages(result.payload.items)
-        break
+      case "last": {
+        this.onLastMessages(result.payload.items);
+        break;
       }
-      case 'old': {
-        this.onOldMessages(result.payload.items)
-        break
+      case "old": {
+        this.onOldMessages(result.payload.items);
+        break;
       }
-      case 'clear': {
-        this.onClearMessages(result.payload)
-        break
+      case "clear": {
+        this.onClearMessages(result.payload);
+        break;
       }
     }
   }
 
-  sendMessage(message: string) {
+  sendMessage(message: string, user: Partial<Profile>) {
     const key = uuidv4();
-    this.getState().ws?.send(
+    this.ws?.send(
       JSON.stringify({
         method: "post",
         payload: {
@@ -76,66 +109,93 @@ class ChatState extends StoreModule<InitialStateChat, ConfigWS> {
         },
       })
     );
-    this.setState({
-      ...this.getState(),
-      keyofMessageSentByMe: key
-    })
+
+    const newMessage = {
+      _id: "",
+      _key: key,
+      text: message,
+      author: {
+        _id: user._id,
+        username: user.username,
+      },
+      dateCreate: new Date().toISOString(),
+      status: "pending" as StatusType,
+    };
+
+    this.setState(
+      {
+        ...this.getState(),
+        messages: [...this.getState().messages, newMessage],
+      },
+      "Установлен ключ сообщения"
+    );
   }
 
   onPostMessage(message: MessageType) {
-    const selfMessage = this.getState().keyofMessageSentByMe === message._key;
-    if(selfMessage) {
+    const selfMessage = this.getState().messages.find(m => m._key === message._key);
+    if (selfMessage) {
       message['status'] = 'sent';
+      const messages = this.getState().messages.map((m) => m._key === message._key ? message : m)
+      this.setState(
+        {
+          ...this.getState(),
+          messages
+        },
+        "Сообщение принято"
+      );
+    } else {
+      this.setState(
+        {
+          ...this.getState(),
+          messages: [...this.getState().messages, message],
+        },
+        "Сообщение принято"
+      );
     }
-    const messages = [...this.getState().messages, message];
-    this.setState({
-      ...this.getState(),
-      messages,
-    });
-    console.log(this.getState().messages)
   }
 
   changeStatus(status: StatusType) {
-    const messages = this.getState().messages.map(m => {
-      m.status = status
-      return m
-    })
+    const messages = this.getState().messages.map((m) => {
+      m.status = status;
+      return m;
+    });
 
-    this.setState({
-      ...this.getState(),
-      messages
-    })
+    this.setState(
+      {
+        ...this.getState(),
+        messages,
+      },
+      "Сообщение прочитано"
+    );
   }
 
   //получить последние сообщения, если не указать дату, придут последние 10 сообщений
   getLastMessages(fromDate?: string) {
-    if (this.getState().ws?.readyState === 1) {
-      this.getState().ws?.send(
-        JSON.stringify({
-          method: "last",
-          payload: {
-            fromDate,
-          },
-        })
-      );
-    } else {
-      setTimeout(() => {
-        this.getLastMessages(fromDate);
-      }, 1000);
-    }
+    this.ws?.send(
+      JSON.stringify({
+        method: "last",
+        payload: {
+          fromDate,
+        },
+      })
+    );
   }
 
   onLastMessages(messages: MessageType[]) {
-    this.setState({
-      ...this.getState(),
-      messages,
-    });
+    this.setState(
+      {
+        ...this.getState(),
+        messages,
+      },
+      "Последние сообщения получены"
+    );
   }
 
   //получение старых сообщений начиная с конкретного сообщения(id)
   getOldMessages() {
+    if (!this.getState().messages.length) return;
     const fromId = this.getState().messages[0]?._id;
-    this.getState().ws?.send(
+    this.ws?.send(
       JSON.stringify({
         method: "old",
         payload: {
@@ -145,29 +205,31 @@ class ChatState extends StoreModule<InitialStateChat, ConfigWS> {
     );
     this.setState({
       ...this.getState(),
-      fromId
-    })
+      fromId,
+    });
   }
 
   onOldMessages(messages: MessageType[]) {
     const oldMessages = messages.slice(0, -1);
 
-    this.setState({
-      ...this.getState(),
-      messages: [...oldMessages, ...this.getState().messages],
-    });
+    this.setState(
+      {
+        ...this.getState(),
+        messages: [...oldMessages, ...this.getState().messages],
+      },
+      "Старые сообщения получены"
+    );
   }
 
   reconnect(e: CloseEvent, token: string) {
-    if(e.code === 1006) {
-      this.connection(token)
-      console.log(this.getState().ws, e)
+    if (!e.wasClean && navigator.onLine) {
+      this.initConnection(token);
     }
   }
 
   //очистить все сообщения
-  clearAll() {
-    this.getState().ws?.send(
+  clearAllMessages() {
+    this.ws?.send(
       JSON.stringify({
         method: "clear",
         payload: {},
@@ -176,16 +238,31 @@ class ChatState extends StoreModule<InitialStateChat, ConfigWS> {
   }
 
   onClearMessages(result = {}) {
-    if(!Object.keys(result).length) {
-      this.setState({
-        ...this.getState(),
-        messages: []
-      })
+    if (!Object.keys(result).length) {
+      this.setState(
+        {
+          ...this.getState(),
+          messages: [],
+        },
+        "Все сообщения удалены"
+      );
     }
   }
 
-  close() {
-    this.getState().ws?.close();
+  onClose() {
+    if(!this.ws) return;
+    this.onAuth(false);
+    clearInterval(this.getState().timeId);
+    this.ws?.close();
+    this.ws = null;
+  }
+
+  onPong() {
+    const timeId = setInterval(() => this.ws?.send(JSON.stringify({ type: "pong" })), 55000);
+    this.setState({
+      ...this.getState(),
+      timeId
+    })
   }
 }
 

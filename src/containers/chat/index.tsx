@@ -11,49 +11,48 @@ export const Chat = () => {
   const { t } = useTranslate();
   const store = useStore();
 
-  const select = useSelector(state => ({
+  const select = useSelector((state) => ({
     token: state.session.token,
-    userId: state.session.user._id,
-    ws: state.chat.ws,
-    messages: state.chat.messages
-  }))
+    user: state.session.user,
+    messages: state.chat.messages,
+    connection: state.chat.connection
+  }));
 
   useEffect(() => {
-    store.actions.chat.connection(select.token!);
-    setTimeout(() => {
-      store.actions.chat.getLastMessages();
-    }, 1000);
-    return () => {
-      store.actions.chat.close()
-    };
-  }, [])
-
+    store.actions.chat.initConnection(select.token!)
+    return () => store.actions.chat.onClose();
+  }, []);
 
   const callbacks = {
     onSubmit: (message: string) => {
-      store.actions.chat.sendMessage(message);
+      store.actions.chat.sendMessage(message, select.user);
     },
     onLoadOldMessages: () => {
       store.actions.chat.getOldMessages();
     },
     onClear: () => {
-      store.actions.chat.clearAll()
+      store.actions.chat.clearAllMessages();
     },
     onChangeStatus: () => {
       store.actions.chat.changeStatus("read");
-    }
-  }
+    },
+  };
 
   return (
-    <SideLayout direction='column'>
-      <ButtonClear labelClear={t('chat.clear')} onClear={callbacks.onClear} />
-      <Messages messages={select.messages} userId={select.userId!} changeStatus={callbacks.onChangeStatus} loadOldMessages={callbacks.onLoadOldMessages}/>
+    <SideLayout direction="column">
+      <ButtonClear labelClear={t("chat.clear")} onClear={callbacks.onClear} />
+      <Messages
+        messages={select.messages}
+        userId={select.user._id!}
+        changeStatus={callbacks.onChangeStatus}
+        loadOldMessages={callbacks.onLoadOldMessages}
+      />
       <AddMessageForm
         labelSend={t("chat.send")}
         labelPlaceholder={t("chat.placeholder")}
         onSubmit={callbacks.onSubmit}
-        connection={select.ws?.readyState === 1}
+        connection={select.connection}
       />
     </SideLayout>
   );
-}
+};

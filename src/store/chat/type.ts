@@ -3,10 +3,10 @@ export type ConfigWS = {
 };
 
 export type InitialStateChat = {
-  ws: WebSocket | null;
   messages: MessageType[];
   fromId?: string,
-  keyofMessageSentByMe: string,
+  timeId: number | string | NodeJS.Timeout,
+  connection: boolean
 };
 
 export type MessageType = {
@@ -17,12 +17,12 @@ export type MessageType = {
   dateCreate: string;
   status?: StatusType
 };
-export type StatusType = 'sent' | 'read';
+export type StatusType = 'pending' | 'sent' | 'read';
 
 export type Author = {
-  _id: string;
-  username: string;
-  profile: {
+  _id?: string;
+  username?: string;
+  profile?: {
     name: string;
     avatar: {
       url: string;

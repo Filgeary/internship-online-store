@@ -1,4 +1,5 @@
-import { FC, memo, useEffect, useState } from "react";
+import { FC, memo, useEffect } from "react";
+import { sanitize } from "dompurify";
 import { cn as bem } from "@bem-react/classname";
 import { dateFormat } from "@src/utils/date-format";
 import { MessagePropsType } from "./type";
@@ -11,7 +12,7 @@ const Message: FC<MessagePropsType> = ({ message, self, changeStatus }) => {
   const time = dateFormat(new Date(message.dateCreate));
 
   useEffect(() => {
-    if(!self)
+    if(!self && message.status !== 'pending')
     changeStatus();
   }, [])
 
@@ -19,11 +20,14 @@ const Message: FC<MessagePropsType> = ({ message, self, changeStatus }) => {
     <article className={cn({ self, notSelf: !self })}>
       {!self && <h5 className={cn("name")}>{message.author.username}</h5>}
       <div className={cn("text", { self, notSelf: !self })}>
-        <p>{message.text}</p>
+        <p dangerouslySetInnerHTML={{ __html: sanitize(message.text) }}></p>
         <div className={cn("time")}>
           <span>{time}</span>
+          {message.status === "pending" && self && (
+            <div className={cn("loader")}></div>
+          )}
           {message.status === "sent" && self && <CheckIcon />}
-          {message.status === 'read' && self && <DoubleCheckIcon />}
+          {message.status === "read" && self && <DoubleCheckIcon />}
         </div>
       </div>
     </article>
