@@ -26,7 +26,8 @@ const Chat: FC = () => {
     messages: state.chat.messages,
     message: state.chat.message,
     name: state.session.user as any,
-    statusClearChat: state.chat.statusClearChat
+    statusClearChat: state.chat.statusClearChat,
+    connected: state.chat.connected
   }));
 
   const callbacks = {
@@ -54,8 +55,8 @@ const Chat: FC = () => {
     adjustTextareaHeight: useCallback(() => {
       const textarea = textareaRef.current
       if (textarea) {
-        textarea.style.height = 'auto';
-        textarea.style.height = `${textarea.scrollHeight}px`;
+        textarea.style.height = 'auto'
+        textarea.style.height = `${textarea.scrollHeight}px`
     }
     }, [store]),
     // Добавление жирного шрифта
@@ -77,7 +78,7 @@ const Chat: FC = () => {
   const resetTextareaHeight = () => {
     const textarea = textareaRef.current
     if (textarea) {
-      textarea.style.height = 'auto';
+      textarea.style.height = 'auto'
     }
 }
 
@@ -107,13 +108,13 @@ const Chat: FC = () => {
   }
  
   useEffect(() => {
-    store.actions.chat.request()
+    store.actions.chat.onConnect()
      return () => store.actions.chat.close()
   }, [])
 
   useEffect(() => {
     if (lastMessageRef.current) {
-      lastMessageRef.current.scrollIntoView({ behavior: "smooth" });
+      lastMessageRef.current.scrollIntoView({ behavior: "smooth" })
     }
   }, [select.messages]);
 
@@ -136,9 +137,10 @@ const Chat: FC = () => {
         textarea={renders.textarea}
         font={renders.font}
         isfontOpen={fontOpen}
-        setFontOpen={setFontOpen}/>
+        setFontOpen={setFontOpen}
+        connected={select.connected}/>
     </PageLayout>
-  );
-};
+  )
+}
 
 export default memo(Chat)

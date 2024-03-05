@@ -1,9 +1,11 @@
 import React, { memo, useState } from "react"
+import * as DOMPurify from 'dompurify'
 import { cn as bem } from "@bem-react/classname"
 import { IChat } from "@src/store/chat/types"
 import Img from "../../assets/images/avatar.png"
 import ChatButton from "./chat-button"
 import MessageCheck from "./message-check"
+import getTimeFromDate from "@src/utils/time-from-date"
 import "./style.css"
 
 interface IChatLayout {
@@ -18,6 +20,7 @@ interface IChatLayout {
   name: string
   statusClearChat: boolean
   isfontOpen: boolean
+  connected: boolean
 }
 
 const ChatLayout = React.forwardRef<HTMLDivElement, IChatLayout>((props, ref) =>  {
@@ -29,6 +32,7 @@ const ChatLayout = React.forwardRef<HTMLDivElement, IChatLayout>((props, ref) =>
         textarea,
         font,
         setFontOpen,
+        connected,
         isfontOpen,
         messages,
         name,
@@ -47,8 +51,9 @@ const ChatLayout = React.forwardRef<HTMLDivElement, IChatLayout>((props, ref) =>
           ref={ref}>
             <div className={cn("message")}>
                 <img className={cn("img")} src={Img} alt='Avatar'></img>
+                <p className={cn("time")}>{getTimeFromDate(item.dateCreate)}</p>
                 <p className={cn("name")}>{item.author.username}</p>
-              <p className={cn("text")} >{item.text}</p>
+              <div className={cn("text")} dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(item.text)}}/>
               <MessageCheck/>
             </div>
           </div>
@@ -58,9 +63,9 @@ const ChatLayout = React.forwardRef<HTMLDivElement, IChatLayout>((props, ref) =>
         {isfontOpen && font()}
         {textarea()}
         <div>
-          <button className={cn("button")} onClick={onMessage}>
+         {connected && <button className={cn("button")} onClick={onMessage}>
             Отправить
-          </button>
+          </button>} 
         </div>
       </div>
       <ChatButton 

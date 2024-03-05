@@ -6,7 +6,6 @@ import generateUniqueId from "@src/utils/unicque_id"
  * Список категорий
  */
 class ChatState extends StoreModule<IChatState> {
-  private timeoutId: ReturnType<typeof setTimeout> | null = null
   /**
    * Начальное состояние
    * @return {Object}
@@ -21,17 +20,9 @@ class ChatState extends StoreModule<IChatState> {
   }
 
   /**
-   * Подключение и запрос данных
-   */
-  request() {
-    this.onConnect()
-    this.timeoutId = setTimeout(() => this.requestLatestMessages(), 1000)
-  }
-
-  /**
    * Установка соединения
    */
-  private onConnect() {
+  onConnect() {
     this.services.socket.connect("example.front.ylab.io/chat")
 
     const socket = this.services.socket.socket!
@@ -49,10 +40,14 @@ class ChatState extends StoreModule<IChatState> {
 
       this.services.socket.send("auth", {
         token: token,
-      })
+      })}
 
       socket.onmessage = (event: MessageEvent<any>) => {
         const messages = JSON.parse(event.data) as TMessages
+
+        if (messages.method === "auth") {
+          this.requestLatestMessages()
+        }
 
         if (messages.method === "last") {
           if ("items" in messages.payload) {
@@ -96,10 +91,9 @@ class ChatState extends StoreModule<IChatState> {
           }
         }
       }
-      }
-
+      
       socket.onclose = () => {
-        if (this.getState().connected) this.request()
+         if (this.getState().connected) this.onConnect()
         console.log("Socket закрыт")
       }
 
@@ -112,16 +106,14 @@ class ChatState extends StoreModule<IChatState> {
    * Закрытие WebSocket соединения
    */
   close() {
-    this.services.socket.close()
 
     this.setState({
       ...this.getState(),
       connected: false,
     })
 
-    if (this.timeoutId !== null) {
-      clearTimeout(this.timeoutId)
-    }
+    this.services.socket.close()
+
   }
 
   /**
@@ -187,6 +179,12 @@ class ChatState extends StoreModule<IChatState> {
       message: "",
     })
   }
+
+  // Генерируем искусственную ошибку в сокете
+generateSocketError() {
+  const event = new Event('error');
+  this.services.socket.socket!.dispatchEvent(event);
+}
 }
 
 export default ChatState

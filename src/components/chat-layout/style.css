@@ -18,11 +18,31 @@
   padding-bottom: 30px;
   box-shadow: inset rgba(0, 0, 0, 0.6) 0 -3px 8px,
     inset rgba(111, 106, 139, 0.7) 0 3px 8px, rgba(0, 0, 0, 0.8) 0 3px 8px -3px;
+    position: relative;
+}
+
+.Chat:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  min-height: 100%;
+  background-image: url("../../assets/images/grid.png");
+  opacity: 0.03;
 }
 
 .Chat-title {
   font-size: 30px;
   margin-bottom: 50px;
+}
+
+.Chat-time {
+  position: absolute;
+  top: -4px;
+  right: 10px;
+  color: #9bff00;
+  font-size: 12px;
 }
 
 .Chat-wrap-message {
@@ -41,6 +61,7 @@
 }
 
 .Chat-message {
+  min-width: 20%;
   min-height: 20px;
   position: relative;
   display: flex;
@@ -58,7 +79,7 @@
   word-wrap: break-word;
   line-height: 20px;
   margin: 20px 0 20px 0;
-  max-width: 40%;
+  max-width: 60%;
   /* width: 100%; */
   color: white;
   box-shadow: inset rgba(0, 0, 0, 0.6) 0 -3px 8px,
@@ -83,6 +104,12 @@
   overflow: hidden;
   word-wrap: break-word;
   margin: 5px;
+  max-height: 50vh;
+}
+
+.Chat-text * {
+  max-width: 100%;
+  max-height: 100%;
 }
 
 .Chat-input {

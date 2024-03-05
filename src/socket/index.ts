@@ -31,7 +31,7 @@ class WebSocketService {
             payload: {
               ...payload
             }
-          }); 
+          })
 
       if (this.socket) {
         this.socket.send(data);

@@ -43,7 +43,7 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, IProps>(
         console.log('emojiObject.emoji', emojiObject.emoji)
         setMessage(prev => prev + emojiObject.emoji)
         onChangeDebounce(message + emojiObject.emoji);
-        setShowPicker(false)
+        // setShowPicker(false)
       };
 
     useEffect(() => {
@@ -70,6 +70,7 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, IProps>(
           value={message}
           onChange={handleChange}
           placeholder={placeholder}
+          onClick={() => setShowPicker(false)}
         />
       </>
     )
