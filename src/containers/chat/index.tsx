@@ -2,8 +2,9 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 
 import Field from '@src/components/field';
 import { useChat } from '@src/hooks/use-chat';
-import { IUserSession } from '@src/types/IUserSession';
-import { Check } from 'react-feather';
+import { Check as CheckIcon } from 'react-feather';
+
+import type { IUserSession } from '@src/types/IUserSession';
 
 type Props = {
   token: string;
@@ -92,7 +93,7 @@ const Chat = ({ token, user }: Props) => {
             }}
           >
             {message.text}{' '}
-            {uniqueUUIDs?.includes(message._key) && <Check style={{ color: 'white' }} />}
+            {uniqueUUIDs?.includes(message._key) && <CheckIcon style={{ color: 'white' }} />}
           </li>
         ))}
       </ul>
@@ -102,7 +103,7 @@ const Chat = ({ token, user }: Props) => {
           <Field>
             <input
               ref={inputRef}
-              name='chat-message'
+              name='input-chat'
               placeholder='Enter message'
               value={inputValue}
               onChange={evt => setInputValue(evt.target.value)}

@@ -22,11 +22,33 @@ interface Message {
   dateCreate: Date;
 }
 
+type TResponse =
+  | {
+      method: 'auth';
+      payload: {
+        result: boolean;
+        error?: string;
+      };
+    }
+  | {
+      method: 'post';
+      payload: Message;
+    }
+  | {
+      method: 'last' | 'old';
+      payload: {
+        items: Message[];
+      };
+    }
+  | {
+      method: 'clear';
+    };
+
 export const useChat = (token: string) => {
   const [isAuth, setIsAuth] = useState(false);
   const [socket, setSocket] = useState<WebSocket | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | undefined>(undefined);
   const [uniqueUUIDs, setUniqueUUIDs] = useState<string[] | null>(null);
 
   useEffect(() => {
@@ -48,10 +70,7 @@ export const useChat = (token: string) => {
     };
 
     newSocket.onmessage = event => {
-      const data = JSON.parse(event.data) as {
-        method: string;
-        payload: any;
-      };
+      const data = JSON.parse(event.data) as TResponse;
 
       switch (data.method) {
         case 'auth':
@@ -82,15 +101,29 @@ export const useChat = (token: string) => {
       console.error('WebSocket error:', error);
     };
 
-    newSocket.addEventListener('close', evt => {
+    newSocket.onclose = evt => {
       setError(`WebSocket connection closed`);
       console.error('WebSocket connection closed', evt.code, evt.reason);
-    });
+      setIsAuth(false);
+      setSocket(null);
+    };
+
+    // Ping server
+    const timerID = setInterval(() => {
+      if (!newSocket) {
+        return;
+      }
+      newSocket.send(JSON.stringify({ method: 'ping', payload: {} }));
+    }, 30_000);
 
     setSocket(newSocket);
 
     return () => {
       newSocket.close();
+
+      if (timerID) {
+        clearInterval(timerID);
+      }
     };
   }, [token]);
 
