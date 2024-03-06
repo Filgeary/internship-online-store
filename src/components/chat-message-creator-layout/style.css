@@ -23,6 +23,8 @@
   min-height: 20px;
   max-height: 100px;
   line-height: 20px;
+  overflow-y: auto;
+  white-space: pre-line;
 }
 
 .ChatMessageCreatorLayout-textarea::placeholder {

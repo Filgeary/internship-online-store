@@ -145,7 +145,7 @@ class ChatModule extends StoreModule<ChatState, ChatConfig> {
               profile: this.services.store.getState().session.user.profile!,
               username: this.services.store.getState().session.user.profile!.name,
             },
-            dateCreate: '',
+            dateCreate: new Date(Date.now()).toISOString(),
           }
         ]
       }, 'новое сообщение на клиенте')
