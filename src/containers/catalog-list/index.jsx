@@ -9,7 +9,6 @@ import Spinner from "@src/components/spinner"
 import modalsActions from '@src/store-redux/modals/actions'
 import generateUniqueId from "@src/utils/unicque_id"
 import { useDispatch } from "react-redux"
-import { StoreState } from "@src/store/types"
 
 function CatalogList({stateName}) {
   const store = useStore();

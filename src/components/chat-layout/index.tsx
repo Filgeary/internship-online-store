@@ -1,5 +1,5 @@
 import React, { memo, useState } from "react"
-import * as DOMPurify from 'dompurify'
+import DOMPurify from 'dompurify'
 import { cn as bem } from "@bem-react/classname"
 import { IChat } from "@src/store/chat/types"
 import Img from "../../assets/images/avatar.png"
