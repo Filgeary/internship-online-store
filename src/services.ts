@@ -1,5 +1,4 @@
 import APIService from "./api";
-import ChatService from "./chat";
 import Store from "./store";
 import createStoreRedux from "./store-redux";
 import { IConfig } from "./types";
@@ -9,7 +8,6 @@ class Services {
   _api: APIService | undefined;
   _store: Store | undefined;
   _redux: any;
-  _chat: ChatService | undefined;
 
   constructor(config: IConfig) {
     this.config = config;
@@ -24,16 +22,6 @@ class Services {
       this._api = new APIService(this, this.config.api);
     }
     return this._api;
-  }
-  /**
-   * Сервис Чата
-   * @returns {ChatService}
-   */
-  get chat(): ChatService {
-    if (!this._chat) {
-      this._chat = new ChatService(this, this.config.chat);
-    }
-    return this._chat;
   }
 
   /**

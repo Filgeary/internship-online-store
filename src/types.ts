@@ -1,5 +1,4 @@
 import { APIConfig } from "./api/types";
-import { ChatConfig } from "./chat/types";
 import { StoreConfigs } from "./store/types";
 
 export type ConfigStoreModules = {
@@ -19,7 +18,6 @@ export interface ReduxConfig {}
 export interface IConfig {
   store: StoreConfig;
   api: APIConfig;
-  chat: ChatConfig;
   redux: ReduxConfig;
 }
 

@@ -31,9 +31,6 @@ const config: IConfig = {
   api: {
     baseUrl: "",
   },
-  chat: {
-    baseUrl: "ws://example.front.ylab.io/chat",
-  },
   redux: {},
 };
 

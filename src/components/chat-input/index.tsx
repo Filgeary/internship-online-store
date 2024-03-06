@@ -1,7 +1,6 @@
 import {
   memo,
   useCallback,
-  useEffect,
   useRef,
 } from "react";
 import { cn as bem } from "@bem-react/classname";
