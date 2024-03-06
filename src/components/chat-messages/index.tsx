@@ -23,10 +23,10 @@ function ChatMessages(props: IChatMessagesProps) {
   }, [props.messages, isScrollDown]);
 
   useLayoutEffect(() => {
-    setLoading(false);
-    if (prevScrollHeight && chatRef.current) {
+    if (prevScrollHeight && chatRef.current && loading === true) {
       chatRef.current.scrollTop = chatRef.current.scrollHeight - prevScrollHeight;
     }
+    setLoading(false);
   }, [props.messages])
 
   const callbacks = {

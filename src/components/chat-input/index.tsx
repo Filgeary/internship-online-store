@@ -36,6 +36,7 @@ function ChatInput(props: IChatInputProps) {
       }
       props.onSubmit(textareaRef.current.value);
       textareaRef.current.value = "";
+      callbacks.onChange();
     }, [textareaRef]),
     onKeyUp: useCallback((e: React.KeyboardEvent) => {
       if (!e.shiftKey && e.key === "Enter") {
