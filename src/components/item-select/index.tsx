@@ -2,7 +2,6 @@ import { memo } from "react";
 import { cn as bem } from "@bem-react/classname";
 import "./style.css";
 import { TCountries } from "@src/store/countries";
-import useSelector from "@src/hooks/use-selector";
 
 export type TItemSelectProps = {
   item: TCountries;
