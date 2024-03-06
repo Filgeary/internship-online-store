@@ -3,9 +3,11 @@
   "version": "1.0.0",
   "description": "Example project for webinar",
   "main": "index.tsx",
+  "type": "module",
   "scripts": {
-    "start": "webpack serve",
-    "build": "cross-env NODE_ENV=production webpack",
+    "start": "vite serve",
+    "build": "vite build",
+    "serve": "vite preview",
     "test": "jest"
   },
   "repository": {
@@ -41,6 +43,7 @@
     "@types/react": "^18.2.55",
     "@types/react-dom": "^18.2.18",
     "@types/react-redux": "^7.1.33",
+    "@vitejs/plugin-react": "^4.2.1",
     "babel-loader": "^9.1.2",
     "cross-env": "^7.0.3",
     "css-loader": "^6.8.1",
@@ -50,6 +53,9 @@
     "less-loader": "^11.1.3",
     "mini-css-extract-plugin": "^2.7.6",
     "typescript": "^5.3.3",
+    "vite": "^5.1.5",
+    "vite-plugin-purgecss": "^0.2.12",
+    "vite-tsconfig-paths": "^4.3.1",
     "webpack": "^5.88.1",
     "webpack-cli": "^5.1.4",
     "webpack-dev-server": "^4.15.1"
