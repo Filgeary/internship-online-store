@@ -38,6 +38,7 @@ function Navigation() {
   const options = {
     menu: useMemo(() => ([
       {key: 1, title: t('menu.main'), link: '/'},
+      {key: 2, title: t('menu.chat'), link: '/chat'},
     ]), [t])
   };
 

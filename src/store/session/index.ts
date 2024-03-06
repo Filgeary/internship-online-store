@@ -126,7 +126,7 @@ class SessionState extends StoreModule<ISessionInitState, ISessionConfig> {
    * Сброс ошибок авторизации
    */
   resetErrors() {
-    this.setState({...this.initState(), errors: null})
+    this.setState({...this.initState(), errors: null, waiting: false}, "Сброс");
   }
 }
 

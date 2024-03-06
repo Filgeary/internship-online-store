@@ -1,0 +1,61 @@
+.ChatMessage {
+    border-top-left-radius: 0.9375rem;
+    border-top-right-radius: 0.9375rem;
+    border-bottom-right-radius: 0.9375rem;
+    align-self: flex-start;
+    border-bottom-left-radius: 0;
+    background-color: #fff;
+    max-width: 30%;
+    padding: 0.3125rem 0.5rem 0.375rem;
+    color: #000;
+}
+
+.ChatMessage_self {
+    margin-right: 0;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0.9375rem;
+    align-self: flex-end;
+    background-color: rgba(255, 255, 255, .7);
+}
+
+.ChatMessage-title {
+    font-size: 15px;
+    color: rgb(118,106,200);
+    font-weight: 600;
+}
+
+.ChatMessage-content {
+    margin: 0;
+    word-break: break-word;
+    white-space: pre-wrap;
+    line-height: 1.3125;
+    text-align: initial;
+    display: block;
+    unicode-bidi: plaintext;
+    border-radius: 0.25rem;
+    position: relative;
+    font-size: 15px;
+}
+
+.ChatMessage-meta {
+    display: flex;
+    align-items: center;
+    position: relative;
+    top: 0.375rem;
+    bottom: auto !important;
+    float: right;
+    line-height: 1.35;
+    height: calc(var(--message-meta-height, 1rem));
+    margin-left: 0.4375rem;
+    margin-right: -0.5rem;
+}
+
+.ChatMessage-time {
+    font-size: .75rem;
+    white-space: nowrap;
+}
+
+.ChatMessage-status {
+    width: 19px;
+    height: 19px;
+}

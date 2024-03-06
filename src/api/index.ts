@@ -1,34 +1,22 @@
 import Services from "@src/services";
-import { ApiConfig } from "@src/types";
-
-type ApiRequest = {
-  url: string;
-  method?: "GET" | "POST" | "PUT" | "DELETE";
-} & RequestInit
-
-interface ApiResponse<T> {
-  data: T,
-  status: number,
-  headers: any
-}
+import { APIConfig, ApiRequest, ApiResponse } from "./types";
 
 class APIService {
   services: Services;
-  config: Partial<ApiConfig>;
+  config: Partial<APIConfig>;
   defaultHeaders: Record<string, string>;
 
   /**
    * @param services {Services} Менеджер сервисов
    * @param config {Object}
    */
-  constructor(services: Services, config: Partial<ApiConfig> = {}) {
+  constructor(services: Services, config: Partial<APIConfig> = {}) {
     this.services = services;
     this.config = config
     this.defaultHeaders = {
       'Content-Type': 'application/json',
     }
   }
-
   /**
    * HTTP запрос
    * @param url

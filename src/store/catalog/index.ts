@@ -62,7 +62,6 @@ class CatalogState extends StoreModule<ICatalogInitState, ICatalogConfig> {
       if (urlParams.has('category')) validParams.category = urlParams.get('category') ?? '';
       if (urlParams.has('madeIn')) validParams.madeIn = urlParams.get('madeIn') ?? '';
     }
-    console.log(validParams);
     await this.setParams({...this.initState().params, ...validParams, ...newParams}, true);
   }
 

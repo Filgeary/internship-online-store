@@ -1,11 +1,11 @@
 import { IConfig } from "./types";
 
-const isProduction = process.env.NODE_ENV === 'production';
+const isProduction = process.env.NODE_ENV === "production";
 
 /**
  * Настройки сервисов
  */
-const config : IConfig = {
+const config: IConfig = {
   store: {
     // Логировать установку состояния?
     log: !isProduction,
@@ -13,22 +13,28 @@ const config : IConfig = {
     modules: {
       session: {
         // Названия токена в АПИ
-        tokenHeader: 'X-Token'
+        tokenHeader: "X-Token",
       },
       catalog: {
         readParams: true,
-        saveParams: true
+        saveParams: true,
       },
       catalogModal: {
         readParams: false,
-        saveParams: false
-      }
-    }
+        saveParams: false,
+      },
+      chat: {
+        baseUrl: "ws://example.front.ylab.io/chat",
+      },
+    },
   },
   api: {
-    baseUrl: ''
+    baseUrl: "",
   },
-  redux: {}
-}
+  chat: {
+    baseUrl: "ws://example.front.ylab.io/chat",
+  },
+  redux: {},
+};
 
 export default config;
