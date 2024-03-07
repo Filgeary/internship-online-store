@@ -1,0 +1,9 @@
+.ChatList {
+  list-style: none;
+  word-break: break-word;
+  padding: 12px 32px;
+  margin: 0;
+  max-height: 500px;
+  overflow: auto;
+  width: 100%;
+}
