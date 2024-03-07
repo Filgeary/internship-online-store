@@ -54,12 +54,8 @@
     "@types/uuid": "^9.0.8",
     "babel-loader": "^9.1.2",
     "cross-env": "^7.0.3",
-    "define": "^1.0.1",
     "jest": "^29.5.0",
     "typescript": "^5.3.3",
-    "vite": "^5.1.5",
-    "vite-plugin-html": "^3.2.2",
-    "vite-plugin-purgecss": "^0.2.12",
-    "vite-tsconfig-paths": "^4.3.1"
+    "vite": "^5.1.5"
   }
 }

@@ -49,5 +49,8 @@
     "send": "Send",
     "placeholder": "Type message...",
     "clear": "Clear all messages"
+  },
+  "draw": {
+    "title": "Draw"
   }
 }
