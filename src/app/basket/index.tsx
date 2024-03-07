@@ -4,11 +4,11 @@ import useSelector from "../../hooks/use-selector";
 import useTranslate from "../../hooks/use-translate";
 import ItemBasket from "../../components/item-basket";
 import List from "../../components/list";
-import ModalLayout from "../../components/modal-layout";
 import BasketTotal from "../../components/basket-total";
 import Button from '../../components/button';
 import { BasketPropsType } from './types';
 import { BasketItemType } from '../../store/basket/types';
+import ModalLayout from '../../components/modal-layout';
 
 function Basket({close}: BasketPropsType) {
 

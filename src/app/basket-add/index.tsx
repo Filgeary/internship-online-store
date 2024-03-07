@@ -1,10 +1,10 @@
-import ModalLayout from "../../components/modal-layout";
 import { useCallback } from "react";
 import { memo } from "react"
 import useStore from "../../hooks/use-store";
 import ItemAdd from "../../components/item-add";
 import useTranslate from "../../hooks/use-translate";
 import { BasketAddPropsType } from "./types";
+import ModalLayout from "../../components/modal-layout";
 
 function BasketAdd({close, title, count}: BasketAddPropsType) {
   const store = useStore();

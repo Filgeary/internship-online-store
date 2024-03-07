@@ -1,4 +1,4 @@
-import exclude from './index.js';
+import exclude from './index.ts';
 
 describe('utils/exclude', () => {
 

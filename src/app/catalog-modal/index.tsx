@@ -1,11 +1,11 @@
 import Button from "../../components/button";
-import ModalLayout from "../../components/modal-layout";
 import CatalogFilter from "../../containers/catalog-filter";
 import CatalogList from "../../containers/catalog-list";
 import useInit from "../../hooks/use-init";
 import useStore from "../../hooks/use-store";
 import { memo, useCallback, useState } from "react"
 import { CatalogModalPropsType } from "./types";
+import ModalLayout from "../../components/modal-layout";
 
 
 function CatalogModal({storeSlice = 'catalog', close}: CatalogModalPropsType<'catalog'>) {
@@ -13,7 +13,7 @@ function CatalogModal({storeSlice = 'catalog', close}: CatalogModalPropsType<'ca
   const [articles, setArticles] = useState<string[]>([]);
 
   useInit(async () => {
-    await store.actions[storeSlice].resetParams({}, false);
+    await store.actions[storeSlice].resetParams({});
   }, [], true)
 
   const callbacks = {
@@ -34,7 +34,7 @@ function CatalogModal({storeSlice = 'catalog', close}: CatalogModalPropsType<'ca
               labelClose="Закрыть"
               onClose={callbacks.closeModal}
       >
-        <CatalogFilter isModal={true} storeSlice={storeSlice}/>
+        <CatalogFilter storeSlice={storeSlice}/>
         <CatalogList isModal={true}
                      storeSlice={storeSlice}
                      onAdd={callbacks.addArticle}
