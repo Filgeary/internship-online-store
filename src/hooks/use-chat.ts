@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react';
 
+import { sortByDate } from '@src/utils/sortByDate';
+import { uniqBy } from '@src/utils/uniqBy';
+
 const url = 'ws://example.front.ylab.io/chat';
 
 // generate unique id with modern WEB API crypto
@@ -83,11 +86,13 @@ export const useChat = (token: string) => {
           }
           break;
         case 'post':
-          setMessages(prevMessages => [...prevMessages, data.payload]);
+          setMessages(prevMessages => uniqBy([...prevMessages, data.payload], item => item._id));
           break;
         case 'last':
         case 'old':
-          setMessages(prevMessages => [...data.payload.items, ...prevMessages]);
+          setMessages(prevMessages =>
+            uniqBy([...data.payload.items, ...prevMessages], item => item._id).toSorted(sortByDate),
+          );
           break;
         case 'clear':
           setMessages([]);
@@ -163,7 +168,7 @@ export const useChat = (token: string) => {
     );
   };
 
-  const loadOldMessages = (fromId: string) => {
+  const loadOldMessagesFromID = (fromId: string) => {
     if (!socket) {
       return;
     }
@@ -198,7 +203,7 @@ export const useChat = (token: string) => {
     error,
     sendMessage,
     loadLastMessages,
-    loadOldMessages,
+    loadOldMessagesFromID,
     clearAllMessages,
   };
 };
