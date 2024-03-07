@@ -8,6 +8,7 @@ import Profile from "./profile";
 import Protected from "@src/containers/protected";
 import Modals from "@src/containers/modals";
 import Chat from "./chat-page";
+import CanvasPage from "./canvas-page";
 
 /**
  * Приложение
@@ -41,6 +42,7 @@ function App(): React.ReactElement {
             </Protected>
           }
         />
+            <Route path={"/canvas"} element={<CanvasPage />} />
       </Routes>
       <Modals />
     </>
