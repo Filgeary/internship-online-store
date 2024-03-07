@@ -1,9 +1,9 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef } from 'react';
 
-import Field from '@src/components/field';
+import ChatInput from '@src/components/chat-input';
+import ChatMessage from '@src/components/chat-message';
 import SideLayout from '@src/components/side-layout';
 import { useChat } from '@src/hooks/use-chat';
-import ChatMessage from '../../components/chat-message';
 
 import type { IUserSession } from '@src/types/IUserSession';
 
@@ -25,15 +25,6 @@ const Chat = ({ token, user }: Props) => {
   } = useChat(token);
 
   const lastMessagesID = messages.at(0)?._id || '';
-  const [inputValue, setInputValue] = useState('');
-
-  const inputRef = useRef<HTMLInputElement>(null);
-  // Initial focus on input
-  useEffect(() => {
-    if (inputRef.current) {
-      inputRef.current.focus();
-    }
-  }, []);
 
   const messagesUListRef = useRef<HTMLUListElement>(null);
   // Scroll to bottom on new message
@@ -53,15 +44,6 @@ const Chat = ({ token, user }: Props) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuth]);
-
-  const handleSendMessage = (evt: React.FormEvent<HTMLFormElement>) => {
-    evt.preventDefault();
-    const formattedValue = inputValue.trim();
-    if (formattedValue.length === 0) return;
-
-    sendMessage(formattedValue);
-    setInputValue('');
-  };
 
   const handleClearAllMessages = () => {
     clearAllMessages();
@@ -109,33 +91,10 @@ const Chat = ({ token, user }: Props) => {
       </ul>
 
       <div style={{ marginTop: 'auto' }}>
-        <form onSubmit={handleSendMessage}>
-          <Field>
-            <input
-              ref={inputRef}
-              name='input-chat'
-              placeholder='Write a message...'
-              value={inputValue}
-              onChange={evt => setInputValue(evt.target.value)}
-              style={{
-                outline: 'none',
-                color: 'white',
-                background: '#323232',
-                border: 'none',
-                borderRadius: '16px',
-                height: '50px',
-                lineHeight: 'normal',
-                display: 'block',
-                width: '600px',
-                boxSizing: 'border-box',
-                userSelect: 'auto',
-                fontSize: '16px',
-                padding: '0 12px',
-              }}
-            />
-          </Field>
-          <Field error={error} />
-        </form>
+        <ChatInput
+          onSubmit={sendMessage}
+          error={error}
+        />
 
         <SideLayout side='center'>
           <button onClick={() => loadOldMessagesFromID(lastMessagesID)}>
