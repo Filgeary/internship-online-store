@@ -8,7 +8,7 @@ const url = 'ws://example.front.ylab.io/chat';
 // generate unique id with modern WEB API crypto
 const createUUID = () => self.crypto.randomUUID();
 
-interface Message {
+export interface IMessage {
   _id: string;
   _key: string;
   text: string;
@@ -35,12 +35,12 @@ type TResponse =
     }
   | {
       method: 'post';
-      payload: Message;
+      payload: IMessage;
     }
   | {
       method: 'last' | 'old';
       payload: {
-        items: Message[];
+        items: IMessage[];
       };
     }
   | {
@@ -50,7 +50,7 @@ type TResponse =
 export const useChat = (token: string) => {
   const [isAuth, setIsAuth] = useState(false);
   const [socket, setSocket] = useState<WebSocket | null>(null);
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<IMessage[]>([]);
   const [error, setError] = useState<string | undefined>(undefined);
   const [uniqueUUIDs, setUniqueUUIDs] = useState<string[] | null>(null);
 
@@ -140,7 +140,7 @@ export const useChat = (token: string) => {
     const messageID = createUUID();
     setUniqueUUIDs(prevUUIDs => [...(prevUUIDs || []), messageID]);
 
-    const message: Pick<Message, '_key' | 'text'> = {
+    const message: Pick<IMessage, '_key' | 'text'> = {
       _key: messageID,
       text,
     };

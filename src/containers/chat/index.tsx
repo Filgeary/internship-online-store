@@ -1,10 +1,9 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { Check as CheckIcon } from 'react-feather';
 
 import Field from '@src/components/field';
 import SideLayout from '@src/components/side-layout';
 import { useChat } from '@src/hooks/use-chat';
-import { formatDateToHoursAndMinutes } from '../../utils/formatDateToHoursAndMinutes';
+import ChatMessage from '../../components/chat-message';
 
 import type { IUserSession } from '@src/types/IUserSession';
 
@@ -99,75 +98,12 @@ const Chat = ({ token, user }: Props) => {
           const isMessageDelivered = uniqueUUIDs?.includes(message._key);
 
           return (
-            <li key={message._id}>
-              {!isOwnMessage && (
-                <div style={{ float: 'left', marginRight: '12px' }}>
-                  {message.author.profile.avatar.url ? (
-                    <img
-                      src={message.author.profile.avatar.url}
-                      alt={message.author.profile.name}
-                      style={{ width: '50px', height: '50px', borderRadius: '50%' }}
-                    />
-                  ) : (
-                    <div
-                      style={{
-                        width: '50px',
-                        height: '50px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: 'white',
-                        backgroundColor: 'tomato',
-                        fontSize: '24px',
-                        fontWeight: 'bold',
-                        borderRadius: '50%',
-                      }}
-                    >
-                      {message.author.profile.name[0]}
-                    </div>
-                  )}
-                </div>
-              )}
-              <div
-                style={{
-                  marginLeft: isOwnMessage ? 'auto' : '0px',
-                  backgroundColor: isOwnMessage ? '#006dca' : '#323232',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '8px',
-                  width: 'max-content',
-                  maxWidth: '60%',
-                  padding: '10px 20px',
-                  paddingBottom: '6px',
-                  marginBottom: '10px',
-                  borderRadius: '20px',
-                }}
-              >
-                {!isOwnMessage && (
-                  <div style={{ fontWeight: 'bold', color: 'tomato', fontStyle: 'italic' }}>
-                    {message.author.profile.name}
-                  </div>
-                )}
-                <div>{message.text}</div>
-                <div
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'flex-end',
-                    alignItems: 'center',
-                    gap: '8px',
-                    marginTop: '-4px',
-                    textAlign: 'right',
-                    fontSize: '12px',
-                    color: '#bfbfbf',
-                  }}
-                >
-                  <span>{formatDateToHoursAndMinutes(message)}</span>
-                  {isMessageDelivered && (
-                    <CheckIcon style={{ color: '#bfbfbf', width: '20px', height: '20px' }} />
-                  )}
-                </div>
-              </div>
-            </li>
+            <ChatMessage
+              key={message._id}
+              message={message}
+              isOwnMessage={isOwnMessage}
+              isMessageDelivered={Boolean(isMessageDelivered)}
+            />
           );
         })}
       </ul>
