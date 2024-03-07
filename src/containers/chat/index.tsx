@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 
 import ChatInput from '@src/components/chat-input';
+import ChatLayout from '@src/components/chat-layout';
 import ChatList from '@src/components/chat-list';
 import SideLayout from '@src/components/side-layout';
 import { useChat } from '@src/hooks/use-chat';
@@ -35,19 +36,7 @@ const Chat = ({ token, user }: Props) => {
   }, [isAuth]);
 
   return (
-    <div
-      style={{
-        overflow: 'hidden',
-        display: 'grid',
-        gap: '16px',
-        padding: '60px 20px',
-        placeItems: 'center',
-        margin: '0 auto',
-        minHeight: '80vh',
-        color: 'white',
-        background: '#232222',
-      }}
-    >
+    <ChatLayout>
       <ChatList
         messages={messages}
         uniqueUUIDs={uniqueUUIDs}
@@ -59,6 +48,7 @@ const Chat = ({ token, user }: Props) => {
           onSubmit={sendMessage}
           error={error}
         />
+
         <SideLayout side='center'>
           <button onClick={() => loadOldMessagesFromID(lastMessagesID)}>
             Load Old Messages from ID
@@ -67,7 +57,7 @@ const Chat = ({ token, user }: Props) => {
           <button onClick={clearAllMessages}>Clear All Messages</button>
         </SideLayout>
       </div>
-    </div>
+    </ChatLayout>
   );
 };
 
