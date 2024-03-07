@@ -34,3 +34,7 @@
 .button:active {
   background-color: rgb(1, 61, 121);
 }
+
+.Emoji {
+  position: absolute;
+}
