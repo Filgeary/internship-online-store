@@ -8,21 +8,25 @@ const Draw = (props: Props) => {
     if (ctx) {
       // синий круг
       ctx.beginPath();
-      ctx.arc(100, 100, 50, 0, 2 * Math.PI);
-      ctx.closePath();
-      ctx.fillStyle = "blue";
-      ctx.fill();
 
+      ctx.fillStyle = "blue";
+      ctx.arc(100, 100, 50, 0, 2 * Math.PI);
+      ctx.fill();
+     // ctx.closePath();
+      
       // красный прямоугольник
+      ctx.beginPath();
       ctx.fillStyle = "red";
       ctx.fillRect(350, 50, 100, 100);
-
+      
       // зеленый треугольник
+      ctx.beginPath();
       ctx.fillStyle = "green";
       ctx.moveTo(250, 50);
       ctx.lineTo(300, 150);
       ctx.lineTo(200, 150);
       ctx.fill();
+   
     }
   };
   const heigth = window.innerHeight;
