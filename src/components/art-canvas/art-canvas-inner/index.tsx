@@ -1,7 +1,7 @@
 import './style.css';
 
-import { cn as bem } from '@bem-react/classname';
 import React, { memo, useEffect, useRef } from 'react';
+import { cn as bem } from '@bem-react/classname';
 import { useArtCanvasContext } from '..';
 
 import { FaArrowAltCircleLeft, FaArrowAltCircleRight, FaTrash } from 'react-icons/fa';
@@ -11,6 +11,7 @@ function ArtCanvasInner() {
   const cn = bem('ArtCanvasInner');
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const canvasCtx = useRef<CanvasRenderingContext2D>(null);
+  const isDown = useRef<boolean>(false);
 
   const {
     brushWidth,
@@ -54,7 +55,25 @@ function ArtCanvasInner() {
       });
     },
 
+    endAction: () => {
+      canvasRef.current.toBlob((blob) => {
+        const image = new Image(canvasRef.current.width, canvasRef.current.height) as TArtImage;
+        image.src = URL.createObjectURL(blob);
+
+        console.log({ activeImage, images });
+        const nextActiveImage = activeImage + 1;
+        const nextImages = [...images.slice(0, activeImage + 1), image];
+
+        setImages(nextImages);
+        setActiveImage(nextActiveImage);
+      });
+
+      canvasCtx.current.closePath();
+      isDown.current = false;
+    },
+
     undo: () => {
+      console.log({ activeImage, images });
       setActiveImage(Math.max(activeImage - 1, 0));
     },
 
@@ -63,97 +82,59 @@ function ArtCanvasInner() {
     },
 
     clearImages: () => {
+      const newImages = [...images];
+      newImages.length = 1;
+
       setActiveImage(0);
-      setImages(images.slice(0, 1));
+      setImages(newImages);
+    },
+  };
+
+  const handlers = {
+    onPointerDown: (e: React.PointerEvent<HTMLCanvasElement>) => {
+      if (e.button === options.leftMouseBtn) {
+        canvasCtx.current.beginPath();
+        isDown.current = true;
+      }
+    },
+
+    onPointerMove: (e: React.PointerEvent<HTMLCanvasElement>) => {
+      if (isDown.current) {
+        const { offsetX, offsetY } = e.nativeEvent;
+        canvasCtx.current.lineWidth = brushWidth;
+        canvasCtx.current.lineCap = 'round';
+        canvasCtx.current.strokeStyle = brushColor;
+        canvasCtx.current.lineTo(offsetX, offsetY);
+        canvasCtx.current.stroke();
+      }
+    },
+
+    onPointerUp: (e: React.PointerEvent<HTMLCanvasElement>) => {
+      if (e.button === options.leftMouseBtn) {
+        callbacks.endAction();
+      }
+    },
+
+    onPointerOut: () => {
+      if (isDown.current) {
+        callbacks.endAction();
+      }
     },
   };
 
   const options = {
+    leftMouseBtn: 0,
     undoDisabled: activeImage === 0,
     redoDisabled: activeImage === images.length - 1,
     clearImagesDisabled: images.length === 1,
   };
 
   useEffect(() => {
-    if (!canvasRef.current) return;
-
-    const canvasNode = canvasRef.current;
-
-    canvasCtx.current = canvasNode.getContext('2d');
-
-    const ctx = canvasCtx.current;
-    let isDown = false;
-
-    const leftMouseBtn = 0;
-
-    // Действия при отпускании ЛКМ / выхода за канвас
-    const endAction = () => {
-      canvasRef.current.toBlob((blob) => {
-        const image = new Image(canvasRef.current.width, canvasRef.current.height) as TArtImage;
-        image.src = URL.createObjectURL(blob);
-
-        const nextActiveImage = activeImage + 1;
-        const correctOldImages = activeImage !== images.length - 1 ? images.slice(0, -1) : images;
-        const nextImages = [...correctOldImages, image];
-
-        console.log({ activeImage, images });
-
-        setImages(nextImages);
-        setActiveImage(nextActiveImage);
-      });
-      ctx.closePath();
-      isDown = false;
-    };
-
-    const downHandler = (e: PointerEvent) => {
-      if (e.button === leftMouseBtn) {
-        ctx.beginPath();
-        isDown = true;
-      }
-    };
-
-    const moveHandler = (e: PointerEvent) => {
-      if (isDown) {
-        const { offsetX, offsetY } = e;
-        ctx.lineWidth = brushWidth;
-        ctx.lineCap = 'round';
-        ctx.strokeStyle = brushColor;
-        ctx.lineTo(offsetX, offsetY);
-        ctx.stroke();
-      }
-    };
-
-    const upHandler = (e: PointerEvent) => {
-      if (e.button === leftMouseBtn) {
-        endAction();
-      }
-    };
-
-    const outHandler = () => {
-      if (isDown) {
-        endAction();
-      }
-    };
-
-    canvasNode.addEventListener('pointerdown', downHandler);
-    canvasNode.addEventListener('pointermove', moveHandler);
-    canvasNode.addEventListener('pointerup', upHandler);
-    canvasNode.addEventListener('pointerout', outHandler);
-
-    return () => {
-      canvasNode.removeEventListener('pointerdown', downHandler);
-      canvasNode.removeEventListener('pointermove', moveHandler);
-      canvasNode.removeEventListener('pointerup', upHandler);
-      canvasNode.removeEventListener('pointerout', outHandler);
-    };
-  }, [brushWidth, brushColor, images, activeImage]);
-
-  useEffect(() => {
     const keyDownHandler = (e: KeyboardEvent) => {
       if (e.ctrlKey) {
-        if (e.key === 'z') {
+        if (e.code === 'KeyZ') {
           callbacks.undo();
-        } else if (e.key === 'y') {
+        } else if (e.key === 'keyY') {
           callbacks.redo();
         }
         console.log(e.key);
@@ -168,6 +149,8 @@ function ArtCanvasInner() {
   }, [images]);
 
   useEffect(() => {
+    canvasCtx.current = canvasRef.current.getContext('2d');
+
     const ctx = canvasCtx.current;
 
     ctx.fillStyle = 'rgba(0, 0, 0, 0)';
@@ -186,10 +169,8 @@ function ArtCanvasInner() {
 
   useEffect(() => {
     const imageNode = images[activeImage];
-    console.log(images, activeImage, imageNode);
-    if (!imageNode) {
-      return;
-    }
+
+    if (!imageNode) return;
 
     if (!imageNode.loaded) {
       imageNode.onload = () => {
@@ -252,7 +233,16 @@ function ArtCanvasInner() {
           </div>
         </div>
       </div>
-      <canvas ref={canvasRef} width={984} height={492} className={cn('canvas')}></canvas>
+      <canvas
+        onPointerDown={handlers.onPointerDown}
+        onPointerMove={handlers.onPointerMove}
+        onPointerUp={handlers.onPointerUp}
+        onPointerOut={handlers.onPointerOut}
+        ref={canvasRef}
+        width={984}
+        height={492}
+        className={cn('canvas')}
+      ></canvas>
     </div>
   );
 }
