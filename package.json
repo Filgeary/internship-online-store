@@ -1,10 +1,10 @@
 {
-  "name": "react-webinar-3",
+  "name": "ylab-react-internship",
   "version": "1.0.0",
-  "description": "Example project for webinar",
+  "description": "Example project for Ylab React Internship",
   "main": "index.js",
   "scripts": {
-    "start": "webpack serve",
+    "start": "webpack serve --open",
     "build": "cross-env NODE_ENV=production webpack",
     "test": "jest",
     "format": "prettier . --write",
@@ -13,16 +13,6 @@
     "lint": "npm run lint:prettier && npm run lint:eslint && npm run check-types",
     "check-types": "tsc --noEmit"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ylabio/react-webinar-3.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/ylabio/react-webinar-3/issues"
-  },
-  "homepage": "https://github.com/ylabio/react-webinar-3#readme",
   "dependencies": {
     "@bem-react/classname": "^1.6.0",
     "lodash.debounce": "^4.0.8",
