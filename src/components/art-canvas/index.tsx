@@ -1,13 +1,15 @@
 import './style.css';
 
-import React, { memo, useContext, useEffect, useState } from 'react';
+import React, { memo, useContext, useState } from 'react';
 import { cn as bem } from '@bem-react/classname';
 
 import ArtCanvasTitle from './art-canvas-title';
 import ArtCanvasInner from './art-canvas-inner';
 import ArtCanvasOptions from './art-canvas-options';
 
-const ArtCanvasContext = React.createContext(null);
+import { TArtCanvasContext } from './types';
+
+const ArtCanvasContext = React.createContext<TArtCanvasContext>(null);
 
 export const useArtCanvasContext = () => {
   const ctx = useContext(ArtCanvasContext);
@@ -36,17 +38,14 @@ function ArtCanvas(props: ArtCanvasProps) {
   const [brushWidth, setBrushWidth] = useState(initValues.brushWidth);
   const [brushColor, setBrushColor] = useState(initValues.brushColor);
   const [images, setImages] = useState([]);
+  const [activeImage, setActiveImage] = useState(0);
   const canSave =
     bgColor !== initValues.bgColor ||
     brushWidth !== initValues.brushWidth ||
     brushColor !== initValues.brushColor ||
-    images.length !== 0;
+    images.length !== 1;
 
   const cn = bem('ArtCanvas');
-
-  useEffect(() => {
-    console.log('@', images);
-  }, [images]);
 
   return (
     <div className={cn()}>
@@ -60,6 +59,8 @@ function ArtCanvas(props: ArtCanvasProps) {
           setBrushColor,
           images,
           setImages,
+          activeImage,
+          setActiveImage,
           canSave,
         }}
       >

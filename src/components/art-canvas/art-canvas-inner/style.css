@@ -7,12 +7,21 @@
 }
 
 .ArtCanvasInner-utils {
-  display: flex;
-  justify-content: flex-end;
   margin-bottom: 10px;
 }
 
 .ArtCanvasInner-utils-row {
+  display: flex;
+  justify-content: space-between;
+  column-gap: 5px;
+}
+
+.ArtCanvasInner-utils-left {
+  display: flex;
+  column-gap: 5px;
+}
+
+.ArtCanvasInner-utils-right {
   display: flex;
   column-gap: 5px;
 }
@@ -20,4 +29,11 @@
 .ArtCanvasInner-utils-btn {
   padding: 3px 10px;
   cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &:disabled {
+    cursor: not-allowed;
+  }
 }
