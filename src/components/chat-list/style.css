@@ -7,3 +7,25 @@
   overflow: auto;
   width: 100%;
 }
+
+.ChatList-loader {
+  visibility: hidden;
+}
+.ChatList-loader_isLoading {
+  visibility: visible;
+}
+
+.ChatList-icon {
+  display: flex;
+  margin-left: auto;
+  align-items: center;
+  justify-content: center;
+  visibility: hidden;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  padding: 0;
+}
+.ChatList-icon_isScrolling {
+  visibility: visible;
+}

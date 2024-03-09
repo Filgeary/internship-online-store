@@ -1,8 +1,8 @@
 .ChatLayout {
   overflow: hidden;
   display: grid;
-  gap: 16px;
-  padding: 40px 20px;
+  gap: 10px;
+  padding: 30px 20px;
   place-items: center;
   margin: 0 auto;
   min-height: 80vh;

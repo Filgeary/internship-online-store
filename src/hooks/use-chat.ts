@@ -50,6 +50,8 @@ type TResponse =
 export const useChat = (token: string) => {
   const [isAuth, setIsAuth] = useState(false);
   const [socket, setSocket] = useState<WebSocket | null>(null);
+  const [isInitialFetching, setIsInitialFetching] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [messages, setMessages] = useState<IMessage[]>([]);
   const [error, setError] = useState<string | undefined>(undefined);
   const [uniqueUUIDs, setUniqueUUIDs] = useState<string[] | null>(null);
@@ -82,20 +84,26 @@ export const useChat = (token: string) => {
             console.log('Authentication successful');
           } else {
             setIsAuth(false);
+            setIsInitialFetching(true);
             setError(data.payload.error);
           }
+          setIsLoading(false);
           break;
         case 'post':
           setMessages(prevMessages => uniqBy([...prevMessages, data.payload], item => item._id));
+          setIsLoading(false);
           break;
         case 'last':
         case 'old':
           setMessages(prevMessages =>
             uniqBy([...data.payload.items, ...prevMessages], item => item._id).toSorted(sortByDate),
           );
+          setIsLoading(false);
+          setIsInitialFetching(false);
           break;
         case 'clear':
           setMessages([]);
+          setIsLoading(false);
           break;
         default:
           console.warn('Unknown message received:', data);
@@ -103,10 +111,12 @@ export const useChat = (token: string) => {
     };
 
     newSocket.onerror = error => {
+      setIsLoading(false);
       console.error('WebSocket error:', error);
     };
 
     newSocket.onclose = evt => {
+      setIsLoading(false);
       setError(`WebSocket connection closed`);
       console.error('WebSocket connection closed', evt.code, evt.reason);
       setIsAuth(false);
@@ -133,10 +143,10 @@ export const useChat = (token: string) => {
   }, [token]);
 
   const sendMessage = (text: string) => {
-    if (!socket) {
+    if (!socket || socket.readyState !== WebSocket.OPEN) {
       return;
     }
-
+    setIsLoading(true);
     const messageID = createUUID();
     setUniqueUUIDs(prevUUIDs => [...(prevUUIDs || []), messageID]);
 
@@ -154,9 +164,10 @@ export const useChat = (token: string) => {
   };
 
   const loadLastMessages = (fromDate?: Date) => {
-    if (!socket) {
+    if (!socket || socket.readyState !== WebSocket.OPEN) {
       return;
     }
+    setIsLoading(true);
 
     socket.send(
       JSON.stringify({
@@ -169,9 +180,10 @@ export const useChat = (token: string) => {
   };
 
   const loadOldMessagesFromID = (fromId: string) => {
-    if (!socket) {
+    if (!socket || socket.readyState !== WebSocket.OPEN) {
       return;
     }
+    setIsLoading(true);
 
     socket.send(
       JSON.stringify({
@@ -184,9 +196,10 @@ export const useChat = (token: string) => {
   };
 
   const clearAllMessages = () => {
-    if (!socket) {
+    if (!socket || socket.readyState !== WebSocket.OPEN) {
       return;
     }
+    setIsLoading(true);
 
     socket.send(
       JSON.stringify({
@@ -199,6 +212,8 @@ export const useChat = (token: string) => {
   return {
     uniqueUUIDs,
     isAuth,
+    isInitialFetching,
+    isLoading,
     messages,
     error,
     sendMessage,

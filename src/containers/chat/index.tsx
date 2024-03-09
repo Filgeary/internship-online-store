@@ -16,6 +16,8 @@ type Props = {
 const Chat = ({ token, user }: Props) => {
   const {
     isAuth,
+    isInitialFetching,
+    isLoading,
     messages,
     uniqueUUIDs,
     error,
@@ -24,7 +26,6 @@ const Chat = ({ token, user }: Props) => {
     loadOldMessagesFromID,
     clearAllMessages,
   } = useChat(token);
-
   const lastMessagesID = messages.at(0)?._id || '';
 
   // Load last messages on auth
@@ -35,12 +36,19 @@ const Chat = ({ token, user }: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuth]);
 
+  const handleScrollTop = () => {
+    if (!isAuth || isInitialFetching || isLoading) return;
+    loadOldMessagesFromID(lastMessagesID);
+  };
+
   return (
     <ChatLayout>
       <ChatList
+        isInitialFetching={isInitialFetching}
         messages={messages}
         uniqueUUIDs={uniqueUUIDs}
         user={user}
+        onScrollTop={handleScrollTop}
       />
 
       <div style={{ marginTop: 'auto' }}>
@@ -51,7 +59,7 @@ const Chat = ({ token, user }: Props) => {
 
         <SideLayout side='center'>
           <button onClick={() => loadOldMessagesFromID(lastMessagesID)}>
-            Load Old Messages from ID
+            Load Prev Messages from last ID
           </button>
           <button onClick={() => loadLastMessages()}>Load Last Messages</button>
           <button onClick={clearAllMessages}>Clear All Messages</button>
