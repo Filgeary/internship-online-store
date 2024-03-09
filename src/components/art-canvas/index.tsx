@@ -1,6 +1,6 @@
 import './style.css';
 
-import React, { memo, useContext } from 'react';
+import React, { memo, useContext, useEffect, useState } from 'react';
 import { cn as bem } from '@bem-react/classname';
 
 import ArtCanvasTitle from './art-canvas-title';
@@ -23,14 +23,48 @@ type ArtCanvasProps = {
   children: React.ReactNode;
 };
 
+const initValues = {
+  bgColor: '#ffffff',
+  brushWidth: 5,
+  brushColor: '#000000',
+};
+
 function ArtCanvas(props: ArtCanvasProps) {
   const { children } = props;
 
+  const [bgColor, setBgColor] = useState(initValues.bgColor);
+  const [brushWidth, setBrushWidth] = useState(initValues.brushWidth);
+  const [brushColor, setBrushColor] = useState(initValues.brushColor);
+  const [images, setImages] = useState([]);
+  const canSave =
+    bgColor !== initValues.bgColor ||
+    brushWidth !== initValues.brushWidth ||
+    brushColor !== initValues.brushColor ||
+    images.length !== 0;
+
   const cn = bem('ArtCanvas');
+
+  useEffect(() => {
+    console.log('@', images);
+  }, [images]);
 
   return (
     <div className={cn()}>
-      <ArtCanvasContext.Provider value={{}}>{children}</ArtCanvasContext.Provider>
+      <ArtCanvasContext.Provider
+        value={{
+          bgColor,
+          setBgColor,
+          brushWidth,
+          setBrushWidth,
+          brushColor,
+          setBrushColor,
+          images,
+          setImages,
+          canSave,
+        }}
+      >
+        {children}
+      </ArtCanvasContext.Provider>
     </div>
   );
 }

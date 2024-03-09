@@ -16,7 +16,7 @@ function Art() {
   return (
     <PageLayout>
       <TopHead />
-      <Head title={t('title.community')}>
+      <Head title={t('title.art')}>
         <LocaleSelect />
       </Head>
       <Navigation />
