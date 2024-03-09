@@ -39,6 +39,12 @@ function ArtCanvasInner() {
     },
 
     downloadCanvas: () => {
+      // Для заднего фона на загружаемой картинке
+      canvasCtx.current.globalCompositeOperation = 'destination-over';
+      canvasCtx.current.fillStyle = bgColor;
+      canvasCtx.current.fillRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+      canvasCtx.current.globalCompositeOperation = 'source-over';
+
       canvasRef.current.toBlob((blob) => {
         const image = URL.createObjectURL(blob);
         const link = document.createElement('a');
@@ -49,12 +55,10 @@ function ArtCanvasInner() {
     },
 
     undo: () => {
-      // @ts-ignore
       setActiveImage(Math.max(activeImage - 1, 0));
     },
 
     redo: () => {
-      // @ts-ignore
       setActiveImage(Math.min(activeImage + 1, images.length - 1));
     },
 

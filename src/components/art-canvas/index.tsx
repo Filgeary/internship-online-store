@@ -26,7 +26,7 @@ type ArtCanvasProps = {
 };
 
 const initValues = {
-  bgColor: '#ffffff',
+  bgColor: '#ff0000',
   brushWidth: 5,
   brushColor: '#000000',
 };
