@@ -4,9 +4,9 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
 export default defineConfig({
-  root: 'src',
+  root: path.resolve(__dirname, 'src'),
   build: {
-    outDir: './dist',
+    outDir: path.resolve(__dirname, 'dist'),
     emptyOutDir: true,
   },
   plugins: [
@@ -24,15 +24,18 @@ export default defineConfig({
     port: 5000,
 
     proxy: {
-      '/api': {
+      '/api/v1': {
         target: 'http://example.front.ylab.io',
         changeOrigin: true,
         secure: false,
       },
-      '/chat': {
-        target: 'ws://example.front.ylab.io',
+      '/chat/v1': {
+        target: 'ws://example.front.ylab.io/chat',
         ws: true,
       },
     },
+  },
+  preview: {
+    port: 5000,
   },
 });

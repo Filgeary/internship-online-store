@@ -1,0 +1,17 @@
+.ArtCanvasOptions-title {
+  font-size: 20px;
+  display: block;
+  margin-bottom: 20px;
+  text-decoration: underline;
+}
+
+.ArtCanvasOptions-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.ArtCanvasOptions-list {
+  list-style: none;
+  margin: 0;
+  padding-left: 15px;
+}

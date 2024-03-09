@@ -39,6 +39,7 @@ function Navigation() {
       () => [
         { key: 1, title: t('menu.main'), link: '/' },
         { key: 2, title: t('menu.community'), link: '/community' },
+        { key: 3, title: t('menu.art'), link: '/art' },
       ],
       [t]
     ),

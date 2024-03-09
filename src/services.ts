@@ -1,8 +1,9 @@
-import APIService from './api';
-import Store from './store';
 import createStoreRedux from './store-redux';
 
 import { TConfig } from './config';
+
+import APIService from './api';
+import Store from './store';
 import ChatService from './chat';
 
 class Services {

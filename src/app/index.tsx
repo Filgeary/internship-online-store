@@ -1,16 +1,18 @@
 import { useRef } from 'react';
-
 import { Routes, Route } from 'react-router-dom';
+
 import useStore from '@src/hooks/use-store';
 import useInit from '@src/hooks/use-init';
+
+import Protected from '@src/containers/protected';
+import AllModals from '@src/containers/all-modals';
+
+import Community from './community';
 import Main from './main';
 import Article from './article';
 import Login from './login';
 import Profile from './profile';
-import Protected from '@src/containers/protected';
-
-import AllModals from '@src/containers/all-modals';
-import Community from './community';
+import Art from './art';
 
 /**
  * Приложение
@@ -46,6 +48,7 @@ function App() {
               </Protected>
             }
           />
+          <Route path={'/art'} element={<Art />} />
         </Routes>
       </div>
 

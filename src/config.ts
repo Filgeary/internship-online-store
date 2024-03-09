@@ -40,7 +40,7 @@ const config = {
   redux: {},
   chat: {
     // URL для чата (с протоколом websocket)
-    url: 'ws://localhost:5000/chat',
+    url: `ws://${window.location.host ?? 'localhost:5000'}/chat/v1`,
   },
 };
 
