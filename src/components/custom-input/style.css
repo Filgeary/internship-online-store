@@ -1,0 +1,14 @@
+.CustomInput {
+  width: 100%;
+  padding-left: 6px;
+  margin-top: 10px;
+  font-family: "Arial", sans-serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 13px;
+  color: #000;
+  border-radius: 3px;
+  border: 1px solid #f6f6f6;
+  outline: 1px solid #f6f6f6;
+  box-sizing: border-box;
+}

@@ -1,12 +1,12 @@
 import Store from "@src/store/index";
-import {AllModules, AssembledState, ExtendedModulesKey} from "@src/store/types";
+import {AllModules, ExtendedModulesKey} from "@src/store/types";
 import Services from "@src/services";
 
 /**
  * Базовый класс для модулей хранилища
  * Для группировки действий над внешним состоянием
  */
-class StoreModule<T extends ExtendedModulesKey<AllModules>, Config = object> {
+class StoreModule<State, Config = object> {
   store: Store;
   name: ExtendedModulesKey<AllModules>;
   config: Config;
@@ -34,11 +34,11 @@ class StoreModule<T extends ExtendedModulesKey<AllModules>, Config = object> {
   initState() {
     return {}
   }
-  getState(): AssembledState[T] {
-    return this.store.getState()[this.name] as AssembledState[T];
+  getState(): State {
+    return this.store.getState()[this.name] as State;
   }
 
-  setState(newState: AssembledState[T], description: string = 'setState'): void {
+  setState(newState: State, description: string = 'setState'): void {
     this.store.setState({
       ...this.store.getState(),
       [this.name]: newState

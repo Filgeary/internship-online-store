@@ -39,9 +39,9 @@ let config = {
       {
         test: /\.less$/,
         use: [
-          { loader: MiniCssExtractPlugin.loader, options: {} },
-          { loader: 'css-loader', options: { url: true, import: true } },
-          { loader: 'less-loader', options: { lessOptions: {} } },
+          {loader: MiniCssExtractPlugin.loader, options: {}},
+          {loader: 'css-loader', options: {url: true, import: true}},
+          {loader: 'less-loader', options: {lessOptions: {}}},
         ],
       },
       {
@@ -78,6 +78,11 @@ if (process.env.NODE_ENV === 'development') {
     proxy: {
       '/api/**': {
         target: 'http://example.front.ylab.io',
+        secure: false,
+        changeOrigin: true,
+      },
+      '/ws/**': {
+        target: `ws://example.front.ylab.io/chat`,
         secure: false,
         changeOrigin: true,
       }

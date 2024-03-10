@@ -2,16 +2,17 @@ import StoreModule from "../module";
 import {IArticle} from "../../../types/IArticle";
 import {TArticleData} from "../../../types/Response";
 
+type TArticleState = {
+  data: IArticle,
+  waiting: boolean,
+  error: string
+}
 
 /**
  * Детальная информация о товаре для страницы товара
  */
-class ArticleState extends StoreModule<'article'> {
-    initState(): {
-        data: IArticle,
-        waiting: boolean,
-        error: string
-    } {
+class ArticleState extends StoreModule<TArticleState> {
+    initState(): TArticleState {
         return {
             data: {} as IArticle,
             waiting: false, // признак ожидания загрузки
@@ -41,7 +42,6 @@ class ArticleState extends StoreModule<'article'> {
                 waiting: false,
                 error: ''
             }, 'Загружен товар из АПИ');
-            console.log(this.getState(), res)
         }
         if (res.status === 400) {
             this.setState({

@@ -38,13 +38,9 @@ export type DeepKeysOfType<SourceObject, KeyPrefix extends string = ''> = ValueO
 type AllTransferKeys = DeepKeysOfType<TTranslations['ru']>;
 
 // Тип для "фильтрации" типов из некоторого переданного
-type FilteredTypes<T> = T extends string
-  // Если T строка, то делим ее на подстроки, и проверяем, если у нее в конце есть строка с одним из значений IntersectionsOfPluralization,
-  // то выводим всю строку, тем самым, выберем только те строки, которые являются как-бы конечными
-  ? T extends `${infer _Prefix}.${IntersectionsOfPluralization}`
-    ? T
-    : never
-  : never;
+// Делим T на подстроки, и проверяем, если у нее в конце есть строка с одним из значений IntersectionsOfPluralization,
+// то выводим всю строку, тем самым, выберем только те строки, которые являются как-бы конечными
+type FilteredTypes<T extends string> = T extends `${infer _Prefix}.${IntersectionsOfPluralization}` ? T : never;
 // Удаление приставки с плюрализацией у полученного обледенения строк, то есть выбор только предыдущих значений
 type RemovePluralModification<T extends string> = T extends `${infer Prefix}.${IntersectionsOfPluralization}` ? Prefix : T;
 
@@ -56,35 +52,29 @@ type KeysWithPluralValue = RemovePluralModification<KeysTranslationsPluralizatio
 const keysWithPluralValue: KeysWithPluralValue = 'basket.articles' || 'modalAdd.article' // то есть те поля у которых есть объект плюрализации
 // Ключи исключающие из себя ключи с объектами плюрализации
 type ExcludingKeysWithPlural = Exclude<AllTransferKeys, KeysWithPluralValue>
-const excludingKeysWithPlural: ExcludingKeysWithPlural = 'basket.articles.few'  // 'basket.articles' | 'modalAdd.article' - будет ошибкой типов
+//const excludingKeysWithPlural: ExcludingKeysWithPlural = 'basket.articles'  // 'basket.articles' | 'modalAdd.article' - будет ошибкой типов
 
 type Lang = keyof TTranslations
 
 
 // Перегрузки функции с разными принимаемыми типами
 // @todo Почему при вызове функции с ключами соотносящимися с типом KeysWithPluralValue, перегрузка не сравнивает их по типам, а только по количеству аргументов
-export function transitionPoint(lang: Lang, text: KeysWithPluralValue, plural: number): string
 export function transitionPoint(lang: Lang, text: ExcludingKeysWithPlural): string
-export function transitionPoint(lang: Lang, text: KeysWithPluralValue | ExcludingKeysWithPlural, plural?: number): string {
+export function transitionPoint(lang: Lang, text: KeysWithPluralValue, plural: number): string
+export function transitionPoint(lang: Lang, text: KeysWithPluralValue | ExcludingKeysWithPlural, plural?: number | undefined): string {
   // Делим строку на массив ключей, чтобы достать значения из перевода
   const keysTransfer = text.split('.')
   // Текущая "позиция" перевода, то есть на каком этапе мы находимся, будет изменяться в цикле
   let currentTransfer: string | Record<string, string | object> = translations[lang]
   // Цикл для перебора ключей и получения значений по ним, выбран "for" для выхода из функции если мы дошли до момента, когда результирующее значение стало строкой
   for (let i = 0; i < keysTransfer.length; i++) {
-    // Получаем текущий ключ
     const currentKey: string = keysTransfer[i]
-    // Промежуточный результат, будет или объектом или строкой, сразу записываем значение во внешнюю переменную
     currentTransfer = currentTransfer[currentKey] as Record<string, string | object> | string
-    // Если мы дошли до строки, то выходим из функции и возвращаем результат
     if (typeof currentTransfer === 'string') return currentTransfer
   }
-  // Если значение плюрализации передано, то мы получаем ключ плюрализации
   if (plural !== undefined) {
     const key: Intl.LDMLPluralRule = new Intl.PluralRules(lang).select(plural);
-    // Если есть ключ в объекте, то получаем значение
     if (key in currentTransfer) return currentTransfer[key] as string
-    // Если же нет, тогда возвращаем текст и выводим ошибку
     else {
       console.error(`По данному ключу плюрализации ${key} не было найдено подходящего поля, пожалуйста добавьте значение плюрализации`)
       return text
@@ -94,5 +84,5 @@ export function transitionPoint(lang: Lang, text: KeysWithPluralValue | Excludin
 }
 transitionPoint('ru', 'basket.articles', 11)
 // @todo как здесь, при вызове TS пытается сравнить 'basket.articles' с ExcludingKeysWithPlural, хотя по сути должен требовать 3-ий аргумент
-transitionPoint('ru', 'basket.articles')
+transitionPoint('ru', 'basket.articles', 11)
 

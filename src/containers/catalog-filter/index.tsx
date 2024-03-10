@@ -1,4 +1,4 @@
-import React, {memo, useCallback, useMemo} from "react";
+import React, {memo, useCallback, useEffect, useMemo} from "react";
 import useTranslate from "@src/hooks/use-translate";
 import useStore from "@src/hooks/use-store";
 import useSelector from "@src/hooks/use-selector";
@@ -9,6 +9,8 @@ import treeToList from "@src/utils/tree-to-list";
 import listToTree from "@src/utils/list-to-tree";
 import {ExtendedModulesKey} from "@src/store/types";
 import {TSort} from "@src/store/catalog";
+import CustomSelectList from "@src/components/custom-select-list";
+import SelectCountriesList from "@src/containers/select-countries-list";
 
 interface Props {
   stateName?: ExtendedModulesKey<'catalog'>,
@@ -40,8 +42,10 @@ const CatalogFilter: React.FC<Props> = ({stateName = 'catalog'}) => {
     onCategory: useCallback((category: string) => {
       store.actions[stateName].setParams({category, page: 1})
     }, []),
+    onMadeIn: useCallback((madeIn: string) => {
+      store.actions[stateName].setParams({madeIn, page: 1})
+    }, [])
   };
-
 
   const options = {
     sort: useMemo(() => ([
@@ -56,6 +60,7 @@ const CatalogFilter: React.FC<Props> = ({stateName = 'catalog'}) => {
         {value: item._id, title: '- '.repeat(level) + item.title}
       ))
     ]), [select.categories]),
+
   };
 
   const {t} = useTranslate();
@@ -66,6 +71,7 @@ const CatalogFilter: React.FC<Props> = ({stateName = 'catalog'}) => {
       <Select options={options.sort} value={select.params.sort} onChange={callbacks.onSort}/>
       <Input<'filter'> name={'filter'} value={select.params.query} onChange={callbacks.onSearch} placeholder={'Поиск'}
              delay={1000}/>
+      <SelectCountriesList stateName={stateName}/>
       <button onClick={callbacks.onReset}>{t('filter.reset')}</button>
     </SideLayout>
   )

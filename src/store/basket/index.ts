@@ -4,12 +4,15 @@ import {IArticle} from "../../../types/IArticle";
 /**
  * Покупательская корзина
  */
-class BasketState extends StoreModule<'basket'> {
-  initState(): {
-    list: IArticle[],
-    sum: number,
-    amount: number
-  } {
+
+type TBasketState = {
+  list: IArticle[],
+  sum: number,
+  amount: number
+}
+
+class BasketState extends StoreModule<TBasketState> {
+  initState(): TBasketState {
     return {
       list: [],
       sum: 0,

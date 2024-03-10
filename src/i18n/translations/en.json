@@ -1,6 +1,14 @@
 {
-  "title": "Shop",
+  "title.main": "Shop",
+  "title.chat": "Chat",
+  "select.countries": {
+    "one": "country",
+    "few": "countries",
+    "many": "countries",
+    "other": "countries"
+  },
   "menu.main": "Main",
+  "menu.chat": "Chat",
   "basket.title": "Cart",
   "basket.open": "Open",
   "basket.close": "Close",

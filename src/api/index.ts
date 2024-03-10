@@ -33,7 +33,7 @@ class APIService {
    * @param options
    * @returns {Promise<{}>}
    */
-  async request({url, method = 'GET', headers = {}, ...options}: Request): Promise<{ data: any, status: any, headers: any }> {
+  async request({url, method = 'GET', headers = {}, ...options}: any): Promise<{ data: any, status: any, headers: any }> {
     if (!url.match(/^(http|\/\/)/)) url = this.config.baseUrl + url;
     const res = await fetch(url, {
       method,

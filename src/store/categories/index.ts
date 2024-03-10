@@ -2,18 +2,20 @@ import StoreModule from "../module";
 import {Tree} from "@src/utils/list-to-tree";
 import {TCategoryData} from "../../../types/Response";
 
+type TCategoriesState = {
+  list: Tree[],
+  waiting: boolean
+}
+
 /**
  * Список категорий
  */
-class CategoriesState extends StoreModule<'categories'> {
+class CategoriesState extends StoreModule<TCategoriesState> {
   /**
    * Начальное состояние
    * @return {Object}
    */
-  initState(): {
-    list: Tree[],
-    waiting: boolean
-  } {
+  initState(): TCategoriesState {
     return {
       list: [],
       waiting: false

@@ -33,12 +33,13 @@ function ModalList({onClose}: { onClose: onCloseModal }) {
     }, [selectedList])
   }
 
-  useEffect(() => {
+  useInit(async () => {
     store.makeCopy('catalog-modal', 'catalog', {entryURLParams: false})
     // Загружаем список в любом случае, но конкретно в созданную стора
-    Promise.all([
+    await Promise.all([
       store.actions['catalog-modal'].setParams({}, false),
-      store.actions.categories.load()
+      store.actions.categories.load(),
+      store.actions.countries.load()
     ])
     setWaiting(false)
     return () => {

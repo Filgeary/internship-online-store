@@ -1,5 +1,6 @@
 import StoreModule from "../module";
 import exclude from "@src/utils/exclude";
+import {IArticle} from "../../../types/IArticle";
 
 export type TSort = 'order' | 'title.ru' | '-price' | 'edition'
 export interface Params {
@@ -7,7 +8,15 @@ export interface Params {
   limit: number,
   sort: TSort,
   query: string,
-  category: string
+  category: string,
+  madeIn: string
+}
+
+type TCatalogState = {
+  list: IArticle[],
+  params: Params,
+  count: number,
+  waiting: boolean,
 }
 
 type TCatalogConfig = {entryURLParams: boolean}
@@ -15,17 +24,12 @@ type TCatalogConfig = {entryURLParams: boolean}
 /**
  * Состояние каталога - параметры фильтра и список товара
  */
-class CatalogState extends StoreModule<'catalog', TCatalogConfig> {
+class CatalogState extends StoreModule<TCatalogState, TCatalogConfig> {
   /**
    * Начальное состояние
    * @return {Object}
    */
-  initState():{
-    list: any[],
-    params: Params,
-    count: number,
-    waiting: boolean,
-  } {
+  initState(): TCatalogState {
     return {
       list: [],
       params: {
@@ -33,7 +37,8 @@ class CatalogState extends StoreModule<'catalog', TCatalogConfig> {
         limit: 10,
         sort: 'order',
         query: '',
-        category: ''
+        category: '',
+        madeIn: ''
       },
       count: 0,
       waiting: false,
@@ -54,6 +59,7 @@ class CatalogState extends StoreModule<'catalog', TCatalogConfig> {
     if (urlParams.has('sort')) validParams.sort = urlParams.get('sort') as TSort;
     if (urlParams.has('query')) validParams.query = urlParams.get('query') as string;
     if (urlParams.has('category')) validParams.category = urlParams.get('category') as string;
+    if (urlParams.has('madeIn')) validParams.madeIn = urlParams.get('madeIn') as string;
     await this.setParams({...this.initState().params, ...validParams, ...newParams}, true);
   }
 
@@ -103,9 +109,11 @@ class CatalogState extends StoreModule<'catalog', TCatalogConfig> {
       fields: 'items(*),count',
       sort: params.sort,
       'search[query]': params.query,
-      'search[category]': params.category
+      'search[category]': params.category,
+      'search[madeIn]': params.madeIn
     }, {
       skip: 0,
+      'search[madeIn]': '',
       'search[query]': '',
       'search[category]': ''
     });

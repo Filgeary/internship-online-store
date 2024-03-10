@@ -5,18 +5,20 @@ import {TSessionData} from "../../../types/Response";
 
 type TSessionConfig = {tokenHeader: string}
 
+type TSessionState = {
+  user: IUser,
+  token: null | string,
+  errors: null | Record<string, string[]>,
+  waiting: boolean,
+  exists: boolean
+}
+
 /**
  * Сессия
  */
-class SessionState extends StoreModule<'session', TSessionConfig> {
+class SessionState extends StoreModule<TSessionState, TSessionConfig> {
   /**Начальное состояние*/
-  initState(): {
-    user: IUser,
-    token: null | string,
-    errors: null | Record<string, string[]>,
-    waiting: boolean,
-    exists: boolean
-  } {
+  initState(): TSessionState {
     return {
       user: {} as IUser,
       token: null,
@@ -39,7 +41,6 @@ class SessionState extends StoreModule<'session', TSessionConfig> {
       const res: TSessionData = await this.services.api.request({
         url: '/api/v1/users/sign',
         method: 'POST',
-        //@ts-ignore
         body: JSON.stringify(data)
       });
 

@@ -1,4 +1,5 @@
 import {AllModules, ImportModules, TModulesConfig} from "@src/store/types";
+import {number} from "prop-types";
 
 
 const isProduction = process.env.NODE_ENV === 'production';
@@ -14,10 +15,16 @@ const defaultConfig = {
       catalog: {
         entryURLParams: true,
       },
+      chat: {
+        connectionName: '/chat'
+      }
     }
   },
   api: {
     baseUrl: ''
+  },
+  websocket: {
+    baseUrl: 'ws://example.front.ylab.io',
   }
 }
 
@@ -46,6 +53,9 @@ export interface Config {
     modules: CurrentModuleConfig;
   };
   api: {
+    baseUrl: string;
+  };
+  websocket: {
     baseUrl: string;
   };
 }

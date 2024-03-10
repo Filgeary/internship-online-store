@@ -1,6 +1,14 @@
 {
-  "title": "Магазин",
+  "title.main": "Магазин",
+  "title.chat": "Чат",
+  "select.countries": {
+    "one": "страна",
+    "few": "страны",
+    "many": "стран",
+    "other": "страны"
+  },
   "menu.main": "Главная",
+  "menu.chat": "Chat",
   "basket.title": "Корзина",
   "basket.open": "Перейти",
   "ee.eee": "11",

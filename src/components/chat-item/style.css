@@ -1,0 +1,10 @@
+.ChatItem-style {
+  font-size: 16px;
+  padding: 0 8px 5px;
+  max-width: 100%;
+  color: #ffffff;
+  line-height: 1.3125;
+  word-break: break-word;
+  white-space: pre-wrap;
+  position: relative;
+}

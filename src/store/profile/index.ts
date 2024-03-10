@@ -1,12 +1,17 @@
 import StoreModule from "../module";
 import {IUser} from "../../../types/User";
 
+type TProfileState = {
+  data: IUser;
+  waiting: boolean;
+}
+
 /**
  * Детальная информация о пользователе
  */
-class ProfileState extends StoreModule<'profile'> {
+class ProfileState extends StoreModule<TProfileState> {
 
-  initState() {
+  initState(): TProfileState {
     return {
       data: {} as IUser,
       waiting: false // признак ожидания загрузки

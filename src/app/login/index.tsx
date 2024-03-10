@@ -59,7 +59,7 @@ function Login() {
   return (
     <PageLayout>
       <TopHead/>
-      <Head title={t('title')}>
+      <Head title={t('title.main')}>
         <LocaleSelect/>
       </Head>
       <Navigation/>

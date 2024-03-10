@@ -9,6 +9,7 @@ import CatalogFilter from "@src/containers/catalog-filter";
 import CatalogList from "@src/containers/catalog-list";
 import LocaleSelect from "@src/containers/locale-select";
 import TopHead from "@src/containers/top-head";
+import SelectCountriesList from "@src/containers/select-countries-list";
 
 function Main() {
 
@@ -17,7 +18,7 @@ function Main() {
   useInit(async () => {
     await Promise.all([
       store.actions.catalog.initParams(),
-      store.actions.categories.load()
+      store.actions.categories.load(),
     ]);
   }, [], true);
 
@@ -26,12 +27,13 @@ function Main() {
   return (
     <PageLayout>
       <TopHead/>
-      <Head title={t('title')}>
+      <Head title={t('title.main')}>
         <LocaleSelect/>
       </Head>
       <Navigation/>
       <CatalogFilter/>
       <CatalogList/>
+      <SelectCountriesList/>
     </PageLayout>
   );
 }

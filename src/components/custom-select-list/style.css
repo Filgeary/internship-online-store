@@ -1,0 +1,205 @@
+.customSelectList {
+  width: 240px;
+  z-index: 100;
+  position: relative;
+  border: 1px solid #E5E6E9;
+}
+
+.customSelectList-currentSelect {
+  padding: 6px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff;
+  cursor: pointer;
+  z-index: 4;
+  position: relative;
+  box-sizing: border-box;
+}
+
+.customSelectList-textContainer {
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.customSelectList-listCountries {
+  display: flex;
+}
+
+.customSelectList-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 3px;
+  width: 18px;
+  height: 18px;
+  margin-right: 6px;
+  background: #6f7eff;
+  font-family: "Arial", sans-serif;
+  font-weight: 700;
+  font-size: 8px;
+  text-align: center;
+  color: #fff;
+  position: relative;
+  transition: background-color 1s;
+  cursor: pointer;
+}
+
+.customSelectList-title.all:hover {
+  background: #6f7eff;
+}
+.customSelectList-title.all:after {
+  display: none;
+}
+
+.customSelectList-title.all:before {
+  display: none;
+}
+
+.customSelectList-title:after {
+  opacity: 0;
+  content: '';
+  position: absolute;
+  width: 2px;
+  height: 12px;
+  background-color: #494949;
+  transform: rotate(45deg);
+  transition: opacity 1s;
+}
+
+.customSelectList-title:hover:after {
+  opacity: 1;
+}
+
+.customSelectList-title:before {
+  opacity: 0;
+  content: '';
+  position: absolute;
+  width: 2px;
+  height: 12px;
+  background-color: #494949;
+  transform: rotate(-45deg);
+  transition: opacity 1s;
+}
+
+.customSelectList-title:hover:before {
+  opacity: 1;
+}
+
+.customSelectList-title:hover {
+  background-color: #ff5454;
+}
+
+.customSelectList-card {
+  width: auto;
+  white-space: nowrap;
+  z-index: 100;
+  display: none;
+  position: absolute;
+  top: 150%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: "Arial", sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  background-color: #fff;
+  color: #595959;
+  box-shadow: 0px 5px 5px 0 rgba(60, 60, 63, 0.25);
+  border: 1px solid rgba(60, 60, 63, 0.25);
+  padding: 10px;
+  transition: all 0.3s;
+}
+
+.customSelectList-title:hover .customSelectList-card {
+  display: inline;
+}
+
+.customSelectList-name {
+  margin-right: 10px;
+  display: flex;
+  font-family: "Arial", sans-serif;
+  font-weight: 400;
+  font-size: 15px;
+  color: #191f4d;
+}
+
+.customSelectList-openingArrow {
+  transition: all 0.3s;
+
+}
+
+.customSelectList-openingArrow.open.bottom {
+  transform: rotate(180deg);
+}
+
+.customSelectList-openingArrow.open.top {
+  transform: rotate(-180deg);
+}
+
+.customSelectList-listContainers {
+  height: 0;
+  width: inherit;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: center;
+  max-height: 163px;
+  margin-top: 2px;
+  padding: 0 5px;
+  position: absolute;
+  visibility: hidden;
+  z-index: 2;
+  opacity: 0;
+  transition: opacity 0.3s, height 0.3s;
+  background-color: #ffffff;
+  border: 1px solid rgba(60, 60, 63, 0.25);
+  box-sizing: border-box;
+}
+
+.customSelectList-listContainers.bottom {
+  transform: translateY(-20%);
+}
+
+.customSelectList-listContainers.top {
+  transform: translateY(-95%);
+
+}
+
+.customSelectList-listContainers.open {
+  height: auto;
+}
+
+
+.customSelectList-listContainers.open.bottom {
+  transform: translateY(0);
+  visibility: visible;
+  box-shadow: 0 8px 8px 0 rgba(60, 60, 63, 0.25);
+  opacity: 1;
+}
+
+.customSelectList-listContainers.open.top {
+  transform: translateY(-122%);
+  visibility: visible;
+  -webkit-box-shadow: 0px -12px 40px -13px rgba(60, 60, 63, 0.25);
+  -moz-box-shadow: 0px -12px 40px -13px rgba(60, 60, 63, 0.25);
+  box-shadow: 0px -12px 40px -13px rgba(60, 60, 63, 0.25);
+  opacity: 1;
+}
+
+.customSelectList-listOptions::-webkit-scrollbar {
+  width: 10px;
+}
+
+.customSelectList-listOptions::-webkit-scrollbar-track {
+  background: none;
+}
+
+.customSelectList-listOptions::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+  width: 8px;
+  height: 60px;
+  background: #e5e6e9;
+}

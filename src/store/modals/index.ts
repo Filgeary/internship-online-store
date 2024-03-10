@@ -1,11 +1,13 @@
 import StoreModule from "../module";
 import {TModal, TModalName} from "@src/store/modals/types";
 
-class ModalsState extends StoreModule<'modals'> {
-  initState(): {
-    modalsList: TModal[],
-    unId: number
-  } {
+type TModalState = {
+  modalsList: TModal[],
+  unId: number
+}
+
+class ModalsState extends StoreModule<TModalState> {
+  initState(): TModalState {
     return {
       modalsList: [],
       // Здесь будет лежать уникальный id

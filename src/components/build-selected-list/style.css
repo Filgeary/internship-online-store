@@ -1,0 +1,23 @@
+.BuildSelectedList {
+  max-height: inherit;
+  width: 100%;
+  padding: 0;
+  margin: 10px 0 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.BuildSelectedList::-webkit-scrollbar {
+  width: 10px;
+}
+
+.BuildSelectedList::-webkit-scrollbar-track {
+  background: none;
+}
+
+.BuildSelectedList::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+  width: 8px;
+  height: 60px;
+  background: #e5e6e9;
+}
