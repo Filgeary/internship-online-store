@@ -36,7 +36,7 @@
   cursor: pointer;
 }
 
-.ChatComponent-InputContainer-arrow img {
+.ChatComponent-InputContainer-arrow svg {
   transform: translate(6px, 8px);
 }
 

@@ -1,8 +1,8 @@
 import React, {useEffect, useRef, useState} from 'react';
 import './style.css';
-import checkSVG from './check.svg';
-import loadingSVG from './loading.svg';
-import arrowBottomSVG from './bottom-arrow.svg';
+import CheckSVG from './check.svg?react';
+import LoadingSVG from './loading.svg?react';
+import ArrowBottomSVG from './bottom-arrow.svg?react';
 import {Message} from "@src/store/chat";
 import {getLocalTime} from "@src/utils/get-local-time";
 import {generateUniqueCode} from "@src/utils/unique-code";
@@ -72,12 +72,12 @@ function ChatList({list, username, uploadOldMessages}: ChatList) {
             <div className="ChatItem-information-field">
               <span className="ChatItem-date">{getLocalTime(item.dateCreate).slice(0, 5)}</span>
               <span className={"ChatItem-status" + (item.waiting ? " waiting" : "")}>
-                <img src={item.waiting ? loadingSVG : checkSVG} alt=""/>
+                {item.waiting ? <LoadingSVG/> : <CheckSVG/>}
               </span>
             </div>
           </div>)}
       <div className={"ChatList-scrollBottom" + (visibilityArrowForScrolling ? ' visible' : '')} onClick={scrollDown}>
-        <img src={arrowBottomSVG} alt="arrow"/>
+        <ArrowBottomSVG/>
       </div>
     </div>
   );

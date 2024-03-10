@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef} from 'react';
 import CustomSelectLang from "@src/components/custom-select-lang";
 import {cn as bem} from "@bem-react/classname";
 import './style.css'

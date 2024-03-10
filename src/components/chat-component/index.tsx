@@ -1,6 +1,6 @@
 import React, {ChangeEvent, memo, useRef, useState} from 'react';
 import './style.css';
-import arrowSVG from './arrow.svg';
+import ArrowSVG from './arrow.svg?react';
 import {cn as bem} from "@bem-react/classname";
 import {Message} from "@src/store/chat";
 import ChatList from "@src/components/chat-list";
@@ -41,7 +41,7 @@ function ChatComponent({list, username, sendMessage, uploadOldMessages}: {
                   onInput={onInput} ref={inputRef}/>
         <div className={cn('InputContainer-arrow') + (value ? ' visible' : '')}
              onClick={onSendMessage}>
-          <img src={arrowSVG} alt="arrow"/>
+          <ArrowSVG/>
         </div>
       </div>
     </div>

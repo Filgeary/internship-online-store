@@ -1,4 +1,4 @@
-import React, {memo, useCallback, useEffect, useState} from 'react';
+import React, {memo, useCallback, useState} from 'react';
 import CatalogFilter from "@src/containers/catalog-filter";
 import ModalLayout from "@src/components/modal-layout";
 import useTranslate from "@src/hooks/use-translate";
