@@ -150,7 +150,7 @@ socket.send(
 
 Rewrite from `webpack` to `vite`.
 
-### Performance
+### Performance (about 100 modules)
 
 - _webpack_: start 3100ms / build 5800ms
 - _vite_: start 120ms / build 1100ms
