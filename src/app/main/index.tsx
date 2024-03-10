@@ -15,11 +15,10 @@ function Main() {
 
   useInit(
     async () => {
-    
       await Promise.all([
         store.actions.catalog.initParams(),
         store.actions.categories.load(),
-        store.actions.countries.load()
+        store.actions.countries.load(),
       ]);
     },
     [],
@@ -36,7 +35,7 @@ function Main() {
       </Head>
       <Navigation />
       <CatalogFilter />
-      <CatalogList  />
+      <CatalogList />
     </PageLayout>
   );
 }

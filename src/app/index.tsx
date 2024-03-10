@@ -42,7 +42,7 @@ function App(): React.ReactElement {
             </Protected>
           }
         />
-            <Route path={"/canvas"} element={<CanvasPage />} />
+        <Route path={"/canvas"} element={<CanvasPage />} />
       </Routes>
       <Modals />
     </>
