@@ -26,6 +26,10 @@
   column-gap: 5px;
 }
 
+.ArtCanvasInner-separate-util {
+  margin: 0 5px;
+}
+
 .ArtCanvasInner-utils-btn {
   padding: 3px 10px;
   cursor: pointer;
@@ -36,4 +40,9 @@
   &:disabled {
     cursor: not-allowed;
   }
+}
+
+.ArtCanvasInner-utils-select {
+  padding: 3px 10px;
+  font-size: 16px;
 }

@@ -1,11 +1,16 @@
 import './style.css';
 
-import React, { memo, useEffect, useRef } from 'react';
+import React, { memo, useEffect, useRef, useState } from 'react';
 import { cn as bem } from '@bem-react/classname';
 import { useArtCanvasContext } from '..';
 
-import { FaArrowAltCircleLeft, FaArrowAltCircleRight, FaTrash } from 'react-icons/fa';
-import { TArtImage } from '../types';
+import { FaArrowAltCircleLeft, FaArrowAltCircleRight, FaTrash, FaEraser } from 'react-icons/fa';
+import { TArtImage, TTools } from '@src/store/art/types';
+
+type TCoords = {
+  x: number | null;
+  y: number | null;
+};
 
 function ArtCanvasInner() {
   const cn = bem('ArtCanvasInner');
@@ -13,36 +18,30 @@ function ArtCanvasInner() {
   const canvasCtx = useRef<CanvasRenderingContext2D>(null);
   const isDown = useRef<boolean>(false);
 
-  const {
-    brushWidth,
-    brushColor,
-    bgColor,
-    setBgColor,
-    setBrushColor,
-    setBrushWidth,
-    images,
-    setImages,
-    activeImage,
-    setActiveImage,
-    canSave,
-  } = useArtCanvasContext();
+  const [startCoords, setStartCoords] = useState<TCoords>({ x: null, y: null });
+  const [snapshot, setSnapshot] = useState<ImageData>(null);
+
+  const { values, callbacks: ctxCallbacks } = useArtCanvasContext();
 
   const callbacks = {
     clearCanvasPicture: () => {
       canvasCtx.current.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+      callbacks.endAction();
     },
 
     clearCanvas: () => {
       canvasCtx.current.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
-      setBgColor('#ffffff');
-      setBrushColor('#000000');
-      setBrushWidth(5);
+      callbacks.endAction();
+
+      ctxCallbacks.setBgColor('#ffffff');
+      ctxCallbacks.setBrushColor('#000000');
+      ctxCallbacks.setBrushWidth(5);
     },
 
     downloadCanvas: () => {
       // Для заднего фона на загружаемой картинке
       canvasCtx.current.globalCompositeOperation = 'destination-over';
-      canvasCtx.current.fillStyle = bgColor;
+      canvasCtx.current.fillStyle = values.bgColor;
       canvasCtx.current.fillRect(0, 0, canvasRef.current.width, canvasRef.current.height);
       canvasCtx.current.globalCompositeOperation = 'source-over';
 
@@ -60,12 +59,11 @@ function ArtCanvasInner() {
         const image = new Image(canvasRef.current.width, canvasRef.current.height) as TArtImage;
         image.src = URL.createObjectURL(blob);
 
-        console.log({ activeImage, images });
-        const nextActiveImage = activeImage + 1;
-        const nextImages = [...images.slice(0, activeImage + 1), image];
+        const nextActiveImage = values.activeImage + 1;
+        const nextImages = [...values.images.slice(0, values.activeImage + 1), image];
 
-        setImages(nextImages);
-        setActiveImage(nextActiveImage);
+        ctxCallbacks.setImages(nextImages);
+        ctxCallbacks.setActiveImage(nextActiveImage);
       });
 
       canvasCtx.current.closePath();
@@ -73,26 +71,36 @@ function ArtCanvasInner() {
     },
 
     undo: () => {
-      console.log({ activeImage, images });
-      setActiveImage(Math.max(activeImage - 1, 0));
+      ctxCallbacks.setActiveImage(Math.max(values.activeImage - 1, 0));
     },
 
     redo: () => {
-      setActiveImage(Math.min(activeImage + 1, images.length - 1));
+      ctxCallbacks.setActiveImage(Math.min(values.activeImage + 1, values.images.length - 1));
     },
 
     clearImages: () => {
-      const newImages = [...images];
+      const newImages = [...values.images];
       newImages.length = 1;
 
-      setActiveImage(0);
-      setImages(newImages);
+      ctxCallbacks.setActiveImage(0);
+      ctxCallbacks.setImages(newImages);
     },
+
+    eraserToggle: () => ctxCallbacks.setEraserActive(!values.eraserActive),
   };
 
   const handlers = {
     onPointerDown: (e: React.PointerEvent<HTMLCanvasElement>) => {
       if (e.button === options.leftMouseBtn) {
+        const { offsetX, offsetY } = e.nativeEvent;
+        setStartCoords({
+          x: offsetX,
+          y: offsetY,
+        });
+        setSnapshot(
+          canvasCtx.current.getImageData(0, 0, canvasRef.current.width, canvasRef.current.height)
+        );
+
         canvasCtx.current.beginPath();
         isDown.current = true;
       }
@@ -101,11 +109,71 @@ function ArtCanvasInner() {
     onPointerMove: (e: React.PointerEvent<HTMLCanvasElement>) => {
       if (isDown.current) {
         const { offsetX, offsetY } = e.nativeEvent;
-        canvasCtx.current.lineWidth = brushWidth;
-        canvasCtx.current.lineCap = 'round';
-        canvasCtx.current.strokeStyle = brushColor;
-        canvasCtx.current.lineTo(offsetX, offsetY);
-        canvasCtx.current.stroke();
+
+        canvasCtx.current.putImageData(snapshot, 0, 0);
+
+        if (values.eraserActive) {
+          canvasCtx.current.lineWidth = values.brushWidth;
+          canvasCtx.current.lineCap = 'round';
+          canvasCtx.current.globalCompositeOperation = 'destination-out';
+          // При переключении заднего фона - останется таким же
+          canvasCtx.current.strokeStyle = values.bgColor;
+          canvasCtx.current.lineTo(offsetX, offsetY);
+          canvasCtx.current.stroke();
+
+          canvasCtx.current.globalCompositeOperation = 'source-over';
+
+          return;
+        }
+
+        switch (values.activeTool) {
+          case 'brush': {
+            canvasCtx.current.lineWidth = values.brushWidth;
+            canvasCtx.current.lineCap = 'round';
+            canvasCtx.current.strokeStyle = values.brushColor;
+            canvasCtx.current.lineTo(offsetX, offsetY);
+            canvasCtx.current.stroke();
+            break;
+          }
+
+          case 'square': {
+            if (!values.fillColor) {
+              canvasCtx.current.lineWidth = values.brushWidth;
+              canvasCtx.current.strokeStyle = values.brushColor;
+              canvasCtx.current.strokeRect(
+                offsetX,
+                offsetY,
+                startCoords.x - offsetX,
+                startCoords.y - offsetY
+              );
+            } else {
+              canvasCtx.current.fillStyle = values.brushColor;
+              canvasCtx.current.fillRect(
+                offsetX,
+                offsetY,
+                startCoords.x - offsetX,
+                startCoords.y - offsetY
+              );
+            }
+            break;
+          }
+
+          case 'circle': {
+            canvasCtx.current.beginPath();
+            canvasCtx.current.fillStyle = values.brushColor;
+            canvasCtx.current.lineWidth = values.brushWidth;
+
+            const radius = Math.sqrt(
+              Math.pow(startCoords.x - offsetX, 2) + Math.pow(startCoords.y - offsetY, 2)
+            );
+            canvasCtx.current.arc(startCoords.x, startCoords.y, radius, 0, 2 * Math.PI);
+
+            if (values.fillColor) canvasCtx.current.fill();
+            else canvasCtx.current.stroke();
+
+            break;
+          }
+        }
       }
     },
 
@@ -120,24 +188,32 @@ function ArtCanvasInner() {
         callbacks.endAction();
       }
     },
+
+    onActiveToolChange: (e: React.ChangeEvent<HTMLSelectElement>) => {
+      ctxCallbacks.setActiveTool(e.target.value as TTools);
+    },
   };
 
   const options = {
     leftMouseBtn: 0,
-    undoDisabled: activeImage === 0,
-    redoDisabled: activeImage === images.length - 1,
-    clearImagesDisabled: images.length === 1,
+    undoDisabled: values.activeImage === 0,
+    redoDisabled: values.activeImage === values.images.length - 1,
+    clearImagesDisabled: values.images.length === 1,
   };
 
   useEffect(() => {
     const keyDownHandler = (e: KeyboardEvent) => {
       if (e.ctrlKey) {
-        if (e.code === 'KeyZ') {
-          callbacks.undo();
-        } else if (e.key === 'keyY') {
-          callbacks.redo();
+        switch (e.code) {
+          case 'KeyZ': {
+            callbacks.undo();
+            break;
+          }
+          case 'KeyY': {
+            callbacks.redo();
+            break;
+          }
         }
-        console.log(e.key);
       }
     };
 
@@ -146,9 +222,11 @@ function ArtCanvasInner() {
     return () => {
       document.removeEventListener('keydown', keyDownHandler);
     };
-  }, [images]);
+  }, [values.images]);
 
   useEffect(() => {
+    if (values.images.length === 1) return;
+
     canvasCtx.current = canvasRef.current.getContext('2d');
 
     const ctx = canvasCtx.current;
@@ -159,16 +237,18 @@ function ArtCanvasInner() {
     canvasRef.current.toBlob((blob) => {
       const image = new Image() as TArtImage;
       image.src = URL.createObjectURL(blob);
-      setImages((prevImages) => [...prevImages, image]);
+      ctxCallbacks.setImages([...values.images, image]);
     });
   }, []);
 
   useEffect(() => {
-    canvasRef.current.style.setProperty('background-color', bgColor);
-  }, [bgColor]);
+    canvasRef.current.style.setProperty('background-color', values.bgColor);
+  }, [values.bgColor]);
 
   useEffect(() => {
-    const imageNode = images[activeImage];
+    if (!canvasCtx.current) return;
+
+    const imageNode = values.images[values.activeImage];
 
     if (!imageNode) return;
 
@@ -183,7 +263,7 @@ function ArtCanvasInner() {
       canvasCtx.current.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
       canvasCtx.current.drawImage(imageNode, 0, 0);
     }
-  }, [images, activeImage]);
+  }, [values.images, values.activeImage]);
 
   return (
     <div className={cn()}>
@@ -214,6 +294,20 @@ function ArtCanvasInner() {
             >
               <FaTrash size={20} />
             </button>
+
+            <div className={cn('separate-util')}>
+              <button title={'Стёрка'} onClick={callbacks.eraserToggle} className={cn('utils-btn')}>
+                <FaEraser color={values.eraserActive ? 'green' : 'black'} size={20} />
+              </button>
+            </div>
+          </div>
+
+          <div className={cn('utils-center')}>
+            <select onChange={handlers.onActiveToolChange} className={cn('utils-select')}>
+              <option value={'brush'}>Кисть</option>
+              <option value={'square'}>Прямоугольник</option>
+              <option value={'circle'}>Круг</option>
+            </select>
           </div>
 
           <div className={cn('utils-right')}>
@@ -224,7 +318,7 @@ function ArtCanvasInner() {
               Очистить рисунок
             </button>
             <button
-              disabled={!canSave}
+              disabled={!values.canSave}
               className={cn('utils-btn')}
               onClick={callbacks.downloadCanvas}
             >

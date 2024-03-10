@@ -7,7 +7,11 @@ import ArtCanvasTitle from './art-canvas-title';
 import ArtCanvasInner from './art-canvas-inner';
 import ArtCanvasOptions from './art-canvas-options';
 
+import { useAppSelector } from '@src/hooks/use-selector';
+import useStore from '@src/hooks/use-store';
+
 import { TArtCanvasContext } from './types';
+import { TTools, TArtImage } from '@src/store/art/types';
 
 const ArtCanvasContext = React.createContext<TArtCanvasContext>(null);
 
@@ -26,7 +30,7 @@ type ArtCanvasProps = {
 };
 
 const initValues = {
-  bgColor: '#ff0000',
+  bgColor: '#ffffff',
   brushWidth: 5,
   brushColor: '#000000',
 };
@@ -34,16 +38,41 @@ const initValues = {
 function ArtCanvas(props: ArtCanvasProps) {
   const { children } = props;
 
-  const [bgColor, setBgColor] = useState(initValues.bgColor);
-  const [brushWidth, setBrushWidth] = useState(initValues.brushWidth);
-  const [brushColor, setBrushColor] = useState(initValues.brushColor);
-  const [images, setImages] = useState([]);
-  const [activeImage, setActiveImage] = useState(0);
+  const store = useStore();
+  const select = useAppSelector((state) => ({
+    bgColor: state.art.bgColor,
+    brushWidth: state.art.brushWidth,
+    brushColor: state.art.brushColor,
+    images: state.art.images,
+    activeTool: state.art.activeTool,
+    fillColor: state.art.fillColor,
+  }));
+
+  const [activeImage, setActiveImage] = useState(Math.max(0, select.images.length - 1));
+  const [eraserActive, setEraserActive] = useState(false);
+
   const canSave =
-    bgColor !== initValues.bgColor ||
-    brushWidth !== initValues.brushWidth ||
-    brushColor !== initValues.brushColor ||
-    images.length !== 1;
+    select.bgColor !== initValues.bgColor ||
+    select.brushColor !== initValues.brushColor ||
+    (select.images.length !== 1 && activeImage !== 0);
+
+  const values = {
+    ...select,
+    activeImage,
+    canSave,
+    eraserActive,
+  };
+
+  const callbacks = {
+    setActiveImage,
+    setImages: (val: TArtImage[]) => store.actions.art.setImages(val),
+    setBgColor: (val: string) => store.actions.art.setBgColor(val),
+    setBrushWidth: (val: number) => store.actions.art.setBrushWidth(val),
+    setBrushColor: (val: string) => store.actions.art.setBrushColor(val),
+    setActiveTool: (val: TTools) => store.actions.art.setActiveTool(val),
+    setFillColor: (val: boolean) => store.actions.art.setFillColor(val),
+    setEraserActive,
+  };
 
   const cn = bem('ArtCanvas');
 
@@ -51,17 +80,8 @@ function ArtCanvas(props: ArtCanvasProps) {
     <div className={cn()}>
       <ArtCanvasContext.Provider
         value={{
-          bgColor,
-          setBgColor,
-          brushWidth,
-          setBrushWidth,
-          brushColor,
-          setBrushColor,
-          images,
-          setImages,
-          activeImage,
-          setActiveImage,
-          canSave,
+          values,
+          callbacks,
         }}
       >
         {children}

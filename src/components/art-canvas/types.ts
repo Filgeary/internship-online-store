@@ -1,22 +1,26 @@
-import React from 'react';
+import { TArtImage, TTools } from '@src/store/art/types';
 
 export type TArtCanvasContext = {
-  bgColor: string;
-  setBgColor: React.Dispatch<React.SetStateAction<string>>;
+  values: {
+    images: TArtImage[];
+    activeImage: number;
+    bgColor: string;
+    brushWidth: number;
+    brushColor: string;
+    canSave: boolean;
+    activeTool: TTools;
+    fillColor: boolean;
+    eraserActive: boolean;
+  };
 
-  brushWidth: number;
-  setBrushWidth: React.Dispatch<React.SetStateAction<number>>;
-
-  brushColor: string;
-  setBrushColor: React.Dispatch<React.SetStateAction<string>>;
-
-  images: TArtImage[];
-  setImages: React.Dispatch<React.SetStateAction<TArtImage[]>>;
-
-  activeImage: number;
-  setActiveImage: React.Dispatch<React.SetStateAction<number>>;
-
-  canSave: boolean;
+  callbacks: {
+    setImages: (imagesVal: TArtImage[]) => void;
+    setActiveImage: (activeImageVal: number) => void;
+    setBgColor: (bgColorVal: string) => void;
+    setBrushWidth: (brushWidthVal: number) => void;
+    setBrushColor: (brushColorVal: string) => void;
+    setActiveTool: (activeToolVal: TTools) => void;
+    setFillColor: (fillColorVal: boolean) => void;
+    setEraserActive: (eraserActiveVal: boolean) => void;
+  };
 };
-
-export type TArtImage = HTMLImageElement & { loaded: boolean };

@@ -7,25 +7,25 @@ import { useArtCanvasContext } from '..';
 function ArtCanvasOptions() {
   const cn = bem('ArtCanvasOptions');
 
-  const { brushWidth, setBrushWidth, brushColor, setBrushColor, bgColor, setBgColor } =
-    useArtCanvasContext();
+  const { values, callbacks: ctxCallbacks } = useArtCanvasContext();
 
   const handlers = {
     onBrushColorChange: (e: React.ChangeEvent<HTMLInputElement>) => {
-      setBrushColor(e.target.value);
+      ctxCallbacks.setBrushColor(e.target.value);
     },
 
     onBgColorChange: (e: React.ChangeEvent<HTMLInputElement>) => {
-      setBgColor(e.target.value);
+      ctxCallbacks.setBgColor(e.target.value);
     },
 
     onBrushWidthChange: (e: React.ChangeEvent<HTMLInputElement>) => {
-      console.log(e.target.value);
-      setBrushWidth(Number(e.target.value));
+      ctxCallbacks.setBrushWidth(Number(e.target.value));
+    },
+
+    onFillColorChange: (e: React.ChangeEvent<HTMLInputElement>) => {
+      ctxCallbacks.setFillColor(e.target.checked);
     },
   };
-
-  console.log(brushColor);
 
   return (
     <div className={cn()}>
@@ -39,14 +39,29 @@ function ArtCanvasOptions() {
             <li>
               <label>
                 Цвет кисточки: &nbsp;
-                <input value={brushColor} onChange={handlers.onBrushColorChange} type='color' />
+                <input
+                  value={values.brushColor}
+                  onChange={handlers.onBrushColorChange}
+                  type='color'
+                />
               </label>
             </li>
 
             <li>
               <label>
                 Цвет заднего фона: &nbsp;
-                <input value={bgColor} onChange={handlers.onBgColorChange} type='color' />
+                <input value={values.bgColor} onChange={handlers.onBgColorChange} type='color' />
+              </label>
+            </li>
+
+            <li>
+              <label>
+                Заливка цветом: &nbsp;
+                <input
+                  checked={values.fillColor}
+                  onChange={handlers.onFillColorChange}
+                  type='checkbox'
+                />
               </label>
             </li>
           </ul>
@@ -59,7 +74,13 @@ function ArtCanvasOptions() {
             <li>
               <label>
                 Толщина: &nbsp;
-                <input value={brushWidth} onChange={handlers.onBrushWidthChange} type='number' />
+                <input
+                  value={values.brushWidth}
+                  onChange={handlers.onBrushWidthChange}
+                  max={50}
+                  type='range'
+                />
+                {values.brushWidth}
               </label>
             </li>
           </ul>
