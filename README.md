@@ -145,3 +145,12 @@ socket.send(
 ```
 
 Ответ от сервера такой же как и запрос.
+
+## Vite (`/vite`)
+
+Rewrite from `webpack` to `vite`.
+
+### Performance
+
+- _webpack_: start 3100ms / build 5800ms
+<!-- add vite metrics -->
