@@ -2,6 +2,7 @@ import { cn as bem } from "@bem-react/classname";
 import { memo, useEffect, useRef } from "react";
 import Select from "../select";
 import "./style.css";
+import { TDictionaryKeys } from "@src/i18n/translations";
 
 type TCanvasDrawProps = {
   draw: (...arg: any) => void;
@@ -11,6 +12,7 @@ type TCanvasDrawProps = {
   selectFigure: (el: string) => void;
   isColor: string;
   isFigure: string;
+  t: (text: TDictionaryKeys, number?: number) => string;
 };
 
 const CanvasDraw = ({
@@ -21,6 +23,7 @@ const CanvasDraw = ({
   selectFigure,
   isColor,
   isFigure,
+  t,
 }: TCanvasDrawProps) => {
   const cn = bem("DrawCanvas");
   const refDiv = useRef<HTMLDivElement | null>(null);
@@ -65,7 +68,7 @@ const CanvasDraw = ({
           <Select options={figure} onChange={selectFigure} value={isFigure} />
           <Select options={color} onChange={selectColor} value={isColor} />
         </div>
-        <button onClick={clearCanvas}>{"Clear"}</button>
+        <button onClick={()=>clearCanvas()}>{t("canvas.clear")}</button>
       </div>
       <canvas
         className={cn("canvas")}

@@ -1,5 +1,6 @@
 import { memo, useCallback, useState } from "react";
 import CanvasDraw from "@src/components/canvas-draw";
+import useTranslate from "@src/hooks/use-translate";
 
 type TDrawFigure = {
   ctx: CanvasRenderingContext2D | null;
@@ -117,6 +118,8 @@ const Canvas = () => {
     ),
   };
 
+  const { t } = useTranslate(); 
+
   return (
     <>
       <CanvasDraw
@@ -127,6 +130,7 @@ const Canvas = () => {
         selectFigure={setIsFigure}
         isColor={isColor}
         isFigure={isFigure}
+        t={t}
       />
     </>
   );

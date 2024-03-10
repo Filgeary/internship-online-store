@@ -31,5 +31,7 @@
   "count.counter":"Количество товара",
   "count.form.title":"Введите количество товара",
   "count.form.ok":"Ок",
-  "count.form.cancel":"Отмена"
+  "count.form.cancel":"Отмена",
+  "canvas.clear":"Очистить"
+
 }
