@@ -7,5 +7,5 @@ export type TArtState = {
   fillColor: boolean;
 };
 
-export type TTools = 'brush' | 'square' | 'circle';
+export type TTools = 'brush' | 'square' | 'circle' | 'triangle';
 export type TArtImage = HTMLImageElement & { loaded: boolean };

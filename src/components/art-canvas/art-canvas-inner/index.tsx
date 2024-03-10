@@ -173,6 +173,23 @@ function ArtCanvasInner() {
 
             break;
           }
+
+          case 'triangle': {
+            canvasCtx.current.beginPath();
+            canvasCtx.current.fillStyle = values.brushColor;
+            canvasCtx.current.lineWidth = values.brushWidth;
+
+            canvasCtx.current.moveTo(startCoords.x, startCoords.y);
+            canvasCtx.current.lineTo(offsetX, offsetY);
+            // Нижняя линия треугольника
+            canvasCtx.current.lineTo(startCoords.x * 2 - offsetX, offsetY);
+            canvasCtx.current.closePath();
+
+            if (values.fillColor) canvasCtx.current.fill();
+            else canvasCtx.current.stroke();
+
+            break;
+          }
         }
       }
     },
@@ -307,6 +324,7 @@ function ArtCanvasInner() {
               <option value={'brush'}>Кисть</option>
               <option value={'square'}>Прямоугольник</option>
               <option value={'circle'}>Круг</option>
+              <option value={'triangle'}>Треугольник</option>
             </select>
           </div>
 
