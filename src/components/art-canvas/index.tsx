@@ -50,6 +50,7 @@ function ArtCanvas(props: ArtCanvasProps) {
   }));
 
   const [activeImage, setActiveImage] = useState(Math.max(0, select.images.length - 1));
+  console.log({ activeImage });
   const [eraserActive, setEraserActive] = useState(false);
 
   const canSave =

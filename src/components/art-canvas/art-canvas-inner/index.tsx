@@ -240,9 +240,8 @@ function ArtCanvasInner() {
   }, [values.images, values.activeImage, callbacks.undo, callbacks.redo]);
 
   useEffect(() => {
-    if (values.images.length === 1) return;
-
     canvasCtx.current = canvasRef.current.getContext('2d');
+    if (values.images.length) return;
 
     const ctx = canvasCtx.current;
 
@@ -250,6 +249,7 @@ function ArtCanvasInner() {
     ctx.fillRect(0, 0, canvasRef.current.width, canvasRef.current.height);
 
     canvasRef.current.toBlob((blob) => {
+      console.log('here');
       const image = new Image() as TArtImage;
       image.src = URL.createObjectURL(blob);
       ctxCallbacks.setImages([...values.images, image]);
@@ -284,6 +284,10 @@ function ArtCanvasInner() {
       canvasCtx.current.drawImage(imageNode, 0, 0);
     }
   }, [values.images, values.activeImage]);
+
+  useEffect(() => {
+    console.log('Values images:', values.images);
+  }, [values.images]);
 
   return (
     <div className={cn()}>

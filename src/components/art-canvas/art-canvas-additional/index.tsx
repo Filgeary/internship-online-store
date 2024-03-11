@@ -1,6 +1,6 @@
 import './style.css';
 
-import { memo, useState, useEffect, useRef } from 'react';
+import { memo, useEffect, useRef } from 'react';
 import dvdImage from '../assets/dvd.png';
 import { cn as bem } from '@bem-react/classname';
 import getRandomNum from '@src/utils/get-random-num';
@@ -11,6 +11,7 @@ function ArtCanvasAdditional() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const dx = useRef(2);
   const dy = useRef(2);
+  const speeds = useRef([2, 3]);
   const sizes = useRef({
     width: 120,
     height: 120,
@@ -36,6 +37,8 @@ function ArtCanvasAdditional() {
     const ctx = canvasCtx.current;
 
     function loop() {
+      if (!canvasRef.current) return;
+
       ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
       ctx.drawImage(
         image.current,
@@ -48,18 +51,23 @@ function ArtCanvasAdditional() {
       coords.current.x += dx.current;
       coords.current.y += dy.current;
 
-      if (
-        coords.current.y + sizes.current.height >= canvasRef.current.height ||
-        coords.current.y <= 0
-      ) {
-        dy.current *= -1;
+      const newSpeedY = speeds.current[getRandomNum(0, speeds.current.length - 1)];
+      const newSpeedX = speeds.current[getRandomNum(0, speeds.current.length - 1)];
+
+      if (coords.current.y + sizes.current.height >= canvasRef.current.height) {
+        dy.current = -newSpeedY;
+        dx.current = dx.current > 0 ? newSpeedX : -newSpeedX;
+      } else if (coords.current.y <= 0) {
+        dy.current = newSpeedY;
+        dx.current = dx.current > 0 ? newSpeedX : -newSpeedX;
       }
 
-      if (
-        coords.current.x + sizes.current.width >= canvasRef.current.width ||
-        coords.current.x <= 0
-      ) {
-        dx.current *= -1;
+      if (coords.current.x + sizes.current.width >= canvasRef.current.width) {
+        dx.current = -newSpeedX;
+        dy.current = dy.current > 0 ? newSpeedY : -newSpeedY;
+      } else if (coords.current.x <= 0) {
+        dx.current = newSpeedX;
+        dy.current = dy.current > 0 ? newSpeedY : -newSpeedY;
       }
 
       window.requestAnimationFrame(loop);
