@@ -9,7 +9,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import Arrow from '@src/assets/images/arrow.svg';
+import arrowImage from './assets/arrow.svg';
 
 import { cn as bem } from '@bem-react/classname';
 import { Scrollbar } from 'react-scrollbars-custom';
@@ -300,7 +300,7 @@ function Autocomplete(props: AutocompleteProps) {
           <AutocompleteField isDisabled={true} code={views.activeCode} title={views.activeTitle} />
 
           <div className={cn('marker')}>
-            <img className={cn('marker-image')} src={Arrow} alt='' aria-hidden='true' />
+            <img className={cn('marker-image')} src={arrowImage} alt='' aria-hidden='true' />
           </div>
         </div>
       </div>
