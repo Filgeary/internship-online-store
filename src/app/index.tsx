@@ -4,6 +4,7 @@ import Protected from '@src/containers/protected';
 import useInit from '@src/hooks/use-init';
 import useStore from '@src/hooks/use-store';
 import Article from './article';
+import CanvasPage from './canvas-page';
 import ChatPage from './chat-page';
 import Login from './login';
 import Main from './main';
@@ -23,6 +24,10 @@ function App() {
         <Route
           path={''}
           element={<Main />}
+        />
+        <Route
+          path={'/canvas'}
+          element={<CanvasPage />}
         />
         <Route
           path={'/articles/:id'}
