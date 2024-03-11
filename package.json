@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Example project for Ylab React Internship",
   "scripts": {
-    "start": "vite serve --open",
+    "start": "vite serve --open --port 8010",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
     "test": "jest",
