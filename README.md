@@ -154,3 +154,11 @@ Rewrite from `webpack` to `vite`.
 
 - _webpack_: start 3100ms / build 5800ms
 - _vite_: start 120ms / build 1100ms
+
+## Canvas (`/canvas`)
+
+### Подготовка
+
+- Ознакомиться с canvas на React
+- Создать несколько фигур по запросу (кнопка, клик мыши на холсте)
+- Поиграться с фигурами, цветами
