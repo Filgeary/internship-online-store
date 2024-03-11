@@ -22,5 +22,6 @@ export type TArtCanvasContext = {
     setActiveTool: (activeToolVal: TTools) => void;
     setFillColor: (fillColorVal: boolean) => void;
     setEraserActive: (eraserActiveVal: boolean) => void;
+    resetAllToDefault: () => void;
   };
 };

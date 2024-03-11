@@ -6,6 +6,7 @@ import { cn as bem } from '@bem-react/classname';
 import ArtCanvasTitle from './art-canvas-title';
 import ArtCanvasInner from './art-canvas-inner';
 import ArtCanvasOptions from './art-canvas-options';
+import ArtCanvasAdditional from './art-canvas-additional';
 
 import { useAppSelector } from '@src/hooks/use-selector';
 import useStore from '@src/hooks/use-store';
@@ -72,6 +73,13 @@ function ArtCanvas(props: ArtCanvasProps) {
     setActiveTool: (val: TTools) => store.actions.art.setActiveTool(val),
     setFillColor: (val: boolean) => store.actions.art.setFillColor(val),
     setEraserActive,
+    resetAllToDefault: () => {
+      callbacks.setBgColor('#ffffff');
+      callbacks.setBrushColor('#000000');
+      callbacks.setBrushWidth(5);
+      callbacks.setFillColor(false);
+      callbacks.setEraserActive(false);
+    },
   };
 
   const cn = bem('ArtCanvas');
@@ -95,4 +103,5 @@ export default {
   Title: memo(ArtCanvasTitle),
   Inner: memo(ArtCanvasInner),
   Options: memo(ArtCanvasOptions),
+  Additional: memo(ArtCanvasAdditional),
 };

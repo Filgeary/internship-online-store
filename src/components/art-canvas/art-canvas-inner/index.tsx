@@ -33,9 +33,7 @@ function ArtCanvasInner() {
       canvasCtx.current.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
       callbacks.endAction();
 
-      ctxCallbacks.setBgColor('#ffffff');
-      ctxCallbacks.setBrushColor('#000000');
-      ctxCallbacks.setBrushWidth(5);
+      ctxCallbacks.resetAllToDefault();
     },
 
     downloadCanvas: () => {
@@ -239,7 +237,7 @@ function ArtCanvasInner() {
     return () => {
       document.removeEventListener('keydown', keyDownHandler);
     };
-  }, [values.images]);
+  }, [values.images, values.activeImage, callbacks.undo, callbacks.redo]);
 
   useEffect(() => {
     if (values.images.length === 1) return;
@@ -256,6 +254,11 @@ function ArtCanvasInner() {
       image.src = URL.createObjectURL(blob);
       ctxCallbacks.setImages([...values.images, image]);
     });
+  }, []);
+
+  useEffect(() => {
+    canvasRef.current.width = canvasRef.current.offsetWidth;
+    canvasRef.current.height = canvasRef.current.offsetHeight;
   }, []);
 
   useEffect(() => {
@@ -351,10 +354,8 @@ function ArtCanvasInner() {
         onPointerUp={handlers.onPointerUp}
         onPointerOut={handlers.onPointerOut}
         ref={canvasRef}
-        width={984}
-        height={492}
         className={cn('canvas')}
-      ></canvas>
+      />
     </div>
   );
 }

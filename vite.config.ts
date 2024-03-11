@@ -1,3 +1,4 @@
+/// <reference types="vitest" />
 import path from 'path';
 
 import { defineConfig } from 'vite';
@@ -18,6 +19,10 @@ export default defineConfig({
     alias: {
       '@src': path.resolve(__dirname, 'src'),
     },
+  },
+  test: {
+    include: ['**/*.spec.ts', '**/*.spec.tsx'],
+    globals: true,
   },
   server: {
     hmr: true,

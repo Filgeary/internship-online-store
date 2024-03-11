@@ -77,6 +77,7 @@ function ArtCanvasOptions() {
                 <input
                   value={values.brushWidth}
                   onChange={handlers.onBrushWidthChange}
+                  min={1}
                   max={50}
                   type='range'
                 />

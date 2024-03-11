@@ -13,6 +13,8 @@ function ArtCanvasWrapper() {
         <ArtCanvas.Inner />
         <hr />
         <ArtCanvas.Options />
+        <hr />
+        <ArtCanvas.Additional />
       </ArtCanvas.Root>
     </div>
   );
