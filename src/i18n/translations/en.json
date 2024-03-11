@@ -2,6 +2,8 @@
   "title": "Shop",
   "menu.main": "Main",
   "menu.chat": "Chat",
+  "menu.leaf": "Leaf fall",
+  "menu.drawing": "Drawing",
   "basket.title": "Cart",
   "basket.open": "Open",
   "basket.close": "Close",

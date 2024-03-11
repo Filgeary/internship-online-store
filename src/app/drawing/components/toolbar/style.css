@@ -1,0 +1,62 @@
+.Toolbar {
+  height: 40px;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  position: absolute;
+  width: 100%;
+  box-shadow: 0 4px 5px gray;
+  z-index: 999;
+}
+
+.Toolbar-btn {
+  height: 25px;
+  width: 25px;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  background-size: cover;
+  margin-left: 10px;
+}
+
+.Toolbar-btn_brush {
+  background: url("../../../../assets/images/drawing_toolbar/brush.png")
+    no-repeat center center;
+}
+
+.Toolbar-btn_rect {
+  background: url("../../../../assets/images/drawing_toolbar/rect.png")
+    no-repeat center center;
+}
+
+.Toolbar-btn_circle {
+  background: url("../../../../assets/images/drawing_toolbar/circle.png")
+    no-repeat center center;
+}
+
+.Toolbar-btn_eraser {
+  background: url("../../../../assets/images/drawing_toolbar/eraser.png")
+    no-repeat center center;
+}
+
+.Toolbar-btn_line {
+  background: url("../../../../assets/images/drawing_toolbar/line.png")
+    no-repeat center center;
+}
+
+.Toolbar-btn_undo {
+  margin-left: auto;
+  background: url("../../../../assets/images/drawing_toolbar/undo.png")
+    no-repeat center center;
+}
+
+.Toolbar-btn_redo {
+  background: url("../../../../assets/images/drawing_toolbar/redo.png")
+    no-repeat center center;
+}
+
+.Toolbar-btn_save {
+  background: url("../../../../assets/images/drawing_toolbar/save.png")
+    no-repeat center center;
+  margin-right: 10px;
+}

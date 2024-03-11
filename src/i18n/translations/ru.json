@@ -2,6 +2,8 @@
   "title": "Магазин",
   "menu.main": "Главная",
   "menu.chat": "Чат",
+  "menu.leaf": "Листопад",
+  "menu.drawing": "Рисование",
   "basket.title": "Корзина",
   "basket.open": "Перейти",
   "basket.close": "Закрыть",
