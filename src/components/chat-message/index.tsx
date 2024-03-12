@@ -3,7 +3,7 @@ import { cn as bem } from "@bem-react/classname";
 import "./style.css";
 import statusSent from "./status-sent.svg";
 import statusDelivered from "./status-delivered.svg";
-import sanitize from "sanitize-html";
+import DOMPurify from 'dompurify';
 
 export interface IChatMessageProps {
   _id?: string;
@@ -43,11 +43,9 @@ function ChatMessage(props: IChatMessageProps) {
       }
     }, [props.status]),
 
-    cleanHtml: sanitize(props.text, {
-      allowedTags: [ 'b', 'i', 'em', 'a' ],
-      allowedAttributes: {
-        a: [ 'href' ]
-      }
+    cleanHtml: DOMPurify.sanitize(props.text, {
+      ALLOWED_TAGS: [ 'b', 'i', 'em', 'a' ],
+      ALLOWED_ATTR: [ 'href' ]
     }),
   };
 

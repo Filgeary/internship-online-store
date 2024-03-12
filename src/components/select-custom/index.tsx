@@ -102,6 +102,9 @@ function SelectCustom<ValueType extends Option>(
           e.preventDefault();
           if (e.key === "ArrowDown" && !hoveredOption && options.length > 0) {
             setHoveredOption({ item: options[0], isHovered: true });
+            optionsRef.current[0].scrollIntoView({
+              behavior: "smooth",
+            });
             return;
           }
           if (e.key === "ArrowUp" && !hoveredOption && options.length > 0) {
@@ -111,8 +114,6 @@ function SelectCustom<ValueType extends Option>(
             });
             optionsRef.current[options.length - 1].scrollIntoView({
               behavior: "smooth",
-              block: "center",
-              inline: "start",
             });
             return;
           }
@@ -128,8 +129,6 @@ function SelectCustom<ValueType extends Option>(
             setHoveredOption({ item: navigateToItem, isHovered: true });
             optionsRef.current[currentItem].scrollIntoView({
               behavior: "smooth",
-              block: "center",
-              inline: "start",
             });
             return;
           }

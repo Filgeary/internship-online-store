@@ -3,13 +3,15 @@ import {cn as bem} from "@bem-react/classname";
 import {Link} from "react-router-dom";
 import './style.css';
 
+interface IItem {
+  key: number,
+  link: string,
+  title: string,
+}
+
 interface MenuProps {
-  items: {
-    key: number,
-    link: string,
-    title: string,
-  }[],
-  onNavigate: (item: {title: string}) => void
+  items: IItem[],
+  onNavigate: (item: IItem) => void
 }
 
 function Menu({items, onNavigate}: MenuProps) {
