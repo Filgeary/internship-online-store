@@ -1,0 +1,40 @@
+.ArtCanvasUtils {
+  margin-bottom: 10px;
+}
+
+.ArtCanvasUtils-row {
+  display: flex;
+  justify-content: space-between;
+  column-gap: 5px;
+}
+
+.ArtCanvasUtils-left {
+  display: flex;
+  column-gap: 5px;
+}
+
+.ArtCanvasUtils-right {
+  display: flex;
+  column-gap: 5px;
+}
+
+.ArtCanvasUtils-separate-util {
+  margin: 0 5px;
+}
+
+.ArtCanvasUtils-btn {
+  padding: 3px 10px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+}
+
+.ArtCanvasUtils-select {
+  padding: 3px 10px;
+  font-size: 16px;
+}

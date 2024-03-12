@@ -11,7 +11,6 @@ function ArtCanvasWrapper() {
       <ArtCanvas.Root>
         <ArtCanvas.Title>{t('title.art')}</ArtCanvas.Title>
         <ArtCanvas.Inner />
-        <hr />
         <ArtCanvas.Options />
         <hr />
         <ArtCanvas.Additional />

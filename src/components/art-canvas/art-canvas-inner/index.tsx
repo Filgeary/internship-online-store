@@ -4,8 +4,9 @@ import React, { memo, useEffect, useRef, useState } from 'react';
 import { cn as bem } from '@bem-react/classname';
 import { useArtCanvasContext } from '..';
 
-import { FaArrowAltCircleLeft, FaArrowAltCircleRight, FaTrash, FaEraser } from 'react-icons/fa';
 import { TArtImage, TTools } from '@src/store/art/types';
+import ArtCanvasUtils from '../art-canvas-utils';
+import ArtManager, { artManager } from '../manager';
 
 type TCoords = {
   x: number | null;
@@ -16,6 +17,7 @@ function ArtCanvasInner() {
   const cn = bem('ArtCanvasInner');
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const canvasCtx = useRef<CanvasRenderingContext2D>(null);
+  const canvasManager = useRef<ArtManager>(artManager);
   const isDown = useRef<boolean>(false);
 
   const [startCoords, setStartCoords] = useState<TCoords>({ x: null, y: null });
@@ -25,35 +27,23 @@ function ArtCanvasInner() {
 
   const callbacks = {
     clearCanvasPicture: () => {
-      canvasCtx.current.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+      canvasManager.current.clearCanvasPicture();
       callbacks.endAction();
     },
 
     clearCanvas: () => {
-      canvasCtx.current.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+      canvasManager.current.clearCanvasPicture();
       callbacks.endAction();
 
       ctxCallbacks.resetAllToDefault();
     },
 
     downloadCanvas: () => {
-      // Для заднего фона на загружаемой картинке
-      canvasCtx.current.globalCompositeOperation = 'destination-over';
-      canvasCtx.current.fillStyle = values.bgColor;
-      canvasCtx.current.fillRect(0, 0, canvasRef.current.width, canvasRef.current.height);
-      canvasCtx.current.globalCompositeOperation = 'source-over';
-
-      canvasRef.current.toBlob((blob) => {
-        const image = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = image;
-        link.download = 'canvas_image.jpg';
-        link.click();
-      });
+      canvasManager.current.downloadCanvas(values.bgColor);
     },
 
     endAction: () => {
-      canvasRef.current.toBlob((blob) => {
+      canvasManager.current.getBinary().then((blob) => {
         const image = new Image(canvasRef.current.width, canvasRef.current.height) as TArtImage;
         image.src = URL.createObjectURL(blob);
 
@@ -216,6 +206,11 @@ function ArtCanvasInner() {
     clearImagesDisabled: values.images.length === 1,
   };
 
+  // Инициализация менеджера
+  useEffect(() => {
+    canvasManager.current.init(canvasRef.current, canvasRef.current.getContext('2d'));
+  }, []);
+
   useEffect(() => {
     const keyDownHandler = (e: KeyboardEvent) => {
       if (e.ctrlKey) {
@@ -240,16 +235,11 @@ function ArtCanvasInner() {
   }, [values.images, values.activeImage, callbacks.undo, callbacks.redo]);
 
   useEffect(() => {
-    canvasCtx.current = canvasRef.current.getContext('2d');
     if (values.images.length) return;
 
-    const ctx = canvasCtx.current;
+    canvasManager.current.fillBgOpacityColor();
 
-    ctx.fillStyle = 'rgba(0, 0, 0, 0)';
-    ctx.fillRect(0, 0, canvasRef.current.width, canvasRef.current.height);
-
-    canvasRef.current.toBlob((blob) => {
-      console.log('here');
+    canvasManager.current.getBinary().then((blob) => {
       const image = new Image() as TArtImage;
       image.src = URL.createObjectURL(blob);
       ctxCallbacks.setImages([...values.images, image]);
@@ -257,6 +247,7 @@ function ArtCanvasInner() {
   }, []);
 
   useEffect(() => {
+    canvasCtx.current = canvasRef.current.getContext('2d');
     canvasRef.current.width = canvasRef.current.offsetWidth;
     canvasRef.current.height = canvasRef.current.offsetHeight;
   }, []);
@@ -285,82 +276,35 @@ function ArtCanvasInner() {
     }
   }, [values.images, values.activeImage]);
 
-  useEffect(() => {
-    console.log('Values images:', values.images);
-  }, [values.images]);
-
   return (
-    <div className={cn()}>
-      <div className={cn('utils')}>
-        <div className={cn('utils-row')}>
-          <div className={cn('utils-left')}>
-            <button
-              onClick={callbacks.undo}
-              disabled={options.undoDisabled}
-              className={cn('utils-btn')}
-              title={'Назад'}
-            >
-              <FaArrowAltCircleLeft size={20} />
-            </button>
-            <button
-              onClick={callbacks.redo}
-              disabled={options.redoDisabled}
-              className={cn('utils-btn')}
-              title={'Вперёд'}
-            >
-              <FaArrowAltCircleRight size={20} />
-            </button>
-            <button
-              onClick={callbacks.clearImages}
-              disabled={options.clearImagesDisabled}
-              className={cn('utils-btn')}
-              title={'Удалить шаги'}
-            >
-              <FaTrash size={20} />
-            </button>
-
-            <div className={cn('separate-util')}>
-              <button title={'Стёрка'} onClick={callbacks.eraserToggle} className={cn('utils-btn')}>
-                <FaEraser color={values.eraserActive ? 'green' : 'black'} size={20} />
-              </button>
-            </div>
-          </div>
-
-          <div className={cn('utils-center')}>
-            <select onChange={handlers.onActiveToolChange} className={cn('utils-select')}>
-              <option value={'brush'}>Кисть</option>
-              <option value={'square'}>Прямоугольник</option>
-              <option value={'circle'}>Круг</option>
-              <option value={'triangle'}>Треугольник</option>
-            </select>
-          </div>
-
-          <div className={cn('utils-right')}>
-            <button className={cn('utils-btn')} onClick={callbacks.clearCanvas}>
-              Сбросить всё
-            </button>
-            <button className={cn('utils-btn')} onClick={callbacks.clearCanvasPicture}>
-              Очистить рисунок
-            </button>
-            <button
-              disabled={!values.canSave}
-              className={cn('utils-btn')}
-              onClick={callbacks.downloadCanvas}
-            >
-              Скачать
-            </button>
-          </div>
-        </div>
+    <>
+      <div className={cn()}>
+        <ArtCanvasUtils
+          undoAction={callbacks.undo}
+          isUndoDisabled={options.undoDisabled}
+          redoAction={callbacks.redo}
+          isRedoDisabled={options.redoDisabled}
+          clearImages={callbacks.clearImages}
+          isClearImagesDisabled={options.clearImagesDisabled}
+          activeToolChangeAction={handlers.onActiveToolChange}
+          clearCanvas={callbacks.clearCanvas}
+          clearCanvasPicture={callbacks.clearCanvasPicture}
+          downloadAction={callbacks.downloadCanvas}
+          isCanSave={values.canSave}
+          eraserToggle={callbacks.eraserToggle}
+          isEraserActive={values.eraserActive}
+        />
+        <canvas
+          onPointerDown={handlers.onPointerDown}
+          onPointerMove={handlers.onPointerMove}
+          onPointerUp={handlers.onPointerUp}
+          onPointerOut={handlers.onPointerOut}
+          ref={canvasRef}
+          className={cn('canvas')}
+        />
       </div>
-      <canvas
-        onPointerDown={handlers.onPointerDown}
-        onPointerMove={handlers.onPointerMove}
-        onPointerUp={handlers.onPointerUp}
-        onPointerOut={handlers.onPointerOut}
-        ref={canvasRef}
-        className={cn('canvas')}
-      />
-    </div>
+      <hr />
+    </>
   );
 }
 
