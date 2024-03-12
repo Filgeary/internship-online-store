@@ -1,0 +1,9 @@
+.Wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.Slider {
+  width: 150px;
+  margin-right: 20px;
+}

@@ -8,6 +8,7 @@ import Profile from "./profile";
 import Protected from "../containers/protected";
 import Modals from '../containers/modals';
 import Chat from './chat';
+import Canvas from './canvas';
 
 /**
  * Приложение
@@ -28,6 +29,7 @@ function App() {
         <Route path={"/login"} element={<Login/>}/>
         <Route path={"/profile"} element={<Protected redirect='/login'><Profile/></Protected>}/>
         <Route path={"/chat"} element={<Protected redirect='/login'><Chat/></Protected>}/>
+        <Route path={"/canvas"} element={<Canvas/>}/>
       </Routes>
 
       <Modals />

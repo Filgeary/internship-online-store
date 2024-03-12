@@ -1,0 +1,32 @@
+.Tools {
+  display: flex;
+  flex-direction: column;
+}
+
+.Wrapper {
+  position: relative;
+  display: flex;
+  gap: 10px;
+  padding-bottom: 10px;
+  align-items: center;
+}
+
+.ColorButton {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.ColorExample {
+  width: 20px;
+  height: 12px;
+}
+
+.ColorPicker {
+  position: absolute;
+  top: 30px;
+}
+
+.Slider {
+  max-width: 200px;
+}
