@@ -1,12 +1,12 @@
 import Canvas from '@src/containers/canvas';
-import { Circle, Edit2, Minus, RefreshCw, Square, Triangle, Type, X } from 'react-feather';
+import { Circle, Edit2, Italic, RefreshCw, Square, Triangle, Type, X } from 'react-feather';
 
 const iconsMap = {
   type: Type,
   circle: Circle,
-  line: Minus,
   rect: Square,
   triangle: Triangle,
+  line: Italic,
   pencil: Edit2,
   clear: X,
   random: RefreshCw,

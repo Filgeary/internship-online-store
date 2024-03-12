@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { composition1 } from '../../utils/composition1';
 
 const Canvas = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -58,6 +59,108 @@ const Canvas = () => {
   }
   drawRect.state = {} as TRect;
 
+  type TCircle = {
+    x: number;
+    y: number;
+    color: string;
+    radius: number;
+  };
+
+  function drawCircle(ctx: CanvasRenderingContext2D, options: TCircle) {
+    drawCircle.state = {
+      ...drawCircle.state,
+      ...options,
+    };
+    const { x, y, color, radius } = { ...drawCircle.state };
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.arc(x, y, radius, 0, 2 * Math.PI);
+    ctx.fill();
+  }
+  drawCircle.state = {} as TCircle;
+
+  type TTriangle = {
+    color: string;
+    point1: { x: number; y: number };
+    point2: { x: number; y: number };
+    point3: { x: number; y: number };
+  };
+
+  function drawTriangle(ctx: CanvasRenderingContext2D, options: TTriangle) {
+    drawTriangle.state = {
+      ...drawTriangle.state,
+      ...options,
+    };
+    const { color, point1, point2, point3 } = { ...drawTriangle.state };
+    ctx.beginPath();
+    ctx.fillStyle = color;
+    ctx.moveTo(point1.x, point1.y);
+    ctx.lineTo(point2.x, point2.y);
+    ctx.lineTo(point3.x, point3.y);
+    ctx.closePath();
+    ctx.fill();
+  }
+  drawTriangle.state = {} as TTriangle;
+
+  type TText = {
+    x: number;
+    y: number;
+    color: string;
+    text: string;
+    fontSize: number;
+  };
+
+  function drawText(ctx: CanvasRenderingContext2D, options: TText) {
+    drawText.state = {
+      ...drawText.state,
+      ...options,
+    };
+    const { x, y, color, text, fontSize } = { ...drawText.state };
+    ctx.fillStyle = color;
+    ctx.font = `${fontSize}px system-ui`;
+    ctx.fillText(text, x, y);
+  }
+  drawText.state = {} as TText;
+
+  type TLine = {
+    color: string;
+    lineWidth: number;
+    startPoint: { x: number; y: number };
+    endPoint: { x: number; y: number };
+  };
+
+  function drawLine(ctx: CanvasRenderingContext2D, options: TLine) {
+    drawLine.state = {
+      ...drawLine.state,
+      ...options,
+    };
+    const { color, lineWidth, startPoint, endPoint } = { ...drawLine.state };
+    ctx.strokeStyle = color;
+    ctx.lineWidth = lineWidth;
+    ctx.beginPath();
+    ctx.moveTo(startPoint.x, startPoint.y);
+    ctx.lineTo(endPoint.x, endPoint.y);
+    ctx.stroke();
+  }
+  drawLine.state = {} as TLine;
+
+  function drawInitialComposition(
+    ctx: CanvasRenderingContext2D,
+    {
+      width,
+      height,
+    }: {
+      width: number;
+      height: number;
+    },
+  ) {
+    drawText(ctx, composition1.createText());
+    drawCircle(ctx, composition1.createCircle({ width, height }));
+    drawRect(ctx, composition1.createRect({ height }));
+    drawTriangle(ctx, composition1.createTriangle());
+    drawLine(ctx, composition1.createLine({ height }));
+  }
+
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -78,34 +181,7 @@ const Canvas = () => {
     ctx.fillStyle = '#232222';
     ctx.fillRect(0, 0, width, height);
 
-    drawRect(ctx, { x: 355, y: height * 0.59, color: 'red', width: 150, height: 102 });
-
-    // draw a circle
-    ctx.fillStyle = 'lime';
-    ctx.beginPath();
-    ctx.arc(Math.floor(width / 2), Math.floor(height * 0.75), 50, 0, 2 * Math.PI);
-    ctx.fill();
-
-    // Draw a triangle
-    ctx.beginPath();
-    ctx.fillStyle = 'dodgerblue';
-    ctx.moveTo(550, 440);
-    ctx.lineTo(650, 340);
-    ctx.lineTo(700, 490); // Line to third point
-    ctx.closePath();
-    ctx.fill();
-
-    // draw text
-    ctx.font = '80px Ubuntu';
-    ctx.fillStyle = 'cyan';
-    ctx.fillText('Hello, Canvas!', 380, 120);
-
-    // draw a line
-    ctx.beginPath();
-    ctx.strokeStyle = 'yellow';
-    ctx.moveTo(355, Math.floor(height * 0.69));
-    ctx.lineTo(905, Math.floor(height * 0.7));
-    ctx.stroke();
+    drawInitialComposition(ctx, { width, height });
 
     canvas.addEventListener('mousedown', handleMouseDown);
     canvas.addEventListener('mousemove', handleMouseMove);
