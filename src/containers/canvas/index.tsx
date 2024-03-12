@@ -1,7 +1,14 @@
 import { useEffect, useRef } from 'react';
+
 import { composition1 } from '../../utils/composition1';
 
-const Canvas = () => {
+import type { TCanvasActions } from '@src/components/canvas-panel';
+
+type Props = {
+  action: TCanvasActions | '';
+};
+
+const Canvas = ({ action }: Props) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const isDrawing = useRef(false);
   const prevCoords = useRef({ x: 0, y: 0 });
@@ -38,6 +45,8 @@ const Canvas = () => {
     const ctx = canvasRef.current?.getContext('2d');
     if (!ctx) return;
     ctx.clearRect(0, 0, width, height);
+    ctx.fillStyle = '#232222';
+    ctx.fillRect(0, 0, width, height);
   };
 
   type TRect = {
@@ -144,6 +153,8 @@ const Canvas = () => {
   }
   drawLine.state = {} as TLine;
 
+  // TODO: refactor
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   function drawInitialComposition(
     ctx: CanvasRenderingContext2D,
     {
@@ -161,6 +172,7 @@ const Canvas = () => {
     drawLine(ctx, composition1.createLine({ height }));
   }
 
+  // initialize
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -181,8 +193,6 @@ const Canvas = () => {
     ctx.fillStyle = '#232222';
     ctx.fillRect(0, 0, width, height);
 
-    drawInitialComposition(ctx, { width, height });
-
     canvas.addEventListener('mousedown', handleMouseDown);
     canvas.addEventListener('mousemove', handleMouseMove);
     canvas.addEventListener('mouseup', handleMouseUp);
@@ -197,6 +207,42 @@ const Canvas = () => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // only run once
+
+  // execute handlers on switch action
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    switch (action) {
+      case 'clear':
+        handleClear(canvas.width, canvas.height);
+        break;
+      case 'type':
+        drawText(ctx, composition1.createText());
+        break;
+      case 'circle':
+        drawCircle(ctx, composition1.createCircle({ width: canvas.width, height: canvas.height }));
+        break;
+      case 'rect':
+        drawRect(ctx, composition1.createRect({ height: canvas.height }));
+        break;
+      case 'triangle':
+        drawTriangle(ctx, composition1.createTriangle());
+        break;
+      case 'line':
+        drawLine(ctx, composition1.createLine({ height: canvas.height }));
+        break;
+      case 'draw':
+        break;
+      case 'random':
+        break;
+      default:
+        break;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [action]);
 
   return <canvas ref={canvasRef} />;
 };
