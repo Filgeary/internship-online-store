@@ -1,9 +1,6 @@
 import StoreModule from "@src/store/module";
 import {generateUniqueCode} from "@src/utils/unique-code";
 import {filterDuplicatesByField} from "@src/utils/filter-duplicates-by-field";
-import {element} from "prop-types";
-import {Simulate} from "react-dom/test-utils";
-import waiting = Simulate.waiting;
 
 type MessageAuthor = {
   _id: string,
@@ -21,7 +18,8 @@ export type Message = {
   title: string,
   author: MessageAuthor,
   dateCreate: string,
-  waiting?: boolean
+  waiting?: boolean,
+  sendingError?: boolean
 }
 
 type SendMessage = {}
@@ -130,8 +128,8 @@ class ChatState extends StoreModule<TChatState, TChatConfig> {
     })
   }
 
-  send(text: string) {
-    const _key = generateUniqueCode();
+  async send(text: string, key?: string) {
+    const _key = key || generateUniqueCode();
     this.setState({
       ...this.getState(),
       lastValueOfKeys: [...this.getState().lastValueOfKeys, _key],
@@ -146,10 +144,24 @@ class ChatState extends StoreModule<TChatState, TChatConfig> {
       waiting: true,
     } as Message;
     this.settingMessage([newMessage])
-    this.services.websocket.send(this.config.connectionName, {
+
+    const confirmationSending = await this.services.websocket.send(this.config.connectionName, {
       method: 'post',
       payload: {_key, text}
     })
+    console.log(confirmationSending)
+    if (!confirmationSending) {
+      const unsentMessages = localStorage.getItem('unsentMessages') || JSON.stringify([])
+
+      localStorage.setItem('unsentMessages', JSON.stringify([
+        ...JSON.parse(unsentMessages),
+        {...newMessage, waiting: false, sendingError: true}
+      ]))
+
+      this.settingMessage([{...newMessage, waiting: false, sendingError: true}])
+
+    }
+
   }
 
   resetMessage() {

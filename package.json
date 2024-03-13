@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "build": "vite build",
-    "dev": "vite serve",
+    "start": "vite serve",
     "preview": "vite preview"
   },
   "repository": {
@@ -21,6 +21,8 @@
   "homepage": "https://github.com/ylabio/react-webinar-3#readme",
   "dependencies": {
     "@bem-react/classname": "^1.6.0",
+    "@types/dompurify": "^3.0.5",
+    "dompurify": "^3.0.9",
     "lodash.debounce": "^4.0.8",
     "lodash.throttle": "^4.1.1",
     "prop-types": "^15.8.1",
@@ -31,6 +33,7 @@
     "react-router-dom": "^6.14.1",
     "redux": "^4.2.1",
     "redux-thunk": "^2.4.2",
+    "sanitize-html": "^2.12.1",
     "shallowequal": "^1.1.0",
     "vite-plugin-svgr": "^4.2.0"
   },
@@ -41,6 +44,7 @@
     "@types/lodash.debounce": "^4.0.9",
     "@types/react": "^18.2.55",
     "@types/react-dom": "^18.2.18",
+    "@types/sanitize-html": "^2.11.0",
     "@types/shallowequal": "^1.1.5",
     "@vitejs/plugin-react": "^4.2.1",
     "cross-env": "^7.0.3",

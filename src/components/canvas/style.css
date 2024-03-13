@@ -1,0 +1,12 @@
+.CanvasContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 20px;
+}
+
+.CanvasComponent {
+  margin-bottom: 10px;
+  border: 1px #535353 solid;
+  box-shadow: 0 0 5px 0 #535353;
+}

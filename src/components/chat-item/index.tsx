@@ -1,16 +1,39 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import './style.css';
+import DOMPurify from 'dompurify';
+import CheckSVG from './check.svg?react';
+import LoadingSVG from './loading.svg?react';
+import ErrorSVG from './error.svg?react';
+import {generateUniqueCode} from "@src/utils/unique-code";
+import {getLocalTime} from "@src/utils/get-local-time";
+import {Message} from "@src/store/chat";
 
-type message = {
-  _id: string,
-  key: string,
-  text: string
-}
+function ChatItem({item, myMessage}: {item: Message, myMessage: boolean }) {
 
-function ChatItem(props: message) {
+  const textFiltered = useMemo(() => DOMPurify.sanitize(item.text, {
+    ALLOWED_TAGS: ['b', 'i', 'a'],
+    ALLOWED_ATTR: ['href'],
+  }), [item.text])
+
   return (
-    <div className={'ChatItem-style'}>
-
+    <div key={item._key === null ? generateUniqueCode() : item._key} className={'ChatList-item ChatItem' + (myMessage ? ' myMessage' : '')}>
+      <div className={'ChatItem-textBody'}>
+        <div className={'ChatItem-name'}>
+          {item.author.username}
+        </div>
+        <p className={'ChatItem-text'} dangerouslySetInnerHTML={{__html: textFiltered}}>
+        </p>
+      </div>
+      <div className="ChatItem-information-field">
+        <span className="ChatItem-date">{getLocalTime(item.dateCreate).slice(0, 5)}</span>
+        <span className={"ChatItem-status" + (item.waiting ? " waiting" : "")}>
+                {item.waiting ?
+                  <LoadingSVG/>
+                  : item.sendingError
+                    ? <ErrorSVG/>
+                    : <CheckSVG/>}
+              </span>
+      </div>
     </div>
   );
 }

@@ -9,6 +9,7 @@ import Profile from "./profile";
 import Protected from "@src/containers/protected";
 import ModalWindow from "@src/containers/modal-window";
 import Chat from "@src/app/chat";
+import Canvas from "@src/app/canvas";
 
 /**
  * Приложение
@@ -42,6 +43,9 @@ function App(): React.JSX.Element {
           <Protected redirect='/login'>
             <Chat/>
           </Protected>
+        }/>
+        <Route path={"/canvas"} element={
+            <Canvas/>
         }/>
       </Routes>
 

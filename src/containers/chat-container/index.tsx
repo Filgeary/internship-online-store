@@ -11,7 +11,6 @@ function ChatContainer() {
         waiting: select.chat.waiting,
         username: select.session.user.username,
     }))
-  console.log(select)
 
     function sendMessage(text: string) {
         store.actions.chat.send(text)

@@ -33,7 +33,6 @@ function Main() {
       <Navigation/>
       <CatalogFilter/>
       <CatalogList/>
-      <SelectCountriesList/>
     </PageLayout>
   );
 }

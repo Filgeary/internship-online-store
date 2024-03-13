@@ -1,11 +1,10 @@
 import React, {useEffect, useRef, useState} from 'react';
 import './style.css';
-import CheckSVG from './check.svg?react';
-import LoadingSVG from './loading.svg?react';
 import ArrowBottomSVG from './bottom-arrow.svg?react';
 import {Message} from "@src/store/chat";
 import {getLocalTime} from "@src/utils/get-local-time";
 import {generateUniqueCode} from "@src/utils/unique-code";
+import ChatItem from "@src/components/chat-item";
 
 type ChatList = {
   list: Message[],
@@ -58,24 +57,9 @@ function ChatList({list, username, uploadOldMessages}: ChatList) {
   return (
     <div className='ChatList' ref={listRef} onScroll={scrolling}>
       <div className="ChatList-InterSection" ref={intersectionElement}></div>
-      {list.map(item =>
-          <div key={item._key === null ? generateUniqueCode() : item._key}
-               className={'ChatList-item ChatItem' + (username === item.author.username ? ' myMessage' : '')}>
-            <div className={'ChatItem-textBody'}>
-              <div className={'ChatItem-name'}>
-                {item.author.username}
-              </div>
-              <div className={'ChatItem-text'}>
-                {item.text}
-              </div>
-            </div>
-            <div className="ChatItem-information-field">
-              <span className="ChatItem-date">{getLocalTime(item.dateCreate).slice(0, 5)}</span>
-              <span className={"ChatItem-status" + (item.waiting ? " waiting" : "")}>
-                {item.waiting ? <LoadingSVG/> : <CheckSVG/>}
-              </span>
-            </div>
-          </div>)}
+      {list.map(item => (
+        <ChatItem item={item} myMessage={item.author.username === username} key={item._key ? item._key : generateUniqueCode()}/>
+      ))}
       <div className={"ChatList-scrollBottom" + (visibilityArrowForScrolling ? ' visible' : '')} onClick={scrollDown}>
         <ArrowBottomSVG/>
       </div>

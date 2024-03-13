@@ -1,6 +1,14 @@
 import Services from "@src/services";
 import {Config} from "@src/config";
 
+function createDelay(delayInMilliseconds: number): Promise<void> {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve();
+    }, delayInMilliseconds);
+  });
+}
+
 export interface WebSocketConnection {
   socket: WebSocket;
   messageHandler: ((message: any) => void) | null;
@@ -17,7 +25,7 @@ class WebSocketService {
     this.config = config;
   }
 
-  async connect(connectionName: string, messageHandler: (message: any) => void, authentication: Record<string, any> = {}) {
+  async connect(connectionName: string, messageHandler: (message: any) => void, authentication?: Record<string, any>) {
     const url = this.config.baseUrl + connectionName;
     const currentSocket = this.connections.get(connectionName);
 
@@ -29,7 +37,7 @@ class WebSocketService {
 
     socket.onopen = (ev) => {
       this.connections.set(connectionName, socket);
-      socket.send(JSON.stringify(authentication))
+      if (authentication) socket.send(JSON.stringify(authentication))
     };
 
     socket.onerror = (ev) => {
@@ -53,23 +61,29 @@ class WebSocketService {
     return socket;
   }
 
-  send(socketName: string, message: Record<string, any>, reconnectionAttempts = 1) {
-    const socket = this.connections.get(socketName)
-    if (socket && socket.readyState === WebSocket.OPEN) {
-      console.log('Отправлено сообщение:', message);
-      socket.send(JSON.stringify(message));
-      return true;
-    } else {
-      console.error('Соединение закрыто или не установлено');
-      if (reconnectionAttempts <= 5) {
-        setTimeout(() => {
-          this.send(socketName, message, reconnectionAttempts + 1)
-        }, 1000)
+  async send(socketName: string, message: Record<string, any>, reconnectionAttempts = 1): Promise<boolean> {
+    return new Promise(async (resolve, reject) => {
+      const socket = this.connections.get(socketName)
+      if (socket && socket.readyState === WebSocket.OPEN) {
+        console.log('Отправлено сообщение:', message);
+        socket.send(JSON.stringify(message));
+        resolve(true)
       } else {
-        console.error('Отправить сообщение не удалось')
-        return false;
+        console.error('Соединение закрыто или не установлено', reconnectionAttempts);
+        if (reconnectionAttempts <= 5) {
+          await createDelay(1000)
+          const resultSending = await this.send(socketName, message, reconnectionAttempts + 1)
+          resultSending ? resolve(true) : reject('Отправить сообщение не удалось')
+        } else {
+          reject('Отправить сообщение не удалось')
+        }
       }
-    }
+    }).then(() => {
+      return true;
+    }).catch(e => {
+      return false;
+    })
+
   }
 
   close(socketName: string, reconnectionAttempts = 1) {

@@ -1,6 +1,7 @@
 {
   "title.main": "Магазин",
   "title.chat": "Чат",
+  "title.canvas": "Холст",
   "select.countries": {
     "one": "страна",
     "few": "страны",
@@ -9,6 +10,8 @@
   },
   "menu.main": "Главная",
   "menu.chat": "Chat",
+  "menu.canvas": "Холст",
+
   "basket.title": "Корзина",
   "basket.open": "Перейти",
   "ee.eee": "11",
