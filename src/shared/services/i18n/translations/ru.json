@@ -1,0 +1,50 @@
+{
+  "title.main": "Магазин",
+  "title.chat": "Чат",
+  "title.canvas": "Холст",
+  "select.countries": {
+    "one": "страна",
+    "few": "страны",
+    "many": "стран",
+    "other": "страны"
+  },
+  "menu.main": "Главная",
+  "menu.chat": "Chat",
+  "menu.canvas": "Холст",
+
+  "basket.title": "Корзина",
+  "basket.open": "Перейти",
+  "ee.eee": "11",
+  "basket.close": "Закрыть",
+  "basket.inBasket": "В корзине",
+  "basket.empty": "пусто",
+  "basket.total": "Итого",
+  "basket.unit": "шт",
+  "basket.delete": "Удалить",
+  "basket.articles": {
+    "one": "товар",
+    "few": "товара",
+    "many": "товаров",
+    "other": "товара"
+  },
+  "basket.add": "Добавить еще товар",
+  "modalAdd.article": {
+    "one": "товар",
+    "few": "товара",
+    "many": "товаров",
+    "other": "товара"
+  },
+  "modalAdd.close": "закрыть",
+  "modalAdd.sum": "на сумму",
+  "modalAdd.cancel": "отмена",
+  "modalAdd.ok": "ок",
+  "modalList.title": "Выберите товары",
+  "article.add": "Добавить",
+  "filter.reset": "Сбросить",
+  "auth.title": "Вход",
+  "auth.login": "Логин",
+  "auth.password": "Пароль",
+  "auth.signIn": "Войти",
+  "session.signIn": "Вход",
+  "session.signOut": "Выход"
+}

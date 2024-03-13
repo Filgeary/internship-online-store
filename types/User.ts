@@ -5,7 +5,7 @@ interface Role {
 }
 
 // Профиль
-export interface Profile {
+declare interface Profile {
   name: string;
   surname?: string;
   phone: string;
@@ -19,7 +19,7 @@ export interface Profile {
 }
 
 // Интерфейс юзера
-export interface IUser {
+declare interface IUser {
   _id: string;
   _key: string;
   _type?: string;

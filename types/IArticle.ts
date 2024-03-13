@@ -1,18 +1,18 @@
 // Тип для страны производства
-export interface MadeIn {
+declare interface MadeIn {
   _id: string,
   code: string,
   title: string
 }
 
 // Категории
-export interface Category {
+declare interface Category {
   _id: string,
   title: string
 }
 
 // Те поля что не используются в компонентах я пометил как необязательные
-export interface IArticle {
+declare interface IArticle {
   _id: string,
   _type?: string,
   category?: Category,

@@ -1,4 +1,4 @@
-import {AllModules, ImportModules, TModulesConfig} from "@src/store/types";
+import {AllModules, ImportModules, TModulesConfig} from "@src/ww-old-store-postponed-modals/types";
 import {number} from "prop-types";
 
 

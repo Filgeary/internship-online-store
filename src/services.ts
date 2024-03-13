@@ -1,7 +1,7 @@
-import APIService from "./api";
-import Store from "./store";
+import APIService from "./ww-old-api-postponed";
+import Store from "./ww-old-store-postponed-modals";
 import {Config} from "@src/config";
-import WebSocketService from "@src/websocket";
+import WebSocketService from "src/ww-old-websocket-postponed";
 
 class Services {
   private config: Config;
