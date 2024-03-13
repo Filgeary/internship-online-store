@@ -16,7 +16,6 @@ type TCoords = {
 function ArtCanvasInner() {
   const cn = bem('ArtCanvasInner');
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const canvasCtx = useRef<CanvasRenderingContext2D>(null);
   const canvasManager = useRef<ArtManager>(artManager);
   const isDown = useRef<boolean>(false);
 
@@ -43,18 +42,17 @@ function ArtCanvasInner() {
     },
 
     endAction: () => {
-      canvasManager.current.getBinary().then((blob) => {
-        const image = new Image(canvasRef.current.width, canvasRef.current.height) as TArtImage;
-        image.src = URL.createObjectURL(blob);
+      canvasManager.current
+        .getImage(canvasRef.current.width, canvasRef.current.height)
+        .then((image: TArtImage) => {
+          const nextActiveImage = values.activeImage + 1;
+          const nextImages = [...values.images.slice(0, values.activeImage + 1), image];
 
-        const nextActiveImage = values.activeImage + 1;
-        const nextImages = [...values.images.slice(0, values.activeImage + 1), image];
+          ctxCallbacks.setImages(nextImages);
+          ctxCallbacks.setActiveImage(nextActiveImage);
+        });
 
-        ctxCallbacks.setImages(nextImages);
-        ctxCallbacks.setActiveImage(nextActiveImage);
-      });
-
-      canvasCtx.current.closePath();
+      canvasManager.current.closePath();
       isDown.current = false;
     },
 
@@ -85,11 +83,9 @@ function ArtCanvasInner() {
           x: offsetX,
           y: offsetY,
         });
-        setSnapshot(
-          canvasCtx.current.getImageData(0, 0, canvasRef.current.width, canvasRef.current.height)
-        );
+        setSnapshot(canvasManager.current.getImageData());
 
-        canvasCtx.current.beginPath();
+        canvasManager.current.beginPath();
         isDown.current = true;
       }
     },
@@ -98,100 +94,36 @@ function ArtCanvasInner() {
       if (isDown.current) {
         const { offsetX, offsetY } = e.nativeEvent;
 
-        canvasCtx.current.putImageData(snapshot, 0, 0);
+        canvasManager.current.putImageData(snapshot, 0, 0);
 
         if (values.eraserActive) {
-          canvasCtx.current.lineWidth = values.brushWidth;
-          canvasCtx.current.lineCap = 'round';
-          canvasCtx.current.globalCompositeOperation = 'destination-out';
-          // При переключении заднего фона - останется таким же
-          canvasCtx.current.strokeStyle = values.bgColor;
-          canvasCtx.current.lineTo(offsetX, offsetY);
-          canvasCtx.current.stroke();
-
-          canvasCtx.current.globalCompositeOperation = 'source-over';
+          canvasManager.current.fillEraser({
+            width: values.brushWidth,
+            bgColor: values.bgColor,
+            x: offsetX,
+            y: offsetY,
+          });
 
           return;
         }
 
-        switch (values.activeTool) {
-          case 'brush': {
-            canvasCtx.current.lineWidth = values.brushWidth;
-            canvasCtx.current.lineCap = 'round';
-            canvasCtx.current.strokeStyle = values.brushColor;
-            canvasCtx.current.lineTo(offsetX, offsetY);
-            canvasCtx.current.stroke();
-            break;
-          }
-
-          case 'square': {
-            if (!values.fillColor) {
-              canvasCtx.current.lineWidth = values.brushWidth;
-              canvasCtx.current.strokeStyle = values.brushColor;
-              canvasCtx.current.strokeRect(
-                offsetX,
-                offsetY,
-                startCoords.x - offsetX,
-                startCoords.y - offsetY
-              );
-            } else {
-              canvasCtx.current.fillStyle = values.brushColor;
-              canvasCtx.current.fillRect(
-                offsetX,
-                offsetY,
-                startCoords.x - offsetX,
-                startCoords.y - offsetY
-              );
-            }
-            break;
-          }
-
-          case 'circle': {
-            canvasCtx.current.beginPath();
-            canvasCtx.current.fillStyle = values.brushColor;
-            canvasCtx.current.lineWidth = values.brushWidth;
-
-            const radius = Math.sqrt(
-              Math.pow(startCoords.x - offsetX, 2) + Math.pow(startCoords.y - offsetY, 2)
-            );
-            canvasCtx.current.arc(startCoords.x, startCoords.y, radius, 0, 2 * Math.PI);
-
-            if (values.fillColor) canvasCtx.current.fill();
-            else canvasCtx.current.stroke();
-
-            break;
-          }
-
-          case 'triangle': {
-            canvasCtx.current.beginPath();
-            canvasCtx.current.fillStyle = values.brushColor;
-            canvasCtx.current.lineWidth = values.brushWidth;
-
-            canvasCtx.current.moveTo(startCoords.x, startCoords.y);
-            canvasCtx.current.lineTo(offsetX, offsetY);
-            // Нижняя линия треугольника
-            canvasCtx.current.lineTo(startCoords.x * 2 - offsetX, offsetY);
-            canvasCtx.current.closePath();
-
-            if (values.fillColor) canvasCtx.current.fill();
-            else canvasCtx.current.stroke();
-
-            break;
-          }
-        }
+        canvasManager.current.draw(values.activeTool, {
+          brushWidth: values.brushWidth,
+          brushColor: values.brushColor,
+          x: offsetX,
+          y: offsetY,
+          isFilled: values.fillColor,
+          startCoords,
+        });
       }
     },
 
     onPointerUp: (e: React.PointerEvent<HTMLCanvasElement>) => {
-      if (e.button === options.leftMouseBtn) {
-        callbacks.endAction();
-      }
+      if (e.button === options.leftMouseBtn) callbacks.endAction();
     },
 
     onPointerOut: () => {
-      if (isDown.current) {
-        callbacks.endAction();
-      }
+      if (isDown.current) callbacks.endAction();
     },
 
     onActiveToolChange: (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -247,7 +179,6 @@ function ArtCanvasInner() {
   }, []);
 
   useEffect(() => {
-    canvasCtx.current = canvasRef.current.getContext('2d');
     canvasRef.current.width = canvasRef.current.offsetWidth;
     canvasRef.current.height = canvasRef.current.offsetHeight;
   }, []);
@@ -257,23 +188,18 @@ function ArtCanvasInner() {
   }, [values.bgColor]);
 
   useEffect(() => {
-    if (!canvasCtx.current) return;
+    if (!canvasManager.current.isInited) return;
 
     const imageNode = values.images[values.activeImage];
-
     if (!imageNode) return;
 
     if (!imageNode.loaded) {
       imageNode.onload = () => {
-        canvasCtx.current.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
-        canvasCtx.current.drawImage(imageNode, 0, 0);
+        canvasManager.current.clearAndDrawImage(imageNode);
 
         imageNode.loaded = true;
       };
-    } else {
-      canvasCtx.current.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
-      canvasCtx.current.drawImage(imageNode, 0, 0);
-    }
+    } else canvasManager.current.clearAndDrawImage(imageNode);
   }, [values.images, values.activeImage]);
 
   return (

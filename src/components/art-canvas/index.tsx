@@ -16,7 +16,7 @@ import { TTools, TArtImage } from '@src/store/art/types';
 
 const ArtCanvasContext = React.createContext<TArtCanvasContext>(null);
 
-export const useArtCanvasContext = () => {
+export const useArtCanvasContext = (): TArtCanvasContext => {
   const ctx = useContext(ArtCanvasContext);
 
   if (!ctx) {
