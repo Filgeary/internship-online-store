@@ -1,27 +1,47 @@
 import Shape from '..';
 import { TShapeOptions } from '../types';
 
+type TSquareCoords = {
+  x: number;
+  y: number;
+};
+
 class Square extends Shape {
-  draw(ctx: CanvasRenderingContext2D, options: TShapeOptions): void {
-    if (!options.isFilled) {
-      ctx.lineWidth = options.brushWidth;
-      ctx.strokeStyle = options.brushColor;
-      ctx.strokeRect(
-        options.x,
-        options.y,
-        options.startCoords.x - options.x,
-        options.startCoords.y - options.y
+  constructor(ctx: CanvasRenderingContext2D, options: TShapeOptions) {
+    super();
+    this.ctx = ctx;
+    this.options = options;
+  }
+
+  draw(): void {
+    if (!this.options.isFilled) {
+      this.ctx.lineWidth = this.options.brushWidth;
+      this.ctx.strokeStyle = this.options.brushColor;
+      this.ctx.strokeRect(
+        this.options.x,
+        this.options.y,
+        this.options.startCoords.x - this.options.x,
+        this.options.startCoords.y - this.options.y
       );
     } else {
-      ctx.fillStyle = options.brushColor;
-      ctx.fillRect(
-        options.x,
-        options.y,
-        options.startCoords.x - options.x,
-        options.startCoords.y - options.y
+      this.ctx.fillStyle = this.options.brushColor;
+      this.ctx.fillRect(
+        this.options.x,
+        this.options.y,
+        this.options.startCoords.x - this.options.x,
+        this.options.startCoords.y - this.options.y
       );
     }
   }
+
+  mouseIn(coords: { x: number; y: number }) {
+    return (
+      coords.x >= this.options.startCoords.x &&
+      coords.x <= this.options.x &&
+      coords.y >= this.options.startCoords.y &&
+      coords.y <= this.options.y
+    );
+  }
 }
 
-export default new Square();
+export default Square;

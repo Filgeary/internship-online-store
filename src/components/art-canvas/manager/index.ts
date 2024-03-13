@@ -5,6 +5,10 @@ import square from '../shapes/square';
 import cirlce from '../shapes/cirlce';
 import triangle from '../shapes/triangle';
 import { TDrawShapesMethods } from './types';
+import Square from '../shapes/square';
+import Brush from '../shapes/brush';
+import Circle from '../shapes/cirlce';
+import Triangle from '../shapes/triangle';
 
 class ArtManager {
   canvasNode: HTMLCanvasElement;
@@ -55,7 +59,7 @@ class ArtManager {
   /**
    * Сформировать готовый Image
    */
-  getImage(width: number, height: number): Promise<HTMLImageElement> {
+  getImage(width?: number, height?: number): Promise<HTMLImageElement> {
     return new Promise((resolve) => {
       this.getBinary().then((blob) => {
         const image = new Image(width, height);
@@ -125,41 +129,60 @@ class ArtManager {
   }
 
   /**
+   * Трансформация
+   */
+  setTransform(...args: number[]) {
+    this.canvasCtx.setTransform(1, 0, 0, 1, 0, 0);
+  }
+
+  /**
    * Рисование определённых фигур
    */
   draw(shape: TTools, options: TShapeOptions) {
     const shapeCapitalized = shape[0].toUpperCase() + shape.slice(1);
     const methodName = ('draw' + shapeCapitalized) as TDrawShapesMethods;
 
-    this[methodName](options);
+    return this[methodName](options);
   }
 
   /**
    * Рисование кисточкой
    */
   drawBrush(options: TShapeOptions) {
-    brush.draw(this.canvasCtx, options);
+    const brush = new Brush(this.canvasCtx, options);
+    brush.draw();
+
+    return brush;
   }
 
   /**
    * Рисование квадрата
    */
   drawSquare(options: TShapeOptions) {
-    square.draw(this.canvasCtx, options);
+    const square = new Square(this.canvasCtx, options);
+    square.draw();
+
+    return square;
   }
 
   /**
    * Рисование круга
    */
   drawCircle(options: TShapeOptions) {
-    cirlce.draw(this.canvasCtx, options);
+    const circle = new Circle(this.canvasCtx, options);
+    circle.draw();
+
+    return circle;
   }
 
   /**
    * Рисование треугольника
    */
   drawTriangle(options: TShapeOptions) {
-    triangle.draw(this.canvasCtx, options);
+    const triangle = new Triangle(this.canvasCtx, options);
+    triangle.draw();
+
+    return triangle;
   }
 }
 
