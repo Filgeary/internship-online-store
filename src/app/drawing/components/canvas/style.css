@@ -1,6 +1,6 @@
 .Canvas {
   height: 100%;
-  padding-top: 80px;
+  padding-top: 90px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -8,4 +8,5 @@
 
 canvas {
   box-shadow: 0 0 10px 5px rgba(221, 221, 221, 1);
+  background-color: white;
 }

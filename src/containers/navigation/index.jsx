@@ -45,7 +45,7 @@ function Navigation() {
       {key: 1, title: t('menu.main'), link: '/'},
       {key: 2, title: t('menu.chat'), link: '/chat'},
       {key: 3, title: t('menu.leaf'), link: '/leaf'},
-      {key: 3, title: t('menu.drawing'), link: '/drawing'},
+      {key: 4, title: t('menu.drawing'), link: '/drawing'},
     ]), [t])
   };
 

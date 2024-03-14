@@ -35,6 +35,7 @@ class Store {
      * catalog-modal: CatalogModalState,
      * countries: CountriesState,
      * chat: ChatState
+     * canvas: CanvasState
      * }} */
     this.actions = {} as Actions;
     const keys = Object.keys(modules) as IKeysModules[];

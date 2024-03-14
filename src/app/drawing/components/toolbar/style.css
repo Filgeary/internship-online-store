@@ -1,5 +1,9 @@
 .Toolbar {
+  box-sizing: border-box;
+  font-size: 16px;
+  letter-spacing: 1px;
   height: 40px;
+  padding-left: 10px;
   background-color: white;
   display: flex;
   align-items: center;
@@ -7,6 +11,7 @@
   width: 100%;
   box-shadow: 0 4px 5px gray;
   z-index: 999;
+  color: #5f5d61;
 }
 
 .Toolbar-btn {
@@ -17,6 +22,10 @@
   cursor: pointer;
   background-size: cover;
   margin-left: 10px;
+}
+
+.Toolbar-btn:active {
+  opacity: 0.5;
 }
 
 .Toolbar-btn_brush {
