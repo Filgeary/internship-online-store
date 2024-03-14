@@ -1,3 +1,8 @@
+import Brush from './brush';
+import Circle from './cirlce';
+import Square from './square';
+import Triangle from './triangle';
+
 export type TShapeOptions = {
   bgColor?: string;
   brushWidth: number;
@@ -6,9 +11,12 @@ export type TShapeOptions = {
   y?: number;
   isFilled: boolean;
   startCoords?: TCoords;
+  justGetInstance?: boolean;
 };
 
 export type TCoords = {
   x: number;
   y: number;
 };
+
+export type TShapes = Brush | Circle | Square | Triangle;

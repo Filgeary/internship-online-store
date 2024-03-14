@@ -12,7 +12,8 @@ import { useAppSelector } from '@src/hooks/use-selector';
 import useStore from '@src/hooks/use-store';
 
 import { TArtCanvasContext } from './types';
-import { TTools, TArtImage } from '@src/store/art/types';
+import { TTools, TArtImagesState, TArtImage } from '@src/store/art/types';
+import { TShapes } from './shapes/types';
 
 const ArtCanvasContext = React.createContext<TArtCanvasContext>(null);
 
@@ -49,13 +50,13 @@ function ArtCanvas(props: ArtCanvasProps) {
     fillColor: state.art.fillColor,
   }));
 
-  const [activeImage, setActiveImage] = useState(Math.max(0, select.images.length - 1));
+  const [activeImage, setActiveImage] = useState(Math.max(0, select.images.imagesNodes.length - 1));
   const [eraserActive, setEraserActive] = useState(false);
 
   const canSave =
     select.bgColor !== initValues.bgColor ||
     select.brushColor !== initValues.brushColor ||
-    (select.images.length !== 1 && activeImage !== 0);
+    (select.images.imagesNodes.length !== 1 && activeImage !== 0);
 
   const values = {
     ...select,
@@ -66,7 +67,10 @@ function ArtCanvas(props: ArtCanvasProps) {
 
   const callbacks = {
     setActiveImage,
-    setImages: (val: TArtImage[]) => store.actions.art.setImages(val),
+    setImages: (val: TArtImagesState | null) => store.actions.art.setImages(val),
+    setImagesNodes: (val: TArtImage[]) => store.actions.art.setImagesNodes(val),
+    setShapes: (val: TShapes[]) => store.actions.art.setShapes(val),
+    setShapesHistory: (val: TShapes[][]) => store.actions.art.setShapesHistory(val),
     setBgColor: (val: string) => store.actions.art.setBgColor(val),
     setBrushWidth: (val: number) => store.actions.art.setBrushWidth(val),
     setBrushColor: (val: string) => store.actions.art.setBrushColor(val),

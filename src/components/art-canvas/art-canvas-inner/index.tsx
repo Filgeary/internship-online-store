@@ -8,7 +8,7 @@ import { TArtImage, TTools } from '@src/store/art/types';
 import ArtCanvasUtils from '../art-canvas-utils';
 import ArtManager, { artManager } from '../manager';
 import Square from '../shapes/square';
-import { TShapeOptions } from '../shapes/types';
+import { TShapes } from '../shapes/types';
 
 type TCoords = {
   x: number | null;
@@ -19,11 +19,6 @@ function ArtCanvasInner() {
   const cn = bem('ArtCanvasInner');
 
   const { values, callbacks: ctxCallbacks } = useArtCanvasContext();
-  const canvasConfig: TShapeOptions = {
-    brushColor: values.brushColor,
-    brushWidth: values.brushWidth,
-    isFilled: values.fillColor,
-  };
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const canvasCtx = useRef<CanvasRenderingContext2D>(null);
@@ -33,7 +28,7 @@ function ArtCanvasInner() {
   const [snapshot, setSnapshot] = useState<ImageData>(null);
   const [isCtrlPressed, setIsCtrlPressed] = useState(false);
   const [isPointerDown, setIsPointerDown] = useState(false);
-  const [shapes, setShapes] = useState<Square[]>([]);
+  const [selectedShapeId, setSelectedShapeId] = useState(null);
 
   const callbacks = {
     clearCanvasPicture: () => {
@@ -61,9 +56,9 @@ function ArtCanvasInner() {
         .getImage(canvasRef.current.width, canvasRef.current.height)
         .then((image: TArtImage) => {
           const nextActiveImage = values.activeImage + 1;
-          const nextImages = [...values.images.slice(0, values.activeImage + 1), image];
+          const nextImages = [...values.images.imagesNodes.slice(0, values.activeImage + 1), image];
 
-          ctxCallbacks.setImages(nextImages);
+          ctxCallbacks.setImagesNodes(nextImages);
           ctxCallbacks.setActiveImage(nextActiveImage);
         });
     },
@@ -73,16 +68,21 @@ function ArtCanvasInner() {
     },
 
     redo: () => {
-      ctxCallbacks.setActiveImage(Math.min(values.activeImage + 1, values.images.length - 1));
+      ctxCallbacks.setActiveImage(
+        Math.min(values.activeImage + 1, values.images.imagesNodes.length - 1)
+      );
     },
 
     clearImages: () => {
-      const newImages = [...values.images];
+      const newImages = [...values.images.imagesNodes];
       newImages.length = 1;
 
       ctxCallbacks.setActiveImage(0);
-      ctxCallbacks.setImages(newImages);
-      setShapes([]);
+      ctxCallbacks.setImages({
+        imagesNodes: newImages,
+        shapes: [],
+        shapesHistory: [],
+      });
     },
 
     eraserToggle: () => ctxCallbacks.setEraserActive(!values.eraserActive),
@@ -141,6 +141,8 @@ function ArtCanvasInner() {
 
     onPointerUp: (e: React.PointerEvent<HTMLCanvasElement>) => {
       if (e.button === options.leftMouseBtn) {
+        const { offsetX, offsetY } = e.nativeEvent;
+
         /* 
           Если нет снапшота - пользователь сначала двигал с помощью Ctrl + ЛКМ,
           а потом отпустил Ctrl 
@@ -150,8 +152,6 @@ function ArtCanvasInner() {
           return;
         }
 
-        const { offsetX, offsetY } = e.nativeEvent;
-
         if (values.activeTool !== 'brush' && !values.eraserActive) {
           const shape = canvasManager.current.draw(values.activeTool, {
             brushWidth: values.brushWidth,
@@ -160,13 +160,15 @@ function ArtCanvasInner() {
             y: offsetY,
             isFilled: values.fillColor,
             startCoords,
-          }) as Square;
+          }) as TShapes;
 
-          setShapes([...shapes, shape]);
+          ctxCallbacks.setShapes([...values.images.shapes, shape]);
         }
 
-        callbacks.endAction();
-        setSnapshot(null);
+        if (snapshot) {
+          callbacks.endAction();
+          setSnapshot(null);
+        }
       }
     },
 
@@ -182,18 +184,19 @@ function ArtCanvasInner() {
   const options = {
     leftMouseBtn: 0,
     undoDisabled: values.activeImage === 0,
-    redoDisabled: values.activeImage === values.images.length - 1,
-    clearImagesDisabled: values.images.length === 1,
+    redoDisabled: values.activeImage === values.images.imagesNodes.length - 1,
+    clearImagesDisabled: values.images.imagesNodes.length === 1,
   };
 
   useEffect(() => {
     if (!isCtrlPressed || values.eraserActive) return;
 
-    const shapeSelected = shapes
+    const shapeSelected = values.images.shapes
       .slice()
       .reverse()
       .find((shape) => shape.mouseIn(startCoords));
     if (!shapeSelected) return;
+    setSelectedShapeId(shapeSelected.id);
 
     const pointerMoveHandler = (e: PointerEvent) => {
       shapeSelected.options.x += e.movementX;
@@ -203,7 +206,7 @@ function ArtCanvasInner() {
 
       canvasManager.current.clearCanvasPicture();
 
-      shapes.forEach((shape) => shape.draw());
+      values.images.shapes.forEach((shape) => shape.draw());
     };
 
     const pointerUpHandler = () => {
@@ -219,7 +222,18 @@ function ArtCanvasInner() {
       canvasRef.current.removeEventListener('pointermove', pointerMoveHandler);
       canvasRef.current.removeEventListener('pointerup', pointerUpHandler);
     };
-  }, [startCoords, isPointerDown, values.eraserActive]);
+  }, [startCoords, isPointerDown, values.eraserActive, values.images.shapes]);
+
+  useEffect(() => {
+    console.log(selectedShapeId);
+  }, [selectedShapeId]);
+
+  useEffect(() => {
+    if (!canvasManager.current.isInited) return;
+
+    canvasManager.current.clearCanvasPicture();
+    values.images.shapes.forEach((shape) => shape.draw());
+  }, [values.images.shapes]);
 
   // Инициализация менеджера
   useEffect(() => {
@@ -275,6 +289,7 @@ function ArtCanvasInner() {
       else canvasRef.current.style.setProperty('cursor', 'grab');
     } else {
       canvasRef.current.style.setProperty('cursor', null);
+      setSelectedShapeId(null);
     }
   }, [isCtrlPressed, isPointerDown]);
 
@@ -293,14 +308,14 @@ function ArtCanvasInner() {
 
   // Инициализация видимого полотна
   useEffect(() => {
-    if (values.images.length) return;
+    if (values.images.imagesNodes.length) return;
 
     canvasManager.current.fillBgOpacityColor();
 
     canvasManager.current.getBinary().then((blob) => {
       const image = new Image() as TArtImage;
       image.src = URL.createObjectURL(blob);
-      ctxCallbacks.setImages([...values.images, image]);
+      ctxCallbacks.setImagesNodes([...values.images.imagesNodes, image]);
     });
   }, []);
 
@@ -308,9 +323,13 @@ function ArtCanvasInner() {
   useEffect(() => {
     if (!canvasManager.current.isInited) return;
 
-    const imageNode = values.images[values.activeImage];
-    console.log(imageNode, imageNode?.src, values.activeImage);
+    const imageNode = values.images.imagesNodes[values.activeImage];
+    const shapeStep = values.images.shapesHistory[values.activeImage - 1];
+
     if (!imageNode) return;
+    if (shapeStep?.length) {
+      ctxCallbacks.setShapes([...shapeStep]);
+    }
 
     if (!imageNode.loaded) {
       imageNode.onload = () => {
@@ -319,7 +338,7 @@ function ArtCanvasInner() {
         imageNode.loaded = true;
       };
     } else canvasManager.current.clearAndDrawImage(imageNode);
-  }, [values.images, values.activeImage]);
+  }, [values.images.imagesNodes, values.activeImage]);
 
   return (
     <>
@@ -331,6 +350,7 @@ function ArtCanvasInner() {
           isRedoDisabled={options.redoDisabled}
           clearImages={callbacks.clearImages}
           isClearImagesDisabled={options.clearImagesDisabled}
+          activeTool={values.activeTool}
           activeToolChangeAction={handlers.onActiveToolChange}
           clearCanvas={callbacks.clearCanvas}
           clearCanvasPicture={callbacks.clearCanvasPicture}

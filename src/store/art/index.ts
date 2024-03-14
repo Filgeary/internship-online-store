@@ -1,6 +1,7 @@
+import { TShapes } from '@src/components/art-canvas/shapes/types';
 import StoreModule from '../module';
 
-import { TArtState, TTools, TArtImage } from './types';
+import { TArtState, TTools, TArtImage, TArtImagesState } from './types';
 
 class ArtStore extends StoreModule<TArtState> {
   initState(): TArtState {
@@ -8,16 +9,52 @@ class ArtStore extends StoreModule<TArtState> {
       bgColor: '#ffffff',
       brushWidth: 5,
       brushColor: '#000000',
-      images: [],
+      images: {
+        imagesNodes: [],
+        shapes: [],
+        shapesHistory: [],
+      },
       activeTool: 'brush',
       fillColor: false,
     };
   }
 
-  setImages(imagesVal: TArtImage[]) {
+  setImages(imagesVal: TArtImagesState | null) {
+    const newImagesState = imagesVal ?? { imagesNodes: [], shapes: [], shapesHistory: [] };
+
     this.setState({
       ...this.getState(),
-      images: imagesVal,
+      images: newImagesState,
+    });
+  }
+
+  setImagesNodes(imagesNodesVal: TArtImage[]) {
+    this.setState({
+      ...this.getState(),
+      images: {
+        ...this.getState().images,
+        imagesNodes: imagesNodesVal,
+      },
+    });
+  }
+
+  setShapes(shapesVal: TShapes[]) {
+    this.setState({
+      ...this.getState(),
+      images: {
+        ...this.getState().images,
+        shapes: shapesVal,
+      },
+    });
+  }
+
+  setShapesHistory(shapesHistoryVal: TShapes[][]) {
+    this.setState({
+      ...this.getState(),
+      images: {
+        ...this.getState().images,
+        shapesHistory: shapesHistoryVal,
+      },
     });
   }
 

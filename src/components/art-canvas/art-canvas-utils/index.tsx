@@ -3,6 +3,7 @@ import { memo } from 'react';
 import { cn as bem } from '@bem-react/classname';
 
 import { FaArrowAltCircleLeft, FaArrowAltCircleRight, FaTrash, FaEraser } from 'react-icons/fa';
+import { TTools } from '@src/store/art/types';
 
 type ArtCanvasUtilsProps = {
   undoAction: () => void;
@@ -13,6 +14,7 @@ type ArtCanvasUtilsProps = {
   isClearImagesDisabled: boolean;
   eraserToggle: () => void;
   isEraserActive: boolean;
+  activeTool: TTools;
   activeToolChangeAction: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   clearCanvas: () => void;
   clearCanvasPicture: () => void;
@@ -60,7 +62,11 @@ function ArtCanvasUtils(props: ArtCanvasUtilsProps) {
         </div>
 
         <div className={cn('center')}>
-          <select onChange={props.activeToolChangeAction} className={cn('select')}>
+          <select
+            value={props.activeTool}
+            onChange={props.activeToolChangeAction}
+            className={cn('select')}
+          >
             <option value={'brush'}>Кисть</option>
             <option value={'square'}>Прямоугольник</option>
             <option value={'circle'}>Круг</option>

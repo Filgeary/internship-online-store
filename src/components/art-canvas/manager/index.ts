@@ -1,14 +1,11 @@
-import { TArtImage, TTools } from '@src/store/art/types';
-import brush from '../shapes/brush';
-import { TShapeOptions } from '../shapes/types';
-import square from '../shapes/square';
-import cirlce from '../shapes/cirlce';
-import triangle from '../shapes/triangle';
-import { TDrawShapesMethods } from './types';
 import Square from '../shapes/square';
 import Brush from '../shapes/brush';
 import Circle from '../shapes/cirlce';
 import Triangle from '../shapes/triangle';
+
+import { TShapeOptions } from '../shapes/types';
+import { TArtImage, TTools } from '@src/store/art/types';
+import { TDrawShapesMethods } from './types';
 
 class ArtManager {
   canvasNode: HTMLCanvasElement;
@@ -146,11 +143,23 @@ class ArtManager {
   }
 
   /**
+   * Получить экземпляр фигуры
+   */
+  getInstance(shape: TTools, options: TShapeOptions) {
+    options.justGetInstance = true;
+
+    const shapeCapitalized = shape[0].toUpperCase() + shape.slice(1);
+    const methodName = ('draw' + shapeCapitalized) as TDrawShapesMethods;
+
+    return this[methodName](options);
+  }
+
+  /**
    * Рисование кисточкой
    */
   drawBrush(options: TShapeOptions) {
     const brush = new Brush(this.canvasCtx, options);
-    brush.draw();
+    if (!options.justGetInstance) brush.draw();
 
     return brush;
   }
@@ -160,7 +169,7 @@ class ArtManager {
    */
   drawSquare(options: TShapeOptions) {
     const square = new Square(this.canvasCtx, options);
-    square.draw();
+    if (!options.justGetInstance) square.draw();
 
     return square;
   }
@@ -170,7 +179,7 @@ class ArtManager {
    */
   drawCircle(options: TShapeOptions) {
     const circle = new Circle(this.canvasCtx, options);
-    circle.draw();
+    if (!options.justGetInstance) circle.draw();
 
     return circle;
   }
@@ -180,7 +189,7 @@ class ArtManager {
    */
   drawTriangle(options: TShapeOptions) {
     const triangle = new Triangle(this.canvasCtx, options);
-    triangle.draw();
+    if (!options.justGetInstance) triangle.draw();
 
     return triangle;
   }
