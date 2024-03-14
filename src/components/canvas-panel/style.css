@@ -8,11 +8,18 @@
   justify-content: center;
   align-items: center;
   place-items: center;
+  gap: 20px;
   margin: 0 auto;
   color: white;
   background-color: #323232;
   transform: translateX(-50%);
   border-radius: 20px;
+}
+
+.CanvasPanel-separator {
+  width: 2px;
+  height: 50%;
+  background-color: hsl(0, 0%, 50%);
 }
 
 .CanvasPanel-control {
@@ -29,4 +36,7 @@
   &:active {
     background-color: #424242;
   }
+}
+.CanvasPanel-control_active {
+  border: 3px solid dodgerblue;
 }

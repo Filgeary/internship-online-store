@@ -1,15 +1,17 @@
 import { useEffect, useRef } from 'react';
 
-import { composition1 } from '../../utils/composition1';
+import { DrawManager, initialCanvasState } from '@src/canvas/draw-manager';
 
-import type { TCanvasActions } from '@src/components/canvas-panel';
+import type { TCanvasActions, TCanvasModes } from '@src/components/canvas-panel/types';
 
 type Props = {
+  mode: TCanvasModes;
   action: TCanvasActions | '';
 };
 
-const Canvas = ({ action }: Props) => {
+const Canvas = ({ mode, action }: Props) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const drawManagerRef = useRef<DrawManager>();
   const isDrawing = useRef(false);
   const prevCoords = useRef({ x: 0, y: 0 });
 
@@ -17,21 +19,70 @@ const Canvas = ({ action }: Props) => {
     isDrawing.current = true;
     const { offsetX, offsetY } = e;
     prevCoords.current = { x: offsetX, y: offsetY };
+
+    if (!drawManagerRef.current) return;
+    const drawManager = drawManagerRef.current;
+    const mode = drawManager.getMode();
+
+    // TODO: make drawing without given options
+    // switch on mode
+    switch (mode) {
+      case 'type':
+        drawManager.drawText({
+          x: offsetX,
+          y: offsetY,
+          text: 'Hello World!',
+          fontSize: 48,
+          color: 'white',
+        });
+        break;
+      case 'line':
+        drawManager.drawLine({
+          color: 'yellow',
+          lineWidth: 16,
+          startPoint: { x: offsetX, y: offsetY },
+          endPoint: { x: offsetX + 300, y: offsetY + 300 },
+        });
+        break;
+      case 'rect':
+        drawManager.drawRect({
+          x: offsetX,
+          y: offsetY,
+          width: 150,
+          height: 150,
+          color: 'red',
+        });
+        break;
+      case 'circle':
+        drawManager.drawCircle({
+          x: offsetX,
+          y: offsetY,
+          radius: 75,
+          color: 'lime',
+        });
+        break;
+      case 'triangle':
+        drawManager.drawTriangle({
+          color: 'dodgerblue',
+          startPoint: { x: offsetX, y: offsetY },
+        });
+        break;
+      default:
+        break;
+    }
   };
 
   const handleMouseMove = (e: MouseEvent) => {
-    if (!isDrawing.current) return;
-    const { offsetX, offsetY } = e;
-    const ctx = canvasRef.current?.getContext('2d');
-    if (!ctx) return;
+    if (!drawManagerRef.current) return;
+    const drawManager = drawManagerRef.current;
+    const mode = drawManager.getMode();
 
-    ctx.strokeStyle = 'white';
-    ctx.lineWidth = 16;
-    ctx.beginPath();
-    ctx.moveTo(prevCoords.current.x, prevCoords.current.y);
-    ctx.lineTo(offsetX, offsetY);
-    ctx.stroke();
-    prevCoords.current = { x: offsetX, y: offsetY };
+    if (isDrawing.current && mode === 'draw') {
+      const { offsetX, offsetY } = e;
+      const { x: prevX, y: prevY } = prevCoords.current;
+      drawManager.drawByHand({ prevX, prevY, offsetX, offsetY });
+      prevCoords.current = { x: offsetX, y: offsetY };
+    }
   };
 
   const handleMouseUp = () => {
@@ -40,137 +91,6 @@ const Canvas = ({ action }: Props) => {
   const handleMouseLeave = () => {
     isDrawing.current = false;
   };
-
-  const handleClear = (width: number, height: number) => {
-    const ctx = canvasRef.current?.getContext('2d');
-    if (!ctx) return;
-    ctx.clearRect(0, 0, width, height);
-    ctx.fillStyle = '#232222';
-    ctx.fillRect(0, 0, width, height);
-  };
-
-  type TRect = {
-    x: number;
-    y: number;
-    color: string;
-    width: number;
-    height: number;
-  };
-
-  function drawRect(ctx: CanvasRenderingContext2D, options: TRect) {
-    drawRect.state = {
-      ...drawRect.state,
-      ...options,
-    };
-    const { x, y, color, width, height } = { ...drawRect.state };
-    ctx.fillStyle = color;
-    ctx.fillRect(x, y, width, height);
-  }
-  drawRect.state = {} as TRect;
-
-  type TCircle = {
-    x: number;
-    y: number;
-    color: string;
-    radius: number;
-  };
-
-  function drawCircle(ctx: CanvasRenderingContext2D, options: TCircle) {
-    drawCircle.state = {
-      ...drawCircle.state,
-      ...options,
-    };
-    const { x, y, color, radius } = { ...drawCircle.state };
-    ctx.fillStyle = color;
-    ctx.beginPath();
-    ctx.arc(x, y, radius, 0, 2 * Math.PI);
-    ctx.fill();
-  }
-  drawCircle.state = {} as TCircle;
-
-  type TTriangle = {
-    color: string;
-    point1: { x: number; y: number };
-    point2: { x: number; y: number };
-    point3: { x: number; y: number };
-  };
-
-  function drawTriangle(ctx: CanvasRenderingContext2D, options: TTriangle) {
-    drawTriangle.state = {
-      ...drawTriangle.state,
-      ...options,
-    };
-    const { color, point1, point2, point3 } = { ...drawTriangle.state };
-    ctx.beginPath();
-    ctx.fillStyle = color;
-    ctx.moveTo(point1.x, point1.y);
-    ctx.lineTo(point2.x, point2.y);
-    ctx.lineTo(point3.x, point3.y);
-    ctx.closePath();
-    ctx.fill();
-  }
-  drawTriangle.state = {} as TTriangle;
-
-  type TText = {
-    x: number;
-    y: number;
-    color: string;
-    text: string;
-    fontSize: number;
-  };
-
-  function drawText(ctx: CanvasRenderingContext2D, options: TText) {
-    drawText.state = {
-      ...drawText.state,
-      ...options,
-    };
-    const { x, y, color, text, fontSize } = { ...drawText.state };
-    ctx.fillStyle = color;
-    ctx.font = `${fontSize}px system-ui`;
-    ctx.fillText(text, x, y);
-  }
-  drawText.state = {} as TText;
-
-  type TLine = {
-    color: string;
-    lineWidth: number;
-    startPoint: { x: number; y: number };
-    endPoint: { x: number; y: number };
-  };
-
-  function drawLine(ctx: CanvasRenderingContext2D, options: TLine) {
-    drawLine.state = {
-      ...drawLine.state,
-      ...options,
-    };
-    const { color, lineWidth, startPoint, endPoint } = { ...drawLine.state };
-    ctx.strokeStyle = color;
-    ctx.lineWidth = lineWidth;
-    ctx.beginPath();
-    ctx.moveTo(startPoint.x, startPoint.y);
-    ctx.lineTo(endPoint.x, endPoint.y);
-    ctx.stroke();
-  }
-  drawLine.state = {} as TLine;
-
-  // TODO: refactor
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  function drawInitialComposition(
-    ctx: CanvasRenderingContext2D,
-    {
-      width,
-      height,
-    }: {
-      width: number;
-      height: number;
-    },
-  ) {
-    drawText(ctx, composition1.createText());
-    drawCircle(ctx, composition1.createCircle({ width, height }));
-    drawRect(ctx, composition1.createRect({ height }));
-    drawTriangle(ctx, composition1.createTriangle());
-    drawLine(ctx, composition1.createLine({ height }));
-  }
 
   // initialize
   useEffect(() => {
@@ -186,12 +106,8 @@ const Canvas = ({ action }: Props) => {
     canvas.width = width;
     canvas.height = height;
 
-    // initial params
-    ctx.lineCap = 'round';
-    ctx.lineJoin = 'round';
-    ctx.lineWidth = 12;
-    ctx.fillStyle = '#232222';
-    ctx.fillRect(0, 0, width, height);
+    drawManagerRef.current = new DrawManager(ctx, initialCanvasState);
+    if (!(drawManagerRef.current instanceof DrawManager)) return;
 
     canvas.addEventListener('mousedown', handleMouseDown);
     canvas.addEventListener('mousemove', handleMouseMove);
@@ -208,40 +124,39 @@ const Canvas = ({ action }: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // only run once
 
-  // execute handlers on switch action
+  // set drawManager mode
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
+    if (!drawManagerRef.current) return;
+    const drawManager = drawManagerRef.current;
+
+    drawManager.setMode(mode);
+  }, [mode]);
+
+  // handle actions
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    if (!drawManagerRef.current) return;
+    const drawManager = drawManagerRef.current;
+
     switch (action) {
       case 'clear':
-        handleClear(canvas.width, canvas.height);
+        drawManager.clear();
         break;
-      case 'type':
-        drawText(ctx, composition1.createText());
-        break;
-      case 'circle':
-        drawCircle(ctx, composition1.createCircle({ width: canvas.width, height: canvas.height }));
-        break;
-      case 'rect':
-        drawRect(ctx, composition1.createRect({ height: canvas.height }));
-        break;
-      case 'triangle':
-        drawTriangle(ctx, composition1.createTriangle());
-        break;
-      case 'line':
-        drawLine(ctx, composition1.createLine({ height: canvas.height }));
-        break;
-      case 'draw':
-        break;
-      case 'random':
+      case 'refresh':
+        drawManager.init();
         break;
       default:
         break;
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [action]);
 
   return <canvas ref={canvasRef} />;
