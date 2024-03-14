@@ -149,6 +149,22 @@ function ArtCanvasInner() {
         */
         if (!snapshot) {
           setIsPointerDown(false);
+          const shapeInstance = values.images.shapes.find((shape) => shape.id === selectedShapeId);
+          if (!shapeInstance) return;
+
+          const shapeCopy = {
+            ...shapeInstance,
+            options: {
+              ...shapeInstance.options,
+              startCoords: { ...shapeInstance.options.startCoords },
+            },
+            draw: shapeInstance.draw,
+            mouseIn: shapeInstance.mouseIn,
+          };
+          const shapeStepCopy = [...values.images.shapes, shapeCopy];
+          const allShapesCopy = [...values.images.shapesHistory, shapeStepCopy];
+
+          ctxCallbacks.setShapesHistory(allShapesCopy);
           return;
         }
 
@@ -163,6 +179,17 @@ function ArtCanvasInner() {
           }) as TShapes;
 
           ctxCallbacks.setShapes([...values.images.shapes, shape]);
+          // OK
+          const shapeCopy = {
+            ...shape,
+            options: { ...shape.options, startCoords: { ...shape.options.startCoords } },
+            draw: shape.draw,
+            mouseIn: shape.mouseIn,
+          };
+          const shapeStepCopy = [...values.images.shapes, shapeCopy];
+          const allShapesCopy = [...values.images.shapesHistory, shapeStepCopy];
+
+          ctxCallbacks.setShapesHistory(allShapesCopy);
         }
 
         if (snapshot) {
@@ -223,17 +250,6 @@ function ArtCanvasInner() {
       canvasRef.current.removeEventListener('pointerup', pointerUpHandler);
     };
   }, [startCoords, isPointerDown, values.eraserActive, values.images.shapes]);
-
-  useEffect(() => {
-    console.log(selectedShapeId);
-  }, [selectedShapeId]);
-
-  useEffect(() => {
-    if (!canvasManager.current.isInited) return;
-
-    canvasManager.current.clearCanvasPicture();
-    values.images.shapes.forEach((shape) => shape.draw());
-  }, [values.images.shapes]);
 
   // Инициализация менеджера
   useEffect(() => {
@@ -319,26 +335,34 @@ function ArtCanvasInner() {
     });
   }, []);
 
-  // Рисование изображений по соответствующему индексу
   useEffect(() => {
-    if (!canvasManager.current.isInited) return;
+    const shapesHistoryStep = values.images.shapesHistory[values.activeImage - 1];
+    if (!shapesHistoryStep?.length) return;
 
-    const imageNode = values.images.imagesNodes[values.activeImage];
-    const shapeStep = values.images.shapesHistory[values.activeImage - 1];
+    canvasManager.current.clearCanvasPicture();
+    shapesHistoryStep.forEach((shape) => shape.draw());
+  }, [values.activeImage]);
 
-    if (!imageNode) return;
-    if (shapeStep?.length) {
-      ctxCallbacks.setShapes([...shapeStep]);
-    }
+  // Рисование изображений по соответствующему индексу
+  // useEffect(() => {
+  //   if (!canvasManager.current.isInited) return;
 
-    if (!imageNode.loaded) {
-      imageNode.onload = () => {
-        canvasManager.current.clearAndDrawImage(imageNode);
+  //   const imageNode = values.images.imagesNodes[values.activeImage];
+  //   const shapeStep = values.images.shapesHistory[values.activeImage - 1];
 
-        imageNode.loaded = true;
-      };
-    } else canvasManager.current.clearAndDrawImage(imageNode);
-  }, [values.images.imagesNodes, values.activeImage]);
+  //   if (!imageNode) return;
+  //   if (shapeStep?.length) {
+  //     ctxCallbacks.setShapes([...shapeStep]);
+  //   }
+
+  //   if (!imageNode.loaded) {
+  //     imageNode.onload = () => {
+  //       canvasManager.current.clearAndDrawImage(imageNode);
+
+  //       imageNode.loaded = true;
+  //     };
+  //   } else canvasManager.current.clearAndDrawImage(imageNode);
+  // }, [values.images.imagesNodes, values.activeImage]);
 
   return (
     <>
