@@ -1,8 +1,11 @@
-import { TCanvasModes } from '@src/components/canvas-panel/types';
+import { Circle, DrawByHand, Line, Rect, Text, Triangle } from './figures';
+
+import type { TCanvasModes } from '@src/components/canvas-panel/types';
+import type { IFigure } from './types';
 
 export const initialCanvasState = {
   mode: 'draw',
-  color: 'white',
+  strokeStyle: 'white',
   fillStyle: '#232222',
   lineWidth: 16,
   lineCap: 'round',
@@ -13,10 +16,11 @@ type TInitialCanvasState = typeof initialCanvasState;
 
 export class DrawManager {
   private ctx: CanvasRenderingContext2D;
+  private mode: TCanvasModes;
+  private figures: IFigure[] = [];
 
   // initial params
-  private mode: TCanvasModes;
-  private color: string;
+  private strokeStyle: string;
   private fillStyle: string;
   private lineWidth: number;
   private lineCap: CanvasLineCap;
@@ -25,30 +29,34 @@ export class DrawManager {
   constructor(ctx: CanvasRenderingContext2D, initialState: TInitialCanvasState) {
     this.ctx = ctx;
     this.mode = initialState.mode;
-    this.color = initialState.color;
+    this.figures = [];
+    this.strokeStyle = initialState.strokeStyle;
     this.fillStyle = initialState.fillStyle;
     this.lineWidth = initialState.lineWidth;
     this.lineCap = initialState.lineCap;
     this.lineJoin = initialState.lineJoin;
 
     this.init();
+    this.initFigure();
   }
 
   // initialize
   init = () => {
-    this.ctx.strokeStyle = this.color;
+    this.ctx.strokeStyle = this.strokeStyle;
     this.ctx.fillStyle = this.fillStyle;
     this.ctx.lineWidth = this.lineWidth;
     this.ctx.lineCap = this.lineCap;
     this.ctx.lineJoin = this.lineJoin;
     this.ctx.fillRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+  };
 
-    this.drawText({
+  initFigure = () => {
+    this.createText({
       x: this.ctx.canvas.width / 2,
       y: 100,
       text: 'Canvasify',
       fontSize: 64,
-      color: 'cyan',
+      fillColor: 'cyan',
     });
   };
 
@@ -62,12 +70,12 @@ export class DrawManager {
   };
 
   // Setters for common properties
-  setColor(color: string) {
-    this.color = color;
+  setStrokeColor(color: string) {
+    this.strokeStyle = color;
   }
 
-  setFillStyle(fillStyle: string) {
-    this.fillStyle = fillStyle;
+  setFillStyle(color: string) {
+    this.fillStyle = color;
   }
 
   setLineWidth(lineWidth: number) {
@@ -76,60 +84,67 @@ export class DrawManager {
 
   // clear canvas
   clear = () => {
+    this.figures = [];
+    this.initFigure();
+  };
+
+  reset = () => {
     this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
     this.init();
   };
 
+  // draw all
+  drawAll = () => {
+    this.reset();
+    this.figures.forEach(figure => {
+      figure.draw();
+    });
+  };
+
   // Draw methods
-  drawRect = (options: { x: number; y: number; width: number; height: number; color: string }) => {
-    this.ctx.fillStyle = options.color || this.color;
-    this.ctx.fillRect(options.x, options.y, options.width, options.height);
-  };
-
-  drawCircle = (options: { x: number; y: number; radius: number; color: string }) => {
-    this.ctx.fillStyle = options.color || this.color;
-    this.ctx.beginPath();
-    this.ctx.arc(options.x, options.y, options.radius, 0, 2 * Math.PI);
-    this.ctx.fill();
-  };
-
-  drawTriangle = (options: { color: string; startPoint: { x: number; y: number } }) => {
-    this.ctx.beginPath();
-    this.ctx.fillStyle = options.color || this.color;
-    this.ctx.moveTo(options.startPoint.x, options.startPoint.y);
-    this.ctx.lineTo(options.startPoint.x + 150, options.startPoint.y + 150);
-    this.ctx.lineTo(options.startPoint.x - 150, options.startPoint.y + 150);
-    this.ctx.closePath();
-    this.ctx.fill();
-  };
-
-  drawText = (options: { x: number; y: number; text: string; fontSize: number; color: string }) => {
-    this.ctx.fillStyle = options.color || this.color;
-    this.ctx.font = `${options.fontSize}px system-ui`;
-    this.ctx.textAlign = 'center';
-    this.ctx.fillText(options.text, options.x, options.y);
-  };
-
-  drawLine = (options: {
-    color: string;
-    lineWidth: number;
-    startPoint: { x: number; y: number };
-    endPoint: { x: number; y: number };
+  createText = (options: {
+    x: number;
+    y: number;
+    text?: string;
+    fontSize?: number;
+    fillColor?: string;
   }) => {
-    this.ctx.strokeStyle = options.color || this.color;
-    this.ctx.lineWidth = options.lineWidth || this.lineWidth;
-    this.ctx.beginPath();
-    this.ctx.moveTo(options.startPoint.x, options.startPoint.y);
-    this.ctx.lineTo(options.endPoint.x, options.endPoint.y);
-    this.ctx.closePath();
-    this.ctx.stroke();
+    const text = new Text(this.ctx, options);
+    this.figures.push(text);
+  };
+
+  createRect = (options: {
+    x: number;
+    y: number;
+    width?: number;
+    height?: number;
+    fillColor?: string;
+  }) => {
+    const rect = new Rect(this.ctx, options);
+    this.figures.push(rect);
+  };
+
+  createCircle = (options: { x: number; y: number; radius?: number; fillColor?: string }) => {
+    const circle = new Circle(this.ctx, options);
+    this.figures.push(circle);
+  };
+
+  createTriangle = (options: { startPoint: { x: number; y: number }; fillColor?: string }) => {
+    const triangle = new Triangle(this.ctx, options);
+    this.figures.push(triangle);
+  };
+
+  createLine = (options: {
+    startPoint: { x: number; y: number };
+    strokeColor?: string;
+    lineWidth?: number;
+  }) => {
+    const line = new Line(this.ctx, options);
+    this.figures.push(line);
   };
 
   drawByHand = (options: { prevX: number; prevY: number; offsetX: number; offsetY: number }) => {
-    this.ctx.beginPath();
-    this.ctx.strokeStyle = 'white';
-    this.ctx.moveTo(options.prevX, options.prevY);
-    this.ctx.lineTo(options.offsetX, options.offsetY);
-    this.ctx.stroke();
+    const drawByHand = new DrawByHand(this.ctx, options);
+    this.figures.push(drawByHand);
   };
 }

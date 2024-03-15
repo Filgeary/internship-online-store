@@ -24,46 +24,32 @@ const Canvas = ({ mode, action }: Props) => {
     const drawManager = drawManagerRef.current;
     const mode = drawManager.getMode();
 
-    // TODO: make drawing without given options
-    // switch on mode
     switch (mode) {
-      case 'type':
-        drawManager.drawText({
+      case 'text':
+        drawManager.createText({
           x: offsetX,
           y: offsetY,
-          text: 'Hello World!',
-          fontSize: 48,
-          color: 'white',
-        });
-        break;
-      case 'line':
-        drawManager.drawLine({
-          color: 'yellow',
-          lineWidth: 16,
-          startPoint: { x: offsetX, y: offsetY },
-          endPoint: { x: offsetX + 300, y: offsetY + 300 },
         });
         break;
       case 'rect':
-        drawManager.drawRect({
+        drawManager.createRect({
           x: offsetX,
           y: offsetY,
-          width: 150,
-          height: 150,
-          color: 'red',
         });
         break;
       case 'circle':
-        drawManager.drawCircle({
+        drawManager.createCircle({
           x: offsetX,
           y: offsetY,
-          radius: 75,
-          color: 'lime',
         });
         break;
       case 'triangle':
-        drawManager.drawTriangle({
-          color: 'dodgerblue',
+        drawManager.createTriangle({
+          startPoint: { x: offsetX, y: offsetY },
+        });
+        break;
+      case 'line':
+        drawManager.createLine({
           startPoint: { x: offsetX, y: offsetY },
         });
         break;
@@ -109,6 +95,13 @@ const Canvas = ({ mode, action }: Props) => {
     drawManagerRef.current = new DrawManager(ctx, initialCanvasState);
     if (!(drawManagerRef.current instanceof DrawManager)) return;
 
+    const drawManager = drawManagerRef.current;
+    const draw = () => {
+      drawManager.drawAll();
+      requestAnimationFrame(draw);
+    };
+    draw();
+
     canvas.addEventListener('mousedown', handleMouseDown);
     canvas.addEventListener('mousemove', handleMouseMove);
     canvas.addEventListener('mouseup', handleMouseUp);
@@ -126,11 +119,6 @@ const Canvas = ({ mode, action }: Props) => {
 
   // set drawManager mode
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
     if (!drawManagerRef.current) return;
     const drawManager = drawManagerRef.current;
 
@@ -139,11 +127,6 @@ const Canvas = ({ mode, action }: Props) => {
 
   // handle actions
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
     if (!drawManagerRef.current) return;
     const drawManager = drawManagerRef.current;
 

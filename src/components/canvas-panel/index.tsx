@@ -23,7 +23,7 @@ export const moveModeIconsMap = {
 
 export const drawModeIconsMap = {
   draw: Edit2,
-  type: Type,
+  text: Type,
   circle: Circle,
   rect: Square,
   triangle: Triangle,
