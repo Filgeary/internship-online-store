@@ -7,8 +7,9 @@ import { useArtCanvasContext } from '..';
 import { TArtImage, TTools } from '@src/store/art/types';
 import ArtCanvasUtils from '../art-canvas-utils';
 import ArtManager, { artManager } from '../manager';
-import Square from '../shapes/square';
 import { TShapes } from '../shapes/types';
+import doShapeCopy from '../utils/do-shape-copy';
+import cloneDeep from 'lodash.clonedeep';
 
 type TCoords = {
   x: number | null;
@@ -47,7 +48,7 @@ function ArtCanvasInner() {
       canvasManager.current.downloadCanvas(values.bgColor);
     },
 
-    endAction: () => {
+    endAction: (selectedShapeId?: string) => {
       setIsPointerDown(false);
 
       // if (isCtrlPressed) return;
@@ -60,6 +61,22 @@ function ArtCanvasInner() {
 
           ctxCallbacks.setImagesNodes(nextImages);
           ctxCallbacks.setActiveImage(nextActiveImage);
+
+          if (!selectedShapeId) return;
+          const shapeInstance = values.images.shapes.find((shape) => shape.id === selectedShapeId);
+          if (!shapeInstance) return;
+
+          const shapeCopy = doShapeCopy(shapeInstance);
+          const shapesStepCopy = [
+            ...values.images.shapes.filter((shape) => shape.id !== shapeCopy.id),
+            shapeCopy,
+          ];
+          const shapesHistoryCopy = [...values.images.shapesHistory, shapesStepCopy];
+
+          ctxCallbacks.setShapesHistory(shapesHistoryCopy);
+
+          console.log(selectedShapeId);
+          console.log('Здесь', shapeInstance);
         });
     },
 
@@ -149,26 +166,14 @@ function ArtCanvasInner() {
         */
         if (!snapshot) {
           setIsPointerDown(false);
-          const shapeInstance = values.images.shapes.find((shape) => shape.id === selectedShapeId);
-          if (!shapeInstance) return;
-
-          const shapeCopy = {
-            ...shapeInstance,
-            options: {
-              ...shapeInstance.options,
-              startCoords: { ...shapeInstance.options.startCoords },
-            },
-            draw: shapeInstance.draw,
-            mouseIn: shapeInstance.mouseIn,
-          };
-          const shapeStepCopy = [...values.images.shapes, shapeCopy];
-          const allShapesCopy = [...values.images.shapesHistory, shapeStepCopy];
-
-          ctxCallbacks.setShapesHistory(allShapesCopy);
           return;
         }
 
         if (values.activeTool !== 'brush' && !values.eraserActive) {
+          /*
+           Пользователь нарисовал новую фигуру
+           Рисуем её и заносим в историю
+          */
           const shape = canvasManager.current.draw(values.activeTool, {
             brushWidth: values.brushWidth,
             brushColor: values.brushColor,
@@ -180,13 +185,11 @@ function ArtCanvasInner() {
 
           ctxCallbacks.setShapes([...values.images.shapes, shape]);
           // OK
-          const shapeCopy = {
-            ...shape,
-            options: { ...shape.options, startCoords: { ...shape.options.startCoords } },
-            draw: shape.draw,
-            mouseIn: shape.mouseIn,
-          };
-          const shapeStepCopy = [...values.images.shapes, shapeCopy];
+          const shapeCopy = doShapeCopy(shape);
+          const shapeStepCopy = [
+            ...values.images.shapes.filter((shape) => shape.id !== shapeCopy.id),
+            shapeCopy,
+          ];
           const allShapesCopy = [...values.images.shapesHistory, shapeStepCopy];
 
           ctxCallbacks.setShapesHistory(allShapesCopy);
@@ -215,6 +218,7 @@ function ArtCanvasInner() {
     clearImagesDisabled: values.images.imagesNodes.length === 1,
   };
 
+  // Логика перетаскивания фигур
   useEffect(() => {
     if (!isCtrlPressed || values.eraserActive) return;
 
@@ -238,7 +242,7 @@ function ArtCanvasInner() {
 
     const pointerUpHandler = () => {
       setStartCoords({ x: null, y: null });
-      callbacks.endAction();
+      callbacks.endAction(shapeSelected.id);
       canvasRef.current.removeEventListener('pointermove', pointerMoveHandler);
     };
 
@@ -335,34 +339,41 @@ function ArtCanvasInner() {
     });
   }, []);
 
+  // Рисование динамических фигур
   useEffect(() => {
     const shapesHistoryStep = values.images.shapesHistory[values.activeImage - 1];
     if (!shapesHistoryStep?.length) return;
 
-    canvasManager.current.clearCanvasPicture();
-    shapesHistoryStep.forEach((shape) => shape.draw());
+    ctxCallbacks.setShapes(cloneDeep(shapesHistoryStep));
+    ctxCallbacks.setShapesHistory(values.images.shapesHistory.slice(0, values.activeImage));
   }, [values.activeImage]);
 
   // Рисование изображений по соответствующему индексу
-  // useEffect(() => {
-  //   if (!canvasManager.current.isInited) return;
+  useEffect(() => {
+    if (!canvasManager.current.isInited) return;
 
-  //   const imageNode = values.images.imagesNodes[values.activeImage];
-  //   const shapeStep = values.images.shapesHistory[values.activeImage - 1];
+    const imageNode = values.images.imagesNodes[values.activeImage];
 
-  //   if (!imageNode) return;
-  //   if (shapeStep?.length) {
-  //     ctxCallbacks.setShapes([...shapeStep]);
-  //   }
+    if (!imageNode) return;
 
-  //   if (!imageNode.loaded) {
-  //     imageNode.onload = () => {
-  //       canvasManager.current.clearAndDrawImage(imageNode);
+    if (!imageNode.loaded) {
+      imageNode.onload = () => {
+        canvasManager.current.clearAndDrawImage(imageNode);
 
-  //       imageNode.loaded = true;
-  //     };
-  //   } else canvasManager.current.clearAndDrawImage(imageNode);
-  // }, [values.images.imagesNodes, values.activeImage]);
+        imageNode.loaded = true;
+      };
+    } else canvasManager.current.clearAndDrawImage(imageNode);
+  }, [values.images.imagesNodes, values.activeImage]);
+
+  useEffect(() => {
+    if (!canvasCtx.current) return;
+
+    const ratio = Math.min(
+      canvasRef.current.clientWidth / canvasRef.current.width,
+      canvasRef.current.clientHeight / canvasRef.current.height
+    );
+    canvasCtx.current.scale(ratio, ratio);
+  }, [values.zooming]);
 
   return (
     <>

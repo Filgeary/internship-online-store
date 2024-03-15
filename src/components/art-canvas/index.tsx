@@ -52,6 +52,7 @@ function ArtCanvas(props: ArtCanvasProps) {
 
   const [activeImage, setActiveImage] = useState(Math.max(0, select.images.imagesNodes.length - 1));
   const [eraserActive, setEraserActive] = useState(false);
+  const [zooming, setZooming] = useState({ x: 1, y: 1 });
 
   const canSave =
     select.bgColor !== initValues.bgColor ||
@@ -63,6 +64,7 @@ function ArtCanvas(props: ArtCanvasProps) {
     activeImage,
     canSave,
     eraserActive,
+    zooming,
   };
 
   const callbacks = {
@@ -77,6 +79,7 @@ function ArtCanvas(props: ArtCanvasProps) {
     setActiveTool: (val: TTools) => store.actions.art.setActiveTool(val),
     setFillColor: (val: boolean) => store.actions.art.setFillColor(val),
     setEraserActive,
+    setZooming,
     resetAllToDefault: () => {
       callbacks.setBgColor('#ffffff');
       callbacks.setBrushColor('#000000');

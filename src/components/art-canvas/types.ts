@@ -1,5 +1,11 @@
 import { TArtImage, TArtImagesState, TTools } from '@src/store/art/types';
 import { TShapes } from './shapes/types';
+import React from 'react';
+
+type TCoords = {
+  x: number;
+  y: number;
+};
 
 export type TArtCanvasContext = {
   values: {
@@ -12,6 +18,7 @@ export type TArtCanvasContext = {
     activeTool: TTools;
     fillColor: boolean;
     eraserActive: boolean;
+    zooming: TCoords;
   };
 
   callbacks: {
@@ -26,6 +33,7 @@ export type TArtCanvasContext = {
     setActiveTool: (activeToolVal: TTools) => void;
     setFillColor: (fillColorVal: boolean) => void;
     setEraserActive: (eraserActiveVal: boolean) => void;
+    setZooming: React.Dispatch<React.SetStateAction<TCoords>>;
     resetAllToDefault: () => void;
   };
 };
