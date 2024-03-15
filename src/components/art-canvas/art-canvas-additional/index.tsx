@@ -22,6 +22,7 @@ function ArtCanvasAdditional() {
   });
   const image = useRef<HTMLImageElement>(null);
 
+  // Инициализация контекста и картинки
   useEffect(() => {
     canvasCtx.current = canvasRef.current.getContext('2d');
 
@@ -33,6 +34,7 @@ function ArtCanvasAdditional() {
     };
   }, []);
 
+  // Логика перемещения
   useEffect(() => {
     const ctx = canvasCtx.current;
 
@@ -76,6 +78,7 @@ function ArtCanvasAdditional() {
     loop();
   }, []);
 
+  // Инициализация корректных размеров
   useEffect(() => {
     canvasRef.current.width = canvasRef.current.offsetWidth;
     canvasRef.current.height = canvasRef.current.offsetHeight;

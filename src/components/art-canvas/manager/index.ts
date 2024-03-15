@@ -7,6 +7,16 @@ import { TShapeOptions } from '../shapes/types';
 import { TArtImage, TTools } from '@src/store/art/types';
 import { TDrawShapesMethods } from './types';
 
+type TDrawOptions = {
+  scale: number;
+  panOffset: {
+    x: number;
+    y: number;
+  };
+  scaleOffsetX: number;
+  scaleOffsetY: number;
+};
+
 class ArtManager {
   canvasNode: HTMLCanvasElement;
   canvasCtx: CanvasRenderingContext2D;
@@ -16,6 +26,45 @@ class ArtManager {
     this.canvasNode = canvas;
     this.canvasCtx = ctx;
     this.isInited = true;
+  }
+
+  /**
+   * Инициализационное рисование канваса
+   */
+  initDrawAll(image: TArtImage, { scale, panOffset, scaleOffsetX, scaleOffsetY }: TDrawOptions) {
+    this.clearCanvasPicture();
+
+    this.save();
+    this.translate(panOffset.x * scale - scaleOffsetX, panOffset.y * scale - scaleOffsetY);
+    this.scale(scale, scale);
+
+    if (!image) return;
+
+    if (!image.loaded) {
+      image.onload = () => {
+        this.clearAndDrawImage(image);
+
+        image.loaded = true;
+      };
+    } else this.clearAndDrawImage(image);
+
+    this.restore();
+  }
+
+  /**
+   * Получить координаты, с учётом смещений
+   */
+  getCoordsByScaleOffsets(scale: number) {
+    const scaledWidth = this.canvasNode.width * scale;
+    const scaledHeight = this.canvasNode.height * scale;
+
+    const scaleOffsetX = (scaledWidth - this.canvasNode.width) / 2;
+    const scaleOffsetY = (scaledHeight - this.canvasNode.height) / 2;
+
+    return {
+      x: scaleOffsetX,
+      y: scaleOffsetY,
+    };
   }
 
   /**
@@ -130,6 +179,34 @@ class ArtManager {
    */
   setTransform(...args: number[]) {
     this.canvasCtx.setTransform(1, 0, 0, 1, 0, 0);
+  }
+
+  /**
+   * Сохранить состояние канвы
+   */
+  save() {
+    this.canvasCtx.save();
+  }
+
+  /**
+   * Смещение канвы
+   */
+  translate(x: number, y: number) {
+    this.canvasCtx.translate(x, y);
+  }
+
+  /**
+   * Приближение канвы
+   */
+  scale(scaleX: number, scaleY: number) {
+    this.canvasCtx.scale(scaleX, scaleY);
+  }
+
+  /**
+   * Вернуть последнее сохранённое состояние
+   */
+  restore() {
+    this.canvasCtx.restore();
   }
 
   /**

@@ -261,6 +261,8 @@ function Autocomplete(props: AutocompleteProps) {
   }, [isOpen]);
 
   useEffect(() => {
+    if (!wrapperRef.current) return;
+
     window.requestAnimationFrame(() => {
       const isBottomNear =
         document.body.clientHeight - wrapperRef.current.offsetTop < dropRef.current.clientHeight;
