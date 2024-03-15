@@ -12,6 +12,7 @@ export type TShapeOptions = {
   isFilled: boolean;
   startCoords?: TCoords;
   justGetInstance?: boolean;
+  points?: Array<TCoords>;
 };
 
 export type TCoords = {

@@ -1,14 +1,13 @@
 import './style.css';
 
-import React, { memo, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { memo, useEffect, useMemo, useRef, useState } from 'react';
 import { cn as bem } from '@bem-react/classname';
 import { useArtCanvasContext } from '..';
 
 import { TArtImage, TTools } from '@src/store/art/types';
 import ArtCanvasUtils from '../art-canvas-utils';
-import ArtManager, { artManager } from '../manager';
+import ArtManager from '../manager';
 import { TShapes } from '../shapes/types';
-import doShapeCopy from '../utils/do-shape-copy';
 import cloneDeep from 'lodash.clonedeep';
 
 type TCoords = {
@@ -22,8 +21,7 @@ function ArtCanvasInner() {
   const { values, callbacks: ctxCallbacks } = useArtCanvasContext();
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const canvasCtx = useRef<CanvasRenderingContext2D>(null);
-  const canvasManager = useRef<ArtManager>(artManager);
+  const canvasManager = useMemo<ArtManager>(() => new ArtManager(), []);
 
   const [startCoords, setStartCoords] = useState<TCoords>({ x: null, y: null });
   const [snapshot, setSnapshot] = useState<ImageData>(null);
@@ -32,94 +30,34 @@ function ArtCanvasInner() {
   const [isPointerDown, setIsPointerDown] = useState(false);
 
   // Panning
-  const [panOffset, setPanOffset] = useState({ x: 0, y: 0 });
   const [startPanMousePosition, setStartPanMousePosition] = useState({ x: 0, y: 0 });
 
-  // Scaling
-  const [scale, setScale] = useState(1);
-  const [scaleOffset, setScaleOffset] = useState({ x: 0, y: 0 });
-
   const callbacks = {
+    clearCanvas: () => canvasManager.clearCanvasAndResetAll(),
+    downloadCanvas: () => canvasManager.downloadCanvas(),
+    undo: () => canvasManager.undo(),
+    redo: () => canvasManager.redo(),
+    clearImages: () => canvasManager.clearImages(),
+    eraserToggle: () => canvasManager.eraserToggle(),
+    zoomAction: (delta: number) => canvasManager.zoomAction(delta),
+
     clearCanvasPicture: () => {
-      canvasManager.current.clearCanvasPicture();
+      canvasManager.clearCanvasPicture();
       callbacks.endAction();
-    },
-
-    clearCanvas: () => {
-      canvasManager.current.clearCanvasPicture();
-      callbacks.endAction();
-
-      ctxCallbacks.resetAllToDefault();
-    },
-
-    downloadCanvas: () => {
-      canvasManager.current.downloadCanvas(values.bgColor);
     },
 
     endAction: (selectedShapeId?: string) => {
       setIsPointerDown(false);
-
-      // if (isCtrlPressed) return;
-
-      canvasManager.current
-        .getImage(canvasRef.current.width, canvasRef.current.height)
-        .then((image: TArtImage) => {
-          const nextActiveImage = values.activeImage + 1;
-          const nextImages = [...values.images.imagesNodes.slice(0, values.activeImage + 1), image];
-
-          ctxCallbacks.setImagesNodes(nextImages);
-          ctxCallbacks.setActiveImage(nextActiveImage);
-
-          if (!selectedShapeId) return;
-          const shapeInstance = values.images.shapes.find((shape) => shape.id === selectedShapeId);
-          if (!shapeInstance) return;
-
-          const shapeCopy = doShapeCopy(shapeInstance);
-          const shapesStepCopy = [
-            ...values.images.shapes.filter((shape) => shape.id !== shapeCopy.id),
-            shapeCopy,
-          ];
-          const shapesHistoryCopy = [...values.images.shapesHistory, shapesStepCopy];
-
-          ctxCallbacks.setShapesHistory(shapesHistoryCopy);
-
-          console.log(selectedShapeId);
-          console.log('Здесь', shapeInstance);
-        });
+      canvasManager.endAction(selectedShapeId);
     },
-
-    undo: () => {
-      ctxCallbacks.setActiveImage(Math.max(values.activeImage - 1, 0));
-    },
-
-    redo: () => {
-      ctxCallbacks.setActiveImage(
-        Math.min(values.activeImage + 1, values.images.imagesNodes.length - 1)
-      );
-    },
-
-    clearImages: () => {
-      const newImages = [...values.images.imagesNodes];
-      newImages.length = 1;
-
-      ctxCallbacks.setActiveImage(0);
-      ctxCallbacks.setImages({
-        imagesNodes: newImages,
-        shapes: [],
-        shapesHistory: [],
-      });
-    },
-
-    eraserToggle: () => ctxCallbacks.setEraserActive(!values.eraserActive),
-
-    zoomAction: (delta: number) =>
-      setScale((prevScale) => Math.min(Math.max(prevScale + delta, 0.1), 2)),
   };
 
   const helpers = {
     getMouseCoordinates: (e: MouseEvent) => {
-      const clientX = (e.clientX - panOffset.x * scale + scaleOffset.x) / scale;
-      const clientY = (e.clientY - panOffset.y * scale + scaleOffset.y) / scale;
+      const clientX =
+        (e.clientX - values.panOffset.x * values.scale + values.scaleOffset.x) / values.scale;
+      const clientY =
+        (e.clientY - values.panOffset.y * values.scale + values.scaleOffset.y) / values.scale;
       return { clientX, clientY };
     },
   };
@@ -141,59 +79,26 @@ function ArtCanvasInner() {
           return;
         }
 
-        setSnapshot(canvasManager.current.getImageData());
+        setSnapshot(canvasManager.getImageData());
       }
     },
 
     onPointerMove: (e: React.PointerEvent<HTMLCanvasElement>) => {
       if (isPointerDown) {
         const { offsetX, offsetY } = e.nativeEvent;
+        const { clientX: xWithOffset, clientY: yWithOffset } = helpers.getMouseCoordinates(
+          e.nativeEvent
+        );
 
-        // Panning action
-        if (isSpacePressed) {
-          // @ts-ignore
-          const { clientX, clientY } = helpers.getMouseCoordinates(e);
-
-          console.log({ clientX, clientY });
-
-          const deltaX = clientX - startPanMousePosition.x;
-          const deltaY = clientY - startPanMousePosition.y;
-
-          setPanOffset((prevPanOffset) => ({
-            x: prevPanOffset.x + deltaX,
-            y: prevPanOffset.y + deltaY,
-          }));
-
-          return;
-        }
-
-        if (isCtrlPressed || !snapshot) return;
-
-        canvasManager.current.putImageData(snapshot, 0, 0);
-
-        if (values.eraserActive) {
-          canvasManager.current.fillEraser({
-            width: values.brushWidth,
-            bgColor: values.bgColor,
-            x: offsetX,
-            y: offsetY,
-          });
-
-          return;
-        }
-
-        if (isCtrlPressed) {
-          return;
-        }
-
-        canvasManager.current.draw(values.activeTool, {
-          bgColor: values.bgColor,
-          brushWidth: values.brushWidth,
-          brushColor: values.brushColor,
+        canvasManager.inDrawingProcess(snapshot, {
+          isCtrlPressed,
+          isPanning: isSpacePressed,
+          startX: startCoords.x,
+          startY: startCoords.y,
           x: offsetX,
           y: offsetY,
-          isFilled: values.fillColor,
-          startCoords,
+          xWithOffset,
+          yWithOffset,
         });
       }
     },
@@ -216,25 +121,16 @@ function ArtCanvasInner() {
            Пользователь нарисовал новую фигуру
            Рисуем её и заносим в историю
           */
-          const shape = canvasManager.current.draw(values.activeTool, {
+          const shape = canvasManager.draw(values.activeTool, {
             brushWidth: values.brushWidth,
             brushColor: values.brushColor,
             x: offsetX,
-            y: offsetY,
+            y: values.panOffset.y + offsetY,
             isFilled: values.fillColor,
             startCoords,
           }) as TShapes;
 
-          ctxCallbacks.setShapes([...values.images.shapes, shape]);
-
-          const shapeCopy = doShapeCopy(shape);
-          const shapeStepCopy = [
-            ...values.images.shapes.filter((shape) => shape.id !== shapeCopy.id),
-            shapeCopy,
-          ];
-          const allShapesCopy = [...values.images.shapesHistory, shapeStepCopy];
-
-          ctxCallbacks.setShapesHistory(allShapesCopy);
+          canvasManager.updateShapes(shape);
         }
 
         if (snapshot) {
@@ -276,9 +172,10 @@ function ArtCanvasInner() {
       shapeSelected.options.startCoords.x += e.movementX;
       shapeSelected.options.startCoords.y += e.movementY;
 
-      canvasManager.current.clearCanvasPicture();
+      canvasManager.clearCanvasPicture();
 
       values.images.shapes.forEach((shape) => shape.draw());
+      shapeSelected.draw();
     };
 
     const pointerUpHandler = () => {
@@ -298,13 +195,18 @@ function ArtCanvasInner() {
 
   // Инициализация менеджера
   useEffect(() => {
-    canvasManager.current.init(canvasRef.current, canvasRef.current.getContext('2d'));
+    canvasManager.init(canvasRef.current, canvasRef.current.getContext('2d'), ctxCallbacks, values);
   }, []);
+
+  // Обновление экшнов менеджера
+  useEffect(() => {
+    canvasManager.update(ctxCallbacks, values);
+  }, [ctxCallbacks, values]);
 
   // Синхронизация нажатий и начала рисунка
   useEffect(() => {
-    if (isPointerDown) canvasManager.current.beginPath();
-    else canvasManager.current.closePath();
+    if (isPointerDown) canvasManager.beginPath();
+    else canvasManager.closePath();
   }, [isPointerDown]);
 
   // Логика нажатий кнопок на клавиатуре
@@ -366,8 +268,6 @@ function ArtCanvasInner() {
 
   // Инициализация правильных размеров канвы
   useEffect(() => {
-    canvasCtx.current = canvasRef.current.getContext('2d');
-
     canvasRef.current.width = canvasRef.current.offsetWidth;
     canvasRef.current.height = canvasRef.current.offsetHeight;
   }, []);
@@ -381,9 +281,9 @@ function ArtCanvasInner() {
   useEffect(() => {
     if (values.images.imagesNodes.length) return;
 
-    canvasManager.current.fillBgOpacityColor();
+    canvasManager.fillBgOpacityColor();
 
-    canvasManager.current.getBinary().then((blob) => {
+    canvasManager.getBinary().then((blob) => {
       const image = new Image() as TArtImage;
       image.src = URL.createObjectURL(blob);
       ctxCallbacks.setImagesNodes([...values.images.imagesNodes, image]);
@@ -397,23 +297,23 @@ function ArtCanvasInner() {
 
     ctxCallbacks.setShapes(cloneDeep(shapesHistoryStep));
     ctxCallbacks.setShapesHistory(values.images.shapesHistory.slice(0, values.activeImage));
-  }, [values.activeImage, values.images.shapesHistory]);
+  }, [values.activeImage]);
 
   // Действия по изменению зума и рисованию
   useEffect(() => {
     // Центрирование
-    const { x, y } = canvasManager.current.getCoordsByScaleOffsets(scale);
-    setScaleOffset({ x, y });
+    const { x, y } = canvasManager.getCoordsByScaleOffsets(values.scale);
+    ctxCallbacks.setScaleOffset({ x, y });
 
     const imageNode = values.images.imagesNodes[values.activeImage];
+    if (!imageNode) return;
 
-    canvasManager.current.initDrawAll(imageNode, {
-      panOffset,
-      scale,
+    console.log('initDrawNow');
+    canvasManager.initDrawAll(imageNode, {
       scaleOffsetX: x,
       scaleOffsetY: y,
     });
-  }, [scale, values.images.imagesNodes, values.activeImage, panOffset]);
+  }, [values.scale, values.images.imagesNodes, values.activeImage, values.panOffset]);
 
   // Panning-фича
   useEffect(() => {
@@ -426,24 +326,22 @@ function ArtCanvasInner() {
 
       // Горизонтальный скролл
       if (e.ctrlKey || e.metaKey) {
-        setPanOffset((prevPanOffset) => ({
-          ...prevPanOffset,
-          x: prevPanOffset.x - e.deltaY,
-        }));
+        ctxCallbacks.setPanOffset({
+          ...values.panOffset,
+          x: values.panOffset.x - e.deltaY,
+        });
       } else {
-        setPanOffset((prevPanOffset) => ({
-          x: prevPanOffset.x - e.deltaX,
-          y: prevPanOffset.y - e.deltaY,
-        }));
+        ctxCallbacks.setPanOffset({
+          x: values.panOffset.x - e.deltaX,
+          y: values.panOffset.y - e.deltaY,
+        });
       }
     };
 
     document.addEventListener('wheel', panFunction, { passive: false });
 
-    return () => {
-      document.removeEventListener('wheel', panFunction);
-    };
-  }, []);
+    return () => document.removeEventListener('wheel', panFunction);
+  }, [values.panOffset]);
 
   return (
     <>
@@ -472,11 +370,27 @@ function ArtCanvasInner() {
           ref={canvasRef}
           className={cn('canvas')}
         />
-        <button onClick={() => callbacks.zoomAction(-0.1)}>-</button>
-        <button onClick={() => setScale(1)}>
-          {new Intl.NumberFormat('ru-RU', { style: 'percent' }).format(scale)}
-        </button>
-        <button onClick={() => callbacks.zoomAction(0.1)}>+</button>
+
+        <div className={cn('bottom-utils')}>
+          <div className={cn('zoom-btns')}>
+            <button onClick={() => callbacks.zoomAction(-0.1)}>-</button>
+            <button onClick={() => ctxCallbacks.setScale(1)}>
+              {new Intl.NumberFormat('ru-RU', { style: 'percent' }).format(values.scale)}
+            </button>
+            <button onClick={() => callbacks.zoomAction(0.1)}>+</button>
+          </div>
+
+          <div>
+            <button>Уронить</button>
+          </div>
+
+          <div>
+            <button onClick={() => ctxCallbacks.setScale(1)}>Сбросить зум</button>
+            <button onClick={() => ctxCallbacks.setPanOffset({ x: 0, y: 0 })}>
+              Сбросить скролл
+            </button>
+          </div>
+        </div>
       </div>
       <hr />
     </>

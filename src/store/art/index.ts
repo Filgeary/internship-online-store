@@ -1,7 +1,7 @@
 import { TShapes } from '@src/components/art-canvas/shapes/types';
 import StoreModule from '../module';
 
-import { TArtState, TTools, TArtImage, TArtImagesState } from './types';
+import { TArtState, TTools, TArtImage, TArtImagesState, TCoords2D } from './types';
 
 class ArtStore extends StoreModule<TArtState> {
   initState(): TArtState {
@@ -16,6 +16,15 @@ class ArtStore extends StoreModule<TArtState> {
       },
       activeTool: 'brush',
       fillColor: false,
+      panOffset: {
+        x: 0,
+        y: 0,
+      },
+      scale: 1,
+      scaleOffset: {
+        x: 0,
+        y: 0,
+      },
     };
   }
 
@@ -90,6 +99,27 @@ class ArtStore extends StoreModule<TArtState> {
     this.setState({
       ...this.getState(),
       fillColor: fillColorVal,
+    });
+  }
+
+  setPanOffset(panOffsetVal: TCoords2D) {
+    this.setState({
+      ...this.getState(),
+      panOffset: panOffsetVal,
+    });
+  }
+
+  setScale(scaleVal: number) {
+    this.setState({
+      ...this.getState(),
+      scale: scaleVal,
+    });
+  }
+
+  setScaleOffset(scaleOffsetVal: TCoords2D) {
+    this.setState({
+      ...this.getState(),
+      scaleOffset: scaleOffsetVal,
     });
   }
 }

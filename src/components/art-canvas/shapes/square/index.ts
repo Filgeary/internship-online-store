@@ -36,10 +36,14 @@ class Square extends Shape {
 
   mouseIn(coords: { x: number; y: number }) {
     return (
-      coords.x >= this.options.startCoords.x &&
-      coords.x <= this.options.x &&
-      coords.y >= this.options.startCoords.y &&
-      coords.y <= this.options.y
+      (coords.x >= this.options.startCoords.x &&
+        coords.x <= this.options.x &&
+        coords.y >= this.options.startCoords.y &&
+        coords.y <= this.options.y) ||
+      (coords.x < this.options.startCoords.x &&
+        coords.y < this.options.startCoords.y &&
+        coords.x > this.options.x &&
+        coords.y > this.options.y)
     );
   }
 }

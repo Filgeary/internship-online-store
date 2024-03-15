@@ -25,10 +25,14 @@ class Triangle extends Shape {
 
   mouseIn(coords: { x: number; y: number }): boolean {
     return (
-      coords.x >= this.options.startCoords.x &&
-      coords.x <= this.options.x &&
-      coords.y >= this.options.startCoords.y &&
-      coords.y <= this.options.y
+      (coords.x >= this.options.startCoords.x &&
+        coords.x <= this.options.x &&
+        coords.y >= this.options.startCoords.y &&
+        coords.y <= this.options.y) ||
+      (coords.x < this.options.startCoords.x &&
+        coords.y < this.options.startCoords.y &&
+        coords.x > this.options.x &&
+        coords.y > this.options.y)
     );
   }
 }

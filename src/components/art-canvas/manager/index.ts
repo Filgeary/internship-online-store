@@ -3,16 +3,13 @@ import Brush from '../shapes/brush';
 import Circle from '../shapes/cirlce';
 import Triangle from '../shapes/triangle';
 
-import { TShapeOptions } from '../shapes/types';
+import { TShapeOptions, TShapes } from '../shapes/types';
 import { TArtImage, TTools } from '@src/store/art/types';
-import { TDrawShapesMethods } from './types';
+import { TDrawShapesMethods, TDrawingOptions } from './types';
+import { TArtCanvasContext } from '../types';
+import doShapeCopy from '../utils/do-shape-copy';
 
 type TDrawOptions = {
-  scale: number;
-  panOffset: {
-    x: number;
-    y: number;
-  };
   scaleOffsetX: number;
   scaleOffsetY: number;
 };
@@ -21,22 +18,42 @@ class ArtManager {
   canvasNode: HTMLCanvasElement;
   canvasCtx: CanvasRenderingContext2D;
   isInited: boolean;
+  callbacks: TArtCanvasContext['callbacks'];
+  values: TArtCanvasContext['values'];
 
-  init(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) {
+  init(
+    canvas: HTMLCanvasElement,
+    ctx: CanvasRenderingContext2D,
+    callbacks: TArtCanvasContext['callbacks'],
+    values: TArtCanvasContext['values']
+  ) {
     this.canvasNode = canvas;
     this.canvasCtx = ctx;
+    this.callbacks = callbacks;
+    this.values = values;
     this.isInited = true;
+  }
+
+  /**
+   * Обновить обработчики и значения
+   */
+  update(callbacks: TArtCanvasContext['callbacks'], values: TArtCanvasContext['values']) {
+    this.callbacks = callbacks;
+    this.values = values;
   }
 
   /**
    * Инициализационное рисование канваса
    */
-  initDrawAll(image: TArtImage, { scale, panOffset, scaleOffsetX, scaleOffsetY }: TDrawOptions) {
+  initDrawAll(image: TArtImage, { scaleOffsetX, scaleOffsetY }: TDrawOptions) {
     this.clearCanvasPicture();
 
     this.save();
-    this.translate(panOffset.x * scale - scaleOffsetX, panOffset.y * scale - scaleOffsetY);
-    this.scale(scale, scale);
+    this.translate(
+      this.values.panOffset.x * this.values.scale - scaleOffsetX,
+      this.values.panOffset.y * this.values.scale - scaleOffsetY
+    );
+    this.scale(this.values.scale, this.values.scale);
 
     if (!image) return;
 
@@ -77,10 +94,10 @@ class ArtManager {
   /**
    * Инициировать загрузку изображения на канвасе
    */
-  downloadCanvas(bgColor: string) {
+  downloadCanvas() {
     // Для заднего фона на загружаемой картинке
     this.canvasCtx.globalCompositeOperation = 'destination-over';
-    this.canvasCtx.fillStyle = bgColor;
+    this.canvasCtx.fillStyle = this.values.bgColor;
     this.canvasCtx.fillRect(0, 0, this.canvasNode.width, this.canvasNode.height);
     this.canvasCtx.globalCompositeOperation = 'source-over';
 
@@ -175,13 +192,6 @@ class ArtManager {
   }
 
   /**
-   * Трансформация
-   */
-  setTransform(...args: number[]) {
-    this.canvasCtx.setTransform(1, 0, 0, 1, 0, 0);
-  }
-
-  /**
    * Сохранить состояние канвы
    */
   save() {
@@ -270,8 +280,160 @@ class ArtManager {
 
     return triangle;
   }
-}
 
-export const artManager = new ArtManager();
+  /**
+   * Действия в конце рисования
+   */
+  endAction(selectedShapeId?: string) {
+    this.getImage(this.canvasNode.width, this.canvasNode.height).then((image: TArtImage) => {
+      const nextActiveImage = this.values.activeImage + 1;
+      const nextImages = [
+        ...this.values.images.imagesNodes.slice(0, this.values.activeImage + 1),
+        image,
+      ];
+
+      this.callbacks.setImagesNodes(nextImages);
+      this.callbacks.setActiveImage(nextActiveImage);
+
+      if (!selectedShapeId) return;
+      const shapeInstance = this.values.images.shapes.find((shape) => shape.id === selectedShapeId);
+      if (!shapeInstance) return;
+
+      this.updateShapes(shapeInstance);
+    });
+  }
+
+  /**
+   * Очистить канвас и сбросить всё по умолчанию
+   */
+  clearCanvasAndResetAll() {
+    this.clearCanvasPicture();
+    this.endAction();
+    this.callbacks.resetAllToDefault();
+  }
+
+  /**
+   * Шаг назад
+   */
+  undo() {
+    this.callbacks.setActiveImage(Math.max(this.values.activeImage - 1, 0));
+  }
+
+  /**
+   * Шаг вперёд
+   */
+  redo() {
+    this.callbacks.setActiveImage(
+      Math.min(this.values.activeImage + 1, this.values.images.imagesNodes.length - 1)
+    );
+  }
+
+  /**
+   * Очистить снапшоты
+   */
+  clearImages() {
+    const newImages = [...this.values.images.imagesNodes];
+    newImages.length = 1;
+
+    this.callbacks.setActiveImage(0);
+    this.callbacks.setImages({
+      imagesNodes: newImages,
+      shapes: [],
+      shapesHistory: [],
+    });
+  }
+
+  /**
+   * Переключатель стёрки
+   */
+  eraserToggle() {
+    this.callbacks.setEraserActive(!this.values.eraserActive);
+  }
+
+  /**
+   * Изменение приближения
+   */
+  zoomAction(delta: number) {
+    this.callbacks.setScale(Math.min(Math.max(this.values.scale + delta, 0.1), 2));
+  }
+
+  /**
+   * Процесс рисования
+   */
+  inDrawingProcess(
+    snapshot: ImageData,
+    {
+      isPanning,
+      isCtrlPressed,
+      startX,
+      startY,
+      x,
+      y,
+      xWithOffset,
+      yWithOffset,
+    }: TDrawingOptions & Partial<TShapeOptions>
+  ) {
+    // Panning action
+    if (isPanning) {
+      const deltaX = xWithOffset - startX;
+      const deltaY = yWithOffset - startY;
+
+      this.callbacks.setPanOffset({
+        x: this.values.panOffset.x + deltaX,
+        y: this.values.panOffset.y + deltaY,
+      });
+
+      return;
+    }
+
+    if (isCtrlPressed || !snapshot) return;
+
+    this.putImageData(snapshot, 0, 0);
+
+    if (this.values.eraserActive) {
+      this.fillEraser({
+        width: this.values.brushWidth,
+        bgColor: this.values.bgColor,
+        x,
+        y,
+      });
+
+      return;
+    }
+
+    if (isCtrlPressed) {
+      return;
+    }
+
+    this.draw(this.values.activeTool, {
+      bgColor: this.values.bgColor,
+      brushWidth: this.values.brushWidth,
+      brushColor: this.values.brushColor,
+      x,
+      y,
+      isFilled: this.values.fillColor,
+      startCoords: {
+        x: startX,
+        y: startY,
+      },
+    });
+  }
+
+  /**
+   * Обновить все фигуры
+   */
+  updateShapes(shape: TShapes) {
+    this.callbacks.setShapes([...this.values.images.shapes, shape]);
+
+    const shapeCopy = doShapeCopy(shape);
+    const shapeStepCopy = [
+      ...this.values.images.shapes.filter((shape) => shape.id !== shapeCopy.id),
+      shapeCopy,
+    ];
+    const allShapesCopy = [...this.values.images.shapesHistory, shapeStepCopy];
+
+    this.callbacks.setShapesHistory(allShapesCopy);
+  }
+}
 
 export default ArtManager;

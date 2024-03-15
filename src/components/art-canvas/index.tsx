@@ -12,7 +12,7 @@ import { useAppSelector } from '@src/hooks/use-selector';
 import useStore from '@src/hooks/use-store';
 
 import { TArtCanvasContext } from './types';
-import { TTools, TArtImagesState, TArtImage } from '@src/store/art/types';
+import { TTools, TArtImagesState, TArtImage, TCoords2D } from '@src/store/art/types';
 import { TShapes } from './shapes/types';
 
 const ArtCanvasContext = React.createContext<TArtCanvasContext>(null);
@@ -48,6 +48,9 @@ function ArtCanvas(props: ArtCanvasProps) {
     images: state.art.images,
     activeTool: state.art.activeTool,
     fillColor: state.art.fillColor,
+    panOffset: state.art.panOffset,
+    scaleOffset: state.art.scaleOffset,
+    scale: state.art.scale,
   }));
 
   const [activeImage, setActiveImage] = useState(Math.max(0, select.images.imagesNodes.length - 1));
@@ -78,6 +81,9 @@ function ArtCanvas(props: ArtCanvasProps) {
     setBrushColor: (val: string) => store.actions.art.setBrushColor(val),
     setActiveTool: (val: TTools) => store.actions.art.setActiveTool(val),
     setFillColor: (val: boolean) => store.actions.art.setFillColor(val),
+    setPanOffset: (val: TCoords2D) => store.actions.art.setPanOffset(val),
+    setScale: (val: number) => store.actions.art.setScale(val),
+    setScaleOffset: (val: TCoords2D) => store.actions.art.setScaleOffset(val),
     setEraserActive,
     setZooming,
     resetAllToDefault: () => {
