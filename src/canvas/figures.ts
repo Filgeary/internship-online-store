@@ -2,48 +2,94 @@ import { IFigure } from './types';
 
 abstract class Figure implements IFigure {
   protected ctx: CanvasRenderingContext2D;
+  protected figurePath: Path2D;
   protected x: number;
   protected y: number;
   protected strokeStyle: string;
+  protected defaultStrokeStyle: string;
   protected fillStyle: string;
   protected lineWidth: number;
+  protected lineWidthByHandDrawing: number;
 
   constructor(ctx: CanvasRenderingContext2D) {
     this.ctx = ctx;
+    this.figurePath = null!;
     this.x = 0;
     this.y = 0;
-    this.strokeStyle = 'white';
-    this.fillStyle = '#232222';
-    this.lineWidth = 16;
+    this.strokeStyle = '#eee';
+    this.defaultStrokeStyle = this.strokeStyle;
+    this.fillStyle = 'transparent';
+    this.lineWidth = 8;
+    this.lineWidthByHandDrawing = 8;
   }
 
   abstract draw(): void;
+
+  init() {
+    this.ctx.lineWidth = this.lineWidth;
+    this.ctx.fillStyle = this.fillStyle;
+    this.ctx.strokeStyle = this.strokeStyle;
+  }
+
+  initByHandDrawing() {
+    this.init();
+    this.ctx.lineWidth = this.lineWidthByHandDrawing;
+  }
+
+  updatePosition({ dx, dy }: { dx: number; dy: number }) {
+    this.x += dx;
+    this.y += dy;
+    this.figurePath.moveTo(dx, dy);
+  }
+
+  getFigurePath() {
+    return this.figurePath;
+  }
+
+  setFigurePath(figurePath: Path2D) {
+    this.figurePath = figurePath;
+  }
+
+  select() {
+    this.strokeStyle = 'dodgerblue';
+  }
+
+  unselect() {
+    this.strokeStyle = this.defaultStrokeStyle;
+  }
 }
 
 export class Rect extends Figure {
   width: number;
   height: number;
+  borderRadius: number;
 
   constructor(
     ctx: CanvasRenderingContext2D,
-    options: { x: number; y: number; width?: number; height?: number; fillColor?: string },
+    options: { x: number; y: number; width?: number; height?: number; strokeStyle?: string },
   ) {
     super(ctx);
 
     this.x = options.x;
     this.y = options.y;
-    this.width = options.width || 150;
-    this.height = options.height || 150;
-    this.fillStyle = options.fillColor || 'red';
-    this.strokeStyle = options.fillColor || 'red';
+    this.width = options.width || 300;
+    this.height = options.height || 200;
+    this.defaultStrokeStyle = this.strokeStyle = options.strokeStyle || '#eee';
+    this.borderRadius = 16;
 
     this.draw();
   }
 
   draw() {
-    this.ctx.fillStyle = this.fillStyle;
-    this.ctx.strokeStyle = this.strokeStyle;
-    this.ctx.fillRect(this.x, this.y, this.width, this.height);
+    super.init();
+
+    const figurePath = new Path2D();
+    figurePath.roundRect(this.x, this.y, this.width, this.height, this.borderRadius);
+    this.ctx.stroke(figurePath);
+    this.fillStyle = 'tomato';
+    this.ctx.fill(figurePath);
+
+    super.setFigurePath(figurePath);
   }
 }
 
@@ -52,53 +98,60 @@ export class Circle extends Figure {
 
   constructor(
     ctx: CanvasRenderingContext2D,
-    options: { x: number; y: number; radius?: number; fillColor?: string },
+    options: { x: number; y: number; radius?: number; strokeStyle?: string },
   ) {
     super(ctx);
 
     this.x = options.x;
     this.y = options.y;
     this.radius = options.radius || 75;
-    this.fillStyle = options.fillColor || 'lime';
-    this.strokeStyle = options.fillColor || 'lime';
+    this.defaultStrokeStyle = this.strokeStyle = options.strokeStyle || '#eee';
 
     this.draw();
   }
 
   draw() {
-    this.ctx.fillStyle = this.fillStyle;
-    this.ctx.strokeStyle = this.strokeStyle;
+    super.init();
+
     this.ctx.beginPath();
-    this.ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
-    this.ctx.stroke();
-    this.ctx.fill();
+    const figurePath = new Path2D();
+    figurePath.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
+    this.ctx.stroke(figurePath);
+    this.fillStyle = 'lime';
+    this.ctx.fill(figurePath);
+
+    super.setFigurePath(figurePath);
   }
 }
 
 export class Triangle extends Figure {
   constructor(
     ctx: CanvasRenderingContext2D,
-    options: { startPoint: { x: number; y: number }; fillColor?: string },
+    options: { startPoint: { x: number; y: number }; strokeStyle?: string },
   ) {
     super(ctx);
 
     this.x = options.startPoint.x;
     this.y = options.startPoint.y;
-    this.fillStyle = options.fillColor || 'dodgerblue';
-    this.strokeStyle = options.fillColor || 'dodgerblue';
+    this.defaultStrokeStyle = this.strokeStyle = options.strokeStyle || '#eee';
 
     this.draw();
   }
 
   draw() {
-    this.ctx.fillStyle = this.fillStyle;
-    this.ctx.strokeStyle = this.strokeStyle;
+    super.init();
+
     this.ctx.beginPath();
-    this.ctx.moveTo(this.x, this.y);
-    this.ctx.lineTo(this.x + 150, this.y + 150);
-    this.ctx.lineTo(this.x - 150, this.y + 150);
-    this.ctx.closePath();
-    this.ctx.fill();
+    const figurePath = new Path2D();
+    figurePath.moveTo(this.x, this.y);
+    figurePath.lineTo(this.x + 150, this.y + 150);
+    figurePath.lineTo(this.x - 150, this.y + 150);
+    figurePath.closePath();
+    this.ctx.stroke(figurePath);
+    this.fillStyle = 'gold';
+    this.ctx.fill(figurePath);
+
+    super.setFigurePath(figurePath);
   }
 }
 
@@ -107,7 +160,7 @@ export class Line extends Figure {
     ctx: CanvasRenderingContext2D,
     options: {
       startPoint: { x: number; y: number };
-      strokeColor?: string;
+      strokeStyle?: string;
       lineWidth?: number;
     },
   ) {
@@ -115,20 +168,23 @@ export class Line extends Figure {
 
     this.x = options.startPoint.x;
     this.y = options.startPoint.y;
-    this.strokeStyle = options.strokeColor || 'yellow';
-    this.lineWidth = options.lineWidth || 16;
+    this.defaultStrokeStyle = this.strokeStyle = options.strokeStyle || '#eee';
+    this.lineWidth = options.lineWidth || this.lineWidth;
 
     this.draw();
   }
 
   draw() {
-    this.ctx.strokeStyle = this.strokeStyle;
-    this.ctx.lineWidth = this.lineWidth;
+    super.init();
+
     this.ctx.beginPath();
-    this.ctx.moveTo(this.x, this.y);
-    this.ctx.lineTo(this.x + 250, this.y + 250);
-    this.ctx.closePath();
-    this.ctx.stroke();
+    const figurePath = new Path2D();
+    figurePath.moveTo(this.x, this.y);
+    figurePath.lineTo(this.x + 250, this.y + 250);
+    figurePath.closePath();
+    this.ctx.stroke(figurePath);
+
+    super.setFigurePath(figurePath);
   }
 }
 
@@ -145,7 +201,7 @@ export class Text extends Figure {
 
     this.text = options.text || 'Hello World!';
     this.fontSize = options.fontSize || 48;
-    this.fillStyle = options.fillColor || 'white';
+    this.fillStyle = options.fillColor || '#eee';
     this.textAlign = 'center';
     this.x = options.x;
     this.y = options.y;
@@ -154,7 +210,8 @@ export class Text extends Figure {
   }
 
   draw() {
-    this.ctx.fillStyle = this.fillStyle;
+    super.init();
+
     this.ctx.font = `${this.fontSize}px system-ui`;
     this.ctx.textAlign = this.textAlign;
     this.ctx.fillText(this.text, this.x, this.y);
@@ -182,8 +239,9 @@ export class DrawByHand extends Figure {
   }
 
   draw() {
+    super.initByHandDrawing();
+
     this.ctx.beginPath();
-    this.ctx.strokeStyle = this.strokeStyle;
     this.ctx.moveTo(this.prevX, this.prevY);
     this.ctx.lineTo(this.offsetX, this.offsetY);
     this.ctx.closePath();

@@ -3,6 +3,14 @@ import { Circle, DrawByHand, Line, Rect, Text, Triangle } from './figures';
 import type { TCanvasModes } from '@src/components/canvas-panel/types';
 import type { IFigure } from './types';
 
+const uuid = () => self.crypto.randomUUID();
+
+type TFigureEntity = {
+  id: string;
+  instance: IFigure;
+  path?: Path2D;
+};
+
 export const initialCanvasState = {
   mode: 'draw',
   strokeStyle: 'white',
@@ -17,7 +25,8 @@ type TInitialCanvasState = typeof initialCanvasState;
 export class DrawManager {
   private ctx: CanvasRenderingContext2D;
   private mode: TCanvasModes;
-  private figures: IFigure[] = [];
+  private figures: TFigureEntity[];
+  private selectedFigure: TFigureEntity | null;
 
   // initial params
   private strokeStyle: string;
@@ -30,6 +39,7 @@ export class DrawManager {
     this.ctx = ctx;
     this.mode = initialState.mode;
     this.figures = [];
+    this.selectedFigure = null;
     this.strokeStyle = initialState.strokeStyle;
     this.fillStyle = initialState.fillStyle;
     this.lineWidth = initialState.lineWidth;
@@ -53,9 +63,9 @@ export class DrawManager {
   initFigure = () => {
     this.createText({
       x: this.ctx.canvas.width / 2,
-      y: 100,
+      y: 80,
       text: 'Canvasify',
-      fontSize: 64,
+      fontSize: 50,
       fillColor: 'cyan',
     });
   };
@@ -69,18 +79,44 @@ export class DrawManager {
     return this.mode;
   };
 
-  // Setters for common properties
-  setStrokeColor(color: string) {
-    this.strokeStyle = color;
-  }
+  getFigureByPathIntersection = ({ x, y }: { x: number; y: number }) => {
+    return this.figures.find(figure => {
+      if (figure.path) {
+        return this.ctx.isPointInPath(figure.path, x, y);
+      }
+    });
+  };
 
-  setFillStyle(color: string) {
-    this.fillStyle = color;
-  }
+  selectFigure = ({ x, y }: { x: number; y: number }) => {
+    const { id } = this.getFigureByPathIntersection({ x, y }) || {};
+    if (id) {
+      const foundedFigure = this.figures.findLast(figure => figure.id === id);
+      if (foundedFigure) {
+        foundedFigure.instance.select();
+        this.selectedFigure = foundedFigure;
+      }
+    } else {
+      this.selectedFigure = null;
+      this.figures.forEach(figure => figure.instance.unselect());
+    }
+  };
 
-  setLineWidth(lineWidth: number) {
-    this.lineWidth = lineWidth;
-  }
+  unselectAll = () => {
+    this.updateSelectedFigurePathByID(this.selectedFigure?.id || '');
+    this.selectedFigure = null;
+    this.figures.forEach(figure => figure.instance.unselect());
+  };
+
+  getSelectedFigure = () => {
+    return this.selectedFigure;
+  };
+
+  updateSelectedFigurePathByID = (id: string) => {
+    const selectedFigure = this.figures.find(figure => figure.id === id);
+    if (selectedFigure) {
+      selectedFigure.path = selectedFigure.instance.getFigurePath();
+    }
+  };
 
   // clear canvas
   clear = () => {
@@ -96,10 +132,21 @@ export class DrawManager {
   // draw all
   drawAll = () => {
     this.reset();
-    this.figures.forEach(figure => {
-      figure.draw();
-    });
+    this.figures.forEach(figure => figure.instance.draw());
   };
+
+  // Setters for common properties
+  setStrokeStyle(color: string) {
+    this.strokeStyle = color;
+  }
+
+  setFillStyle(color: string) {
+    this.fillStyle = color;
+  }
+
+  setLineWidth(lineWidth: number) {
+    this.lineWidth = lineWidth;
+  }
 
   // Draw methods
   createText = (options: {
@@ -110,7 +157,10 @@ export class DrawManager {
     fillColor?: string;
   }) => {
     const text = new Text(this.ctx, options);
-    this.figures.push(text);
+    this.figures.push({
+      id: uuid(),
+      instance: text,
+    });
   };
 
   createRect = (options: {
@@ -118,33 +168,52 @@ export class DrawManager {
     y: number;
     width?: number;
     height?: number;
-    fillColor?: string;
+    strokeStyle?: string;
   }) => {
     const rect = new Rect(this.ctx, options);
-    this.figures.push(rect);
+    this.figures.push({
+      id: uuid(),
+      instance: rect,
+      path: rect.getFigurePath(),
+    });
   };
 
-  createCircle = (options: { x: number; y: number; radius?: number; fillColor?: string }) => {
+  createCircle = (options: { x: number; y: number; radius?: number; strokeStyle?: string }) => {
     const circle = new Circle(this.ctx, options);
-    this.figures.push(circle);
+    this.figures.push({
+      id: uuid(),
+      instance: circle,
+      path: circle.getFigurePath(),
+    });
   };
 
-  createTriangle = (options: { startPoint: { x: number; y: number }; fillColor?: string }) => {
+  createTriangle = (options: { startPoint: { x: number; y: number }; strokeStyle?: string }) => {
     const triangle = new Triangle(this.ctx, options);
-    this.figures.push(triangle);
+    this.figures.push({
+      id: uuid(),
+      instance: triangle,
+      path: triangle.getFigurePath(),
+    });
   };
 
   createLine = (options: {
     startPoint: { x: number; y: number };
-    strokeColor?: string;
+    strokeStyle?: string;
     lineWidth?: number;
   }) => {
     const line = new Line(this.ctx, options);
-    this.figures.push(line);
+    this.figures.push({
+      id: uuid(),
+      instance: line,
+      path: line.getFigurePath(),
+    });
   };
 
   drawByHand = (options: { prevX: number; prevY: number; offsetX: number; offsetY: number }) => {
     const drawByHand = new DrawByHand(this.ctx, options);
-    this.figures.push(drawByHand);
+    this.figures.push({
+      id: uuid(),
+      instance: drawByHand,
+    });
   };
 }

@@ -16,6 +16,7 @@ const Canvas = ({ mode, action }: Props) => {
   const prevCoords = useRef({ x: 0, y: 0 });
 
   const handleMouseDown = (e: MouseEvent) => {
+    if (!canvasRef.current) return;
     isDrawing.current = true;
     const { offsetX, offsetY } = e;
     prevCoords.current = { x: offsetX, y: offsetY };
@@ -53,6 +54,9 @@ const Canvas = ({ mode, action }: Props) => {
           startPoint: { x: offsetX, y: offsetY },
         });
         break;
+      case 'select':
+        drawManager.selectFigure({ x: offsetX, y: offsetY });
+        break;
       default:
         break;
     }
@@ -63,19 +67,39 @@ const Canvas = ({ mode, action }: Props) => {
     const drawManager = drawManagerRef.current;
     const mode = drawManager.getMode();
 
+    const { offsetX, offsetY } = e;
+    const { x: prevX, y: prevY } = prevCoords.current;
+
     if (isDrawing.current && mode === 'draw') {
-      const { offsetX, offsetY } = e;
-      const { x: prevX, y: prevY } = prevCoords.current;
       drawManager.drawByHand({ prevX, prevY, offsetX, offsetY });
       prevCoords.current = { x: offsetX, y: offsetY };
+    }
+
+    if (isDrawing.current && mode === 'select') {
+      const selectedFigure = drawManager.getSelectedFigure();
+
+      if (selectedFigure) {
+        selectedFigure.instance.updatePosition({ dx: offsetX - prevX, dy: offsetY - prevY });
+        prevCoords.current = { x: offsetX, y: offsetY };
+      }
     }
   };
 
   const handleMouseUp = () => {
     isDrawing.current = false;
+    drawManagerRef.current?.unselectAll();
   };
   const handleMouseLeave = () => {
     isDrawing.current = false;
+    drawManagerRef.current?.unselectAll();
+  };
+
+  const handleResize = () => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
   };
 
   // initialize
@@ -107,11 +131,15 @@ const Canvas = ({ mode, action }: Props) => {
     canvas.addEventListener('mouseup', handleMouseUp);
     canvas.addEventListener('mouseout', handleMouseLeave);
 
+    window.addEventListener('resize', handleResize);
+
     return () => {
       canvas.removeEventListener('mousedown', handleMouseDown);
       canvas.removeEventListener('mousemove', handleMouseMove);
       canvas.removeEventListener('mouseup', handleMouseUp);
       canvas.removeEventListener('mouseout', handleMouseLeave);
+
+      window.removeEventListener('resize', handleResize);
     };
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -131,11 +159,11 @@ const Canvas = ({ mode, action }: Props) => {
     const drawManager = drawManagerRef.current;
 
     switch (action) {
-      case 'clear':
+      case 'reset':
         drawManager.clear();
         break;
-      case 'refresh':
-        drawManager.init();
+      case 'delete':
+        // TODO: delete selected figure
         break;
       default:
         break;

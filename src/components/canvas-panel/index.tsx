@@ -18,7 +18,7 @@ import './style.css';
 
 export const moveModeIconsMap = {
   move: Move,
-  drag: MousePointer,
+  select: MousePointer,
 };
 
 export const drawModeIconsMap = {
@@ -31,8 +31,8 @@ export const drawModeIconsMap = {
 };
 
 export const actionsIconsMap = {
-  clear: X,
-  refresh: RefreshCw,
+  delete: X,
+  reset: RefreshCw,
 };
 
 type Props = {

@@ -17,7 +17,7 @@ const CanvasPage = () => {
     setAction(action);
     setTimeout(() => {
       setAction(''); // Reset action prop for correct useEffect
-      if (action === 'clear' || action === 'refresh') {
+      if (action === 'reset') {
         setMode('draw');
       }
     }, 0);
