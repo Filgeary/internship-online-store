@@ -5,7 +5,7 @@ class Circle extends Shape {
   radius: number;
 
   constructor(ctx: CanvasRenderingContext2D, options: TShapeOptions) {
-    super();
+    super(options.panOffset);
     this.ctx = ctx;
     this.options = options;
   }

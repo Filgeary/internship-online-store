@@ -126,17 +126,6 @@ function ArtCanvasInner() {
            Пользователь нарисовал новую фигуру
            Рисуем её и заносим в историю
           */
-          // const shape = canvasManager.draw(values.activeTool, {
-          //   brushWidth: values.brushWidth,
-          //   brushColor: values.brushColor,
-          //   x: offsetX + values.panOffset.x,
-          //   y: offsetY + values.panOffset.y,
-          //   isFilled: values.fillColor,
-          // startCoords: {
-          //   x: startCoords.x + values.panOffset.x,
-          //   y: startCoords.y + values.panOffset.y,
-          // },
-          // }) as TShapes;
           const shape = canvasManager.draw(values.activeTool, {
             brushWidth: values.brushWidth,
             brushColor: values.brushColor,
@@ -145,15 +134,15 @@ function ArtCanvasInner() {
             isFilled: values.fillColor,
             startCoords,
             initialCoords: {
-              x: offsetX + values.panOffset.x,
-              y: offsetY + values.panOffset.y,
+              x: offsetX - values.panOffset.x * 2 /* IDK what is value * 2, but it work */,
+              y: offsetY - values.panOffset.y * 2,
               startCoords: {
-                x: startCoords.x + values.panOffset.x,
-                y: startCoords.y + values.panOffset.y,
+                x: startCoords.x - values.panOffset.x * 2,
+                y: startCoords.y - values.panOffset.y * 2,
               },
             },
+            panOffset: values.panOffset,
           }) as TShapes;
-
           canvasManager.updateShapes(shape);
         }
 
@@ -184,13 +173,22 @@ function ArtCanvasInner() {
   useEffect(() => {
     if (!isCtrlPressed || values.eraserActive) return;
 
+    console.log('Start coords:', startCoords);
+    // Начальные координаты со смещением для корректного определения попадания по фигуре
+    const startCoordsWithOffset = {
+      x: startCoords.x - values.panOffset.x * 2,
+      y: startCoords.y - values.panOffset.y * 2,
+    };
     const shapeSelected = values.images.shapes
       .slice()
       .reverse()
-      .find((shape) => shape.mouseIn(startCoords));
+      .find((shape) => {
+        return shape.mouseIn(startCoordsWithOffset) || shape.mouseIn(startCoords);
+      });
     if (!shapeSelected) return;
 
     const pointerMoveHandler = (e: PointerEvent) => {
+      console.log({ movementX: e.movementX, movementY: e.movementY });
       shapeSelected.options.x += e.movementX;
       shapeSelected.options.y += e.movementY;
       shapeSelected.options.startCoords.x += e.movementX;
@@ -203,15 +201,14 @@ function ArtCanvasInner() {
 
       canvasManager.clearCanvasPicture();
 
-      values.images.shapes.forEach((shape) => shape.draw());
-      shapeSelected.draw();
+      values.images.shapes.forEach((shape) => {
+        shape.draw();
+      });
     };
 
     const pointerUpHandler = () => {
       setStartCoords({ x: null, y: null });
-      setIsPointerDown(false);
-      ctxCallbacks.setShapes(values.images.shapes.slice());
-      // callbacks.endAction(shapeSelected.id);
+      callbacks.endAction(shapeSelected.id);
       canvasRef.current.removeEventListener('pointermove', pointerMoveHandler);
     };
 
@@ -245,14 +242,10 @@ function ArtCanvasInner() {
     const keyDownHandler = (e: KeyboardEvent) => {
       if (e.ctrlKey) {
         switch (e.code) {
-          case 'KeyZ': {
-            callbacks.undo();
-            break;
-          }
-          case 'KeyY': {
-            callbacks.redo();
-            break;
-          }
+          case 'KeyZ':
+            return callbacks.undo();
+          case 'KeyY':
+            return callbacks.redo();
           default: {
             if (e.repeat) return;
             setIsCtrlPressed(true);
@@ -266,15 +259,10 @@ function ArtCanvasInner() {
 
     const keyUpHandler = (e: KeyboardEvent) => {
       switch (e.code) {
-        case 'ControlLeft': {
-          setIsCtrlPressed(false);
-          break;
-        }
-
-        case 'Space': {
-          setIsSpacePressed(false);
-          break;
-        }
+        case 'ControlLeft':
+          return setIsCtrlPressed(false);
+        case 'Space':
+          return setIsSpacePressed(false);
       }
     };
 
@@ -296,12 +284,6 @@ function ArtCanvasInner() {
       canvasRef.current.style.setProperty('cursor', null);
     }
   }, [isCtrlPressed, isPointerDown]);
-
-  // Инициализация правильных размеров канвы
-  useEffect(() => {
-    canvasRef.current.width = canvasRef.current.offsetWidth;
-    canvasRef.current.height = canvasRef.current.offsetHeight;
-  }, []);
 
   // Смена цвета заднего фона
   useEffect(() => {
@@ -331,28 +313,32 @@ function ArtCanvasInner() {
   }, [values.activeImage]);
 
   // Действия по изменению зума и рисованию
+  // useEffect(() => {
+  //   // Центрирование
+  //   const { x, y } = canvasManager.getCoordsByScaleOffsets(values.scale);
+  //   ctxCallbacks.setScaleOffset({ x, y });
+
+  //   const imageNode = values.images.imagesNodes[values.activeImage];
+  //   if (!imageNode) return;
+
+  //   console.log('initDrawNow');
+  //   // canvasManager.initDrawAll(imageNode, {
+  //   //   scaleOffsetX: x,
+  //   //   scaleOffsetY: y,
+  //   // });
+  // }, [values.scale, values.images.imagesNodes, values.activeImage, values.panOffset]);
+
   useEffect(() => {
-    // Центрирование
     const { x, y } = canvasManager.getCoordsByScaleOffsets(values.scale);
-    ctxCallbacks.setScaleOffset({ x, y });
-
-    const imageNode = values.images.imagesNodes[values.activeImage];
-    if (!imageNode) return;
-
-    console.log('initDrawNow');
-    // canvasManager.initDrawAll(imageNode, {
-    //   scaleOffsetX: x,
-    //   scaleOffsetY: y,
-    // });
-  }, [values.scale, values.images.imagesNodes, values.activeImage, values.panOffset]);
-
-  useEffect(() => {
     canvasManager.clearCanvasPicture();
     canvasManager.save();
-    canvasManager.translate(values.panOffset.x, values.panOffset.y);
+    canvasManager.translate(
+      values.panOffset.x * values.scale - x,
+      values.panOffset.y * values.scale - y
+    );
+    canvasManager.scale(values.scale, values.scale);
     const shapesUpdatedCopy = values.images.shapes.map((shape) => {
       const shapeCopy = doShapeCopy(shape);
-      console.log(shapeCopy.options.initialCoords);
 
       shapeCopy.options.x = shapeCopy.options.initialCoords.x + values.panOffset.x;
       shapeCopy.options.y = shapeCopy.options.initialCoords.y + values.panOffset.y;
@@ -365,11 +351,11 @@ function ArtCanvasInner() {
       return shapeCopy;
     });
 
-    ctxCallbacks.setShapes(shapesUpdatedCopy);
+    // ctxCallbacks.setShapes(shapesUpdatedCopy);
 
     shapesUpdatedCopy.forEach((shape) => shape.draw());
     canvasManager.restore();
-  }, [values.panOffset]);
+  }, [values.panOffset, values.images.shapes, values.scale]);
 
   // Panning-фича
   useEffect(() => {

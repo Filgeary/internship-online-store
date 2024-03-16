@@ -33,6 +33,10 @@ class ArtManager {
     this.values = values;
     this.isInited = true;
 
+    // Корректные размеры канвы
+    this.canvasNode.width = this.canvasNode.clientWidth;
+    this.canvasNode.height = this.canvasNode.clientHeight;
+
     // Чтобы не ломалось при изменении размеров
     const resizeObserver = new ResizeObserver(() => {
       this.canvasNode.width = this.canvasNode.clientWidth;
@@ -380,6 +384,7 @@ class ArtManager {
       y,
       xWithOffset,
       yWithOffset,
+      panOffset,
     }: TDrawingOptions & Partial<TShapeOptions>
   ) {
     // Panning action
@@ -425,6 +430,7 @@ class ArtManager {
         x: startX,
         y: startY,
       },
+      panOffset,
     });
   }
 

@@ -1,10 +1,9 @@
-import shallowEqual from 'shallowequal';
 import Shape from '..';
 import { TShapeOptions } from '../types';
 
 class Brush extends Shape {
   constructor(ctx: CanvasRenderingContext2D, options: TShapeOptions) {
-    super();
+    super(options.panOffset);
     this.ctx = ctx;
     this.options = options;
   }

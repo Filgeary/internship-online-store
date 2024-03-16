@@ -1,14 +1,9 @@
 import Shape from '..';
 import { TShapeOptions } from '../types';
 
-type TSquareCoords = {
-  x: number;
-  y: number;
-};
-
 class Square extends Shape {
   constructor(ctx: CanvasRenderingContext2D, options: TShapeOptions) {
-    super();
+    super(options.panOffset);
     this.ctx = ctx;
     this.options = options;
   }
@@ -35,6 +30,10 @@ class Square extends Shape {
   }
 
   mouseIn(coords: { x: number; y: number }) {
+    console.log('Coords:', coords);
+    console.log('Default coords:', this.options.x, this.options.y);
+    console.log('Start coords:', this.options.startCoords);
+
     return (
       (coords.x >= this.options.startCoords.x &&
         coords.x <= this.options.x &&

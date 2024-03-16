@@ -3,7 +3,7 @@ import { TShapeOptions } from '../types';
 
 class Triangle extends Shape {
   constructor(ctx: CanvasRenderingContext2D, options: TShapeOptions) {
-    super();
+    super(options.panOffset);
     this.ctx = ctx;
     this.options = options;
   }
