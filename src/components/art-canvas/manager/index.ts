@@ -32,6 +32,13 @@ class ArtManager {
     this.callbacks = callbacks;
     this.values = values;
     this.isInited = true;
+
+    // Чтобы не ломалось при изменении размеров
+    const resizeObserver = new ResizeObserver(() => {
+      this.canvasNode.width = this.canvasNode.clientWidth;
+      this.canvasNode.height = this.canvasNode.clientHeight;
+    });
+    resizeObserver.observe(this.canvasNode);
   }
 
   /**
@@ -367,6 +374,8 @@ class ArtManager {
       isCtrlPressed,
       startX,
       startY,
+      startPanX,
+      startPanY,
       x,
       y,
       xWithOffset,
@@ -375,8 +384,8 @@ class ArtManager {
   ) {
     // Panning action
     if (isPanning) {
-      const deltaX = xWithOffset - startX;
-      const deltaY = yWithOffset - startY;
+      const deltaX = xWithOffset - startPanX;
+      const deltaY = yWithOffset - startPanY;
 
       this.callbacks.setPanOffset({
         x: this.values.panOffset.x + deltaX,
@@ -423,7 +432,7 @@ class ArtManager {
    * Обновить все фигуры
    */
   updateShapes(shape: TShapes) {
-    this.callbacks.setShapes([...this.values.images.shapes, shape]);
+    // this.callbacks.setShapes([...this.values.images.shapes, shape]);
 
     const shapeCopy = doShapeCopy(shape);
     const shapeStepCopy = [

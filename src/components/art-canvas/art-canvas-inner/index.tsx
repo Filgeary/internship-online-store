@@ -9,6 +9,7 @@ import ArtCanvasUtils from '../art-canvas-utils';
 import ArtManager from '../manager';
 import { TShapes } from '../shapes/types';
 import cloneDeep from 'lodash.clonedeep';
+import doShapeCopy from '../utils/do-shape-copy';
 
 type TCoords = {
   x: number | null;
@@ -75,7 +76,9 @@ function ArtCanvasInner() {
 
         if (isCtrlPressed) return;
         if (isSpacePressed) {
-          setStartPanMousePosition({ x: offsetX, y: offsetY });
+          const { clientX, clientY } = helpers.getMouseCoordinates(e.nativeEvent);
+
+          setStartPanMousePosition({ x: clientX, y: clientY });
           return;
         }
 
@@ -95,6 +98,8 @@ function ArtCanvasInner() {
           isPanning: isSpacePressed,
           startX: startCoords.x,
           startY: startCoords.y,
+          startPanX: startPanMousePosition.x,
+          startPanY: startPanMousePosition.y,
           x: offsetX,
           y: offsetY,
           xWithOffset,
@@ -121,13 +126,32 @@ function ArtCanvasInner() {
            Пользователь нарисовал новую фигуру
            Рисуем её и заносим в историю
           */
+          // const shape = canvasManager.draw(values.activeTool, {
+          //   brushWidth: values.brushWidth,
+          //   brushColor: values.brushColor,
+          //   x: offsetX + values.panOffset.x,
+          //   y: offsetY + values.panOffset.y,
+          //   isFilled: values.fillColor,
+          // startCoords: {
+          //   x: startCoords.x + values.panOffset.x,
+          //   y: startCoords.y + values.panOffset.y,
+          // },
+          // }) as TShapes;
           const shape = canvasManager.draw(values.activeTool, {
             brushWidth: values.brushWidth,
             brushColor: values.brushColor,
             x: offsetX,
-            y: values.panOffset.y + offsetY,
+            y: offsetY,
             isFilled: values.fillColor,
             startCoords,
+            initialCoords: {
+              x: offsetX + values.panOffset.x,
+              y: offsetY + values.panOffset.y,
+              startCoords: {
+                x: startCoords.x + values.panOffset.x,
+                y: startCoords.y + values.panOffset.y,
+              },
+            },
           }) as TShapes;
 
           canvasManager.updateShapes(shape);
@@ -172,6 +196,11 @@ function ArtCanvasInner() {
       shapeSelected.options.startCoords.x += e.movementX;
       shapeSelected.options.startCoords.y += e.movementY;
 
+      shapeSelected.options.initialCoords.x += e.movementX;
+      shapeSelected.options.initialCoords.y += e.movementY;
+      shapeSelected.options.initialCoords.startCoords.x += e.movementX;
+      shapeSelected.options.initialCoords.startCoords.y += e.movementY;
+
       canvasManager.clearCanvasPicture();
 
       values.images.shapes.forEach((shape) => shape.draw());
@@ -180,7 +209,9 @@ function ArtCanvasInner() {
 
     const pointerUpHandler = () => {
       setStartCoords({ x: null, y: null });
-      callbacks.endAction(shapeSelected.id);
+      setIsPointerDown(false);
+      ctxCallbacks.setShapes(values.images.shapes.slice());
+      // callbacks.endAction(shapeSelected.id);
       canvasRef.current.removeEventListener('pointermove', pointerMoveHandler);
     };
 
@@ -309,11 +340,36 @@ function ArtCanvasInner() {
     if (!imageNode) return;
 
     console.log('initDrawNow');
-    canvasManager.initDrawAll(imageNode, {
-      scaleOffsetX: x,
-      scaleOffsetY: y,
-    });
+    // canvasManager.initDrawAll(imageNode, {
+    //   scaleOffsetX: x,
+    //   scaleOffsetY: y,
+    // });
   }, [values.scale, values.images.imagesNodes, values.activeImage, values.panOffset]);
+
+  useEffect(() => {
+    canvasManager.clearCanvasPicture();
+    canvasManager.save();
+    canvasManager.translate(values.panOffset.x, values.panOffset.y);
+    const shapesUpdatedCopy = values.images.shapes.map((shape) => {
+      const shapeCopy = doShapeCopy(shape);
+      console.log(shapeCopy.options.initialCoords);
+
+      shapeCopy.options.x = shapeCopy.options.initialCoords.x + values.panOffset.x;
+      shapeCopy.options.y = shapeCopy.options.initialCoords.y + values.panOffset.y;
+
+      shapeCopy.options.startCoords.x =
+        shapeCopy.options.initialCoords.startCoords.x + values.panOffset.x;
+      shapeCopy.options.startCoords.y =
+        shapeCopy.options.initialCoords.startCoords.y + values.panOffset.y;
+
+      return shapeCopy;
+    });
+
+    ctxCallbacks.setShapes(shapesUpdatedCopy);
+
+    shapesUpdatedCopy.forEach((shape) => shape.draw());
+    canvasManager.restore();
+  }, [values.panOffset]);
 
   // Panning-фича
   useEffect(() => {

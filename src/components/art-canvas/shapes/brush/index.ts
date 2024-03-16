@@ -3,14 +3,10 @@ import Shape from '..';
 import { TShapeOptions } from '../types';
 
 class Brush extends Shape {
-  points: Array<{ x: number; y: number }>;
-
   constructor(ctx: CanvasRenderingContext2D, options: TShapeOptions) {
     super();
     this.ctx = ctx;
     this.options = options;
-    console.log('@@', options.points);
-    this.points = options.points;
   }
 
   // draw() {
@@ -28,7 +24,7 @@ class Brush extends Shape {
   }
 
   mouseIn(coords: { x: number; y: number }): boolean {
-    return Boolean(this.points.find((dot) => shallowEqual(coords, dot)));
+    return false;
   }
 }
 

@@ -10,4 +10,6 @@ export type TDrawingOptions = {
   y: number;
   xWithOffset: number;
   yWithOffset: number;
+  startPanX: number;
+  startPanY: number;
 };
