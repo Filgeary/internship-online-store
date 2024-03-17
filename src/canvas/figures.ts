@@ -36,10 +36,10 @@ abstract class Figure implements IFigure {
     this.ctx.lineWidth = this.lineWidthByHandDrawing;
   }
 
-  updatePosition({ dx, dy }: { dx: number; dy: number }) {
-    this.x += dx;
-    this.y += dy;
-    this.figurePath.moveTo(dx, dy);
+  updatePosition({ deltaX, deltaY }: { deltaX: number; deltaY: number }) {
+    this.x += deltaX;
+    this.y += deltaY;
+    this.figurePath.moveTo(deltaX, deltaY);
   }
 
   getFigurePath() {

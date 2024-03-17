@@ -51,7 +51,7 @@ export class DrawManager {
   }
 
   // initialize
-  init = () => {
+  private init = () => {
     this.ctx.strokeStyle = this.strokeStyle;
     this.ctx.fillStyle = this.fillStyle;
     this.ctx.lineWidth = this.lineWidth;
@@ -60,7 +60,7 @@ export class DrawManager {
     this.ctx.fillRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
   };
 
-  initFigure = () => {
+  private initFigure = () => {
     this.createText({
       x: this.ctx.canvas.width / 2,
       y: 80,
@@ -70,22 +70,39 @@ export class DrawManager {
     });
   };
 
-  // set mode
-  setMode = (mode: TCanvasModes) => {
-    this.mode = mode;
-  };
-  // get mode
-  getMode = () => {
-    return this.mode;
-  };
-
-  getFigureByPathIntersection = ({ x, y }: { x: number; y: number }) => {
+  private getFigureByPathIntersection = ({ x, y }: { x: number; y: number }) => {
     return this.figures.find(figure => {
       if (figure.path) {
         return this.ctx.isPointInPath(figure.path, x, y);
       }
     });
   };
+
+  private updateSelectedFigurePathByID = (id: string) => {
+    const selectedFigure = this.figures.find(figure => figure.id === id);
+    if (selectedFigure) {
+      selectedFigure.path = selectedFigure.instance.getFigurePath();
+    }
+  };
+
+  private reset = () => {
+    this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+    this.init();
+  };
+
+  // get & set mode
+  // ============================================
+
+  setMode = (mode: TCanvasModes) => {
+    this.mode = mode;
+  };
+
+  getMode = () => {
+    return this.mode;
+  };
+
+  // select & unselect, delete figures
+  // ============================================
 
   selectFigure = ({ x, y }: { x: number; y: number }) => {
     const { id } = this.getFigureByPathIntersection({ x, y }) || {};
@@ -111,13 +128,6 @@ export class DrawManager {
     return this.selectedFigure;
   };
 
-  updateSelectedFigurePathByID = (id: string) => {
-    const selectedFigure = this.figures.find(figure => figure.id === id);
-    if (selectedFigure) {
-      selectedFigure.path = selectedFigure.instance.getFigurePath();
-    }
-  };
-
   deleteFigure = ({ x, y }: { x: number; y: number }) => {
     const { id } = this.getFigureByPathIntersection({ x, y }) || {};
     if (id) {
@@ -125,24 +135,22 @@ export class DrawManager {
     }
   };
 
-  // clear canvas
+  // clear & draw canvas
+  // ============================================
+
   clear = () => {
     this.figures = [];
     this.initFigure();
   };
 
-  reset = () => {
-    this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
-    this.init();
-  };
-
-  // draw all
   drawAll = () => {
     this.reset();
     this.figures.forEach(figure => figure.instance.draw());
   };
 
   // Setters for common properties
+  // ============================================
+
   setStrokeStyle(color: string) {
     this.strokeStyle = color;
   }
@@ -156,6 +164,8 @@ export class DrawManager {
   }
 
   // Draw methods
+  // ============================================
+
   createText = (options: {
     x: number;
     y: number;

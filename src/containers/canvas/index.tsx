@@ -26,12 +26,6 @@ const Canvas = ({ mode, action }: Props) => {
     const mode = drawManager.getMode();
 
     switch (mode) {
-      case 'text':
-        drawManager.createText({
-          x: offsetX,
-          y: offsetY,
-        });
-        break;
       case 'rect':
         drawManager.createRect({
           x: offsetX,
@@ -52,6 +46,12 @@ const Canvas = ({ mode, action }: Props) => {
       case 'line':
         drawManager.createLine({
           startPoint: { x: offsetX, y: offsetY },
+        });
+        break;
+      case 'text':
+        drawManager.createText({
+          x: offsetX,
+          y: offsetY,
         });
         break;
       case 'select':
@@ -82,7 +82,10 @@ const Canvas = ({ mode, action }: Props) => {
       const selectedFigure = drawManager.getSelectedFigure();
 
       if (selectedFigure) {
-        selectedFigure.instance.updatePosition({ dx: offsetX - prevX, dy: offsetY - prevY });
+        selectedFigure.instance.updatePosition({
+          deltaX: offsetX - prevX,
+          deltaY: offsetY - prevY,
+        });
         prevCoords.current = { x: offsetX, y: offsetY };
       }
     }

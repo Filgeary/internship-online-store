@@ -1,7 +1,7 @@
 export interface IFigure {
   init: () => void;
   draw: () => void;
-  updatePosition: ({ dx, dy }: { dx: number; dy: number }) => void;
+  updatePosition: ({ deltaX, deltaY }: { deltaX: number; deltaY: number }) => void;
   select: () => void;
   unselect: () => void;
   getFigurePath: () => Path2D;
