@@ -30,10 +30,6 @@ class Square extends Shape {
   }
 
   mouseIn(coords: { x: number; y: number }) {
-    console.log('Coords:', coords);
-    console.log('Default coords:', this.options.x, this.options.y);
-    console.log('Start coords:', this.options.startCoords);
-
     return (
       (coords.x >= this.options.startCoords.x &&
         coords.x <= this.options.x &&

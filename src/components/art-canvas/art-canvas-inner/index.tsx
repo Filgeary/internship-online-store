@@ -134,11 +134,11 @@ function ArtCanvasInner() {
             isFilled: values.fillColor,
             startCoords,
             initialCoords: {
-              x: offsetX - values.panOffset.x * 2 /* IDK what is value * 2, but it work */,
-              y: offsetY - values.panOffset.y * 2,
+              x: offsetX - values.panOffset.x * 3 /* IDK what is value * 3, but it work */,
+              y: offsetY - values.panOffset.y * 3,
               startCoords: {
-                x: startCoords.x - values.panOffset.x * 2,
-                y: startCoords.y - values.panOffset.y * 2,
+                x: startCoords.x - values.panOffset.x * 3,
+                y: startCoords.y - values.panOffset.y * 3,
               },
             },
             panOffset: values.panOffset,
@@ -173,22 +173,15 @@ function ArtCanvasInner() {
   useEffect(() => {
     if (!isCtrlPressed || values.eraserActive) return;
 
-    console.log('Start coords:', startCoords);
-    // Начальные координаты со смещением для корректного определения попадания по фигуре
-    const startCoordsWithOffset = {
-      x: startCoords.x - values.panOffset.x * 2,
-      y: startCoords.y - values.panOffset.y * 2,
-    };
     const shapeSelected = values.images.shapes
       .slice()
       .reverse()
       .find((shape) => {
-        return shape.mouseIn(startCoordsWithOffset) || shape.mouseIn(startCoords);
+        return shape.mouseIn(startCoords);
       });
     if (!shapeSelected) return;
 
     const pointerMoveHandler = (e: PointerEvent) => {
-      console.log({ movementX: e.movementX, movementY: e.movementY });
       shapeSelected.options.x += e.movementX;
       shapeSelected.options.y += e.movementY;
       shapeSelected.options.startCoords.x += e.movementX;
@@ -202,6 +195,13 @@ function ArtCanvasInner() {
       canvasManager.clearCanvasPicture();
 
       values.images.shapes.forEach((shape) => {
+        shape.options.x = shape.options.initialCoords.x + values.panOffset.x * 3;
+        shape.options.y = shape.options.initialCoords.y + values.panOffset.y * 3;
+
+        shape.options.startCoords.x =
+          shape.options.initialCoords.startCoords.x + values.panOffset.x * 3;
+        shape.options.startCoords.y =
+          shape.options.initialCoords.startCoords.y + values.panOffset.y * 3;
         shape.draw();
       });
     };
@@ -219,7 +219,7 @@ function ArtCanvasInner() {
       canvasRef.current.removeEventListener('pointermove', pointerMoveHandler);
       canvasRef.current.removeEventListener('pointerup', pointerUpHandler);
     };
-  }, [startCoords, isPointerDown, values.eraserActive, values.images.shapes]);
+  }, [startCoords, isPointerDown, values.eraserActive, values.images.shapes, values.panOffset]);
 
   // Инициализация менеджера
   useEffect(() => {
@@ -329,33 +329,8 @@ function ArtCanvasInner() {
   // }, [values.scale, values.images.imagesNodes, values.activeImage, values.panOffset]);
 
   useEffect(() => {
-    const { x, y } = canvasManager.getCoordsByScaleOffsets(values.scale);
-    canvasManager.clearCanvasPicture();
-    canvasManager.save();
-    canvasManager.translate(
-      values.panOffset.x * values.scale - x,
-      values.panOffset.y * values.scale - y
-    );
-    canvasManager.scale(values.scale, values.scale);
-    const shapesUpdatedCopy = values.images.shapes.map((shape) => {
-      const shapeCopy = doShapeCopy(shape);
-
-      shapeCopy.options.x = shapeCopy.options.initialCoords.x + values.panOffset.x;
-      shapeCopy.options.y = shapeCopy.options.initialCoords.y + values.panOffset.y;
-
-      shapeCopy.options.startCoords.x =
-        shapeCopy.options.initialCoords.startCoords.x + values.panOffset.x;
-      shapeCopy.options.startCoords.y =
-        shapeCopy.options.initialCoords.startCoords.y + values.panOffset.y;
-
-      return shapeCopy;
-    });
-
-    // ctxCallbacks.setShapes(shapesUpdatedCopy);
-
-    shapesUpdatedCopy.forEach((shape) => shape.draw());
-    canvasManager.restore();
-  }, [values.panOffset, values.images.shapes, values.scale]);
+    canvasManager.makeVisibleAllShapes();
+  }, [values.panOffset, values.scale]);
 
   // Panning-фича
   useEffect(() => {

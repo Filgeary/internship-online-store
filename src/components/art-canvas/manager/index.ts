@@ -449,6 +449,38 @@ class ArtManager {
 
     this.callbacks.setShapesHistory(allShapesCopy);
   }
+
+  /**
+   * Сделать видимыми все фигуры
+   */
+  makeVisibleAllShapes() {
+    const { x, y } = this.getCoordsByScaleOffsets(this.values.scale);
+    this.clearCanvasPicture();
+    this.save();
+    this.translate(
+      this.values.panOffset.x * this.values.scale - x,
+      this.values.panOffset.y * this.values.scale - y
+    );
+    this.scale(this.values.scale, this.values.scale);
+    const shapesUpdatedCopy = this.values.images.shapes.map((shape) => {
+      const shapeCopy = doShapeCopy(shape);
+
+      shapeCopy.options.x = shapeCopy.options.initialCoords.x + this.values.panOffset.x * 2;
+      shapeCopy.options.y = shapeCopy.options.initialCoords.y + this.values.panOffset.y * 2;
+
+      shapeCopy.options.startCoords.x =
+        shapeCopy.options.initialCoords.startCoords.x + this.values.panOffset.x * 2;
+      shapeCopy.options.startCoords.y =
+        shapeCopy.options.initialCoords.startCoords.y + this.values.panOffset.y * 2;
+
+      return shapeCopy;
+    });
+
+    this.callbacks.setShapes(shapesUpdatedCopy);
+
+    shapesUpdatedCopy.forEach((shape) => shape.draw());
+    this.restore();
+  }
 }
 
 export default ArtManager;
