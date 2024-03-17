@@ -8,7 +8,7 @@ import Profile from "./profile";
 import Protected from "@src/containers/protected";
 import Modals from '../containers/modals';
 import { ChatPage } from './chat-page';
-import { Canvas } from './canvas';
+import { CanvasPage } from './canvas-page';
 
 /**
  * Приложение
@@ -27,7 +27,7 @@ function App(): React.ReactElement {
         <Route path={""} element={<Main />} />
         <Route path={"/articles/:id"} element={<Article />} />
         <Route path={"/login"} element={<Login />} />
-        <Route path={"/draw"} element={<Canvas />} />
+        <Route path={"/draw"} element={<CanvasPage />} />
         <Route
           path={"/profile"}
           element={

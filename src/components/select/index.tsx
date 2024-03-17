@@ -5,7 +5,7 @@ import './style.css';
 
 function Select(props: SelectProps) {
   const onSelect = (e: ChangeEvent<HTMLSelectElement>) => {
-    props.onChange(e.target.value as Lang & string);
+    props.onChange(e.target.value as Lang & string & number);
   };
 
   return (

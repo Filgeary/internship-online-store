@@ -51,6 +51,10 @@
     "clear": "Clear all messages"
   },
   "draw": {
-    "title": "Draw"
+    "title": "Draw",
+    "fill": "Fill color",
+    "clear": "Clear All",
+    "save": "Save image",
+    "draw": "Draw"
   }
 }

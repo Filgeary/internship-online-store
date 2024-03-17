@@ -1,0 +1,14 @@
+.Canvas {
+  display: flex;
+  flex-direction: column;
+  padding: 10px 20px;
+  gap: 10px;
+}
+
+.Canvas-field {
+  border: 1px solid #000;
+}
+
+canvas {
+  border: 1px solid #000;
+}
