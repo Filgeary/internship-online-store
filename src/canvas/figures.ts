@@ -2,7 +2,7 @@ import { IFigure } from './types';
 
 abstract class Figure implements IFigure {
   protected ctx: CanvasRenderingContext2D;
-  protected figurePath: Path2D;
+  protected figurePath: Path2D | undefined;
   protected x: number;
   protected y: number;
   protected strokeStyle: string;
@@ -13,7 +13,7 @@ abstract class Figure implements IFigure {
 
   constructor(ctx: CanvasRenderingContext2D) {
     this.ctx = ctx;
-    this.figurePath = null!;
+    this.figurePath = undefined;
     this.x = 0;
     this.y = 0;
     this.strokeStyle = '#eee';
@@ -39,7 +39,6 @@ abstract class Figure implements IFigure {
   updatePosition({ deltaX, deltaY }: { deltaX: number; deltaY: number }) {
     this.x += deltaX;
     this.y += deltaY;
-    this.figurePath.moveTo(deltaX, deltaY);
   }
 
   getFigurePath() {

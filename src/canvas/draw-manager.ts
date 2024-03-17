@@ -1,3 +1,4 @@
+import { config as initialCanvasState } from './config';
 import { Circle, DrawByHand, Line, Rect, Text, Triangle } from './figures';
 
 import type { TCanvasModes } from '@src/components/canvas-panel/types';
@@ -10,15 +11,6 @@ type TFigureEntity = {
   instance: IFigure;
   path?: Path2D;
 };
-
-export const initialCanvasState = {
-  mode: 'draw',
-  strokeStyle: 'white',
-  fillStyle: '#232222',
-  lineWidth: 16,
-  lineCap: 'round',
-  lineJoin: 'round',
-} as const;
 
 type TInitialCanvasState = typeof initialCanvasState;
 
@@ -133,6 +125,25 @@ export class DrawManager {
     if (id) {
       this.figures = this.figures.filter(figure => figure.id !== id);
     }
+  };
+
+  // move canvas
+  // ============================================
+
+  moveCanvas = ({ deltaX, deltaY }: { deltaX: number; deltaY: number }) => {
+    this.figures.forEach(figure => {
+      figure.instance.updatePosition({ deltaX, deltaY });
+      if (figure.path) {
+        figure.path = figure.instance.getFigurePath();
+      }
+    });
+  };
+
+  // others
+  // ============================================
+
+  getFigures = () => {
+    return this.figures;
   };
 
   // clear & draw canvas

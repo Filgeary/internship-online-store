@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 
-import { DrawManager, initialCanvasState } from '@src/canvas/draw-manager';
+import { config } from '@src/canvas/config';
+import { DrawManager } from '@src/canvas/draw-manager';
 
 import type { TCanvasActions, TCanvasModes } from '@src/components/canvas-panel/types';
 
@@ -73,20 +74,29 @@ const Canvas = ({ mode, action }: Props) => {
     const { offsetX, offsetY } = e;
     const { x: prevX, y: prevY } = prevCoords.current;
 
-    if (isDrawing.current && mode === 'draw') {
-      drawManager.drawByHand({ prevX, prevY, offsetX, offsetY });
-      prevCoords.current = { x: offsetX, y: offsetY };
-    }
+    if (isDrawing.current) {
+      let selectedFigure;
 
-    if (isDrawing.current && mode === 'select') {
-      const selectedFigure = drawManager.getSelectedFigure();
+      switch (mode) {
+        case 'draw':
+          drawManager.drawByHand({ prevX, prevY, offsetX, offsetY });
+          prevCoords.current = { x: offsetX, y: offsetY };
+          break;
+        case 'select':
+          selectedFigure = drawManager.getSelectedFigure();
 
-      if (selectedFigure) {
-        selectedFigure.instance.updatePosition({
-          deltaX: offsetX - prevX,
-          deltaY: offsetY - prevY,
-        });
-        prevCoords.current = { x: offsetX, y: offsetY };
+          if (selectedFigure) {
+            selectedFigure.instance.updatePosition({
+              deltaX: offsetX - prevX,
+              deltaY: offsetY - prevY,
+            });
+            prevCoords.current = { x: offsetX, y: offsetY };
+          }
+          break;
+        case 'move':
+          drawManager.moveCanvas({ deltaX: offsetX - prevX, deltaY: offsetY - prevY });
+          prevCoords.current = { x: offsetX, y: offsetY };
+          break;
       }
     }
   };
@@ -122,7 +132,7 @@ const Canvas = ({ mode, action }: Props) => {
     canvas.width = width;
     canvas.height = height;
 
-    drawManagerRef.current = new DrawManager(ctx, initialCanvasState);
+    drawManagerRef.current = new DrawManager(ctx, config);
     if (!(drawManagerRef.current instanceof DrawManager)) return;
 
     const drawManager = drawManagerRef.current;
