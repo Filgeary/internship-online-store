@@ -57,6 +57,9 @@ const Canvas = ({ mode, action }: Props) => {
       case 'select':
         drawManager.selectFigure({ x: offsetX, y: offsetY });
         break;
+      case 'delete':
+        drawManager.deleteFigure({ x: offsetX, y: offsetY });
+        break;
       default:
         break;
     }
@@ -161,9 +164,6 @@ const Canvas = ({ mode, action }: Props) => {
     switch (action) {
       case 'reset':
         drawManager.clear();
-        break;
-      case 'delete':
-        // TODO: delete selected figure
         break;
       default:
         break;

@@ -23,15 +23,15 @@ export const moveModeIconsMap = {
 
 export const drawModeIconsMap = {
   draw: Edit2,
-  text: Type,
-  circle: Circle,
   rect: Square,
+  circle: Circle,
   triangle: Triangle,
   line: Minus,
+  text: Type,
+  delete: X,
 };
 
 export const actionsIconsMap = {
-  delete: X,
   reset: RefreshCw,
 };
 

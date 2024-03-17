@@ -118,6 +118,13 @@ export class DrawManager {
     }
   };
 
+  deleteFigure = ({ x, y }: { x: number; y: number }) => {
+    const { id } = this.getFigureByPathIntersection({ x, y }) || {};
+    if (id) {
+      this.figures = this.figures.filter(figure => figure.id !== id);
+    }
+  };
+
   // clear canvas
   clear = () => {
     this.figures = [];
