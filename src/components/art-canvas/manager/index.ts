@@ -43,6 +43,8 @@ class ArtManager {
       this.canvasNode.height = this.canvasNode.clientHeight;
     });
     resizeObserver.observe(this.canvasNode);
+
+    this.initBaseLayout();
   }
 
   /**
@@ -384,6 +386,7 @@ class ArtManager {
       y,
       xWithOffset,
       yWithOffset,
+      initialCoords,
       panOffset,
     }: TDrawingOptions & Partial<TShapeOptions>
   ) {
@@ -430,6 +433,7 @@ class ArtManager {
         x: startX,
         y: startY,
       },
+      initialCoords,
       panOffset,
     });
   }
@@ -455,6 +459,14 @@ class ArtManager {
    */
   makeVisibleAllShapes() {
     const { x, y } = this.getCoordsByScaleOffsets(this.values.scale);
+
+    let shapesStepHistory = this.values.images.shapesHistory[this.values.activeImage - 1];
+
+    if (!shapesStepHistory) {
+      if (this.values.eraserActive) shapesStepHistory = this.values.images.shapesHistory.at(-1);
+      else return this.clearCanvasPicture();
+    }
+
     this.clearCanvasPicture();
     this.save();
     this.translate(
@@ -462,7 +474,7 @@ class ArtManager {
       this.values.panOffset.y * this.values.scale - y
     );
     this.scale(this.values.scale, this.values.scale);
-    const shapesUpdatedCopy = this.values.images.shapes.map((shape) => {
+    const shapesUpdatedCopy = shapesStepHistory.map((shape) => {
       const shapeCopy = doShapeCopy(shape);
 
       shapeCopy.options.x = shapeCopy.options.initialCoords.x + this.values.panOffset.x * 2;
@@ -480,6 +492,21 @@ class ArtManager {
 
     shapesUpdatedCopy.forEach((shape) => shape.draw());
     this.restore();
+  }
+
+  /**
+   * Инициализация базового полотна
+   */
+  initBaseLayout() {
+    if (this.values.images.imagesNodes.length) return;
+
+    this.fillBgOpacityColor();
+
+    this.getBinary().then((blob) => {
+      const image = new Image() as TArtImage;
+      image.src = URL.createObjectURL(blob);
+      this.callbacks.setImagesNodes([...this.values.images.imagesNodes, image]);
+    });
   }
 }
 

@@ -4,12 +4,11 @@ import React, { memo, useEffect, useMemo, useRef, useState } from 'react';
 import { cn as bem } from '@bem-react/classname';
 import { useArtCanvasContext } from '..';
 
-import { TArtImage, TTools } from '@src/store/art/types';
+import { TTools } from '@src/store/art/types';
 import ArtCanvasUtils from '../art-canvas-utils';
 import ArtManager from '../manager';
 import { TShapes } from '../shapes/types';
 import cloneDeep from 'lodash.clonedeep';
-import doShapeCopy from '../utils/do-shape-copy';
 
 type TCoords = {
   x: number | null;
@@ -67,6 +66,8 @@ function ArtCanvasInner() {
     onPointerDown: (e: React.PointerEvent<HTMLCanvasElement>) => {
       if (e.button === options.leftMouseBtn) {
         setIsPointerDown(true);
+
+        ctxCallbacks.setShapesHistory(values.images.shapesHistory.slice(0, values.activeImage));
 
         const { offsetX, offsetY } = e.nativeEvent;
         setStartCoords({
@@ -167,6 +168,7 @@ function ArtCanvasInner() {
     undoDisabled: values.activeImage === 0,
     redoDisabled: values.activeImage === values.images.imagesNodes.length - 1,
     clearImagesDisabled: values.images.imagesNodes.length === 1,
+    percentScaleFormat: new Intl.NumberFormat('ru-RU', { style: 'percent' }).format(values.scale),
   };
 
   // Логика перетаскивания фигур
@@ -179,6 +181,7 @@ function ArtCanvasInner() {
       .find((shape) => {
         return shape.mouseIn(startCoords);
       });
+
     if (!shapeSelected) return;
 
     const pointerMoveHandler = (e: PointerEvent) => {
@@ -290,26 +293,12 @@ function ArtCanvasInner() {
     canvasRef.current.style.setProperty('background-color', values.bgColor);
   }, [values.bgColor]);
 
-  // Инициализация видимого полотна
-  useEffect(() => {
-    if (values.images.imagesNodes.length) return;
-
-    canvasManager.fillBgOpacityColor();
-
-    canvasManager.getBinary().then((blob) => {
-      const image = new Image() as TArtImage;
-      image.src = URL.createObjectURL(blob);
-      ctxCallbacks.setImagesNodes([...values.images.imagesNodes, image]);
-    });
-  }, []);
-
   // Установка динамических фигур (чтобы можно было перетаскивать в любой момент)
   useEffect(() => {
     const shapesHistoryStep = values.images.shapesHistory[values.activeImage - 1];
     if (!shapesHistoryStep?.length) return;
 
     ctxCallbacks.setShapes(cloneDeep(shapesHistoryStep));
-    ctxCallbacks.setShapesHistory(values.images.shapesHistory.slice(0, values.activeImage));
   }, [values.activeImage]);
 
   // Действия по изменению зума и рисованию
@@ -328,11 +317,12 @@ function ArtCanvasInner() {
   //   // });
   // }, [values.scale, values.images.imagesNodes, values.activeImage, values.panOffset]);
 
+  // Отрисовка примитивов (в том числе учитывается текущий шаг истории)
   useEffect(() => {
     canvasManager.makeVisibleAllShapes();
-  }, [values.panOffset, values.scale]);
+  }, [values.panOffset, values.scale, values.activeImage]);
 
-  // Panning-фича
+  // Panning-фича (можем передвигаться по холсту)
   useEffect(() => {
     const panFunction = (e: WheelEvent) => {
       const { x, y } = e;
@@ -391,9 +381,7 @@ function ArtCanvasInner() {
         <div className={cn('bottom-utils')}>
           <div className={cn('zoom-btns')}>
             <button onClick={() => callbacks.zoomAction(-0.1)}>-</button>
-            <button onClick={() => ctxCallbacks.setScale(1)}>
-              {new Intl.NumberFormat('ru-RU', { style: 'percent' }).format(values.scale)}
-            </button>
+            <button onClick={() => ctxCallbacks.setScale(1)}>{options.percentScaleFormat}</button>
             <button onClick={() => callbacks.zoomAction(0.1)}>+</button>
           </div>
 

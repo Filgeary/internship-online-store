@@ -25,20 +25,6 @@ function ArtCanvasOptions() {
     onFillColorChange: (e: React.ChangeEvent<HTMLInputElement>) => {
       ctxCallbacks.setFillColor(e.target.checked);
     },
-
-    onZoomingXChange: (e: React.ChangeEvent<HTMLInputElement>) => {
-      ctxCallbacks.setZooming((prevZooming) => ({
-        ...prevZooming,
-        x: Number(e.target.value),
-      }));
-    },
-
-    onZoomingYChange: (e: React.ChangeEvent<HTMLInputElement>) => {
-      ctxCallbacks.setZooming((prevZooming) => ({
-        ...prevZooming,
-        y: Number(e.target.value),
-      }));
-    },
   };
 
   return (
@@ -96,39 +82,6 @@ function ArtCanvasOptions() {
                   type='range'
                 />
                 {values.brushWidth}
-              </label>
-            </li>
-          </ul>
-        </div>
-
-        <div>
-          <span>Приближение</span>
-
-          <ul className={cn('list')}>
-            <li>
-              <label>
-                Приближение по <b>X</b>:
-                <input
-                  value={values.zooming.x}
-                  onChange={handlers.onZoomingXChange}
-                  min={1}
-                  max={10}
-                  type='range'
-                />
-                {values.zooming.x}
-              </label>
-            </li>
-            <li>
-              <label>
-                Приближение по <b>Y</b>:
-                <input
-                  value={values.zooming.y}
-                  onChange={handlers.onZoomingYChange}
-                  min={1}
-                  max={10}
-                  type='range'
-                />
-                {values.zooming.y}
               </label>
             </li>
           </ul>

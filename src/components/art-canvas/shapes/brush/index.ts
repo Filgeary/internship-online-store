@@ -8,12 +8,6 @@ class Brush extends Shape {
     this.options = options;
   }
 
-  // draw() {
-  //   this.points.forEach((dot) => {
-  //     this.drawDot(dot.x, dot.y);
-  //   });
-  // }
-
   draw(): void {
     this.ctx.lineWidth = this.options.brushWidth;
     this.ctx.lineCap = 'round';
@@ -22,7 +16,7 @@ class Brush extends Shape {
     this.ctx.stroke();
   }
 
-  mouseIn(coords: { x: number; y: number }): boolean {
+  mouseIn(): boolean {
     return false;
   }
 }
