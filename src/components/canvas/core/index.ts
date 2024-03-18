@@ -1,4 +1,4 @@
-import { Action, Figures, Options, Points, ScrollParams } from "./type";
+import { Action, Figures, Options, ScrollParams, ZoomParams } from "./type";
 import * as figures from "./shapes/exports";
 import { getPaddingSize } from "@src/utils/get-padding-size";
 
@@ -21,12 +21,6 @@ class Core {
     figure: "pencil",
     fill: false,
     draw: true,
-  };
-
-  //начальные координаты
-  startCoords: Points = {
-    x: 0,
-    y: 0,
   };
 
   //снимок канвы
@@ -52,8 +46,9 @@ class Core {
     // Отслеживаем изменение размеров окна (хотя лучше повесить ResizeObserver на root)
     window.addEventListener("resize", this.resize);
     this.canvas.addEventListener("mousedown", this.onMouseDown);
-    this.canvas.addEventListener("mousemove", this.onMouseMove.bind(this));
-    this.canvas.addEventListener("mouseup", this.onMouseUp.bind(this));
+    this.canvas.addEventListener("mousemove", this.onMouseMove);
+    this.canvas.addEventListener("mouseup", this.onMouseUp);
+    this.canvas.addEventListener("wheel", this.onMouseWheel);
 
     this.ctx = this.canvas.getContext("2d", { willReadFrequently: true });
     if (this.ctx) {
@@ -73,6 +68,7 @@ class Core {
       this.canvas.removeEventListener("mousedown", this.onMouseDown);
       this.canvas.addEventListener("mousemove", this.onMouseMove);
       this.canvas.addEventListener("mouseup", this.onMouseUp);
+      this.canvas.removeEventListener("wheel", this.onMouseWheel);
       // Удаление канвы
       if (this.root) this.root.removeChild(this.canvas);
       this.canvas = null;
@@ -83,10 +79,10 @@ class Core {
   resize = () => {
     if (this.root && this.canvas && this.ctx) {
       const rect = this.root.getBoundingClientRect();
-      this.metrics.left = rect.left;
-      this.metrics.top = rect.top;
       const { paddingTop, paddingRight, paddingBottom, paddingLeft } =
         getPaddingSize(this.root);
+      this.metrics.left = rect.left + paddingLeft;
+      this.metrics.top = rect.top + paddingTop;
       this.metrics.width = this.root.offsetWidth - paddingRight - paddingLeft;
       this.metrics.height = this.root.offsetHeight - paddingTop - paddingBottom;
       this.metrics.dpr = window.devicePixelRatio;
@@ -106,14 +102,46 @@ class Core {
   }
 
   scroll({ x, y, dx, dy }: ScrollParams) {
-    if (typeof x != "undefined") this.metrics.scrollX = x;
-    if (typeof y != "undefined") this.metrics.scrollY = y;
-    if (typeof dx != "undefined") this.metrics.scrollX += dx; //добавлвяется смещение по горизонтали
-    if (typeof dy != "undefined") this.metrics.scrollY += dy; //добавлвяется смещение по вертикали
+    if (x) this.metrics.scrollX = x;
+    if (y) this.metrics.scrollY = y;
+    if (dx) this.metrics.scrollX += dx; //добавляется смещение по горизонтали
+    if (dy) this.metrics.scrollY += dy; //добавляется смещение по вертикали
   }
 
-  startDrawing() {
-    if (this.ctx && this.canvas) {
+  zoom({center, zoom, delta}: ZoomParams) {
+    // Центр масштабирования с учётом текущего смещения и масштабирования
+    const centerReal = {
+      x: (center.x + this.metrics.scrollX) / this.metrics.zoom,
+      y: (center.y + this.metrics.scrollY) / this.metrics.zoom,
+    };
+    // Точная установка масштаба
+    if (zoom) this.metrics.zoom = zoom;
+    // Изменение масштабирования на коэффициент
+    if (delta) this.metrics.zoom += delta * this.metrics.zoom;
+    // Корректировка минимального масштаба
+    this.metrics.zoom = Math.max(0.1, this.metrics.zoom);
+    // Центр масштабирования с учётом нового масштаба
+    const centerNew = {
+      x: centerReal.x * this.metrics.zoom,
+      y: centerReal.y * this.metrics.zoom,
+    };
+    // Корректировка смещения
+    this.scroll({
+      x: centerNew.x - center.x,
+      y: centerNew.y - center.y,
+    });
+  }
+
+  onMouseDown = (e: MouseEvent) => {
+    const point = {
+      x:
+        (e.clientX - this.metrics.left + this.metrics.scrollX) /
+        this.metrics.zoom,
+      y:
+        (e.clientY - this.metrics.top + this.metrics.scrollY) /
+        this.metrics.zoom,
+    };
+    if (this.options.draw && this.ctx && this.canvas) {
       this.ctx.beginPath();
       //копирование данных канваса и передача их в качестве снимка
       this.snapshot = this.ctx.getImageData(
@@ -122,25 +150,18 @@ class Core {
         this.canvas.width,
         this.canvas.height
       );
-    }
-    this.isDrawing = true;
-  }
+      this.isDrawing = true;
+      this.action = {
+        name: 'draw',
+        targetX: point.x,
+        targetY: point.y,
+        x: point.x,
+        y: point.y,
+      }
 
-  onMouseDown = (e: MouseEvent) => {
-    this.startCoords = { x: e.offsetX, y: e.offsetY };
-    if (this.options.draw) {
-      this.startDrawing();
     } else {
       for (let shape of this.shapes) {
-        if (shape.mouseInShape(e.offsetX, e.offsetY)) {
-          const point = {
-            x:
-              (e.clientX - this.metrics.left + this.metrics.scrollX) /
-              this.metrics.zoom,
-            y:
-              (e.clientY - this.metrics.top + this.metrics.scrollY) /
-              this.metrics.zoom,
-          };
+        if (shape.mouseInShape(point.x, point.y)) {
           this.action = {
             name: "drag",
             x: point.x,
@@ -149,6 +170,7 @@ class Core {
             targetY: shape.startY,
             element: shape,
           };
+          break;
         } else {
           this.action = {
             name: "scroll",
@@ -164,7 +186,7 @@ class Core {
     }
   };
 
-  finishDrawing() {
+  finishDrawing = () => {
     if (this.ctx) this.ctx.closePath();
     this.isDrawing = false;
     if (this.elements.length) {
@@ -173,45 +195,59 @@ class Core {
     }
   }
 
-  onMouseUp() {
+  onMouseUp = () => {
     if (this.options.draw) {
       this.finishDrawing();
-    } else {
-      this.action = null;
+    }
+    this.action = null;
+  }
+
+  onMouseMove = (e: MouseEvent) => {
+    const point = {
+      x:
+        (e.clientX - this.metrics.left + this.metrics.scrollX) /
+        this.metrics.zoom,
+      y:
+        (e.clientY - this.metrics.top + this.metrics.scrollY) /
+        this.metrics.zoom,
+    };
+      if (this.action) {
+        if (this.options.draw && this.action.name === "draw") {
+          this.draw(
+            point.x,
+            point.y
+          );
+        } else {
+          if (this.action.name === "drag" && this.action.element) {
+            this.dragShape(
+              this.action.element,
+              this.action.targetX + point.x - this.action.x,
+              this.action.targetY + point.y - this.action.y
+            );
+          } else if (this.action.name === "scroll") {
+            // Скролл использует не масштабированную точку, так как сам же на неё повлиял бы
+            this.scroll({
+              x:
+                this.action.targetX -
+                (e.clientX - this.metrics.left - this.action.x),
+              y:
+                this.action.targetY -
+                (e.clientY - this.metrics.top - this.action.y),
+            });
+          }
+        }
     }
   }
 
-  onMouseMove(e: MouseEvent) {
-    if (this.options.draw) {
-      this.draw(e.offsetX, e.offsetY);
+  onMouseWheel = (e: WheelEvent) => {
+    e.preventDefault();
+    const delta = e.deltaY > 0 ? 0.1 : -0.1;
+    if (e.ctrlKey) {
+      // Масштабирование
+      this.zoom({ center: { x: e.offsetX, y: e.offsetY }, delta });
     } else {
-      const point = {
-        x:
-          (e.clientX - this.metrics.left + this.metrics.scrollX) /
-          this.metrics.zoom,
-        y:
-          (e.clientY - this.metrics.top + this.metrics.scrollY) /
-          this.metrics.zoom,
-      };
-      if (this.action) {
-        if (this.action.name === "drag" && this.action.element) {
-          this.dragShape(
-            this.action.element,
-            this.action.targetX + point.x - this.action.x,
-            this.action.targetY + point.y - this.action.y
-          );
-        } else if (this.action.name === "scroll") {
-          // Скролл использует не масштабированную точку, так как сам же на неё повлиял бы
-          this.scroll({
-            x:
-              this.action.targetX -
-              (e.clientX - this.metrics.left - this.action.x),
-            y:
-              this.action.targetY -
-              (e.clientY - this.metrics.top - this.action.y),
-          });
-        }
-      }
+      // Прокрутка по вертикали
+      this.scroll({ dy: delta * 300 });
     }
   }
 
@@ -240,16 +276,18 @@ class Core {
     if (this.ctx) {
       this.ctx.save();
       this.ctx.clearRect(0, 0, this.metrics.width, this.metrics.height);
+      this.ctx.translate(-this.metrics.scrollX, -this.metrics.scrollY);
+      this.ctx.scale(this.metrics.zoom, this.metrics.zoom);
       for (let shape of this.shapes) {
         shape.draw();
       }
       this.ctx.restore();
-      // requestAnimationFrame(this.reDraw);
+      requestAnimationFrame(this.reDraw);
     }
   };
 
   drawShape(offsetX: number, offsetY: number) {
-    if (this.ctx)
+    if (this.ctx && this.action)
       switch (this.options.figure) {
         case "line": {
           const line = new figures.line(
@@ -258,8 +296,8 @@ class Core {
             this.ctx,
             offsetX,
             offsetY,
-            this.startCoords.x,
-            this.startCoords.y
+            this.action.targetX,
+            this.action.targetY
           );
           line.draw();
           this.elements.push(line);
@@ -295,8 +333,8 @@ class Core {
             this.ctx,
             offsetX,
             offsetY,
-            this.startCoords.x,
-            this.startCoords.y
+            this.action.targetX,
+            this.action.targetY
           );
           rectangle.draw();
           this.elements.push(rectangle);
@@ -310,8 +348,8 @@ class Core {
             this.ctx,
             offsetX,
             offsetY,
-            this.startCoords.x,
-            this.startCoords.y
+            this.action.targetX,
+            this.action.targetY
           );
           this.elements.push(circle);
           circle.draw();
@@ -325,8 +363,8 @@ class Core {
             this.ctx,
             offsetX,
             offsetY,
-            this.startCoords.x,
-            this.startCoords.y
+            this.action.targetX,
+            this.action.targetY
           );
           this.elements.push(triangle);
           triangle.draw();

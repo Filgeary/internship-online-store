@@ -8,7 +8,7 @@ export type Options = {
   draw: boolean;
 };
 
-export type Points = {
+export type Point = {
   x: number;
   y: number;
 }
@@ -30,3 +30,9 @@ export type ScrollParams = Partial<{
   dx: number;
   dy: number;
 }>;
+
+export type ZoomParams = {
+  center: Point;
+  zoom?: number;
+  delta?: number;
+};

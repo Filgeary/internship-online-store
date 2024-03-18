@@ -29,7 +29,6 @@ class Circle extends Shape {
       Math.pow(this.startX - this.offsetX, 2) +
         Math.pow(this.startY - this.offsetY, 2)
     );
-
     this.ctx.arc(this.startX, this.startY, this.radius ? this.radius : radius, 0, 2 * Math.PI);
     this.ctx.lineCap = "round";
     if (this.fill) {
