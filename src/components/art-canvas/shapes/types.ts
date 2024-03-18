@@ -21,6 +21,7 @@ export type TShapeOptions = {
     };
   };
   panOffset: TCoords;
+  fillColor?: string;
 };
 
 export type TCoords = {

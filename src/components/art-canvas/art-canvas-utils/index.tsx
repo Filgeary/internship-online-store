@@ -3,6 +3,7 @@ import { memo } from 'react';
 import { cn as bem } from '@bem-react/classname';
 
 import { FaArrowAltCircleLeft, FaArrowAltCircleRight, FaTrash, FaEraser } from 'react-icons/fa';
+import { PiPaintBucketDuotone } from 'react-icons/pi';
 import { TTools } from '@src/store/art/types';
 
 type ArtCanvasUtilsProps = {
@@ -14,6 +15,8 @@ type ArtCanvasUtilsProps = {
   isClearImagesDisabled: boolean;
   eraserToggle: () => void;
   isEraserActive: boolean;
+  isBucketActive: boolean;
+  bucketToggle: () => void;
   activeTool: TTools;
   activeToolChangeAction: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   clearCanvas: () => void;
@@ -57,6 +60,11 @@ function ArtCanvasUtils(props: ArtCanvasUtilsProps) {
           <div className={cn('separate-util')}>
             <button title={'Стёрка'} onClick={props.eraserToggle} className={cn('btn')}>
               <FaEraser color={props.isEraserActive ? 'green' : 'black'} size={20} />
+            </button>
+          </div>
+          <div className={cn('separate-util')}>
+            <button title={'Заливка'} onClick={props.bucketToggle} className={cn('btn')}>
+              <PiPaintBucketDuotone color={props.isBucketActive ? 'green' : 'black'} size={20} />
             </button>
           </div>
         </div>

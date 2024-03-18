@@ -8,6 +8,7 @@ import { TArtImage, TTools } from '@src/store/art/types';
 import { TDrawShapesMethods, TDrawingOptions } from './types';
 import { TArtCanvasContext } from '../types';
 import doShapeCopy from '../utils/do-shape-copy';
+import Shape from '../shapes';
 
 type TDrawOptions = {
   scaleOffsetX: number;
@@ -41,6 +42,7 @@ class ArtManager {
     const resizeObserver = new ResizeObserver(() => {
       this.canvasNode.width = this.canvasNode.clientWidth;
       this.canvasNode.height = this.canvasNode.clientHeight;
+      this.makeVisibleAllShapes();
     });
     resizeObserver.observe(this.canvasNode);
 
@@ -239,7 +241,38 @@ class ArtManager {
     const shapeCapitalized = shape[0].toUpperCase() + shape.slice(1);
     const methodName = ('draw' + shapeCapitalized) as TDrawShapesMethods;
 
-    return this[methodName](options);
+    const { x, y } = this.getCoordsByScaleOffsets(this.values.scale);
+
+    this.save();
+    this.translate(
+      this.values.panOffset.x * this.values.scale - x,
+      this.values.panOffset.y * this.values.scale - y
+    );
+    this.scale(this.values.scale, this.values.scale);
+
+    const instance = this[methodName](options);
+
+    this.restore();
+
+    return instance;
+  }
+
+  /**
+   * Рисование через уже готовый инстанс
+   */
+  polyDraw(shape: TShapes) {
+    const { x, y } = this.getCoordsByScaleOffsets(this.values.scale);
+
+    this.save();
+    this.translate(
+      this.values.panOffset.x * this.values.scale - x,
+      this.values.panOffset.y * this.values.scale - y
+    );
+    this.scale(this.values.scale, this.values.scale);
+
+    shape.draw();
+
+    this.restore();
   }
 
   /**
@@ -364,6 +397,13 @@ class ArtManager {
   }
 
   /**
+   * Переключатель заливки
+   */
+  bucketToggle() {
+    this.callbacks.setBucketActive(!this.values.bucketActive);
+  }
+
+  /**
    * Изменение приближения
    */
   zoomAction(delta: number) {
@@ -390,6 +430,8 @@ class ArtManager {
       panOffset,
     }: TDrawingOptions & Partial<TShapeOptions>
   ) {
+    if (this.values.bucketActive) return;
+
     // Panning action
     if (isPanning) {
       const deltaX = xWithOffset - startPanX;
@@ -411,8 +453,8 @@ class ArtManager {
       this.fillEraser({
         width: this.values.brushWidth,
         bgColor: this.values.bgColor,
-        x,
-        y,
+        x: x + this.values.panOffset.x,
+        y: y + this.values.panOffset.y,
       });
 
       return;
@@ -458,8 +500,6 @@ class ArtManager {
    * Сделать видимыми все фигуры
    */
   makeVisibleAllShapes() {
-    const { x, y } = this.getCoordsByScaleOffsets(this.values.scale);
-
     let shapesStepHistory = this.values.images.shapesHistory[this.values.activeImage - 1];
 
     if (!shapesStepHistory) {
@@ -467,13 +507,6 @@ class ArtManager {
       else return this.clearCanvasPicture();
     }
 
-    this.clearCanvasPicture();
-    this.save();
-    this.translate(
-      this.values.panOffset.x * this.values.scale - x,
-      this.values.panOffset.y * this.values.scale - y
-    );
-    this.scale(this.values.scale, this.values.scale);
     const shapesUpdatedCopy = shapesStepHistory.map((shape) => {
       const shapeCopy = doShapeCopy(shape);
 
@@ -490,8 +523,8 @@ class ArtManager {
 
     this.callbacks.setShapes(shapesUpdatedCopy);
 
-    shapesUpdatedCopy.forEach((shape) => shape.draw());
-    this.restore();
+    this.clearCanvasPicture();
+    shapesUpdatedCopy.forEach((shape) => this.polyDraw(shape));
   }
 
   /**

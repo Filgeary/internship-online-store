@@ -19,6 +19,10 @@ class Brush extends Shape {
   mouseIn(): boolean {
     return false;
   }
+
+  getArea(): number {
+    return 1000;
+  }
 }
 
 export default Brush;

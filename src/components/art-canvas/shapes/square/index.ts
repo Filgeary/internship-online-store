@@ -18,15 +18,7 @@ class Square extends Shape {
         this.options.startCoords.x - this.options.x,
         this.options.startCoords.y - this.options.y
       );
-    } else {
-      this.ctx.fillStyle = this.options.brushColor;
-      this.ctx.fillRect(
-        this.options.x,
-        this.options.y,
-        this.options.startCoords.x - this.options.x,
-        this.options.startCoords.y - this.options.y
-      );
-    }
+    } else this.fillArea(this.options.fillColor ?? this.options.brushColor);
   }
 
   mouseIn(coords: { x: number; y: number }) {
@@ -39,6 +31,38 @@ class Square extends Shape {
         coords.y < this.options.startCoords.y &&
         coords.x > this.options.x &&
         coords.y > this.options.y)
+    );
+  }
+
+  getArea(): number {
+    const width = Math.abs(this.options.x - this.options.startCoords.x);
+    const height = Math.abs(this.options.y - this.options.startCoords.y);
+
+    const area = width * height;
+
+    return area / 10;
+  }
+
+  fillArea(color: string) {
+    this.options.isFilled = true;
+    this.options.fillColor = color;
+
+    this.ctx.fillStyle = color;
+    this.ctx.fillRect(
+      this.options.x,
+      this.options.y,
+      this.options.startCoords.x - this.options.x,
+      this.options.startCoords.y - this.options.y
+    );
+
+    // Для границы
+    this.ctx.lineWidth = this.options.brushWidth;
+    this.ctx.strokeStyle = this.options.brushColor;
+    this.ctx.strokeRect(
+      this.options.x,
+      this.options.y,
+      this.options.startCoords.x - this.options.x,
+      this.options.startCoords.y - this.options.y
     );
   }
 }

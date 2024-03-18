@@ -18,9 +18,11 @@ export type TArtCanvasContext = {
     activeTool: TTools;
     fillColor: boolean;
     eraserActive: boolean;
+    bucketActive: boolean;
     scaleOffset: TCoords2D;
     panOffset: TCoords2D;
     scale: number;
+    isFalling: boolean;
   };
 
   callbacks: {
@@ -35,6 +37,8 @@ export type TArtCanvasContext = {
     setActiveTool: (activeToolVal: TTools) => void;
     setFillColor: (fillColorVal: boolean) => void;
     setEraserActive: (eraserActiveVal: boolean) => void;
+    setIsFalling: (isFallingVal: boolean) => void;
+    setBucketActive: (bucketActiveVal: boolean) => void;
     setPanOffset: (panOffsetVal: TCoords) => void;
     setScaleOffset: (scaleOffset: TCoords) => void;
     setScale: (scale: number) => void;

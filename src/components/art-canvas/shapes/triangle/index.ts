@@ -35,6 +35,17 @@ class Triangle extends Shape {
         coords.y > this.options.y)
     );
   }
+
+  getArea(): number {
+    const width = Math.abs(this.options.x - this.options.startCoords.x);
+    const height = Math.abs(this.options.y - this.options.startCoords.y);
+
+    const area = width * height;
+
+    return area / 10;
+  }
+
+  fillArea(color: string): void {}
 }
 
 export default Triangle;

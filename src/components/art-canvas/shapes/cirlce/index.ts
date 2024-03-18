@@ -8,6 +8,11 @@ class Circle extends Shape {
     super(options.panOffset);
     this.ctx = ctx;
     this.options = options;
+
+    this.radius = Math.sqrt(
+      Math.pow(this.options.startCoords.x - this.options.x, 2) +
+        Math.pow(this.options.startCoords.y - this.options.y, 2)
+    );
   }
 
   draw(): void {
@@ -15,10 +20,6 @@ class Circle extends Shape {
     this.ctx.fillStyle = this.options.brushColor;
     this.ctx.lineWidth = this.options.brushWidth;
 
-    this.radius = Math.sqrt(
-      Math.pow(this.options.startCoords.x - this.options.x, 2) +
-        Math.pow(this.options.startCoords.y - this.options.y, 2)
-    );
     this.ctx.arc(
       this.options.startCoords.x,
       this.options.startCoords.y,
@@ -39,6 +40,13 @@ class Circle extends Shape {
       coords.y <= this.options.startCoords.y + this.radius
     );
   }
+
+  getArea(): number {
+    const area = Math.PI * this.radius ** 2;
+    return area / 10;
+  }
+
+  fillArea(color: string): void {}
 }
 
 export default Circle;

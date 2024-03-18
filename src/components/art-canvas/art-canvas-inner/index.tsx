@@ -9,6 +9,7 @@ import ArtCanvasUtils from '../art-canvas-utils';
 import ArtManager from '../manager';
 import { TShapes } from '../shapes/types';
 import cloneDeep from 'lodash.clonedeep';
+import doShapeCopy from '../utils/do-shape-copy';
 
 type TCoords = {
   x: number | null;
@@ -39,6 +40,7 @@ function ArtCanvasInner() {
     redo: () => canvasManager.redo(),
     clearImages: () => canvasManager.clearImages(),
     eraserToggle: () => canvasManager.eraserToggle(),
+    bucketToggle: () => canvasManager.bucketToggle(),
     zoomAction: (delta: number) => canvasManager.zoomAction(delta),
 
     clearCanvasPicture: () => {
@@ -48,6 +50,7 @@ function ArtCanvasInner() {
 
     endAction: (selectedShapeId?: string) => {
       setIsPointerDown(false);
+      setStartCoords({ x: null, y: null });
       canvasManager.endAction(selectedShapeId);
     },
   };
@@ -78,7 +81,6 @@ function ArtCanvasInner() {
         if (isCtrlPressed) return;
         if (isSpacePressed) {
           const { clientX, clientY } = helpers.getMouseCoordinates(e.nativeEvent);
-
           setStartPanMousePosition({ x: clientX, y: clientY });
           return;
         }
@@ -97,12 +99,12 @@ function ArtCanvasInner() {
         canvasManager.inDrawingProcess(snapshot, {
           isCtrlPressed,
           isPanning: isSpacePressed,
-          startX: startCoords.x,
-          startY: startCoords.y,
+          startX: startCoords.x - values.panOffset.x,
+          startY: startCoords.y - values.panOffset.y,
           startPanX: startPanMousePosition.x,
           startPanY: startPanMousePosition.y,
-          x: offsetX,
-          y: offsetY,
+          x: offsetX - values.panOffset.x,
+          y: offsetY - values.panOffset.y,
           xWithOffset,
           yWithOffset,
         });
@@ -112,6 +114,8 @@ function ArtCanvasInner() {
     onPointerUp: (e: React.PointerEvent<HTMLCanvasElement>) => {
       if (e.button === options.leftMouseBtn) {
         const { offsetX, offsetY } = e.nativeEvent;
+        let resultShape = null;
+        let resultArea = null;
 
         /* 
           Если нет снапшота - пользователь сначала двигал с помощью Ctrl + ЛКМ,
@@ -127,7 +131,7 @@ function ArtCanvasInner() {
            Пользователь нарисовал новую фигуру
            Рисуем её и заносим в историю
           */
-          const shape = canvasManager.draw(values.activeTool, {
+          resultShape = canvasManager.getInstance(values.activeTool, {
             brushWidth: values.brushWidth,
             brushColor: values.brushColor,
             x: offsetX,
@@ -144,11 +148,14 @@ function ArtCanvasInner() {
             },
             panOffset: values.panOffset,
           }) as TShapes;
-          canvasManager.updateShapes(shape);
+          resultArea = resultShape.getArea();
+          if (resultArea >= options.minArea) canvasManager.updateShapes(resultShape);
+          else canvasManager.makeVisibleAllShapes();
         }
 
         if (snapshot) {
-          callbacks.endAction();
+          if (resultArea >= options.minArea) callbacks.endAction();
+          setIsPointerDown(false);
           setSnapshot(null);
         }
       }
@@ -169,20 +176,33 @@ function ArtCanvasInner() {
     redoDisabled: values.activeImage === values.images.imagesNodes.length - 1,
     clearImagesDisabled: values.images.imagesNodes.length === 1,
     percentScaleFormat: new Intl.NumberFormat('ru-RU', { style: 'percent' }).format(values.scale),
+    minArea: 150,
   };
 
   // Логика перетаскивания фигур
   useEffect(() => {
-    if (!isCtrlPressed || values.eraserActive) return;
+    if ((!isCtrlPressed || values.eraserActive) && !values.bucketActive) return;
 
+    // Координаты со смещением для корректного определения попадания по фигуре
+    const startCoordsWithOffset = {
+      x: startCoords.x - values.panOffset.x,
+      y: startCoords.y - values.panOffset.y,
+    };
     const shapeSelected = values.images.shapes
       .slice()
       .reverse()
       .find((shape) => {
-        return shape.mouseIn(startCoords);
+        return shape.mouseIn(startCoordsWithOffset);
       });
 
     if (!shapeSelected) return;
+
+    // Если активна заливка - только заливаем
+    if (values.bucketActive) {
+      //@ts-ignore
+      shapeSelected.fillArea(values.brushColor);
+      return;
+    }
 
     const pointerMoveHandler = (e: PointerEvent) => {
       shapeSelected.options.x += e.movementX;
@@ -196,16 +216,16 @@ function ArtCanvasInner() {
       shapeSelected.options.initialCoords.startCoords.y += e.movementY;
 
       canvasManager.clearCanvasPicture();
-
       values.images.shapes.forEach((shape) => {
-        shape.options.x = shape.options.initialCoords.x + values.panOffset.x * 3;
-        shape.options.y = shape.options.initialCoords.y + values.panOffset.y * 3;
+        shape.options.x = shape.options.initialCoords.x + values.panOffset.x * 2;
+        shape.options.y = shape.options.initialCoords.y + values.panOffset.y * 2;
 
         shape.options.startCoords.x =
-          shape.options.initialCoords.startCoords.x + values.panOffset.x * 3;
+          shape.options.initialCoords.startCoords.x + values.panOffset.x * 2;
         shape.options.startCoords.y =
-          shape.options.initialCoords.startCoords.y + values.panOffset.y * 3;
-        shape.draw();
+          shape.options.initialCoords.startCoords.y + values.panOffset.y * 2;
+
+        canvasManager.polyDraw(shape);
       });
     };
 
@@ -222,11 +242,25 @@ function ArtCanvasInner() {
       canvasRef.current.removeEventListener('pointermove', pointerMoveHandler);
       canvasRef.current.removeEventListener('pointerup', pointerUpHandler);
     };
-  }, [startCoords, isPointerDown, values.eraserActive, values.images.shapes, values.panOffset]);
+  }, [
+    startCoords,
+    isPointerDown,
+    values.eraserActive,
+    values.images.shapes,
+    values.panOffset,
+    values.bucketActive,
+  ]);
 
   // Инициализация менеджера
   useEffect(() => {
-    canvasManager.init(canvasRef.current, canvasRef.current.getContext('2d'), ctxCallbacks, values);
+    canvasManager.init(
+      canvasRef.current,
+      canvasRef.current.getContext('2d', {
+        willReadFrequently: true,
+      }),
+      ctxCallbacks,
+      values
+    );
   }, []);
 
   // Обновление экшнов менеджера
@@ -350,6 +384,40 @@ function ArtCanvasInner() {
     return () => document.removeEventListener('wheel', panFunction);
   }, [values.panOffset]);
 
+  useEffect(() => {
+    console.log(values.isFalling);
+    let frameId: number | null = null;
+
+    const loop = () => {
+      values.images.shapes.forEach((shape) => {
+        shape.options.y += 1;
+        shape.options.startCoords.y += 1;
+        shape.options.initialCoords.y += 1;
+
+        return shape;
+      });
+
+      canvasManager.clearCanvasPicture();
+      values.images.shapes.forEach((shape) => canvasManager.polyDraw(shape));
+
+      frameId = requestAnimationFrame(loop);
+    };
+
+    if (values.isFalling) loop();
+
+    return () => {
+      if (!frameId) return;
+
+      cancelAnimationFrame(frameId);
+
+      const shapesDeepCopy = values.images.shapes.map(doShapeCopy);
+      const shapesHistoryCopy = [...values.images.shapesHistory, shapesDeepCopy];
+
+      ctxCallbacks.setShapes(shapesDeepCopy);
+      ctxCallbacks.setShapesHistory(shapesHistoryCopy);
+    };
+  }, [values.isFalling]);
+
   return (
     <>
       <div className={cn()}>
@@ -367,7 +435,9 @@ function ArtCanvasInner() {
           downloadAction={callbacks.downloadCanvas}
           isCanSave={values.canSave}
           eraserToggle={callbacks.eraserToggle}
+          bucketToggle={callbacks.bucketToggle}
           isEraserActive={values.eraserActive}
+          isBucketActive={values.bucketActive}
         />
         <canvas
           onPointerDown={handlers.onPointerDown}
@@ -386,7 +456,9 @@ function ArtCanvasInner() {
           </div>
 
           <div>
-            <button>Уронить</button>
+            <button onClick={() => ctxCallbacks.setIsFalling(!values.isFalling)}>
+              {values.isFalling ? 'Остановить' : 'Уронить'}
+            </button>
           </div>
 
           <div>

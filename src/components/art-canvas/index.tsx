@@ -55,6 +55,8 @@ function ArtCanvas(props: ArtCanvasProps) {
 
   const [activeImage, setActiveImage] = useState(Math.max(0, select.images.imagesNodes.length - 1));
   const [eraserActive, setEraserActive] = useState(false);
+  const [bucketActive, setBucketActive] = useState(false);
+  const [isFalling, setIsFalling] = useState(false);
 
   const canSave =
     select.bgColor !== initValues.bgColor ||
@@ -66,6 +68,8 @@ function ArtCanvas(props: ArtCanvasProps) {
     activeImage,
     canSave,
     eraserActive,
+    isFalling,
+    bucketActive,
   };
 
   const callbacks = {
@@ -83,6 +87,8 @@ function ArtCanvas(props: ArtCanvasProps) {
     setScale: (val: number) => store.actions.art.setScale(val),
     setScaleOffset: (val: TCoords2D) => store.actions.art.setScaleOffset(val),
     setEraserActive,
+    setIsFalling,
+    setBucketActive,
     resetAllToDefault: () => {
       callbacks.setBgColor('#ffffff');
       callbacks.setBrushColor('#000000');
