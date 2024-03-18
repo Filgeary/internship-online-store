@@ -1,4 +1,5 @@
 import Tool from "../tool"
+import { ICircle } from "@src/store/canvas/types"
 
 class Circle extends Tool {
     canvas!: HTMLCanvasElement | null // Ссылка на элемент canvas
@@ -6,10 +7,12 @@ class Circle extends Tool {
     startX!: number
     startY!: number
     saved: any
+    figures: ICircle | null
 
     constructor(canvas: HTMLCanvasElement | null) {
         super(canvas) // Вызываем конструктор родительского класса
         this.listen() // Устанавливаем обработчики событий для рисования
+        this.figures = null
     }
     
     listen() {
@@ -28,6 +31,8 @@ class Circle extends Tool {
     // Обработчик события отпускания кнопки мыши
     mouseUpHandler(e: MouseEvent) {
         this.mouseDown = false
+        const allFigures = this.allFiguresTool as any
+        this.allFiguresTool = [...allFigures, this.figures]
     }
 
     // Обработчик события нажатия кнопки мыши
@@ -55,6 +60,12 @@ class Circle extends Tool {
             let width = currentX - this.startX
             let height = currentY - this.startY
             let radius = Math.sqrt(width**2 + height**2)
+            this.figures = {
+                type: 'circle', 
+                x: this.startX, 
+                y: this.startY, 
+                radius: radius
+            }
             this.draw(this.startX, this.startY, radius) 
         }
     }

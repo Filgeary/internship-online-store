@@ -1,8 +1,11 @@
 import React, { memo, useEffect, useRef } from "react"
 import {cn as bem} from '@bem-react/classname'
+import useSelector from "@src/hooks/use-selector"
 import useStore from "@src/hooks/use-store" 
 import './style.css'
 import Brush from "../../tools/brush"
+import Rectangle from "../../tools/rectangle"
+import { StoreState } from "@src/store/types"
 
 const Canvas: React.FC = () => {
 
@@ -10,14 +13,29 @@ const Canvas: React.FC = () => {
   const store = useStore()
   const cn = bem('Canvas')
 
+  const select = useSelector((state: StoreState) => ({
+    figures: state.canvas.tool
+  }));
+
   const mouseDownHandler = () => {
-    canvasRef.current && store.actions.canvas.pushToUndo(canvasRef.current.toDataURL())
+    if(canvasRef.current) {
+      // const rect = canvasRef.current.getBoundingClientRect()
+      // console.log('rect', rect)
+      store.actions.canvas.pushToUndo(canvasRef.current.toDataURL())
+      //  const rectangle = Rectangle
+      //  console.log(rectangle.prototype)
+    }
 }
 
   useEffect(() => {
     canvasRef.current && store.actions.canvas.setCannvas(canvasRef.current)
-    store.actions.canvas.setTool(new Brush(canvasRef.current))
+    store.actions.canvas.setTool(new Brush(canvasRef.current), 'freeDraw')
   }, [])
+
+  useEffect(() => {
+    console.log('Сработал useEffect и select.figures!.allFiguresTool ===', select.figures && select.figures.allFiguresTool)
+  }, [store])
+
 
   return (
     <div className={cn()}>

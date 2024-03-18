@@ -1,11 +1,14 @@
 import StoreModule from "../module"
 import Tool from "@src/app/drawing/tools/tool"
+import { ICircle, IRectangle, ILine, IFreeDraw, Shape } from "./types"
 
 interface ICanvasState {
   canvas: HTMLCanvasElement | null
   tool: Tool | null
   undoList: string[]
   redoList: string[]
+  nameTool: string
+  figures: (ICircle | IRectangle | ILine | IFreeDraw)[]
 }
 
 class CanvasState extends StoreModule<ICanvasState> {
@@ -18,7 +21,9 @@ class CanvasState extends StoreModule<ICanvasState> {
       canvas: null,
       tool: null,
       undoList: [], // Хранение выполненных действий на canvas
-      redoList: []  // Хранение действий на canvas, которые отменили
+      redoList: [],  // Хранение действий на canvas, которые отменили
+      nameTool: 'freeDraw', // Название инструмента
+      figures: []
     }
   }
 
@@ -35,10 +40,11 @@ class CanvasState extends StoreModule<ICanvasState> {
   /**
    * Добавление инструмента
    */
-  setTool(tool: Tool) {
+  setTool(tool: Tool, name: string) {
     this.setState({
       ...this.getState(),
-      tool: tool
+      tool: tool,
+      nameTool: name
   })
 }
 
@@ -66,7 +72,7 @@ class CanvasState extends StoreModule<ICanvasState> {
     })
   }
 
-    /**
+  /**
    * Изменение свойства "lineWidth"
    */
   setLineWidth(width: number) {
@@ -132,6 +138,17 @@ class CanvasState extends StoreModule<ICanvasState> {
             ctx.drawImage(img, 0, 0, this.getState().canvas!.width, this.getState().canvas!.height)
         }
     }
+}
+
+  /**
+   * Сохранение фигур
+   */
+  setFigures() {
+    const figures = this.getState().tool!.allFiguresTool as any
+    this.setState({
+      ...this.getState(),
+      figures: [...this.getState().figures, ...figures]
+  })
 }
 }
 

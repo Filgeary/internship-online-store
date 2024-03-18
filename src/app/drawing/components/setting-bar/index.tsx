@@ -27,6 +27,7 @@ const SettingBar: React.FC = () => {
         id="stroke-color"
         type="color"
       />
+      <button className={cn('arrow')} onClick={() => {}}/>
     </div>
   )
 }

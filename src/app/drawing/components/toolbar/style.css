@@ -53,6 +53,11 @@
     no-repeat center center;
 }
 
+.Toolbar-btn_pointer {
+  background: url("../../../../assets/images/drawing_toolbar/pointer.png")
+    no-repeat center center;
+}
+
 .Toolbar-btn_undo {
   margin-left: auto;
   background: url("../../../../assets/images/drawing_toolbar/undo.png")
@@ -69,3 +74,4 @@
     no-repeat center center;
   margin-right: 10px;
 }
+

@@ -55,6 +55,7 @@ class Line extends Tool {
       img.onload = () => {
         this.ctx!.clearRect(0, 0, this.canvas!.width, this.canvas!.height) // Очистка canvas
         this.ctx!.drawImage(img, 0, 0, this.canvas!.width, this.canvas!.height) // Вернули изображение, которое сохранили 
+        this.ctx!.fillStyle = 'black'
         this.ctx!.beginPath() // Начинаем рисовать новую линию
         this.ctx!.moveTo(this.currentX, this.currentY)
         this.ctx!.lineTo(x, y)

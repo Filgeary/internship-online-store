@@ -1,4 +1,6 @@
 import Tool from "../tool"
+// import { IRectangle } from "@src/store/canvas/types"
+import { IRectangle } from "@src/store/canvas/types"
 
 class Rectangle extends Tool {
     canvas!: HTMLCanvasElement | null // Ссылка на элемент canvas, к которому привязана кисть
@@ -6,10 +8,14 @@ class Rectangle extends Tool {
     startX!: number
     startY!: number
     saved: any
+    rect: any
+    figures: IRectangle | null
 
     constructor(canvas: HTMLCanvasElement | null) {
         super(canvas) // Вызываем конструктор родительского класса
         this.listen() // Устанавливаем обработчики событий для рисования
+        this.rect = null
+        this.figures = null
     }
     
     listen() {
@@ -28,6 +34,8 @@ class Rectangle extends Tool {
     // Обработчик события отпускания кнопки мыши
     mouseUpHandler(e: MouseEvent) {
         this.mouseDown = false
+        const allFigures = this.allFiguresTool as any
+        this.allFiguresTool = [...allFigures, this.figures]
     }
 
     // Обработчик события нажатия кнопки мыши
@@ -54,6 +62,13 @@ class Rectangle extends Tool {
             let currentY = e.clientY - rect.top
             let width = currentX - this.startX
             let height = currentY - this.startY
+            this.figures = {
+                type: 'rectangle', 
+                x: this.startX, 
+                y: this.startY, 
+                width: width, 
+                height:height
+            }
             this.draw(this.startX, this.startY, width, height) // Рисуем по указанным координатам
         }
     }
@@ -71,8 +86,8 @@ class Rectangle extends Tool {
         this.ctx!.rect(x, y, w, h)
         this.ctx!.fill() // Заливка цветом
         this.ctx!.stroke() // Добавляем обводку
+       }
     }
-}
 }
 
 export default Rectangle
