@@ -39,6 +39,7 @@ function Navigation() {
     menu: useMemo(() => ([
       {key: 1, title: t('menu.main'), link: '/'},
       {key: 2, title: t('menu.chat'), link: '/chat'},
+      {key: 3, title: t('menu.draw'), link: '/draw'},
     ]), [t])
   };
 

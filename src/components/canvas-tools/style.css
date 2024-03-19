@@ -1,0 +1,44 @@
+.CanvasTools {
+    display: flex;
+    column-gap: 10px;
+    align-items: center;
+}
+
+.CanvasTools > * {
+    height: 36px;
+}
+
+.CanvasTools-figure {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 30px;
+    height: 30px;
+    background-color: transparent;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.CanvasTools-figure > img {
+    width: 24px;
+    height: 24px;
+}
+
+.CanvasTools-figure:hover {
+    background-color: rgba(226, 226, 226, .7);
+}
+
+.CanvasTools-figure_active {
+    background-color: rgb(226, 226, 226);
+}
+
+.CanvasTools-checkbox {
+    display: flex;
+    align-items: center;
+    column-gap: 5px;
+}
+
+.CanvasTools-checkbox > input {
+    margin: 0;
+}

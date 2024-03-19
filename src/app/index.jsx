@@ -12,6 +12,7 @@ import Protected from "@src/containers/protected";
 import {useSelector as useSelectorRedux} from 'react-redux';
 import ActiveModal from '@src/containers/active-modal';
 import Chat from './chat';
+import Draw from './draw';
 
 /**
  * Приложение
@@ -32,6 +33,7 @@ function App() {
         <Route path={"/login"} element={<Login/>}/>
         <Route path={"/profile"} element={<Protected redirect='/login'><Profile/></Protected>}/>
         <Route path={"/chat"} element={<Protected redirect='/login'><Chat/></Protected>}/>
+        <Route path={"/draw"} element={<Draw/>}/>
       </Routes>
 
       <ActiveModal/>
