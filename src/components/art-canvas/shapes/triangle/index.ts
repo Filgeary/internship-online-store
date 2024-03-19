@@ -5,7 +5,7 @@ class Triangle extends Shape {
   constructor(ctx: CanvasRenderingContext2D, options: TShapeOptions) {
     super(options.panOffset);
     this.ctx = ctx;
-    this.options = options;
+    this.options = JSON.parse(JSON.stringify(options));
   }
 
   draw(): void {
@@ -19,7 +19,7 @@ class Triangle extends Shape {
     this.ctx.lineTo(this.options.startCoords.x * 2 - this.options.x, this.options.y);
     this.ctx.closePath();
 
-    if (this.options.isFilled) this.ctx.fill();
+    if (this.options.isFilled) this.fillArea(this.options.fillColor);
     else this.ctx.stroke();
   }
 
@@ -45,7 +45,24 @@ class Triangle extends Shape {
     return area / 10;
   }
 
-  fillArea(color: string): void {}
+  fillArea(color: string): void {
+    this.options.isFilled = true;
+    this.options.fillColor = color;
+
+    this.ctx.beginPath();
+    this.ctx.fillStyle = color;
+    this.ctx.strokeStyle = this.options.brushColor;
+    this.ctx.lineWidth = this.options.brushWidth;
+
+    this.ctx.moveTo(this.options.startCoords.x, this.options.startCoords.y);
+    this.ctx.lineTo(this.options.x, this.options.y);
+    // Нижняя линия треугольника
+    this.ctx.lineTo(this.options.startCoords.x * 2 - this.options.x, this.options.y);
+    this.ctx.closePath();
+
+    this.ctx.fill();
+    this.ctx.stroke();
+  }
 }
 
 export default Triangle;

@@ -12,7 +12,7 @@ abstract class Shape {
     this.panOffset = panOffset;
   }
 
-  abstract draw(ctx: CanvasRenderingContext2D, options: TShapeOptions): void;
+  abstract draw(): void;
 
   abstract mouseIn(coords: { x: number; y: number }): boolean;
 

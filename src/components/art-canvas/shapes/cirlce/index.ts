@@ -7,7 +7,7 @@ class Circle extends Shape {
   constructor(ctx: CanvasRenderingContext2D, options: TShapeOptions) {
     super(options.panOffset);
     this.ctx = ctx;
-    this.options = options;
+    this.options = JSON.parse(JSON.stringify(options));
 
     this.radius = Math.sqrt(
       Math.pow(this.options.startCoords.x - this.options.x, 2) +
@@ -28,7 +28,7 @@ class Circle extends Shape {
       2 * Math.PI
     );
 
-    if (this.options.isFilled) this.ctx.fill();
+    if (this.options.isFilled) this.fillArea(this.options.fillColor);
     else this.ctx.stroke();
   }
 
@@ -46,7 +46,27 @@ class Circle extends Shape {
     return area / 10;
   }
 
-  fillArea(color: string): void {}
+  fillArea(color: string): void {
+    this.options.isFilled = true;
+    this.options.fillColor = color;
+
+    this.ctx.beginPath();
+    this.ctx.fillStyle = color;
+    this.ctx.strokeStyle = this.options.brushColor;
+    this.ctx.lineWidth = this.options.brushWidth;
+
+    this.ctx.arc(
+      this.options.startCoords.x,
+      this.options.startCoords.y,
+      this.radius,
+      0,
+      2 * Math.PI
+    );
+    this.ctx.closePath();
+
+    this.ctx.fill();
+    this.ctx.stroke();
+  }
 }
 
 export default Circle;

@@ -5,7 +5,7 @@ class Brush extends Shape {
   constructor(ctx: CanvasRenderingContext2D, options: TShapeOptions) {
     super(options.panOffset);
     this.ctx = ctx;
-    this.options = options;
+    this.options = JSON.parse(JSON.stringify(options));
   }
 
   draw(): void {
@@ -23,6 +23,8 @@ class Brush extends Shape {
   getArea(): number {
     return 1000;
   }
+
+  fillArea(color: string): void {}
 }
 
 export default Brush;

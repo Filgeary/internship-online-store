@@ -1,15 +1,18 @@
 import './style.css';
 
 import React, { memo, useEffect, useMemo, useRef, useState } from 'react';
+
 import { cn as bem } from '@bem-react/classname';
 import { useArtCanvasContext } from '..';
+import cloneDeep from 'lodash.clonedeep';
 
-import { TTools } from '@src/store/art/types';
 import ArtCanvasUtils from '../art-canvas-utils';
 import ArtManager from '../manager';
-import { TShapes } from '../shapes/types';
-import cloneDeep from 'lodash.clonedeep';
+
 import doShapeCopy from '../utils/do-shape-copy';
+
+import { TTools } from '@src/store/art/types';
+import { TShapes } from '../shapes/types';
 
 type TCoords = {
   x: number | null;
@@ -70,13 +73,15 @@ function ArtCanvasInner() {
       if (e.button === options.leftMouseBtn) {
         setIsPointerDown(true);
 
-        ctxCallbacks.setShapesHistory(values.images.shapesHistory.slice(0, values.activeImage));
-
         const { offsetX, offsetY } = e.nativeEvent;
         setStartCoords({
           x: offsetX,
           y: offsetY,
         });
+
+        if (values.bucketActive) return;
+
+        ctxCallbacks.setShapesHistory(values.images.shapesHistory.slice(0, values.activeImage));
 
         if (isCtrlPressed) return;
         if (isSpacePressed) {
@@ -139,7 +144,7 @@ function ArtCanvasInner() {
             isFilled: values.fillColor,
             startCoords,
             initialCoords: {
-              x: offsetX - values.panOffset.x * 3 /* IDK what is value * 3, but it work */,
+              x: offsetX - values.panOffset.x * 3,
               y: offsetY - values.panOffset.y * 3,
               startCoords: {
                 x: startCoords.x - values.panOffset.x * 3,
@@ -199,9 +204,11 @@ function ArtCanvasInner() {
 
     // Если активна заливка - только заливаем
     if (values.bucketActive) {
-      //@ts-ignore
+      console.log(
+        `Заливаю ${shapeSelected.id} цветом %c${values.brushColor}`,
+        `background: ${values.brushColor}`
+      );
       shapeSelected.fillArea(values.brushColor);
-      return;
     }
 
     const pointerMoveHandler = (e: PointerEvent) => {
@@ -384,8 +391,8 @@ function ArtCanvasInner() {
     return () => document.removeEventListener('wheel', panFunction);
   }, [values.panOffset]);
 
+  // Анимация падения
   useEffect(() => {
-    console.log(values.isFalling);
     let frameId: number | null = null;
 
     const loop = () => {

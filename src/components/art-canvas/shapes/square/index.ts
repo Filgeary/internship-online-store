@@ -5,7 +5,7 @@ class Square extends Shape {
   constructor(ctx: CanvasRenderingContext2D, options: TShapeOptions) {
     super(options.panOffset);
     this.ctx = ctx;
-    this.options = options;
+    this.options = JSON.parse(JSON.stringify(options));
   }
 
   draw(): void {
@@ -18,7 +18,30 @@ class Square extends Shape {
         this.options.startCoords.x - this.options.x,
         this.options.startCoords.y - this.options.y
       );
-    } else this.fillArea(this.options.fillColor ?? this.options.brushColor);
+    } else this.fillArea(this.options.fillColor);
+  }
+
+  fillArea(color: string) {
+    this.options.isFilled = true;
+    this.options.fillColor = color;
+    this.ctx.fillStyle = color;
+
+    this.ctx.fillRect(
+      this.options.x,
+      this.options.y,
+      this.options.startCoords.x - this.options.x,
+      this.options.startCoords.y - this.options.y
+    );
+
+    // Для корректной обводки
+    this.ctx.lineWidth = this.options.brushWidth;
+    this.ctx.strokeStyle = this.options.brushColor;
+    this.ctx.strokeRect(
+      this.options.x,
+      this.options.y,
+      this.options.startCoords.x - this.options.x,
+      this.options.startCoords.y - this.options.y
+    );
   }
 
   mouseIn(coords: { x: number; y: number }) {
@@ -41,29 +64,6 @@ class Square extends Shape {
     const area = width * height;
 
     return area / 10;
-  }
-
-  fillArea(color: string) {
-    this.options.isFilled = true;
-    this.options.fillColor = color;
-
-    this.ctx.fillStyle = color;
-    this.ctx.fillRect(
-      this.options.x,
-      this.options.y,
-      this.options.startCoords.x - this.options.x,
-      this.options.startCoords.y - this.options.y
-    );
-
-    // Для границы
-    this.ctx.lineWidth = this.options.brushWidth;
-    this.ctx.strokeStyle = this.options.brushColor;
-    this.ctx.strokeRect(
-      this.options.x,
-      this.options.y,
-      this.options.startCoords.x - this.options.x,
-      this.options.startCoords.y - this.options.y
-    );
   }
 }
 

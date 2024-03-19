@@ -3,12 +3,12 @@ import Brush from '../shapes/brush';
 import Circle from '../shapes/cirlce';
 import Triangle from '../shapes/triangle';
 
+import doShapeCopy from '../utils/do-shape-copy';
+
 import { TShapeOptions, TShapes } from '../shapes/types';
 import { TArtImage, TTools } from '@src/store/art/types';
 import { TDrawShapesMethods, TDrawingOptions } from './types';
 import { TArtCanvasContext } from '../types';
-import doShapeCopy from '../utils/do-shape-copy';
-import Shape from '../shapes';
 
 type TDrawOptions = {
   scaleOffsetX: number;
@@ -484,8 +484,6 @@ class ArtManager {
    * Обновить все фигуры
    */
   updateShapes(shape: TShapes) {
-    // this.callbacks.setShapes([...this.values.images.shapes, shape]);
-
     const shapeCopy = doShapeCopy(shape);
     const shapeStepCopy = [
       ...this.values.images.shapes.filter((shape) => shape.id !== shapeCopy.id),
@@ -493,6 +491,7 @@ class ArtManager {
     ];
     const allShapesCopy = [...this.values.images.shapesHistory, shapeStepCopy];
 
+    // this.callbacks.setShapes([...shapeStepCopy, shapeCopy]);
     this.callbacks.setShapesHistory(allShapesCopy);
   }
 
