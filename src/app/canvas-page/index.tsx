@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 import CanvasPanel from '@src/components/canvas-panel';
+import CanvasZoomPanel from '@src/components/canvas-zoom-panel';
 import Canvas from '@src/containers/canvas';
 
 import type { TCanvasActions, TCanvasModes } from '@src/components/canvas-panel/types';
@@ -33,6 +34,12 @@ const CanvasPage = () => {
         onChangeAction={handleAction}
         onChangeMode={handleChangeMode}
         activeMode={mode}
+      />
+      <CanvasZoomPanel
+        currentScale={1}
+        onZoomIn={() => {}}
+        onZoomOut={() => {}}
+        resetScale={() => {}}
       />
     </div>
   );
