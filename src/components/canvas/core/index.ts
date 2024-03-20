@@ -1,6 +1,7 @@
-import { Action, Figures, Options, ScrollParams, ZoomParams } from "./type";
 import * as figures from "./shapes/exports";
 import { getPaddingSize } from "@src/utils/get-padding-size";
+import { Action, Options, ScrollParams, ZoomParams } from "./type";
+import { FiguresNames, ShapeInstance } from "./shapes/type";
 
 class Core {
   // DOM элемент, в котором будет создана канва
@@ -10,8 +11,8 @@ class Core {
   // Контекст для 2D рисования
   ctx: CanvasRenderingContext2D | null = null;
   // Элементы для рендера
-  shapes: Figures[] = [];
-  elements: Figures[] = [];
+  shapes: ShapeInstance[] = [];
+  currentShape: ShapeInstance | null = null;
   //флаг для отрисовки элемента
   isDrawing: boolean = false;
   resizeObserver: ResizeObserver | null = null;
@@ -76,7 +77,7 @@ class Core {
     }
   }
 
-  resize = () => {
+  private resize = () => {
     if (this.root && this.canvas && this.ctx) {
       const rect = this.root.getBoundingClientRect();
       const { paddingTop, paddingRight, paddingBottom, paddingLeft } =
@@ -101,14 +102,14 @@ class Core {
     this.options = options;
   }
 
-  scroll({ x, y, dx, dy }: ScrollParams) {
+  private scroll({ x, y, dx, dy }: ScrollParams) {
     if (x) this.metrics.scrollX = x;
     if (y) this.metrics.scrollY = y;
     if (dx) this.metrics.scrollX += dx; //добавляется смещение по горизонтали
     if (dy) this.metrics.scrollY += dy; //добавляется смещение по вертикали
   }
 
-  zoom({center, zoom, delta}: ZoomParams) {
+  private zoom({ center, zoom, delta }: ZoomParams) {
     // Центр масштабирования с учётом текущего смещения и масштабирования
     const centerReal = {
       x: (center.x + this.metrics.scrollX) / this.metrics.zoom,
@@ -132,7 +133,7 @@ class Core {
     });
   }
 
-  onMouseDown = (e: MouseEvent) => {
+  private onMouseDown = (e: MouseEvent) => {
     const point = {
       x:
         (e.clientX - this.metrics.left + this.metrics.scrollX) /
@@ -142,7 +143,6 @@ class Core {
         this.metrics.zoom,
     };
     if (this.options.draw && this.ctx && this.canvas) {
-      this.ctx.beginPath();
       //копирование данных канваса и передача их в качестве снимка
       this.snapshot = this.ctx.getImageData(
         0,
@@ -151,16 +151,27 @@ class Core {
         this.canvas.height
       );
       this.isDrawing = true;
+      if (this.options.figure === "pencil" || this.options.figure === "eraser") {
+        const shape = this.options.figure as FiguresNames;
+        this.currentShape = new figures[shape](
+          this.options.stroke,
+          this.options.color,
+          this.ctx,
+          point.x,
+          point.y,
+          point.x,
+          point.y,
+        );
+      }
       this.action = {
-        name: 'draw',
+        name: "draw",
         targetX: point.x,
         targetY: point.y,
         x: point.x,
         y: point.y,
-      }
-
+      };
     } else {
-      for (let shape of this.shapes) {
+      for (let shape of this.shapes.reverse()) {
         if (shape.mouseInShape(point.x, point.y)) {
           this.action = {
             name: "drag",
@@ -183,26 +194,22 @@ class Core {
           };
         }
       }
+      this.shapes.reverse();
     }
   };
 
-  finishDrawing = () => {
-    if (this.ctx) this.ctx.closePath();
-    this.isDrawing = false;
-    if (this.elements.length) {
-      this.shapes.push(...this.elements.slice(-1));
-      this.elements = [];
-    }
-  }
-
-  onMouseUp = () => {
+  private onMouseUp = () => {
     if (this.options.draw) {
-      this.finishDrawing();
+      this.isDrawing = false;
+      if(this.currentShape) {
+        this.shapes.push(this.currentShape);
+        this.currentShape = null;
+      }
     }
     this.action = null;
-  }
+  };
 
-  onMouseMove = (e: MouseEvent) => {
+  private onMouseMove = (e: MouseEvent) => {
     const point = {
       x:
         (e.clientX - this.metrics.left + this.metrics.scrollX) /
@@ -211,35 +218,36 @@ class Core {
         (e.clientY - this.metrics.top + this.metrics.scrollY) /
         this.metrics.zoom,
     };
-      if (this.action) {
-        if (this.options.draw && this.action.name === "draw") {
-          this.draw(
-            point.x,
-            point.y
-          );
-        } else {
-          if (this.action.name === "drag" && this.action.element) {
-            this.dragShape(
-              this.action.element,
-              this.action.targetX + point.x - this.action.x,
-              this.action.targetY + point.y - this.action.y
-            );
-          } else if (this.action.name === "scroll") {
-            // Скролл использует не масштабированную точку, так как сам же на неё повлиял бы
-            this.scroll({
-              x:
-                this.action.targetX -
-                (e.clientX - this.metrics.left - this.action.x),
-              y:
-                this.action.targetY -
-                (e.clientY - this.metrics.top - this.action.y),
-            });
-          }
-        }
-    }
-  }
 
-  onMouseWheel = (e: WheelEvent) => {
+    if (this.action) {
+      if (this.options.draw && this.action.name === "draw") {
+        if(this.currentShape && (this.currentShape instanceof figures.pencil || this.currentShape instanceof figures.eraser)) {
+          this.currentShape.addPath(point.x, point.y);
+        }
+        this.draw(point.x, point.y);
+      } else {
+        if (this.action.name === "drag" && this.action.element && this.canvas) {
+          this.dragShape(
+            this.action.element,
+            this.action.targetX + point.x - this.action.x,
+            this.action.targetY + point.y - this.action.y
+          );
+        } else if (this.action.name === "scroll") {
+          // Скролл использует не масштабированную точку, так как сам же на неё повлиял бы
+          this.scroll({
+            x:
+              this.action.targetX -
+              (e.clientX - this.metrics.left - this.action.x),
+            y:
+              this.action.targetY -
+              (e.clientY - this.metrics.top - this.action.y),
+          });
+        }
+      }
+    }
+  };
+
+  private onMouseWheel = (e: WheelEvent) => {
     e.preventDefault();
     const delta = e.deltaY > 0 ? 0.1 : -0.1;
     if (e.ctrlKey) {
@@ -249,9 +257,9 @@ class Core {
       // Прокрутка по вертикали
       this.scroll({ dy: delta * 300 });
     }
-  }
+  };
 
-  dragShape(element: Figures, x: number, y: number) {
+  private dragShape(element: ShapeInstance, x: number, y: number) {
     if (this.ctx) {
       this.ctx.save();
       element.move(x, y);
@@ -260,7 +268,7 @@ class Core {
     }
   }
 
-  draw(offsetX: number, offsetY: number) {
+  private draw = (offsetX: number, offsetY: number) => {
     if (!this.isDrawing) return;
     this.reDraw();
     if (this.ctx && this.snapshot) {
@@ -270,9 +278,9 @@ class Core {
       this.drawShape(offsetX, offsetY);
       this.ctx.restore();
     }
-  }
+  };
 
-  reDraw = () => {
+  private reDraw = () => {
     if (this.ctx) {
       this.ctx.save();
       this.ctx.clearRect(0, 0, this.metrics.width, this.metrics.height);
@@ -280,14 +288,26 @@ class Core {
       this.ctx.scale(this.metrics.zoom, this.metrics.zoom);
       for (let shape of this.shapes) {
         shape.draw();
+        if (
+          this.action &&
+          this.action.name === "generate" &&
+          shape instanceof figures.circle
+        ) {
+          const time = performance.now();
+          shape.animate(
+            time,
+            (this.metrics.height - 25 + this.metrics.scrollY) /
+              this.metrics.zoom
+          );
+        }
       }
       this.ctx.restore();
       requestAnimationFrame(this.reDraw);
     }
   };
 
-  drawShape(offsetX: number, offsetY: number) {
-    if (this.ctx && this.action)
+  private drawShape(offsetX: number, offsetY: number) {
+    if (this.ctx && this.action) {
       switch (this.options.figure) {
         case "line": {
           const line = new figures.line(
@@ -299,78 +319,71 @@ class Core {
             this.action.targetX,
             this.action.targetY
           );
-          line.draw();
-          this.elements.push(line);
-          break;
-        }
-        case "pencil": {
-          const pencil = new figures.pencil(
-            this.options.stroke,
-            this.options.color,
-            this.ctx,
-            offsetX,
-            offsetY
-          );
-          pencil.draw();
-          break;
-        }
-        case "eraser": {
-          const eraser = new figures.eraser(
-            this.options.stroke,
-            this.options.color,
-            this.ctx,
-            offsetX,
-            offsetY
-          );
-          eraser.draw();
+          this.pushShape(line);
           break;
         }
         case "rectangle": {
           const rectangle = new figures.rectangle(
             this.options.stroke,
             this.options.color,
-            this.options.fill,
             this.ctx,
             offsetX,
             offsetY,
             this.action.targetX,
-            this.action.targetY
+            this.action.targetY,
+            this.options.fill,
           );
-          rectangle.draw();
-          this.elements.push(rectangle);
+          this.pushShape(rectangle);
           break;
         }
         case "circle": {
           const circle = new figures.circle(
             this.options.stroke,
             this.options.color,
-            this.options.fill,
             this.ctx,
             offsetX,
             offsetY,
             this.action.targetX,
-            this.action.targetY
+            this.action.targetY,
+            this.options.fill,
           );
-          this.elements.push(circle);
-          circle.draw();
+          this.pushShape(circle);
           break;
         }
         case "triangle": {
           const triangle = new figures.triangle(
             this.options.stroke,
             this.options.color,
-            this.options.fill,
             this.ctx,
             offsetX,
             offsetY,
             this.action.targetX,
-            this.action.targetY
+            this.action.targetY,
+            this.options.fill,
           );
-          this.elements.push(triangle);
-          triangle.draw();
+          this.pushShape(triangle);
+          break;
+        }
+        case "pencil":
+        case "eraser": {
+          if(this.currentShape)
+          this.pushShape(this.currentShape);
           break;
         }
       }
+    }
+  }
+
+  private pushShape(element: ShapeInstance) {
+    if (
+      this.action &&
+      this.shapes.at(-1)?.startX !== this.action.targetX &&
+      this.shapes.at(-1)?.startY !== this.action.targetY
+    ) {
+      this.shapes.push(element);
+    } else {
+      this.shapes.splice(-1, 1, element);
+    }
   }
 
   onClear() {
@@ -387,6 +400,31 @@ class Core {
       link.href = this.canvas.toDataURL();
       link.click();
     }
+  }
+
+  generate() {
+    for (let i = 0; i < 20000; i++) {
+      if (this.ctx)
+        this.shapes.push(
+          new figures.circle(
+            this.options.stroke,
+            this.options.color,
+            this.ctx,
+            i * 49 + 45 + this.metrics.scrollX,
+            30 + this.metrics.scrollY,
+            i * 49 + 25 + this.metrics.scrollX,
+            30 + this.metrics.scrollY,
+            this.options.fill,
+          )
+        );
+    }
+    this.action = {
+      name: "generate",
+      x: 0,
+      y: 30,
+      targetX: 0,
+      targetY: 30,
+    };
   }
 }
 

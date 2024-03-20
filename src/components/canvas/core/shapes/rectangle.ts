@@ -2,29 +2,12 @@ import Shape from "./shape";
 import { Size } from "./type";
 
 class Rectangle extends Shape {
-  fill: boolean;
-  startX: number;
-  startY: number;
   size = {width: 0, height: 0};
-  constructor(
-    stroke: number,
-    color: string,
-    fill: boolean,
-    ctx: CanvasRenderingContext2D,
-    offsetX: number,
-    offsetY: number,
-    startX: number,
-    startY: number
-  ) {
-    super(stroke, color, ctx, offsetX, offsetY);
-    this.fill = fill;
-    this.startX = startX;
-    this.startY = startY;
-  }
 
   draw() {
-    this.ctx.lineCap = "round";
+    this.ctx.lineCap = this.ctx.lineJoin = "round";
     const path = new Path2D();
+    this.ctx.beginPath();
     path.rect(
       this.offsetX,
       this.offsetY,
@@ -45,7 +28,7 @@ class Rectangle extends Shape {
     };
   }
 
-  move(x: number, y: number) {
+  override move(x: number, y: number) {
     this.startX = x;
     this.startY = y;
     this.offsetX = x - this.size!.width;
@@ -70,9 +53,7 @@ class Rectangle extends Shape {
         y > this.offsetY &&
         y < this.offsetY + this.size.height) {
           return true
-        }
-
-
+      }
     return false;
   }
 }

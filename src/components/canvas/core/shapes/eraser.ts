@@ -1,25 +1,18 @@
+import Pencil from "./pencil";
 import Shape from "./shape";
 
-class Eraser extends Shape {
+class Eraser extends Pencil {
   constructor(
     stroke: number,
     color: string,
     ctx: CanvasRenderingContext2D,
     offsetX: number,
-    offsetY: number
+    offsetY: number,
+    startX: number,
+    startY: number
   ) {
-    super(stroke, color, ctx, offsetX, offsetY);
-  }
-
-  draw() {
-    this.ctx.lineTo(this.offsetX, this.offsetY);
-    this.ctx.strokeStyle = '#ffffff';
-    this.ctx.lineWidth = this.stroke;
-    this.ctx.stroke();
-  }
-
-  mouseInShape(x: number, y: number) {
-    return false
+    super(stroke, color, ctx, offsetX, offsetY, startX, startY);
+    this.color = "#ffffff";
   }
 }
 

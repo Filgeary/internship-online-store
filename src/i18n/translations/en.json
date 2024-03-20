@@ -55,6 +55,7 @@
     "fill": "Fill color",
     "clear": "Clear All",
     "save": "Save image",
-    "draw": "Draw"
+    "draw": "Draw",
+    "generate": "Generate Figures"
   }
 }

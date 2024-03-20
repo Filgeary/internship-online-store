@@ -61,7 +61,7 @@ export const Draw = () => {
         labelClear={t("draw.clear")}
         labelSave={t("draw.save")}
         labelDraw={t("draw.draw")}
-      />
+        />
       <Canvas
         stroke={action.stroke}
         color={action.color}
@@ -69,6 +69,7 @@ export const Draw = () => {
         fill={action.fill}
         action={action.name}
         draw={action.draw}
+        labelGenerate={t("draw.generate")}
       />
     </>
   );

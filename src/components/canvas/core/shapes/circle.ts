@@ -1,25 +1,9 @@
 import Shape from "./shape";
 
 class Circle extends Shape {
-  fill: boolean;
-  startX: number;
-  startY: number;
   radius: number | null = null;
-  constructor(
-    stroke: number,
-    color: string,
-    fill: boolean,
-    ctx: CanvasRenderingContext2D,
-    offsetX: number,
-    offsetY: number,
-    startX: number,
-    startY: number
-  ) {
-    super(stroke, color, ctx, offsetX, offsetY);
-    this.fill = fill;
-    this.startX = startX;
-    this.startY = startY;
-  }
+  time: number = performance.now();
+  speed: number = 0
 
   draw() {
     //создать новый путь для отображения окружности
@@ -28,8 +12,15 @@ class Circle extends Shape {
     const radius = Math.sqrt(
       Math.pow(this.startX - this.offsetX, 2) +
         Math.pow(this.startY - this.offsetY, 2)
+        );
+    this.radius = this.radius ? this.radius : radius;
+    this.ctx.arc(
+      this.startX,
+      this.startY,
+      this.radius,
+      0,
+      2 * Math.PI
     );
-    this.ctx.arc(this.startX, this.startY, this.radius ? this.radius : radius, 0, 2 * Math.PI);
     this.ctx.lineCap = "round";
     if (this.fill) {
       this.ctx.fillStyle = this.color;
@@ -39,12 +30,6 @@ class Circle extends Shape {
       this.ctx.lineWidth = this.stroke;
       this.ctx.stroke();
     }
-    this.radius = this.radius ? this.radius : radius;
-  }
-
-  move(x: number, y: number) {
-    this.startX = x;
-    this.startY = y;
   }
 
   mouseInShape(x: number, y: number) {
@@ -53,6 +38,17 @@ class Circle extends Shape {
     );
 
     return d < this.radius!;
+  }
+
+  animate(time: number, height: number) {
+    const duration = 2000;
+    // Время с прошлого расчёта
+    const dt = (time - this.time) / duration;
+    if (this.offsetY <= height) {
+      this.offsetY += this.speed * dt;
+      this.startY += this.speed * dt;
+      this.speed = this.speed + dt;
+    }
   }
 }
 

@@ -13,7 +13,7 @@ export const Panel: FC<PanelPropsType> = (props) => {
     options,
     labelClear,
     labelSave,
-    labelDraw
+    labelDraw,
   } = props;
   const cn = bem("Panel");
 

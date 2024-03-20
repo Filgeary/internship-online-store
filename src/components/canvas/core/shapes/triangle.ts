@@ -2,38 +2,13 @@ import { getSegmentLength } from "@src/utils/get-segment-length";
 import Shape from "./shape";
 
 class Triangle extends Shape {
-  fill: boolean;
-  startX: number;
-  startY: number;
-  size: {
-    ab: number,
-    bc: number,
-    ca: number
-  } | null = null;
-
-  constructor(
-    stroke: number,
-    color: string,
-    fill: boolean,
-    ctx: CanvasRenderingContext2D,
-    offsetX: number,
-    offsetY: number,
-    startX: number,
-    startY: number
-  ) {
-    super(stroke, color, ctx, offsetX, offsetY);
-    this.fill = fill;
-    this.startX = startX;
-    this.startY = startY;
-  }
-
   draw() {
     this.ctx.beginPath();
     this.ctx.moveTo(this.startX, this.startY);
     this.ctx.lineTo(this.offsetX, this.offsetY);
     this.ctx.lineTo(this.startX * 2 - this.offsetX, this.offsetY); //создание нижней линии
     this.ctx.closePath();
-    this.ctx.lineCap = "round";
+    this.ctx.lineCap = this.ctx.lineJoin = "round";
     if (this.fill) {
       this.ctx.fillStyle = this.color;
       this.ctx.fill();
@@ -42,41 +17,33 @@ class Triangle extends Shape {
       this.ctx.lineWidth = this.stroke;
       this.ctx.stroke();
     }
-    this.size = {
-      ab: getSegmentLength(
+  }
+
+  override move(x: number, y: number) {
+    const ab = getSegmentLength(
         this.startX,
         this.startY,
         this.offsetX,
         this.offsetY
-      ),
-      bc: getSegmentLength(
+      );
+    const bc = getSegmentLength(
         this.offsetX,
         this.offsetY,
         this.startX * 2 - this.offsetX,
         this.offsetY
-      ),
-      ca: getSegmentLength(
-        this.startX * 2 - this.offsetX,
-        this.offsetY,
-        this.startX,
-        this.startY
-      ),
-    };
-  }
-
-  move(x: number, y: number) {
+      );
     const rotate = this.startY - this.offsetY > 0;
     this.startX = x;
     this.startY = y;
-    this.offsetX = (x * 2 - this.size!.bc) / 2;
+    this.offsetX = (x * 2 - bc) / 2;
 
     if(rotate) {
       this.offsetY =
-        y - Math.sqrt(Math.pow(this.size!.ab, 2) - Math.pow(this.size!.bc/2, 2));
+        y - Math.sqrt(Math.pow(ab, 2) - Math.pow(bc/2, 2));
     } else {
       this.offsetY =
         y +
-        Math.sqrt(Math.pow(this.size!.ab, 2) - Math.pow(this.size!.bc / 2, 2));
+        Math.sqrt(Math.pow(ab, 2) - Math.pow(bc / 2, 2));
     }
   }
 

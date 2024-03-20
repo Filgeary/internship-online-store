@@ -1,4 +1,4 @@
-import { FiguresNames, Shapes } from "./shapes/type";
+import { FiguresNames, ShapeInstance, valueShape } from "./shapes/type";
 
 export type Options = {
   color: string;
@@ -19,10 +19,8 @@ export type Action = {
   y: number;
   targetX: number;
   targetY: number;
-  element?: Figures;
+  element?: ShapeInstance;
 };
-
-export type Figures = Shapes["rectangle"] | Shapes["circle"] | Shapes["triangle"] | Shapes['line'];
 
 export type ScrollParams = Partial<{
   x: number;

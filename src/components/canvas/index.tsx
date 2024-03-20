@@ -4,7 +4,7 @@ import { CanvasPropsType } from "./type";
 import "./style.css";
 import Core from "./core";
 
-export const Canvas: FC<CanvasPropsType> = ({ color, stroke, figure, fill, action, draw }) => {
+export const Canvas: FC<CanvasPropsType> = ({ color, stroke, figure, fill, action, draw, labelGenerate }) => {
   const cn = bem("Canvas");
 
   const rootRef = useRef<HTMLDivElement>(null);
@@ -19,7 +19,7 @@ export const Canvas: FC<CanvasPropsType> = ({ color, stroke, figure, fill, actio
 
   useEffect(() => {
     core.changeOptions({ color, stroke, figure, fill, draw });
-   
+
     if(action === 'clear') {
       core.onClear();
     } else if(action === 'save') {
@@ -28,6 +28,14 @@ export const Canvas: FC<CanvasPropsType> = ({ color, stroke, figure, fill, actio
   }, [color, stroke, figure, fill, action, draw]);
 
   return (
-    <div className={cn()} ref={rootRef} />
+    <>
+      <button
+        className={cn("generate")}
+        onClick={() => core.generate()}
+      >
+        {labelGenerate}
+      </button>
+      <div className={cn()} ref={rootRef} />
+    </>
   );
 };
