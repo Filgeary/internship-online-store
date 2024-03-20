@@ -5,7 +5,7 @@ class Rectangle extends Shape {
   size = {width: 0, height: 0};
 
   draw() {
-    this.ctx.lineCap = this.ctx.lineJoin = "round";
+    this.ctx.lineCap = "round";
     const path = new Path2D();
     this.ctx.beginPath();
     path.rect(

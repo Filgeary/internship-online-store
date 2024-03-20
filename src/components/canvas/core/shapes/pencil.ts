@@ -10,9 +10,10 @@ class Pencil extends Shape {
     offsetX: number,
     offsetY: number,
     startX: number,
-    startY: number
+    startY: number,
+    fill: boolean
   ) {
-    super(stroke, color, ctx, offsetX, offsetY, startX, startY);
+    super(stroke, color, ctx, offsetX, offsetY, startX, startY, fill);
     this.pathCoords = [{x: startX, y: startY}]
   }
 
@@ -33,7 +34,7 @@ class Pencil extends Shape {
     return false;
   }
 
-  addPath(x: number, y: number) {
+  override changePath(x: number, y: number) {
     this.pathCoords.push({x, y})
   }
 }

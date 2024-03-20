@@ -134,14 +134,7 @@ class Core {
   }
 
   private onMouseDown = (e: MouseEvent) => {
-    const point = {
-      x:
-        (e.clientX - this.metrics.left + this.metrics.scrollX) /
-        this.metrics.zoom,
-      y:
-        (e.clientY - this.metrics.top + this.metrics.scrollY) /
-        this.metrics.zoom,
-    };
+    const point = this.transformPoint(e);
     if (this.options.draw && this.ctx && this.canvas) {
       //копирование данных канваса и передача их в качестве снимка
       this.snapshot = this.ctx.getImageData(
@@ -151,8 +144,7 @@ class Core {
         this.canvas.height
       );
       this.isDrawing = true;
-      if (this.options.figure === "pencil" || this.options.figure === "eraser") {
-        const shape = this.options.figure as FiguresNames;
+      const shape = this.options.figure as FiguresNames;
         this.currentShape = new figures[shape](
           this.options.stroke,
           this.options.color,
@@ -161,14 +153,12 @@ class Core {
           point.y,
           point.x,
           point.y,
+          this.options.fill
         );
-      }
       this.action = {
         name: "draw",
         targetX: point.x,
         targetY: point.y,
-        x: point.x,
-        y: point.y,
       };
     } else {
       for (let shape of this.shapes.reverse()) {
@@ -202,7 +192,7 @@ class Core {
     if (this.options.draw) {
       this.isDrawing = false;
       if(this.currentShape) {
-        this.shapes.push(this.currentShape);
+        this.pushShape(this.currentShape);
         this.currentShape = null;
       }
     }
@@ -210,39 +200,34 @@ class Core {
   };
 
   private onMouseMove = (e: MouseEvent) => {
-    const point = {
-      x:
-        (e.clientX - this.metrics.left + this.metrics.scrollX) /
-        this.metrics.zoom,
-      y:
-        (e.clientY - this.metrics.top + this.metrics.scrollY) /
-        this.metrics.zoom,
-    };
+    const point = this.transformPoint(e);
 
     if (this.action) {
       if (this.options.draw && this.action.name === "draw") {
-        if(this.currentShape && (this.currentShape instanceof figures.pencil || this.currentShape instanceof figures.eraser)) {
-          this.currentShape.addPath(point.x, point.y);
-        }
         this.draw(point.x, point.y);
       } else {
-        if (this.action.name === "drag" && this.action.element && this.canvas) {
-          this.dragShape(
-            this.action.element,
-            this.action.targetX + point.x - this.action.x,
-            this.action.targetY + point.y - this.action.y
-          );
-        } else if (this.action.name === "scroll") {
-          // Скролл использует не масштабированную точку, так как сам же на неё повлиял бы
-          this.scroll({
-            x:
-              this.action.targetX -
-              (e.clientX - this.metrics.left - this.action.x),
-            y:
-              this.action.targetY -
-              (e.clientY - this.metrics.top - this.action.y),
-          });
-        }
+        if (this.action.x && this.action.y)
+          if (
+            this.action.name === "drag" &&
+            this.action.element &&
+            this.canvas
+          ) {
+            this.dragShape(
+              this.action.element,
+              this.action.targetX + point.x - this.action.x,
+              this.action.targetY + point.y - this.action.y
+            );
+          } else if (this.action.name === "scroll") {
+            // Скролл использует не масштабированную точку, так как сам же на неё повлиял бы
+            this.scroll({
+              x:
+                this.action.targetX -
+                (e.clientX - this.metrics.left - this.action.x),
+              y:
+                this.action.targetY -
+                (e.clientY - this.metrics.top - this.action.y),
+            });
+          }
       }
     }
   };
@@ -275,7 +260,10 @@ class Core {
       //добавление скопированных данных канваса
       this.ctx.putImageData(this.snapshot, 0, 0);
       this.ctx.save();
-      this.drawShape(offsetX, offsetY);
+      if (this.currentShape) {
+        this.currentShape.changePath(offsetX, offsetY);
+        this.pushShape(this.currentShape);
+      }
       this.ctx.restore();
     }
   };
@@ -306,74 +294,6 @@ class Core {
     }
   };
 
-  private drawShape(offsetX: number, offsetY: number) {
-    if (this.ctx && this.action) {
-      switch (this.options.figure) {
-        case "line": {
-          const line = new figures.line(
-            this.options.stroke,
-            this.options.color,
-            this.ctx,
-            offsetX,
-            offsetY,
-            this.action.targetX,
-            this.action.targetY
-          );
-          this.pushShape(line);
-          break;
-        }
-        case "rectangle": {
-          const rectangle = new figures.rectangle(
-            this.options.stroke,
-            this.options.color,
-            this.ctx,
-            offsetX,
-            offsetY,
-            this.action.targetX,
-            this.action.targetY,
-            this.options.fill,
-          );
-          this.pushShape(rectangle);
-          break;
-        }
-        case "circle": {
-          const circle = new figures.circle(
-            this.options.stroke,
-            this.options.color,
-            this.ctx,
-            offsetX,
-            offsetY,
-            this.action.targetX,
-            this.action.targetY,
-            this.options.fill,
-          );
-          this.pushShape(circle);
-          break;
-        }
-        case "triangle": {
-          const triangle = new figures.triangle(
-            this.options.stroke,
-            this.options.color,
-            this.ctx,
-            offsetX,
-            offsetY,
-            this.action.targetX,
-            this.action.targetY,
-            this.options.fill,
-          );
-          this.pushShape(triangle);
-          break;
-        }
-        case "pencil":
-        case "eraser": {
-          if(this.currentShape)
-          this.pushShape(this.currentShape);
-          break;
-        }
-      }
-    }
-  }
-
   private pushShape(element: ShapeInstance) {
     if (
       this.action &&
@@ -384,6 +304,17 @@ class Core {
     } else {
       this.shapes.splice(-1, 1, element);
     }
+  }
+
+  private transformPoint(e: MouseEvent) {
+    return {
+      x:
+        (e.clientX - this.metrics.left + this.metrics.scrollX) /
+        this.metrics.zoom,
+      y:
+        (e.clientY - this.metrics.top + this.metrics.scrollY) /
+        this.metrics.zoom,
+    };
   }
 
   onClear() {

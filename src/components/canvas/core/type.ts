@@ -1,4 +1,4 @@
-import { FiguresNames, ShapeInstance, valueShape } from "./shapes/type";
+import { FiguresNames, ShapeInstance } from "./shapes/type";
 
 export type Options = {
   color: string;
@@ -15,10 +15,10 @@ export type Point = {
 
 export type Action = {
   name: string;
-  x: number;
-  y: number;
   targetX: number;
   targetY: number;
+  x?: number;
+  y?: number;
   element?: ShapeInstance;
 };
 

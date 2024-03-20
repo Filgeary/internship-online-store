@@ -6,7 +6,7 @@ abstract class Shape {
   offsetY: number;
   startX: number;
   startY: number;
-  fill?: boolean;
+  fill: boolean;
   constructor(
     stroke: number,
     color: string,
@@ -15,7 +15,7 @@ abstract class Shape {
     offsetY: number,
     startX: number,
     startY: number,
-    fill?: boolean,
+    fill: boolean
   ) {
     this.stroke = stroke;
     this.color = color;
@@ -33,6 +33,10 @@ abstract class Shape {
     this.startY = y;
   }
   abstract mouseInShape(x: number, y: number): boolean;
+  changePath(x: number, y: number) {
+    this.offsetX = x;
+    this.offsetY = y;
+  };
 }
 
 export default Shape;

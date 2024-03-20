@@ -2,8 +2,7 @@ import * as figures from './exports';
 
 export type FiguresType = typeof figures;
 export type FiguresNames = keyof FiguresType;
-export type valueShape = FiguresType[FiguresNames];
-export type ShapeInstance = InstanceType<valueShape>;
+export type ShapeInstance = InstanceType<FiguresType[FiguresNames]>;
 
 export type Size = {
   width: number;

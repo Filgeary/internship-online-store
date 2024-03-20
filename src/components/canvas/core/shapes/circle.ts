@@ -9,11 +9,10 @@ class Circle extends Shape {
     //создать новый путь для отображения окружности
     this.ctx.beginPath();
     //по теореме пифагора высчитывается радиус
-    const radius = Math.sqrt(
+    this.radius = Math.sqrt(
       Math.pow(this.startX - this.offsetX, 2) +
         Math.pow(this.startY - this.offsetY, 2)
         );
-    this.radius = this.radius ? this.radius : radius;
     this.ctx.arc(
       this.startX,
       this.startY,
@@ -30,6 +29,15 @@ class Circle extends Shape {
       this.ctx.lineWidth = this.stroke;
       this.ctx.stroke();
     }
+  }
+
+  override move(x: number, y: number) {
+    const dx = this.startX - this.offsetX;
+    const dy = this.startY - this.offsetY;
+    this.startX = x;
+    this.startY = y;
+    this.offsetX = x - dx;
+    this.offsetY = y - dy;
   }
 
   mouseInShape(x: number, y: number) {
