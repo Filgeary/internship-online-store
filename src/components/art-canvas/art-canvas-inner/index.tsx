@@ -211,7 +211,11 @@ function ArtCanvasInner() {
         `Заливаю ${shapeSelected.id} цветом %c${values.brushColor}`,
         `background: ${values.brushColor}`
       );
-      shapeSelected.fillArea(values.brushColor);
+      shapeSelected.fillArea(
+        values.brushColor,
+        { x: values.panOffset.x, y: values.panOffset.y },
+        values.scale
+      );
     }
 
     const pointerMoveHandler = (e: PointerEvent) => {
@@ -327,10 +331,6 @@ function ArtCanvasInner() {
 
     ctxCallbacks.setShapes(cloneDeep(shapesHistoryStep));
   }, [values.activeImage]);
-
-  useEffect(() => {
-    console.log({ brushColor: values.brushColor });
-  }, [values.brushColor]);
 
   // Отрисовка примитивов (в том числе учитывается текущий шаг истории)
   useEffect(() => {

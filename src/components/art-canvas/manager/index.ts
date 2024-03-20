@@ -10,11 +10,6 @@ import { TArtImage, TTools } from '@src/store/art/types';
 import { TDrawShapesMethods, TDrawingOptions } from './types';
 import { TArtCanvasContext } from '../types';
 
-type TDrawOptions = {
-  scaleOffsetX: number;
-  scaleOffsetY: number;
-};
-
 class ArtManager {
   canvasNode: HTMLCanvasElement;
   canvasCtx: CanvasRenderingContext2D;
@@ -495,7 +490,6 @@ class ArtManager {
     ];
     const allShapesCopy = [...this.values.images.shapesHistory, shapeStepCopy];
 
-    // this.callbacks.setShapes([...shapeStepCopy, shapeCopy]);
     this.callbacks.setShapesHistory(allShapesCopy);
   }
 
@@ -512,12 +506,7 @@ class ArtManager {
 
     const shapesUpdatedCopy = shapesStepHistory.map((shape) => {
       const shapeCopy = doShapeCopy(shape);
-
-      shapeCopy.options.x = shapeCopy.options.initialCoords.x;
-      shapeCopy.options.y = shapeCopy.options.initialCoords.y;
-
-      shapeCopy.options.startCoords.x = shapeCopy.options.initialCoords.startCoords.x;
-      shapeCopy.options.startCoords.y = shapeCopy.options.initialCoords.startCoords.y;
+      shapeCopy.ctx = this.canvasCtx;
 
       return shapeCopy;
     });
@@ -551,14 +540,6 @@ class ArtManager {
    * Нарисовать с учётом смещения
    */
   drawByOffsets(shape: TShapes) {
-    // shape.options.x = shape.options.initialCoords.x + this.values.panOffset.x;
-    // shape.options.y = shape.options.initialCoords.y + this.values.panOffset.y;
-
-    // shape.options.startCoords.x =
-    //   shape.options.initialCoords.startCoords.x + this.values.panOffset.x;
-    // shape.options.startCoords.y =
-    //   shape.options.initialCoords.startCoords.y + this.values.panOffset.y;
-
     this.polyDraw(shape);
   }
 

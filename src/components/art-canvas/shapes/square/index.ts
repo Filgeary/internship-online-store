@@ -1,5 +1,5 @@
 import Shape from '..';
-import { TShapeOptions } from '../types';
+import { TCoords, TShapeOptions } from '../types';
 
 class Square extends Shape {
   constructor(ctx: CanvasRenderingContext2D, options: TShapeOptions) {
@@ -9,6 +9,8 @@ class Square extends Shape {
   }
 
   draw(): void {
+    console.log('Рисую:', this.id);
+
     if (!this.options.isFilled) {
       this.ctx.lineWidth = this.options.brushWidth;
       this.ctx.strokeStyle = this.options.brushColor;
@@ -21,7 +23,11 @@ class Square extends Shape {
     } else this.fillArea(this.options.fillColor);
   }
 
-  fillArea(color: string) {
+  fillArea(color: string, coords: TCoords = { x: 0, y: 0 }, scale: number = 1) {
+    this.ctx.save();
+    this.ctx.translate(coords.x, coords.y);
+    this.ctx.scale(scale, scale);
+
     this.options.isFilled = true;
     this.options.fillColor = color;
     this.ctx.fillStyle = color;
@@ -42,19 +48,18 @@ class Square extends Shape {
       this.options.startCoords.x - this.options.x,
       this.options.startCoords.y - this.options.y
     );
+
+    this.ctx.restore();
   }
 
   mouseIn(coords: { x: number; y: number }) {
-    return (
-      (coords.x >= this.options.startCoords.x &&
-        coords.x <= this.options.x &&
-        coords.y >= this.options.startCoords.y &&
-        coords.y <= this.options.y) ||
-      (coords.x < this.options.startCoords.x &&
-        coords.y < this.options.startCoords.y &&
-        coords.x > this.options.x &&
-        coords.y > this.options.y)
-    );
+    const x1 = Math.min(this.options.startCoords.x, this.options.x);
+    const x2 = Math.max(this.options.startCoords.x, this.options.x);
+
+    const y1 = Math.min(this.options.startCoords.y, this.options.y);
+    const y2 = Math.max(this.options.startCoords.y, this.options.y);
+
+    return coords.x >= x1 && coords.x <= x2 && coords.y >= y1 && coords.y <= y2;
   }
 
   getArea(): number {

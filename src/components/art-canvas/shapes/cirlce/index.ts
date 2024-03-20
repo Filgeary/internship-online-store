@@ -1,5 +1,5 @@
 import Shape from '..';
-import { TShapeOptions } from '../types';
+import { TCoords, TShapeOptions } from '../types';
 
 class Circle extends Shape {
   radius: number;
@@ -47,11 +47,13 @@ class Circle extends Shape {
     return area / 10;
   }
 
-  fillArea(color: string): void {
+  fillArea(color: string, coords: TCoords = { x: 0, y: 0 }, scale: number = 1): void {
+    this.ctx.save();
+    this.ctx.translate(coords.x, coords.y);
+    this.ctx.scale(scale, scale);
+
     this.options.isFilled = true;
     this.options.fillColor = color;
-
-    console.log('Circle brush color:', this.options.brushColor);
 
     this.ctx.beginPath();
     this.ctx.fillStyle = color;
@@ -69,6 +71,8 @@ class Circle extends Shape {
 
     this.ctx.fill();
     this.ctx.stroke();
+
+    this.ctx.restore();
   }
 }
 

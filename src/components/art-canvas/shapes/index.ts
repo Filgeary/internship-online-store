@@ -12,8 +12,14 @@ abstract class Shape {
     this.panOffset = panOffset;
   }
 
+  /**
+   * Отрисовка фигуры
+   */
   abstract draw(): void;
 
+  /**
+   * Проверка вхождения точки в фигуру
+   */
   abstract mouseIn(coords: { x: number; y: number }): boolean;
 
   /**
@@ -24,7 +30,7 @@ abstract class Shape {
   /**
    * Залить фигуру цветом
    */
-  abstract fillArea(color: string): void;
+  abstract fillArea(color: string, coords: TCoords, scale: number): void;
 }
 
 export default Shape;
