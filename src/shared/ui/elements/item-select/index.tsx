@@ -1,18 +1,11 @@
 import React, {memo, useCallback, useEffect, useState} from 'react';
 import {cn as bem} from "@bem-react/classname";
-import numberFormat from "@src/ww-old-utils-postponed/number-format";
 import './style.css';
-import InputNumber from "@src/ww-old-components-postponed/input-number";
+import InputNumber from "@src/shared/ui/elements/input-number";
+import numberFormat from "@src/shared/utils/number-format";
+import {ItemSelectProps} from "@src/shared/ui/elements/item-select/types";
 
-interface Props {
-  item: IArticle,
-  onSelect: (_id: number | string, quantity: number, select: boolean) => void,
-  labelCurr?: string,
-  labelAdd: string,
-  select: number
-}
-
-function ItemSelect ({item, onSelect, select, labelCurr = '₽', labelAdd}: Props): React.ReactElement {
+function ItemSelect({item, onSelect, select, labelCurr = '₽', labelAdd}: ItemSelectProps): React.ReactElement {
   const cn = bem('ItemSelect');
 
   // Создаю внутреннее состояние, которое будет отвечать за то выделен ли каждый элемент, так же при выделении будет появляться инпут для ввода количества

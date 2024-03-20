@@ -1,8 +1,8 @@
 import React from 'react';
-import Spinner from "@src/ww-old-components-postponed/spinner";
-import useSelector from "../../ww-old-hooks-postponed/use-selector";
-import ChatComponent from "@src/ww-old-components-postponed/chat-component";
-import useStore from "../../ww-old-hooks-postponed/use-store";
+import useStore from "@src/shared/hooks/use-store";
+import useSelector from "@src/shared/hooks/use-selector";
+import Spinner from "@src/shared/ui/layout/spinner";
+import ChatComponent from "@src/pages/chat/components/chat-component";
 
 function ChatContainer() {
     const store = useStore()

@@ -1,10 +1,8 @@
 import React, {useEffect, useRef, useState} from 'react';
 import './style.css';
-import ArrowBottomSVG from './bottom-arrow.svg?react';
-import {Message} from "@src/ww-old-store-postponed-modals/chat";
-import {getLocalTime} from "@src/ww-old-utils-postponed/get-local-time";
-import {generateUniqueCode} from "@src/ww-old-utils-postponed/unique-code";
-import ChatItem from "@src/ww-old-components-postponed/chat-item";
+import ArrowBottomSVG from './images/bottom-arrow.svg?react';
+import ChatItem from "@src/pages/chat/components/chat-item";
+import {generateUniqueCode} from "@src/shared/utils/unique-code";
 
 type ChatList = {
   list: Message[],
@@ -58,7 +56,9 @@ function ChatList({list, username, uploadOldMessages}: ChatList) {
     <div className='ChatList' ref={listRef} onScroll={scrolling}>
       <div className="ChatList-InterSection" ref={intersectionElement}></div>
       {list.map(item => (
-        <ChatItem item={item} myMessage={item.author.username === username} key={item._key ? item._key : generateUniqueCode()}/>
+        <ChatItem item={item} myMessage={item.author.username === username}
+                  key={item._key ? item._key : generateUniqueCode()}
+        />
       ))}
       <div className={"ChatList-scrollBottom" + (visibilityArrowForScrolling ? ' visible' : '')} onClick={scrollDown}>
         <ArrowBottomSVG/>

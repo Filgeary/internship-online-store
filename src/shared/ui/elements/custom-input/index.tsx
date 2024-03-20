@@ -1,6 +1,5 @@
-import React, {memo, useCallback, useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef} from 'react';
 import './style.css';
-import debounce from "lodash.debounce";
 
 interface CustomInputProps {
   value?: string,

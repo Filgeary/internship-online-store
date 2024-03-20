@@ -1,7 +1,7 @@
-import APIService from "./ww-old-api-postponed";
-import Store from "./ww-old-store-postponed-modals";
+import APIService from "@src/shared/services/request/index";
+import WebSocketService from "@src/shared/services/websocket/index";
+import Store from "@src/shared/store/index";
 import {Config} from "@src/config";
-import WebSocketService from "src/ww-old-websocket-postponed";
 
 class Services {
   private config: Config;

@@ -1,29 +1,18 @@
 import React, {memo} from "react";
 import {cn as bem} from '@bem-react/classname';
-import numberFormat from "@src/ww-old-utils-postponed/number-format";
 import './style.css';
 import {Link} from "react-router-dom";
-import {IArticle} from "../../../types/IArticle";
-
-interface Props {
-  item: IArticle,
-  link: string,
-  onAdd: (item: IArticle) => void,
-  labelCurr?: string,
-  labelAdd?: string
-}
-
-interface Callbacks {
-  onAdd: (event: React.MouseEvent<HTMLButtonElement>) => void
-}
+import numberFormat from "@src/shared/utils/number-format";
+import {ItemCallbacks, ItemProps} from "@src/shared/ui/elements/item/types";
 
 
-const Item: React.FC<Props> = ({item, link, onAdd, labelCurr = '₽', labelAdd = 'Добавить'}) => {
+
+const Item: React.FC<ItemProps> = ({item, link, onAdd, labelCurr = '₽', labelAdd = 'Добавить'}) => {
 
   const cn = bem('Item');
 
 
-  const callbacks: Callbacks = {
+  const callbacks: ItemCallbacks = {
     onAdd: (e) => onAdd(item),
   }
 

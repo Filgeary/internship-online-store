@@ -1,11 +1,11 @@
 import React, {memo, useCallback} from "react";
-import useStore from "../../ww-old-hooks-postponed/use-store";
-import useSelector from "../../ww-old-hooks-postponed/use-selector";
-import useTranslate from "../../ww-old-hooks-postponed/use-translate";
-import List from "@src/ww-old-components-postponed/list";
-import Pagination from "@src/ww-old-components-postponed/pagination";
-import ItemSelect from "@src/ww-old-components-postponed/item-select";
-import {ExtendedModulesKey} from "@src/ww-old-store-postponed-modals/types";
+import {ExtendedModulesKey} from "@src/shared/store/types";
+import useStore from "@src/shared/hooks/use-store";
+import useTranslate from "@src/shared/hooks/use-translate";
+import useSelector from "@src/shared/hooks/use-selector";
+import ItemSelect from "@src/shared/ui/elements/item-select";
+import List from "@src/shared/ui/elements/list";
+import Pagination from "@src/widgets/pagination";
 
 interface Props {
   stateName: ExtendedModulesKey<'catalog'>,

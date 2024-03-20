@@ -1,6 +1,6 @@
-import StoreModule from "@src/shared/services/store/module";
+import StoreModule from "@src/shared/store/module";
 import {generateUniqueCode} from "@src/shared/utils/unique-code";
-import {filterDuplicatesByField} from "@src/ww-old-utils-postponed/filter-duplicates-by-field";
+import {filterDuplicatesByField} from "@src/shared/utils/filter-duplicates-by-field";
 
 type TChatState = {
   message: Message[],

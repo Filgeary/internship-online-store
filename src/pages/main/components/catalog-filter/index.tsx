@@ -1,15 +1,15 @@
-import React, {memo, useCallback, useEffect, useMemo} from "react";
-import useTranslate from "../../ww-old-hooks-postponed/use-translate";
-import useStore from "../../ww-old-hooks-postponed/use-store";
-import useSelector from "../../ww-old-hooks-postponed/use-selector";
-import Select, {Option} from "@src/ww-old-components-postponed/select";
-import Input from "@src/ww-old-components-postponed/input";
-import SideLayout from "@src/ww-old-components-postponed/side-layout";
-import treeToList from "@src/ww-old-utils-postponed/tree-to-list";
-import listToTree from "@src/ww-old-utils-postponed/list-to-tree";
-import {ExtendedModulesKey} from "@src/ww-old-store-postponed-modals/types";
-import {TSort} from "@src/ww-old-store-postponed-modals/catalog";
-import SelectCountriesList from "@src/ww-old-containers/select-countries-list";
+import React, {memo, useCallback, useMemo} from "react";
+import {ExtendedModulesKey} from "@src/shared/store/types";
+import useStore from "@src/shared/hooks/use-store";
+import useSelector from "@src/shared/hooks/use-selector";
+import {TSort} from "@src/pages/main/store/catalog/types";
+import treeToList from "@src/shared/utils/tree-to-list";
+import listToTree from "@src/shared/utils/list-to-tree";
+import useTranslate from "@src/shared/hooks/use-translate";
+import SideLayout from "@src/shared/ui/layout/side-layout";
+import Select from "@src/shared/ui/elements/select";
+import Input from "@src/shared/ui/elements/input";
+import SelectCountriesList from "@src/feature/select-countries-list";
 
 interface Props {
   stateName?: ExtendedModulesKey<'catalog'>,
@@ -55,7 +55,7 @@ const CatalogFilter: React.FC<Props> = ({stateName = 'catalog'}) => {
     ]), []),
     categories: useMemo(() => ([
       {value: '', title: 'Все'},
-      ...treeToList<Option>(listToTree(select.categories), (item, level) => (
+      ...treeToList<any>(listToTree(select.categories), (item, level) => (
         {value: item._id, title: '- '.repeat(level) + item.title}
       ))
     ]), [select.categories]),

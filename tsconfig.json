@@ -25,7 +25,10 @@
   "include": [
     "src",
     "svg.d.ts",
-    "types/TMessage.ts"
+    "types/TMessage.ts",
+    "types/IArticle.ts",
+    "types/User.ts",
+    "types/Color.ts"
   ]
   /* Пути, которые должны включаться в компиляцию */
 }

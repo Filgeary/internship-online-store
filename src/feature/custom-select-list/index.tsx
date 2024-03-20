@@ -1,9 +1,9 @@
 import React, {memo, useEffect, useMemo, useRef, useState} from 'react';
 import './style.css';
-import Arrow from './arrow.svg?react'
+import Arrow from './images/arrow.svg?react'
 import {cn as bem} from "@bem-react/classname";
-import {TranslateFunction} from "@src/ww-old-i18n-postponed/context";
-import Spinner from "@src/ww-old-components-postponed/spinner";
+import {TranslateFunction} from "@src/shared/services/i18n/context";
+import Spinner from "@src/shared/ui/layout/spinner";
 
 type Country = {
   _id: string;

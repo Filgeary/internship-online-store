@@ -1,5 +1,5 @@
 import {useContext} from "react";
-import {I18nContext, I18nContextType} from "@src/ww-old-i18n-postponed/context";
+import {I18nContext, I18nContextType} from "@src/shared/i18n/context";
 
 /**
  * Хук возвращает функцию для локализации текстов, код языка и функцию его смены

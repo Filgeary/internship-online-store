@@ -1,7 +1,7 @@
 import React, {memo} from "react";
 import {cn as bem} from '@bem-react/classname';
-import numberFormat from "@src/ww-old-utils-postponed/number-format";
 import './style.css';
+import numberFormat from "@src/shared/utils/number-format";
 
 interface Props {
     sum: number,

@@ -1,10 +1,13 @@
-import StoreModule from "@src/shared/services/store/module";
-import simplifyErrors from "@src/ww-old-utils-postponed/simplify-errors";
+import StoreModule from "@src/shared/store/module";
+import {a} from "vite/dist/node/types.d-AKzkD8vd";
+import simplifyErrors from "@src/shared/utils/simplify-errors";
+import {Simulate} from "react-dom/test-utils";
+import waiting = Simulate.waiting;
 
 type TSessionConfig = {tokenHeader: string}
 
 type TSessionState = {
-  user: IUser,
+  user: any,
   token: null | string,
   errors: null | Record<string, string[]>,
   waiting: boolean,
@@ -18,10 +21,10 @@ class SessionState extends StoreModule<TSessionState, TSessionConfig> {
   /**Начальное состояние*/
   initState(): TSessionState {
     return {
-      user: {} as IUser,
+      user: {} as any,
       token: null,
       errors: null,
-      waiting: true,
+      waiting: false,
       exists: false
     };
   }
@@ -33,7 +36,10 @@ class SessionState extends StoreModule<TSessionState, TSessionConfig> {
    * @returns {Promise<void>}
    */
   async signIn(data: {login: string, password: string}, onSuccess: () => void): Promise<void> {
-    this.setState(this.initState(), 'Авторизация');
+    this.setState({
+      ...this.initState(),
+      waiting: true
+    }, 'Авторизация');
 
     try {
       const res = await this.services.api.request({

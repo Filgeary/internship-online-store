@@ -1,12 +1,9 @@
 import React, {memo} from 'react';
 import './style.css'
+import {BackdropProps} from "@src/shared/ui/layout/backdrop/types";
 
-interface Props {
-  isOpen?: boolean,
-  children: React.ReactNode
-}
 // Наложение фона
-const Backdrop: React.FC<Props> = ({isOpen = false, children}) => {
+const Backdrop: React.FC<BackdropProps> = ({isOpen = false, children}) => {
   return isOpen
     ? <div className="backdrop">{children}</div>
     : <>{children}</>;

@@ -1,18 +1,11 @@
-import React, {memo, ReactElement} from "react";
+import React, {memo} from "react";
 import {cn as bem} from '@bem-react/classname';
 import './style.css';
-import codeGenerator from "@src/ww-old-utils-postponed/code-generator";
+import codeGenerator from "@src/shared/utils/code-generator";
+import {SideLayoutProps} from "@src/shared/ui/layout/side-layout/types";
 
-type side = 'start' | 'end' | 'between';
-type padding = 'small' | 'medium';
 
-interface Props {
-  children: React.ReactNode,
-  side?: side,
-  padding?: padding
-}
-
-const SideLayout: React.FC<Props> = ({children, side, padding}) => {
+const SideLayout: React.FC<SideLayoutProps> = ({children, side, padding}) => {
   const key = codeGenerator()
   const cn = bem('SideLayout');
   return (

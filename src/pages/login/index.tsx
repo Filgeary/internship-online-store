@@ -1,17 +1,17 @@
 import React, {memo, useCallback, useState} from "react";
-import useTranslate from "../../ww-old-hooks-postponed/use-translate";
-import Head from "@src/ww-old-components-postponed/head";
-import LocaleSelect from "@src/ww-old-containers/locale-select";
-import Navigation from "@src/ww-old-containers/navigation";
-import PageLayout from "@src/ww-old-components-postponed/page-layout";
-import Input from "@src/ww-old-components-postponed/input";
-import Field from "@src/ww-old-components-postponed/field";
-import SideLayout from "@src/ww-old-components-postponed/side-layout";
-import TopHead from "@src/ww-old-containers/top-head";
+import useTranslate from "@src/shared/hooks/use-translate";
 import {useLocation, useNavigate} from "react-router-dom";
-import useStore from "../../ww-old-hooks-postponed/use-store";
-import useSelector from "../../ww-old-hooks-postponed/use-selector";
-import useInit from "../../ww-old-hooks-postponed/use-init";
+import useStore from "@src/shared/hooks/use-store";
+import useInit from "@src/shared/hooks/use-init";
+import useSelector from "@src/shared/hooks/use-selector";
+import PageLayout from "@src/shared/ui/layout/page-layout";
+import TopHead from "@src/feature/top-head";
+import Head from "@src/shared/ui/layout/head";
+import LocaleSelect from "@src/feature/locale-select";
+import Navigation from "@src/feature/navigation";
+import SideLayout from "@src/shared/ui/layout/side-layout";
+import Field from "@src/shared/ui/layout/field";
+import Input from "@src/shared/ui/elements/input";
 
 
 function Login() {

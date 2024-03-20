@@ -1,13 +1,8 @@
 import React, {memo} from "react";
+import {ListProps} from "@src/shared/ui/elements/list/types";
 import './style.css';
-import {IArticle} from "../../../types/IArticle";
 
-interface Props {
-  list: any[],
-  renderItem: (item: any) => React.ReactNode
-}
-
-const List: React.FC<Props> = ({list, renderItem}) => {
+const List: React.FC<ListProps> = ({list, renderItem}) => {
   return (
     <div className='List'>{
       list.map(item =>
@@ -20,5 +15,3 @@ const List: React.FC<Props> = ({list, renderItem}) => {
 }
 
 export default memo(List);
-
-//dangerouslySetInnerHTML={}

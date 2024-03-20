@@ -1,10 +1,10 @@
 import React, {memo, useCallback, useMemo} from "react";
-import useStore from "../../ww-old-hooks-postponed/use-store";
-import useSelector from "../../ww-old-hooks-postponed/use-selector";
-import useTranslate from "../../ww-old-hooks-postponed/use-translate";
-import Menu from "@src/ww-old-components-postponed/menu";
-import BasketTool from "@src/ww-old-components-postponed/basket-tool";
-import SideLayout from "@src/ww-old-components-postponed/side-layout";
+import useStore from "@src/shared/hooks/use-store";
+import useSelector from "@src/shared/hooks/use-selector";
+import useTranslate from "@src/shared/hooks/use-translate";
+import SideLayout from "@src/shared/ui/layout/side-layout";
+import Menu from "@src/shared/ui/elements/menu";
+import BasketTool from "@src/pages/basket/components/basket-tool";
 
 function Navigation() {
   const store = useStore();

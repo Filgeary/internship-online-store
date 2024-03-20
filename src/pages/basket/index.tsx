@@ -1,13 +1,12 @@
-import {memo, useCallback} from 'react';
-import useStore from "../../ww-old-hooks-postponed/use-store";
-import useSelector from "../../ww-old-hooks-postponed/use-selector";
-import useTranslate from "../../ww-old-hooks-postponed/use-translate";
-import ItemBasket from "@src/ww-old-components-postponed/item-basket";
-import List from "@src/ww-old-components-postponed/list";
-import ModalLayout from "@src/ww-old-components-postponed/modal-layout";
-import BasketTotal from "@src/ww-old-components-postponed/basket-total";
-import Controls from "@src/ww-old-components-postponed/controls";
-import {IArticle} from "../../../types/IArticle";
+import React, {memo, useCallback} from 'react';
+import useStore from "@src/shared/hooks/use-store";
+import useSelector from "@src/shared/hooks/use-selector";
+import useTranslate from "@src/shared/hooks/use-translate";
+import ItemBasket from "@src/pages/basket/components/item-basket";
+import ModalLayout from "@src/shared/ui/layout/modal-layout";
+import List from "@src/shared/ui/elements/list";
+import BasketTotal from "@src/pages/basket/components/basket-total";
+import Controls from "@src/shared/ui/elements/controls";
 
 function Basket({onClose}: {onClose: (value?: any) => void}) {
 
@@ -35,7 +34,7 @@ function Basket({onClose}: {onClose: (value?: any) => void}) {
   const {t} = useTranslate();
 
   const renders = {
-    itemBasket: useCallback((item: IArticle) => (
+    itemBasket: useCallback((item: any) => (
       <ItemBasket item={item}
                   link={`/articles/${item._id}`}
                   onRemove={callbacks.removeFromBasket}

@@ -1,16 +1,12 @@
-import React, {memo, ReactNode} from "react";
+import React, {memo} from "react";
 import './style.css';
+import {HeadProps} from "@src/shared/ui/layout/head/types";
 
-interface Props {
-    title: string,
-    children: ReactNode
-}
-
-const Head: React.FC<Props> = ({title, children}) => {
+const Head: React.FC<HeadProps> = ({title, children}) => {
   return (
     <div className='Head'>
       <div className='Head-place'>
-        <h1 >{title}</h1>
+        <h1>{title}</h1>
       </div>
       <div className='Head-place'>{children}</div>
     </div>

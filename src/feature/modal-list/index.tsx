@@ -1,13 +1,13 @@
 import React, {memo, useCallback, useState} from 'react';
-import CatalogFilter from "@src/ww-old-containers/catalog-filter";
-import ModalLayout from "@src/ww-old-components-postponed/modal-layout";
-import useTranslate from "../../ww-old-hooks-postponed/use-translate";
-import useStore from "../../ww-old-hooks-postponed/use-store";
-import useInit from "../../ww-old-hooks-postponed/use-init";
-import Spinner from "@src/ww-old-components-postponed/spinner";
-import Controls from "@src/ww-old-components-postponed/controls";
-import CatalogListSelected from "@src/ww-old-containers/catalog-list-selected";
-import {onCloseModal} from "@src/ww-old-containers/modal-window";
+import {onCloseModal} from "@src/pages/modal-window";
+import useTranslate from "@src/shared/hooks/use-translate";
+import useStore from "@src/shared/hooks/use-store";
+import useInit from "@src/shared/hooks/use-init";
+import ModalLayout from "@src/shared/ui/layout/modal-layout";
+import Spinner from "@src/shared/ui/layout/spinner";
+import CatalogFilter from "@src/pages/main/components/catalog-filter";
+import CatalogListSelected from "@src/pages/main/components/catalog-list-selected";
+import Controls from "@src/shared/ui/elements/controls";
 
 /**
  * Пометка, данный компонент является "умным"

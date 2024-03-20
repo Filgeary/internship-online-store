@@ -1,9 +1,8 @@
 import React, {memo} from 'react';
-import numberFormat from "@src/ww-old-utils-postponed/number-format";
 import {cn as bem} from "@bem-react/classname";
 import {Link} from "react-router-dom";
 import './style.css';
-import {IArticle} from "../../../types/IArticle";
+import numberFormat from "@src/shared/utils/number-format";
 
 
 interface Props {

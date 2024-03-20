@@ -1,12 +1,8 @@
 import React, {memo} from "react";
+import {SpinnerProps} from "@src/shared/ui/layout/spinner/types";
 import './style.css';
 
-interface Props {
-  active: boolean,
-  children: React.ReactNode
-}
-
-const Spinner: React.FC<Props> = ({active, children}) => {
+const Spinner: React.FC<SpinnerProps> = ({active, children}) => {
   if (active) {
     return <div className="Spinner">{children}</div>
   } else {

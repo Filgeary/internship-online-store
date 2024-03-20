@@ -1,14 +1,9 @@
-import React, {memo, ReactNode} from "react";
+import React, {memo} from "react";
 import {cn as bem} from '@bem-react/classname';
+import {FieldProps} from "@src/shared/ui/layout/field/types";
 import './style.css';
 
-interface Props {
-    label?: string,
-    error?: string[],
-    children?: ReactNode
-}
-
-const Field: React.FC<Props> = ({label, error, children}) => {
+const Field: React.FC<FieldProps> = ({label, error, children}) => {
   const cn = bem('Field');
   return (
     <div className={cn()}>

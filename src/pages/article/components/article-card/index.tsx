@@ -1,9 +1,8 @@
 import React, {memo} from "react";
 import {cn as bem} from '@bem-react/classname';
-import numberFormat from "@src/ww-old-utils-postponed/number-format";
 import './style.css';
-import {IArticle} from "../../../types/IArticle";
-import {TranslateFunction} from "@src/ww-old-i18n-postponed/context";
+import {TranslateFunction} from "@src/shared/i18n/context";
+import numberFormat from "@src/shared/utils/number-format";
 
 interface Props {
     article: IArticle,

@@ -2,19 +2,9 @@ import React, {memo} from "react";
 import {cn as bem} from "@bem-react/classname";
 import {Link} from "react-router-dom";
 import './style.css';
+import {MenuProps} from "@src/shared/ui/elements/menu/types";
 
-interface Item {
-  key: string | number,
-  title: string,
-  link: string
-}
-
-interface Props {
-  items: Item[],
-  onNavigate: (item: Item) => void
-}
-
-const Menu: React.FC<Props> = ({items, onNavigate}) => {
+const Menu: React.FC<MenuProps> = ({items, onNavigate}) => {
   const cn = bem('Menu');
   return (
     <ul className={cn()}>

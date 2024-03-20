@@ -1,4 +1,4 @@
-import exclude from '@src/ww-old-utils-postponed/exclude/index';
+import exclude from './index';
 
 describe('ww-old-utils-postponed/exclude', () => {
 

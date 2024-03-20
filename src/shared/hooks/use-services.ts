@@ -1,5 +1,5 @@
 import {useContext} from "react";
-import {ServicesContext} from "../context";
+import {ServicesContext} from "@src/context";
 import Services from "@src/services";
 
 /**

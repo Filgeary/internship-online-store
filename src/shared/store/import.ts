@@ -1,0 +1,9 @@
+export { default as basket } from '@src/pages/basket/store/basket';
+export { default as catalog } from '@src/pages/main/store/catalog';
+export { default as categories } from '@src/pages/main/store/categoties';
+export { default as article } from '@src/pages/article/store/article';
+export { default as session } from '@src/pages/login/store/login';
+export { default as profile } from '@src/pages/profile/store/profile';
+export { default as countries } from '@src/pages/main/store/countries';
+export { default as chat } from '@src/pages/chat/store/chat';
+export { default as modals } from '@src/pages/modal-window/store/modals';

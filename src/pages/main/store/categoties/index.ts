@@ -1,4 +1,4 @@
-import StoreModule from "@src/shared/services/store/module";
+import StoreModule from "@src/shared/store/module";
 import {TCategoriesState} from "@src/pages/main/store/categoties/types";
 
 /**

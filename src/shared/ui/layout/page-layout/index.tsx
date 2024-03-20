@@ -1,14 +1,9 @@
 import React, {memo} from "react";
 import {cn as bem} from '@bem-react/classname';
+import {PageLayoutProps} from "@src/shared/ui/layout/page-layout/types";
 import './style.css';
 
-interface Props {
-    head?: React.ReactNode,
-    footer?: React.ReactNode,
-    children: React.ReactNode
-}
-
-const PageLayout: React.FC<Props> = ({head, footer, children}) => {
+const PageLayout: React.FC<PageLayoutProps> = ({head, footer, children}) => {
 
   const cn = bem('PageLayout');
 

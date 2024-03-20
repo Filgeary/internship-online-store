@@ -1,23 +1,9 @@
 import React, {useEffect, useRef} from 'react';
-import CustomSelectLang from "@src/ww-old-components-postponed/custom-select-lang";
+import CustomSelectLang from "@src/widgets/custom-select-lang/index";
+import {BuildSelectedListProps} from "@src/feature/build-selected-list/types";
 import {cn as bem} from "@bem-react/classname";
 import './style.css'
 
-interface OptionType {
-  _id: string,
-  title: string,
-  code: string,
-  selected: boolean
-}
-
-
-interface BuildSelectedListProps {
-  onSelected: (langCode: string) => void,
-  filteredOptions: OptionType[],
-  selectedOptionIndex: number,
-  setSelectedOptionIndex: (index: number) => void,
-  visible: boolean
-}
 
 function BuildSelectedList({onSelected, filteredOptions, selectedOptionIndex, setSelectedOptionIndex, visible}: BuildSelectedListProps) {
   const cn = bem('BuildSelectedList');

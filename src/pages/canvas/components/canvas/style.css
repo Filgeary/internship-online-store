@@ -6,7 +6,30 @@
 }
 
 .CanvasComponent {
-  margin-bottom: 10px;
+  margin: 10px 0;
   border: 1px #535353 solid;
   box-shadow: 0 0 5px 0 #535353;
+}
+
+.CanvasColorSelect {
+}
+.CanvasColorSelect.disable {
+  pointer-events: none;
+  opacity: 0.5;
+}
+.CanvasCheckbox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 0;
+}
+
+.CanvasCheckbox-text {
+  margin-right: 10px;
+}
+
+.CanvasCheckbox-input {
+  width: 15px;
+  height: 15px;
+  margin-right: 10px;
 }

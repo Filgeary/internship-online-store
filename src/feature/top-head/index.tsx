@@ -1,10 +1,9 @@
 import React, {memo, useCallback} from "react";
-import SideLayout from "@src/ww-old-components-postponed/side-layout";
+import useTranslate from "@src/shared/hooks/use-translate";
 import {Link, useLocation, useNavigate} from "react-router-dom";
-import useTranslate from "../../ww-old-hooks-postponed/use-translate";
-import useSelector from "../../ww-old-hooks-postponed/use-selector";
-import useStore from "../../ww-old-hooks-postponed/use-store";
-
+import useSelector from "@src/shared/hooks/use-selector";
+import useStore from "@src/shared/hooks/use-store";
+import SideLayout from "@src/shared/ui/layout/side-layout";
 function TopHead() {
 
   const {t} = useTranslate();

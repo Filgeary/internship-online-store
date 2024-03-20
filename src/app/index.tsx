@@ -1,11 +1,15 @@
 import React from 'react'
+import {Providers} from "./provider";
 import {router} from "./route";
-import './global.css'
-import {Providers} from "@src/app/provider";
+import './index.scss'
+import ModalWindow from "@src/pages/modal-window";
 
 
 function App (): React.JSX.Element {
-  return <Providers router={router}/>
+  return <>
+    <Providers router={router}/>
+    <ModalWindow/>
+  </>
 }
 
 export default App;

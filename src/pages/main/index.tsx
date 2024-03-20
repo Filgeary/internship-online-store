@@ -1,15 +1,14 @@
-import {memo} from 'react';
-import useStore from "../../ww-old-hooks-postponed/use-store";
-import useTranslate from "../../ww-old-hooks-postponed/use-translate";
-import useInit from "../../ww-old-hooks-postponed/use-init";
-import Navigation from "@src/ww-old-containers/navigation";
-import PageLayout from "@src/ww-old-components-postponed/page-layout";
-import Head from "@src/ww-old-components-postponed/head";
-import CatalogFilter from "@src/ww-old-containers/catalog-filter";
-import CatalogList from "@src/ww-old-containers/catalog-list";
-import LocaleSelect from "@src/ww-old-containers/locale-select";
-import TopHead from "@src/ww-old-containers/top-head";
-import SelectCountriesList from "@src/ww-old-containers/select-countries-list";
+import React, {memo} from 'react';
+import useStore from "@src/shared/hooks/use-store";
+import useInit from "@src/shared/hooks/use-init";
+import useTranslate from "@src/shared/hooks/use-translate";
+import TopHead from "@src/feature/top-head";
+import PageLayout from "@src/shared/ui/layout/page-layout";
+import Head from "@src/shared/ui/layout/head";
+import LocaleSelect from "@src/feature/locale-select";
+import Navigation from "@src/feature/navigation";
+import CatalogFilter from "@src/pages/main/components/catalog-filter";
+import CatalogList from "@src/pages/main/components/catalog-list";
 
 function Main() {
 

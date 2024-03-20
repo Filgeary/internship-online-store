@@ -1,13 +1,13 @@
 import React, {memo} from 'react';
-import PageLayout from "@src/ww-old-components-postponed/page-layout";
-import TopHead from "@src/ww-old-containers/top-head";
-import Head from "@src/ww-old-components-postponed/head";
-import LocaleSelect from "@src/ww-old-containers/locale-select";
-import Navigation from "@src/ww-old-containers/navigation";
-import useTranslate from "../../ww-old-hooks-postponed/use-translate";
-import useInit from "../../ww-old-hooks-postponed/use-init";
-import useStore from "../../ww-old-hooks-postponed/use-store";
-import ChatContainer from "@src/ww-old-containers/chat-container";
+import useTranslate from "@src/shared/hooks/use-translate";
+import useStore from "@src/shared/hooks/use-store";
+import useInit from "@src/shared/hooks/use-init";
+import PageLayout from "@src/shared/ui/layout/page-layout";
+import TopHead from "@src/feature/top-head";
+import Head from "@src/shared/ui/layout/head";
+import LocaleSelect from "@src/feature/locale-select";
+import Navigation from "@src/feature/navigation";
+import ChatContainer from "@src/pages/chat/components/chat-container";
 
 function Chat() {
   const {t} = useTranslate();

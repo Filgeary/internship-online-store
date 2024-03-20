@@ -1,6 +1,6 @@
-import StoreModule from "@src/shared/services/store/module";
-import exclude from "@src/ww-old-utils-postponed/exclude";
+import StoreModule from "@src/shared/store/module";
 import {Params, TCatalogConfig, TCatalogState, TSort} from "@src/pages/main/store/catalog/types";
+import exclude from "@src/shared/utils/exclude";
 
 /**
  * Состояние каталога - параметры фильтра и список товара

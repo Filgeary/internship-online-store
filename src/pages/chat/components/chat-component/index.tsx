@@ -1,9 +1,8 @@
 import React, {ChangeEvent, memo, useRef, useState} from 'react';
 import './style.css';
-import ArrowSVG from './arrow.svg?react';
+import ArrowSVG from './images/arrow.svg?react';
 import {cn as bem} from "@bem-react/classname";
-import {Message} from "@src/ww-old-store-postponed-modals/chat";
-import ChatList from "@src/ww-old-components-postponed/chat-list";
+import ChatList from "@src/pages/chat/components/chat-list";
 
 function ChatComponent({list, username, sendMessage, uploadOldMessages}: {
   list: Message[],

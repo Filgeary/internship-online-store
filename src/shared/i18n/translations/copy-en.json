@@ -1,0 +1,26 @@
+{
+  "title.main": "Shop",
+  "title.chat": "Chat",
+  "select.countries": {
+    "one": "country",
+    "few": "countries",
+    "many": "countries",
+    "other": "countries"
+  },
+  "menu.main": "Main",
+  "menu.chat": "Chat",
+  "menu.canvas": "Canvas",
+  "modalAdd.article": {
+    "one": "article",
+    "other": "articles"
+  },
+  "modalAdd.close": "close",
+  "modalAdd.sum": "for the amount",
+  "modalAdd.cancel": "cancel",
+  "modalAdd.ok": "ok",
+  "modalList.title": "Select products",
+  "article.add": "Add",
+  "filter.reset": "Reset",
+  "session.signIn": "Sign In",
+  "session.signOut": "Sign Out"
+}

@@ -1,26 +1,26 @@
 import React from 'react';
-import TopHead from "@src/ww-old-containers/top-head";
-import Head from "@src/ww-old-components-postponed/head";
-import LocaleSelect from "@src/ww-old-containers/locale-select";
-import PageLayout from "@src/ww-old-components-postponed/page-layout";
-import useTranslate from "../../ww-old-hooks-postponed/use-translate";
-import Navigation from "@src/ww-old-containers/navigation";
-import CanvasComponent from "@src/ww-old-components-postponed/canvas";
+import useTranslate from "@src/shared/hooks/use-translate";
+import PageLayout from "@src/shared/ui/layout/page-layout";
+import TopHead from "@src/feature/top-head";
+import Head from "@src/shared/ui/layout/head";
+import LocaleSelect from "@src/feature/locale-select";
+import Navigation from "@src/feature/navigation";
+import CanvasComponentTest from "@src/pages/canvas/components/canvas";
 
 function Canvas() {
 
-  const {t} = useTranslate();
+    const {t} = useTranslate();
 
-  return (
-    <PageLayout>
-      <TopHead/>
-      <Head title={t('title.canvas')}>
-        <LocaleSelect/>
-      </Head>
-      <Navigation/>
-      <CanvasComponent/>
-    </PageLayout>
-  );
+    return (
+        <PageLayout>
+            <TopHead/>
+            <Head title={t('title.canvas')}>
+                <LocaleSelect/>
+            </Head>
+            <Navigation/>
+            <CanvasComponentTest/>
+        </PageLayout>
+    );
 }
 
 export default Canvas;

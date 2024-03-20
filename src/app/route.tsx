@@ -1,12 +1,12 @@
 import {createBrowserRouter} from "react-router-dom";
-import Main from "@src/pages/main/page";
-import Article from "@src/pages/article/page";
-import Login from "@src/pages/login/page";
-import Profile from "@src/ww-old-app-postponed/profile";
-import Protected from "@src/ww-old-containers/protected";
+import Main from "@src/pages/main/index";
+import Article from "@src/pages/article/index";
+import Login from "@src/pages/login/index";
 import React from "react";
-import Chat from "@src/ww-old-app-postponed/chat";
-import Canvas from "@src/ww-old-app-postponed/canvas";
+import Protected from "@src/feature/protected";
+import Profile from "@src/pages/profile/index";
+import Chat from "@src/pages/chat/index";
+import Canvas from "@src/pages/canvas/index";
 
 export const router = createBrowserRouter([
   {

@@ -1,5 +1,5 @@
 import React, {memo, useEffect} from "react";
-import useSelector from "../../ww-old-hooks-postponed/use-selector";
+import useSelector from "@src/shared/hooks/use-selector";
 import {useLocation, useNavigate} from "react-router-dom";
 
 interface Props {

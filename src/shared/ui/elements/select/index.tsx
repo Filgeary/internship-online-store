@@ -1,18 +1,8 @@
 import React, {memo} from "react";
+import {SelectProps} from "@src/shared/ui/elements/select/types";
 import './style.css';
 
-export interface Option {
-  value: string | number,
-  title: string
-}
-
-interface Props {
-  onChange: (value: any) => void,
-  value: string,
-  options: Option[]
-}
-
-const Select: React.FC<Props> = (props) => {
+const Select: React.FC<SelectProps> = (props) => {
 
   const onSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
     props.onChange(e.target.value);

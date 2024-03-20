@@ -1,4 +1,4 @@
-import StoreModule from "@src/ww-old-store-postponed-modals/module";
+import StoreModule from "@src/shared/store/module";
 
 export type country = {
   _id: string,

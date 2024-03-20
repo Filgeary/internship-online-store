@@ -1,16 +1,16 @@
-import {memo, useCallback} from 'react';
+import React, {memo, useCallback} from 'react';
 import {useParams} from "react-router-dom";
-import useStore from "../../ww-old-hooks-postponed/use-store";
-import useTranslate from "../../ww-old-hooks-postponed/use-translate";
-import useInit from "../../ww-old-hooks-postponed/use-init";
-import PageLayout from "@src/ww-old-components-postponed/page-layout";
-import Head from "@src/ww-old-components-postponed/head";
-import Navigation from "@src/ww-old-containers/navigation";
-import Spinner from "@src/ww-old-components-postponed/spinner";
-import ArticleCard from "@src/ww-old-components-postponed/article-card";
-import LocaleSelect from "@src/ww-old-containers/locale-select";
-import TopHead from "@src/ww-old-containers/top-head";
-import useSelector from "../../ww-old-hooks-postponed/use-selector";
+import useStore from "@src/shared/hooks/use-store";
+import useInit from "@src/shared/hooks/use-init";
+import useSelector from "@src/shared/hooks/use-selector";
+import useTranslate from "@src/shared/hooks/use-translate";
+import PageLayout from "@src/shared/ui/layout/page-layout";
+import TopHead from "@src/feature/top-head";
+import Head from "@src/shared/ui/layout/head";
+import LocaleSelect from "@src/feature/locale-select";
+import Navigation from "@src/feature/navigation";
+import Spinner from "@src/shared/ui/layout/spinner";
+import ArticleCard from "@src/pages/article/components/article-card";
 
 function Article() {
     const store = useStore();

@@ -1,15 +1,15 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import useTranslate from "../../ww-old-hooks-postponed/use-translate";
-import filterOptionByName from "@src/ww-old-utils-postponed/filter-option-by-name";
-import closingComponents from "@src/ww-old-utils-postponed/closing-components";
-import useInit from "../../ww-old-hooks-postponed/use-init";
-import useStore from "../../ww-old-hooks-postponed/use-store";
-import useSelector from "../../ww-old-hooks-postponed/use-selector";
-import {ExtendedModulesKey} from "@src/ww-old-store-postponed-modals/types";
-import CustomSelectList from "@src/ww-old-components-postponed/custom-select-list";
-import CustomInput from "@src/ww-old-components-postponed/custom-input";
-import BuildSelectedList from "@src/ww-old-components-postponed/build-selected-list";
-import Autocomplete from "@src/ww-old-components-postponed/autocomplete";
+import {ExtendedModulesKey} from "@src/shared/store/types";
+import useStore from "@src/shared/hooks/use-store";
+import useSelector from "@src/shared/hooks/use-selector";
+import useInit from "@src/shared/hooks/use-init";
+import filterOptionByName from "@src/shared/utils/filter-option-by-name";
+import useTranslate from "@src/shared/hooks/use-translate";
+import closingComponents from "@src/shared/utils/closing-components";
+import Autocomplete from "@src/feature/autocomplete";
+import CustomInput from "@src/shared/ui/elements/custom-input";
+import BuildSelectedList from "@src/feature/build-selected-list";
+import CustomSelectList from "@src/feature/custom-select-list";
 
 
 type Country = {

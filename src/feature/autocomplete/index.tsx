@@ -1,20 +1,5 @@
-import React, {useEffect, useRef, useState} from 'react';
-
-interface OptionType {
-  _id: string,
-  title: string,
-  code: string,
-  select?: boolean
-}
-
-interface AutocompleteProps {
-  filteredOptions: OptionType[],
-  inputBuilder: (props: any) => JSX.Element,
-  onSelect: (value: string) => void;
-  optionsBuilder: (inputValue: string) => void;
-  optionsViewBuilder: (props: any) => React.ReactNode;
-  visible?: boolean;
-}
+import React, {useEffect, useState} from 'react';
+import {AutocompleteProps} from "@src/feature/autocomplete/types";
 
 /**
  * Компонент для объединения действий над выпадающими списками

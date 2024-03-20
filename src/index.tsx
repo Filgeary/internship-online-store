@@ -1,11 +1,10 @@
 import {createRoot, Root} from 'react-dom/client';
-import {BrowserRouter} from "react-router-dom";
 import {ServicesContext} from "./context";
-import {I18nProvider} from "@src/ww-old-i18n-postponed/context";
-import App from './ww-old-app-postponed';
+import App from '@src/app/index';
 import Services from "./services";
-import config from "./config";
+import config from "@src/config";
 import React from "react";
+import {I18nProvider} from "@src/shared/i18n/context";
 
 const services: Services = new Services(config);
 
@@ -13,13 +12,11 @@ const root: Root = createRoot(document.getElementById('root') as Element);
 
 // Первый рендер приложения
 root.render(
-    <ServicesContext.Provider value={services}>
-        <I18nProvider>
-            <BrowserRouter>
-                <App/>
-            </BrowserRouter>
-        </I18nProvider>
-    </ServicesContext.Provider>
+  <ServicesContext.Provider value={services}>
+    <I18nProvider>
+      <App/>
+    </I18nProvider>
+  </ServicesContext.Provider>
 );
 
 

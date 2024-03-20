@@ -1,4 +1,4 @@
-import {Tree} from "@src/ww-old-utils-postponed/list-to-tree";
+import {Tree} from "@src/shared/utils/list-to-tree";
 
 /**
  * Преобразование списка в иерархию.

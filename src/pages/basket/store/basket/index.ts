@@ -1,4 +1,4 @@
-import StoreModule from "@src/shared/services/store/module";
+import StoreModule from "@src/shared/store/module";
 import {TBasketState} from "@src/pages/basket/store/basket/types";
 
 /**

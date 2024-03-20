@@ -1,5 +1,5 @@
 import useServices from "./use-services";
-import Store from "src/ww-old-store-postponed-modals";
+import Store from "@src/shared/store/index";
 
 /**
  * Хук для доступа к объекту хранилища

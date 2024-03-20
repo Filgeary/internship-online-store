@@ -1,22 +1,14 @@
 import React, {memo, useCallback, useState} from 'react';
-import ModalLayout from "@src/ww-old-components-postponed/modal-layout";
-import InputNumber from "@src/ww-old-components-postponed/input-number";
+import ModalLayout from "@src/shared/ui/layout/modal-layout";
+import InputNumber from "@src/shared/ui/elements/input-number";
 import {cn as bem} from "@bem-react/classname";
 import './style.css';
-import numberFormat from "@src/ww-old-utils-postponed/number-format";
+import numberFormat from "@src/shared/utils/number-format";
+import {ModalAddBasketProps} from "@src/feature/modal-add-basket/types";
 
-interface Props {
-  modalName?: string,
-  title?: string,
-  onClose: (value?: string | number) => any,
-  data: any,
-  max?: number,
-  min?: number,
-  name?: string
-  t: (key: string, amount?: number) => string
-}
 
-const ModalAddBasket: React.FC<Props> = ({title = 'Товар', data, modalName = '', onClose, max = 999, min = 1, name = 'AddingToBasket', t}) => {
+
+const ModalAddBasket: React.FC<ModalAddBasketProps> = ({title = 'Товар', data, modalName = '', onClose, max = 999, min = 1, name = 'AddingToBasket', t}) => {
   const [value, setValue] = useState(min)
 
   const cn = bem('modalAdding');

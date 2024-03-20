@@ -1,15 +1,10 @@
 import React, {memo, useEffect, useRef} from "react";
+import {ModalLayoutProps} from "@src/shared/ui/layout/modal-layout/types";
 import {cn as bem} from '@bem-react/classname';
 import './style.css';
 
-interface Props {
-  title?: string,
-  labelClose?: string,
-  onClose: (e: React.MouseEvent) => void,
-  children: React.ReactNode
-}
 
-const ModalLayout: React.FC<Props> = ({title = 'Модалка', labelClose = 'Закрыть', onClose, children}) => {
+const ModalLayout: React.FC<ModalLayoutProps> = ({title = 'Модалка', labelClose = 'Закрыть', onClose, children}) => {
 
   const cn = bem('ModalLayout');
 

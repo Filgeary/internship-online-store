@@ -1,17 +1,11 @@
 import React, {memo} from 'react';
 import {cn as bem} from '@bem-react/classname'
 import './style.css';
+import {PaginationProps} from "@src/widgets/pagination/types";
 
-interface Props {
-    page: number,
-    limit?: number,
-    count: number,
-    indent?: number,
-    onChange: (value: number) => void,
-    makeLink: (value: number) => string
-}
 
-const Pagination: React.FC<Props> = ({page = 1, limit = 10, count = 1000, indent = 1, onChange, makeLink}) => {
+
+const Pagination: React.FC<PaginationProps> = ({page = 1, limit = 10, count = 1000, indent = 1, onChange, makeLink}) => {
 
     // Количество страниц
     const length = Math.ceil(count / Math.max(limit, 1));

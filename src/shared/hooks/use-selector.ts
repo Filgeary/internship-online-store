@@ -1,7 +1,7 @@
 import {useLayoutEffect, useMemo, useState} from "react";
 import shallowequal from 'shallowequal';
 import useStore from "./use-store";
-import {AssembledState} from "@src/ww-old-store-postponed-modals/types";
+import {AssembledState} from "@src/shared/store/types";
 
 /**
  * Хук для выборки данных из ww-old-store-postponed-modals и отслеживания их изменения
