@@ -10,6 +10,7 @@ class Triangle extends Shape {
 
   draw(): void {
     this.ctx.beginPath();
+    this.ctx.strokeStyle = this.options.brushColor;
     this.ctx.fillStyle = this.options.brushColor;
     this.ctx.lineWidth = this.options.brushWidth;
 

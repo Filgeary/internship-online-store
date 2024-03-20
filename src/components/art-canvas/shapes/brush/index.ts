@@ -11,6 +11,7 @@ class Brush extends Shape {
   draw(): void {
     this.ctx.lineWidth = this.options.brushWidth;
     this.ctx.lineCap = 'round';
+    this.ctx.lineJoin = 'round';
     this.ctx.strokeStyle = this.options.brushColor;
     this.ctx.lineTo(this.options.x, this.options.y);
     this.ctx.stroke();

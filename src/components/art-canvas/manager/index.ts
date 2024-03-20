@@ -21,6 +21,7 @@ class ArtManager {
   isInited: boolean;
   callbacks: TArtCanvasContext['callbacks'];
   values: TArtCanvasContext['values'];
+  dpr: number;
 
   init(
     canvas: HTMLCanvasElement,
@@ -37,6 +38,14 @@ class ArtManager {
     // Корректные размеры канвы
     this.canvasNode.width = this.canvasNode.clientWidth;
     this.canvasNode.height = this.canvasNode.clientHeight;
+
+    // Размеры с учётом плотности пикселей
+    this.dpr = window.devicePixelRatio;
+
+    this.canvasNode.width *= this.dpr;
+    this.canvasNode.height *= this.dpr;
+
+    this.scale(this.dpr, this.dpr);
 
     // Чтобы не ломалось при изменении размеров
     const resizeObserver = new ResizeObserver(() => {
@@ -60,14 +69,10 @@ class ArtManager {
   /**
    * Инициализационное рисование канваса
    */
-  initDrawAll(image: TArtImage, { scaleOffsetX, scaleOffsetY }: TDrawOptions) {
+  initDrawAll(image: TArtImage) {
     this.clearCanvasPicture();
 
     this.save();
-    this.translate(
-      this.values.panOffset.x * this.values.scale - scaleOffsetX,
-      this.values.panOffset.y * this.values.scale - scaleOffsetY
-    );
     this.scale(this.values.scale, this.values.scale);
 
     if (!image) return;
@@ -241,13 +246,8 @@ class ArtManager {
     const shapeCapitalized = shape[0].toUpperCase() + shape.slice(1);
     const methodName = ('draw' + shapeCapitalized) as TDrawShapesMethods;
 
-    const { x, y } = this.getCoordsByScaleOffsets(this.values.scale);
-
     this.save();
-    this.translate(
-      this.values.panOffset.x * this.values.scale - x,
-      this.values.panOffset.y * this.values.scale - y
-    );
+    this.applyTranslateByOffsets();
     this.scale(this.values.scale, this.values.scale);
 
     const instance = this[methodName](options);
@@ -261,13 +261,9 @@ class ArtManager {
    * Рисование через уже готовый инстанс
    */
   polyDraw(shape: TShapes) {
-    const { x, y } = this.getCoordsByScaleOffsets(this.values.scale);
-
     this.save();
-    this.translate(
-      this.values.panOffset.x * this.values.scale - x,
-      this.values.panOffset.y * this.values.scale - y
-    );
+
+    this.applyTranslateByOffsets();
     this.scale(this.values.scale, this.values.scale);
 
     shape.draw();
@@ -284,7 +280,15 @@ class ArtManager {
     const shapeCapitalized = shape[0].toUpperCase() + shape.slice(1);
     const methodName = ('draw' + shapeCapitalized) as TDrawShapesMethods;
 
-    return this[methodName](options);
+    this.save();
+    this.applyTranslateByOffsets();
+    this.scale(this.values.scale, this.values.scale);
+
+    const instance = this[methodName](options);
+
+    this.restore();
+
+    return instance;
   }
 
   /**
@@ -509,13 +513,11 @@ class ArtManager {
     const shapesUpdatedCopy = shapesStepHistory.map((shape) => {
       const shapeCopy = doShapeCopy(shape);
 
-      shapeCopy.options.x = shapeCopy.options.initialCoords.x + this.values.panOffset.x * 2;
-      shapeCopy.options.y = shapeCopy.options.initialCoords.y + this.values.panOffset.y * 2;
+      shapeCopy.options.x = shapeCopy.options.initialCoords.x;
+      shapeCopy.options.y = shapeCopy.options.initialCoords.y;
 
-      shapeCopy.options.startCoords.x =
-        shapeCopy.options.initialCoords.startCoords.x + this.values.panOffset.x * 2;
-      shapeCopy.options.startCoords.y =
-        shapeCopy.options.initialCoords.startCoords.y + this.values.panOffset.y * 2;
+      shapeCopy.options.startCoords.x = shapeCopy.options.initialCoords.startCoords.x;
+      shapeCopy.options.startCoords.y = shapeCopy.options.initialCoords.startCoords.y;
 
       return shapeCopy;
     });
@@ -539,6 +541,52 @@ class ArtManager {
       image.src = URL.createObjectURL(blob);
       this.callbacks.setImagesNodes([...this.values.images.imagesNodes, image]);
     });
+  }
+
+  /**
+   * === Тестовые методы ===
+   */
+
+  /**
+   * Нарисовать с учётом смещения
+   */
+  drawByOffsets(shape: TShapes) {
+    // shape.options.x = shape.options.initialCoords.x + this.values.panOffset.x;
+    // shape.options.y = shape.options.initialCoords.y + this.values.panOffset.y;
+
+    // shape.options.startCoords.x =
+    //   shape.options.initialCoords.startCoords.x + this.values.panOffset.x;
+    // shape.options.startCoords.y =
+    //   shape.options.initialCoords.startCoords.y + this.values.panOffset.y;
+
+    this.polyDraw(shape);
+  }
+
+  /**
+   * Действия при движении указателя
+   */
+  onPointerMove(shape: TShapes, movementX: number, movementY: number) {
+    shape.options.x += movementX;
+    shape.options.y += movementY;
+    shape.options.startCoords.x += movementX;
+    shape.options.startCoords.y += movementY;
+
+    shape.options.initialCoords.x += movementX;
+    shape.options.initialCoords.y += movementY;
+    shape.options.initialCoords.startCoords.x += movementX;
+    shape.options.initialCoords.startCoords.y += movementY;
+  }
+
+  /**
+   * Применить translate с учётом всех смещений
+   */
+  applyTranslateByOffsets() {
+    const { x, y } = this.getCoordsByScaleOffsets(this.values.scale);
+
+    this.translate(
+      this.values.panOffset.x * this.values.scale - x,
+      this.values.panOffset.y * this.values.scale - y
+    );
   }
 }
 

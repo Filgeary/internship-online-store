@@ -139,16 +139,19 @@ function ArtCanvasInner() {
           resultShape = canvasManager.getInstance(values.activeTool, {
             brushWidth: values.brushWidth,
             brushColor: values.brushColor,
-            x: offsetX,
-            y: offsetY,
+            x: offsetX - values.panOffset.x,
+            y: offsetY - values.panOffset.y,
             isFilled: values.fillColor,
-            startCoords,
+            startCoords: {
+              x: startCoords.x - values.panOffset.x,
+              y: startCoords.y - values.panOffset.y,
+            },
             initialCoords: {
-              x: offsetX - values.panOffset.x * 3,
-              y: offsetY - values.panOffset.y * 3,
+              x: offsetX - values.panOffset.x,
+              y: offsetY - values.panOffset.y,
               startCoords: {
-                x: startCoords.x - values.panOffset.x * 3,
-                y: startCoords.y - values.panOffset.y * 3,
+                x: startCoords.x - values.panOffset.x,
+                y: startCoords.y - values.panOffset.y,
               },
             },
             panOffset: values.panOffset,
@@ -212,28 +215,11 @@ function ArtCanvasInner() {
     }
 
     const pointerMoveHandler = (e: PointerEvent) => {
-      shapeSelected.options.x += e.movementX;
-      shapeSelected.options.y += e.movementY;
-      shapeSelected.options.startCoords.x += e.movementX;
-      shapeSelected.options.startCoords.y += e.movementY;
+      const { movementX, movementY } = e;
 
-      shapeSelected.options.initialCoords.x += e.movementX;
-      shapeSelected.options.initialCoords.y += e.movementY;
-      shapeSelected.options.initialCoords.startCoords.x += e.movementX;
-      shapeSelected.options.initialCoords.startCoords.y += e.movementY;
-
+      canvasManager.onPointerMove(shapeSelected, movementX, movementY);
       canvasManager.clearCanvasPicture();
-      values.images.shapes.forEach((shape) => {
-        shape.options.x = shape.options.initialCoords.x + values.panOffset.x * 2;
-        shape.options.y = shape.options.initialCoords.y + values.panOffset.y * 2;
-
-        shape.options.startCoords.x =
-          shape.options.initialCoords.startCoords.x + values.panOffset.x * 2;
-        shape.options.startCoords.y =
-          shape.options.initialCoords.startCoords.y + values.panOffset.y * 2;
-
-        canvasManager.polyDraw(shape);
-      });
+      values.images.shapes.forEach((shape) => canvasManager.drawByOffsets(shape));
     };
 
     const pointerUpHandler = () => {
@@ -342,21 +328,9 @@ function ArtCanvasInner() {
     ctxCallbacks.setShapes(cloneDeep(shapesHistoryStep));
   }, [values.activeImage]);
 
-  // Действия по изменению зума и рисованию
-  // useEffect(() => {
-  //   // Центрирование
-  //   const { x, y } = canvasManager.getCoordsByScaleOffsets(values.scale);
-  //   ctxCallbacks.setScaleOffset({ x, y });
-
-  //   const imageNode = values.images.imagesNodes[values.activeImage];
-  //   if (!imageNode) return;
-
-  //   console.log('initDrawNow');
-  //   // canvasManager.initDrawAll(imageNode, {
-  //   //   scaleOffsetX: x,
-  //   //   scaleOffsetY: y,
-  //   // });
-  // }, [values.scale, values.images.imagesNodes, values.activeImage, values.panOffset]);
+  useEffect(() => {
+    console.log({ brushColor: values.brushColor });
+  }, [values.brushColor]);
 
   // Отрисовка примитивов (в том числе учитывается текущий шаг истории)
   useEffect(() => {

@@ -17,6 +17,7 @@ class Circle extends Shape {
 
   draw(): void {
     this.ctx.beginPath();
+    this.ctx.strokeStyle = this.options.brushColor;
     this.ctx.fillStyle = this.options.brushColor;
     this.ctx.lineWidth = this.options.brushWidth;
 
@@ -49,6 +50,8 @@ class Circle extends Shape {
   fillArea(color: string): void {
     this.options.isFilled = true;
     this.options.fillColor = color;
+
+    console.log('Circle brush color:', this.options.brushColor);
 
     this.ctx.beginPath();
     this.ctx.fillStyle = color;
