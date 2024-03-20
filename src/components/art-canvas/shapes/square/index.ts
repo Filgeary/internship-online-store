@@ -59,6 +59,8 @@ class Square extends Shape {
     const y1 = Math.min(this.options.startCoords.y, this.options.y);
     const y2 = Math.max(this.options.startCoords.y, this.options.y);
 
+    console.log({ x1, x2, y1, y2 });
+
     return coords.x >= x1 && coords.x <= x2 && coords.y >= y1 && coords.y <= y2;
   }
 

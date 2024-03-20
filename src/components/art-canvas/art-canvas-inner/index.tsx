@@ -56,6 +56,56 @@ function ArtCanvasInner() {
       setStartCoords({ x: null, y: null });
       canvasManager.endAction(selectedShapeId);
     },
+
+    drawShape: (offsetX: number, offsetY: number) => {
+      let resultShape = null;
+      let resultArea = null;
+
+      /* 
+        Если нет снапшота - пользователь сначала двигал с помощью Ctrl + ЛКМ,
+        а потом отпустил Ctrl 
+      */
+      if (!snapshot) {
+        setIsPointerDown(false);
+        return;
+      }
+
+      if (values.activeTool !== 'brush' && !values.eraserActive) {
+        /*
+         Пользователь нарисовал новую фигуру
+         Рисуем её и заносим в историю
+        */
+        resultShape = canvasManager.getInstance(values.activeTool, {
+          brushWidth: values.brushWidth,
+          brushColor: values.brushColor,
+          x: offsetX - values.panOffset.x,
+          y: offsetY - values.panOffset.y,
+          isFilled: values.fillColor,
+          startCoords: {
+            x: startCoords.x - values.panOffset.x,
+            y: startCoords.y - values.panOffset.y,
+          },
+          initialCoords: {
+            x: offsetX - values.panOffset.x,
+            y: offsetY - values.panOffset.y,
+            startCoords: {
+              x: startCoords.x - values.panOffset.x,
+              y: startCoords.y - values.panOffset.y,
+            },
+          },
+          panOffset: values.panOffset,
+        }) as TShapes;
+        resultArea = resultShape.getArea();
+        if (resultArea >= options.minArea) canvasManager.updateShapes(resultShape);
+        else canvasManager.makeVisibleAllShapes();
+      }
+
+      if (snapshot) {
+        if (resultArea >= options.minArea) callbacks.endAction();
+        setIsPointerDown(false);
+        setSnapshot(null);
+      }
+    },
   };
 
   const helpers = {
@@ -119,58 +169,14 @@ function ArtCanvasInner() {
     onPointerUp: (e: React.PointerEvent<HTMLCanvasElement>) => {
       if (e.button === options.leftMouseBtn) {
         const { offsetX, offsetY } = e.nativeEvent;
-        let resultShape = null;
-        let resultArea = null;
 
-        /* 
-          Если нет снапшота - пользователь сначала двигал с помощью Ctrl + ЛКМ,
-          а потом отпустил Ctrl 
-        */
-        if (!snapshot) {
-          setIsPointerDown(false);
-          return;
-        }
-
-        if (values.activeTool !== 'brush' && !values.eraserActive) {
-          /*
-           Пользователь нарисовал новую фигуру
-           Рисуем её и заносим в историю
-          */
-          resultShape = canvasManager.getInstance(values.activeTool, {
-            brushWidth: values.brushWidth,
-            brushColor: values.brushColor,
-            x: offsetX - values.panOffset.x,
-            y: offsetY - values.panOffset.y,
-            isFilled: values.fillColor,
-            startCoords: {
-              x: startCoords.x - values.panOffset.x,
-              y: startCoords.y - values.panOffset.y,
-            },
-            initialCoords: {
-              x: offsetX - values.panOffset.x,
-              y: offsetY - values.panOffset.y,
-              startCoords: {
-                x: startCoords.x - values.panOffset.x,
-                y: startCoords.y - values.panOffset.y,
-              },
-            },
-            panOffset: values.panOffset,
-          }) as TShapes;
-          resultArea = resultShape.getArea();
-          if (resultArea >= options.minArea) canvasManager.updateShapes(resultShape);
-          else canvasManager.makeVisibleAllShapes();
-        }
-
-        if (snapshot) {
-          if (resultArea >= options.minArea) callbacks.endAction();
-          setIsPointerDown(false);
-          setSnapshot(null);
-        }
+        callbacks.drawShape(offsetX, offsetY);
       }
     },
 
-    onPointerOut: () => {
-      if (isPointerDown) callbacks.endAction();
+    onPointerOut: (e: React.PointerEvent) => {
+      const { offsetX, offsetY } = e.nativeEvent;
+      callbacks.drawShape(offsetX, offsetY);
     },
 
     onActiveToolChange: (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -196,12 +202,9 @@ function ArtCanvasInner() {
       x: startCoords.x - values.panOffset.x,
       y: startCoords.y - values.panOffset.y,
     };
-    const shapeSelected = values.images.shapes
-      .slice()
-      .reverse()
-      .find((shape) => {
-        return shape.mouseIn(startCoordsWithOffset);
-      });
+    const shapeSelected = values.images.shapes.findLast((shape) => {
+      return shape.mouseIn(startCoordsWithOffset);
+    });
 
     if (!shapeSelected) return;
 
