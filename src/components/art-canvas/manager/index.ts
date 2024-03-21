@@ -84,22 +84,6 @@ class ArtManager {
   }
 
   /**
-   * Получить координаты, с учётом смещений
-   */
-  getCoordsByScaleOffsets(scale: number) {
-    const scaledWidth = this.canvasNode.width * scale;
-    const scaledHeight = this.canvasNode.height * scale;
-
-    const scaleOffsetX = (scaledWidth - this.canvasNode.width) / 2;
-    const scaleOffsetY = (scaledHeight - this.canvasNode.height) / 2;
-
-    return {
-      x: scaleOffsetX,
-      y: scaleOffsetY,
-    };
-  }
-
-  /**
    * Стереть содержимое канваса
    */
   clearCanvasPicture() {
@@ -562,11 +546,17 @@ class ArtManager {
    * Применить translate с учётом всех смещений
    */
   applyTranslateByOffsets() {
-    const { x, y } = this.getCoordsByScaleOffsets(this.values.scale);
+    const scaledWidth = this.canvasNode.width * this.values.scale;
+    const scaledHeight = this.canvasNode.height * this.values.scale;
+
+    const scaledOffsetX = (scaledWidth - this.canvasNode.width) / 2;
+    const scaledOffsetY = (scaledHeight - this.canvasNode.height) / 2;
+
+    this.callbacks.setScaleOffset({ x: scaledOffsetX, y: scaledOffsetY });
 
     this.translate(
-      this.values.panOffset.x * this.values.scale - x,
-      this.values.panOffset.y * this.values.scale - y
+      this.values.panOffset.x * this.values.scale - scaledOffsetX,
+      this.values.panOffset.y * this.values.scale - scaledOffsetY
     );
   }
 }

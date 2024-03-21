@@ -82,8 +82,8 @@ function ArtCanvasInner() {
           y: offsetY - values.panOffset.y,
           isFilled: values.fillColor,
           startCoords: {
-            x: startCoords.x - values.panOffset.x,
-            y: startCoords.y - values.panOffset.y,
+            x: startCoords.x,
+            y: startCoords.y,
           },
           initialCoords: {
             x: offsetX - values.panOffset.x,
@@ -109,11 +109,11 @@ function ArtCanvasInner() {
   };
 
   const helpers = {
-    getMouseCoordinates: (e: MouseEvent) => {
+    getMouseCoordinates: (e: PointerEvent) => {
       const clientX =
-        (e.clientX - values.panOffset.x * values.scale + values.scaleOffset.x) / values.scale;
+        (e.offsetX - values.panOffset.x * values.scale + values.scaleOffset.x) / values.scale;
       const clientY =
-        (e.clientY - values.panOffset.y * values.scale + values.scaleOffset.y) / values.scale;
+        (e.offsetY - values.panOffset.y * values.scale + values.scaleOffset.y) / values.scale;
       return { clientX, clientY };
     },
   };
@@ -123,10 +123,10 @@ function ArtCanvasInner() {
       if (e.button === options.leftMouseBtn) {
         setIsPointerDown(true);
 
-        const { offsetX, offsetY } = e.nativeEvent;
+        const { clientX, clientY } = helpers.getMouseCoordinates(e.nativeEvent);
         setStartCoords({
-          x: offsetX,
-          y: offsetY,
+          x: clientX,
+          y: clientY,
         });
 
         if (values.bucketActive) return;
@@ -135,7 +135,6 @@ function ArtCanvasInner() {
 
         if (isCtrlPressed) return;
         if (isSpacePressed) {
-          const { clientX, clientY } = helpers.getMouseCoordinates(e.nativeEvent);
           setStartPanMousePosition({ x: clientX, y: clientY });
           return;
         }
@@ -154,8 +153,8 @@ function ArtCanvasInner() {
         canvasManager.inDrawingProcess(snapshot, {
           isCtrlPressed,
           isPanning: isSpacePressed,
-          startX: startCoords.x - values.panOffset.x,
-          startY: startCoords.y - values.panOffset.y,
+          startX: startCoords.x,
+          startY: startCoords.y,
           startPanX: startPanMousePosition.x,
           startPanY: startPanMousePosition.y,
           x: offsetX - values.panOffset.x,
@@ -197,13 +196,8 @@ function ArtCanvasInner() {
   useEffect(() => {
     if ((!isCtrlPressed || values.eraserActive) && !values.bucketActive) return;
 
-    // Координаты со смещением для корректного определения попадания по фигуре
-    const startCoordsWithOffset = {
-      x: startCoords.x - values.panOffset.x,
-      y: startCoords.y - values.panOffset.y,
-    };
     const shapeSelected = values.images.shapes.findLast((shape) => {
-      return shape.mouseIn(startCoordsWithOffset);
+      return shape.mouseIn(startCoords);
     });
 
     if (!shapeSelected) return;

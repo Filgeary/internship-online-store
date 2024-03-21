@@ -1,6 +1,5 @@
 import { TArtImage, TArtImagesState, TCoords2D, TTools } from '@src/store/art/types';
 import { TShapes } from './shapes/types';
-import React from 'react';
 
 type TCoords = {
   x: number;
