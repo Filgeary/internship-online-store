@@ -13,6 +13,7 @@ import doShapeCopy from '../utils/do-shape-copy';
 
 import { TTools } from '@src/store/art/types';
 import { TShapes } from '../shapes/types';
+import throttle from 'lodash.throttle';
 
 type TCoords = {
   x: number | null;
@@ -78,20 +79,12 @@ function ArtCanvasInner() {
         resultShape = canvasManager.getInstance(values.activeTool, {
           brushWidth: values.brushWidth,
           brushColor: values.brushColor,
-          x: offsetX - values.panOffset.x,
-          y: offsetY - values.panOffset.y,
+          x: offsetX,
+          y: offsetY,
           isFilled: values.fillColor,
           startCoords: {
             x: startCoords.x,
             y: startCoords.y,
-          },
-          initialCoords: {
-            x: offsetX - values.panOffset.x,
-            y: offsetY - values.panOffset.y,
-            startCoords: {
-              x: startCoords.x - values.panOffset.x,
-              y: startCoords.y - values.panOffset.y,
-            },
           },
           panOffset: values.panOffset,
         }) as TShapes;
@@ -145,10 +138,7 @@ function ArtCanvasInner() {
 
     onPointerMove: (e: React.PointerEvent<HTMLCanvasElement>) => {
       if (isPointerDown) {
-        const { offsetX, offsetY } = e.nativeEvent;
-        const { clientX: xWithOffset, clientY: yWithOffset } = helpers.getMouseCoordinates(
-          e.nativeEvent
-        );
+        const { clientX, clientY } = helpers.getMouseCoordinates(e.nativeEvent);
 
         canvasManager.inDrawingProcess(snapshot, {
           isCtrlPressed,
@@ -157,19 +147,16 @@ function ArtCanvasInner() {
           startY: startCoords.y,
           startPanX: startPanMousePosition.x,
           startPanY: startPanMousePosition.y,
-          x: offsetX - values.panOffset.x,
-          y: offsetY - values.panOffset.y,
-          xWithOffset,
-          yWithOffset,
+          x: clientX,
+          y: clientY,
         });
       }
     },
 
     onPointerUp: (e: React.PointerEvent<HTMLCanvasElement>) => {
       if (e.button === options.leftMouseBtn) {
-        const { offsetX, offsetY } = e.nativeEvent;
-
-        callbacks.drawShape(offsetX, offsetY);
+        const { clientX, clientY } = helpers.getMouseCoordinates(e.nativeEvent);
+        callbacks.drawShape(clientX, clientY);
       }
     },
 
@@ -208,11 +195,7 @@ function ArtCanvasInner() {
         `Заливаю ${shapeSelected.id} цветом %c${values.brushColor}`,
         `background: ${values.brushColor}`
       );
-      shapeSelected.fillArea(
-        values.brushColor,
-        { x: values.panOffset.x, y: values.panOffset.y },
-        values.scale
-      );
+      canvasManager.fillShape(shapeSelected, values.brushColor);
     }
 
     const pointerMoveHandler = (e: PointerEvent) => {
@@ -370,8 +353,6 @@ function ArtCanvasInner() {
       values.images.shapes.forEach((shape) => {
         shape.options.y += 1;
         shape.options.startCoords.y += 1;
-        shape.options.initialCoords.y += 1;
-
         return shape;
       });
 
@@ -393,6 +374,7 @@ function ArtCanvasInner() {
 
       ctxCallbacks.setShapes(shapesDeepCopy);
       ctxCallbacks.setShapesHistory(shapesHistoryCopy);
+      ctxCallbacks.setActiveImage(values.activeImage + 1);
     };
   }, [values.isFalling]);
 

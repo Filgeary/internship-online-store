@@ -407,9 +407,6 @@ class ArtManager {
       startPanY,
       x,
       y,
-      xWithOffset,
-      yWithOffset,
-      initialCoords,
       panOffset,
     }: TDrawingOptions & Partial<TShapeOptions>
   ) {
@@ -417,8 +414,8 @@ class ArtManager {
 
     // Panning action
     if (isPanning) {
-      const deltaX = xWithOffset - startPanX;
-      const deltaY = yWithOffset - startPanY;
+      const deltaX = x - startPanX;
+      const deltaY = y - startPanY;
 
       this.callbacks.setPanOffset({
         x: this.values.panOffset.x + deltaX,
@@ -458,7 +455,6 @@ class ArtManager {
         x: startX,
         y: startY,
       },
-      initialCoords,
       panOffset,
     });
   }
@@ -535,11 +531,6 @@ class ArtManager {
     shape.options.y += movementY;
     shape.options.startCoords.x += movementX;
     shape.options.startCoords.y += movementY;
-
-    shape.options.initialCoords.x += movementX;
-    shape.options.initialCoords.y += movementY;
-    shape.options.initialCoords.startCoords.x += movementX;
-    shape.options.initialCoords.startCoords.y += movementY;
   }
 
   /**
@@ -558,6 +549,19 @@ class ArtManager {
       this.values.panOffset.x * this.values.scale - scaledOffsetX,
       this.values.panOffset.y * this.values.scale - scaledOffsetY
     );
+  }
+
+  /**
+   * Заливка фигуры
+   */
+  fillShape(shape: TShapes, color: string) {
+    this.save();
+    this.applyTranslateByOffsets();
+    this.scale(this.values.scale, this.values.scale);
+
+    shape.fillArea(color);
+
+    this.restore();
   }
 }
 

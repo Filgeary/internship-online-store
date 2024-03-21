@@ -46,11 +46,7 @@ class Triangle extends Shape {
     return area / 10;
   }
 
-  fillArea(color: string, coords: TCoords = { x: 0, y: 0 }, scale: number = 1): void {
-    this.ctx.save();
-    this.ctx.translate(coords.x, coords.y);
-    this.ctx.scale(scale, scale);
-
+  fillArea(color: string): void {
     this.options.isFilled = true;
     this.options.fillColor = color;
 
@@ -67,8 +63,6 @@ class Triangle extends Shape {
 
     this.ctx.fill();
     this.ctx.stroke();
-
-    this.ctx.restore();
   }
 }
 

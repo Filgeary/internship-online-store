@@ -12,14 +12,6 @@ export type TShapeOptions = {
   isFilled: boolean;
   startCoords?: TCoords;
   justGetInstance?: boolean;
-  initialCoords?: {
-    x: number;
-    y: number;
-    startCoords: {
-      x: number;
-      y: number;
-    };
-  };
   panOffset: TCoords;
   fillColor?: string;
 };

@@ -30,7 +30,7 @@ abstract class Shape {
   /**
    * Залить фигуру цветом
    */
-  abstract fillArea(color: string, coords: TCoords, scale: number): void;
+  abstract fillArea(color: string): void;
 }
 
 export default Shape;

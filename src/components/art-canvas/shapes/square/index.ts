@@ -9,8 +9,6 @@ class Square extends Shape {
   }
 
   draw(): void {
-    console.log('Рисую:', this.id);
-
     if (!this.options.isFilled) {
       this.ctx.lineWidth = this.options.brushWidth;
       this.ctx.strokeStyle = this.options.brushColor;
@@ -23,11 +21,7 @@ class Square extends Shape {
     } else this.fillArea(this.options.fillColor);
   }
 
-  fillArea(color: string, coords: TCoords = { x: 0, y: 0 }, scale: number = 1) {
-    this.ctx.save();
-    this.ctx.translate(coords.x, coords.y);
-    this.ctx.scale(scale, scale);
-
+  fillArea(color: string) {
     this.options.isFilled = true;
     this.options.fillColor = color;
     this.ctx.fillStyle = color;
@@ -48,8 +42,6 @@ class Square extends Shape {
       this.options.startCoords.x - this.options.x,
       this.options.startCoords.y - this.options.y
     );
-
-    this.ctx.restore();
   }
 
   mouseIn(coords: { x: number; y: number }) {
@@ -58,8 +50,6 @@ class Square extends Shape {
 
     const y1 = Math.min(this.options.startCoords.y, this.options.y);
     const y2 = Math.max(this.options.startCoords.y, this.options.y);
-
-    console.log({ x1, x2, y1, y2 });
 
     return coords.x >= x1 && coords.x <= x2 && coords.y >= y1 && coords.y <= y2;
   }
