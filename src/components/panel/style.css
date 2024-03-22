@@ -4,6 +4,7 @@
   justify-content: center;
   padding: 0 20px 10px;
   gap: 8px;
+  flex-wrap: wrap;
 }
 
 .Panel-figure {
@@ -22,20 +23,6 @@
 
 .Panel-figure_active {
   background:rgba(111, 126, 255, 0.2);
-}
-
-.Panel-clear,
-.Panel-save {
-  border: none;
-  background:rgba(111, 126, 255, 0.2);
-  transition: background .3s;
-  padding: 5px 10px;
-  border-radius: 3px;
-
-  &:hover {
-    background:rgba(111, 126, 255, 0.3);
-    color: #000;
-  }
 }
 
 .Panel-checkbox:checked {

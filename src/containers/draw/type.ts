@@ -6,5 +6,4 @@ export type Actions = {
   figure: FigureType;
   fill: boolean;
   draw: boolean
-  name: string;
 };

@@ -1,41 +1,30 @@
 import Shape from "./shape";
-import { Coords } from "./type";
 
 class Pencil extends Shape {
-  pathCoords: Coords[];
+  path: Path2D;
   constructor(
     stroke: number,
     color: string,
-    ctx: CanvasRenderingContext2D,
     offsetX: number,
     offsetY: number,
     startX: number,
-    startY: number,
-    fill: boolean
+    startY: number
   ) {
-    super(stroke, color, ctx, offsetX, offsetY, startX, startY, fill);
-    this.pathCoords = [{x: startX, y: startY}]
+    super(stroke, color, offsetX, offsetY, startX, startY);
+    this.path = new Path2D();
   }
 
-  draw() {
-    this.ctx.strokeStyle = this.color;
-    this.ctx.lineWidth = this.stroke;
-    this.ctx.lineCap = this.ctx.lineJoin = "round";
-    this.ctx.beginPath();
-    this.ctx.moveTo(this.startX, this.startY);
-    for(let i = 0; i < this.pathCoords.length; i++) {
-      const { x, y } = this.pathCoords[i] as Coords;
-      this.ctx.lineTo(x, y);
-    }
-    this.ctx.stroke();
+  draw(ctx: CanvasRenderingContext2D) {
+    ctx.strokeStyle = this.color;
+    ctx.lineWidth = this.stroke;
+    ctx.lineCap = ctx.lineJoin = "round";
+    ctx.beginPath();
+    this.path.lineTo(this.offsetX, this.offsetY);
+    ctx.stroke(this.path);
   }
 
   mouseInShape(x: number, y: number) {
     return false;
-  }
-
-  override changePath(x: number, y: number) {
-    this.pathCoords.push({x, y})
   }
 }
 

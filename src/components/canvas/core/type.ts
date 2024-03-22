@@ -17,8 +17,8 @@ export type Action = {
   name: string;
   targetX: number;
   targetY: number;
-  x?: number;
-  y?: number;
+  x: number;
+  y: number;
   element?: ShapeInstance;
 };
 

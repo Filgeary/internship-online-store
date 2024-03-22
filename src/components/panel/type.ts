@@ -10,8 +10,6 @@ export type PanelPropsType = {
   }[];
   figures: FiguresType[];
   labelFill: string;
-  labelClear: string;
-  labelSave: string;
   labelDraw: string;
 };
 

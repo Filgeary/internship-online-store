@@ -11,8 +11,6 @@ export const Panel: FC<PanelPropsType> = (props) => {
     figures,
     labelFill,
     options,
-    labelClear,
-    labelSave,
     labelDraw,
   } = props;
   const cn = bem("Panel");
@@ -36,16 +34,17 @@ export const Panel: FC<PanelPropsType> = (props) => {
           className={cn("checkbox")}
           checked={action.fill}
           onChange={() =>
-            setAction((prev) => ({ ...prev, fill: !action.fill, name: "" }))
+            setAction((prev) => ({ ...prev, fill: !action.fill }))
           }
         />
         {labelFill}
       </label>
       {figures.map(({ title, icon }) => (
         <button
+          aria-label={"draw " + title}
           className={cn("figure", { active: action.figure === title })}
           onClick={() =>
-            setAction((prev) => ({ ...prev, figure: title, name: "" }))
+            setAction((prev) => ({ ...prev, figure: title }))
           }
           key={title}
         >
@@ -56,28 +55,17 @@ export const Panel: FC<PanelPropsType> = (props) => {
         options={options}
         value={action.stroke}
         onChange={(stroke: number) =>
-          setAction((prev) => ({ ...prev, stroke, name: "" }))
+          setAction((prev) => ({ ...prev, stroke }))
         }
       />
       <input
         type="color"
+        aria-label="choose color"
         value={action.color}
         onChange={(e) =>
-          setAction((prev) => ({ ...prev, color: e.target.value, name: "" }))
+          setAction((prev) => ({ ...prev, color: e.target.value }))
         }
       />
-      <button
-        className={cn("clear")}
-        onClick={() => setAction((prev) => ({ ...prev, name: "clear" }))}
-      >
-        {labelClear}
-      </button>
-      <button
-        className={cn("save")}
-        onClick={() => setAction((prev) => ({ ...prev, name: "save" }))}
-      >
-        {labelSave}
-      </button>
     </div>
   );
 };

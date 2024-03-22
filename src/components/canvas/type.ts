@@ -4,8 +4,9 @@ export type CanvasPropsType = {
   figure: FigureType;
   fill: boolean;
   draw: boolean;
-  action: string;
-  labelGenerate: string
+  labelGenerate: string;
+  labelClear: string;
+  labelSave: string;
 };
 
 export type FigureType =

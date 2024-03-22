@@ -51,13 +51,16 @@ class Core {
     this.canvas.addEventListener("mouseup", this.onMouseUp);
     this.canvas.addEventListener("wheel", this.onMouseWheel);
 
-    this.ctx = this.canvas.getContext("2d", { willReadFrequently: true });
+    this.ctx = this.canvas.getContext("2d", {
+      willReadFrequently: true,
+      alpha: false,
+    });
     if (this.ctx) {
       this.ctx.imageSmoothingEnabled = false;
       this.resize();
       this.reDraw();
       // this.resizeObserver = new ResizeObserver(this.resize);
-      // this.resizeObserver.observe(this.root);
+      // this.resizeObserver.observe(this.root, {box: "content-box"});
     }
   }
 
@@ -84,8 +87,8 @@ class Core {
         getPaddingSize(this.root);
       this.metrics.left = rect.left + paddingLeft;
       this.metrics.top = rect.top + paddingTop;
-      this.metrics.width = this.root.offsetWidth - paddingRight - paddingLeft;
-      this.metrics.height = this.root.offsetHeight - paddingTop - paddingBottom;
+      this.metrics.width = rect.width - paddingRight - paddingLeft;
+      this.metrics.height = rect.height - paddingTop - paddingBottom;
       this.metrics.dpr = window.devicePixelRatio;
       // Физический размер канвы с учётом плотности пикселей (т.е. канва может быть в разы больше)
       this.canvas.width = this.metrics.width * this.metrics.dpr;
@@ -133,10 +136,9 @@ class Core {
     });
   }
 
-  private onMouseDown = (e: MouseEvent) => {
-    const point = this.transformPoint(e);
-    if (this.options.draw && this.ctx && this.canvas) {
-      //копирование данных канваса и передача их в качестве снимка
+  startDrawing(x: number, y: number) {
+    if (this.canvas && this.ctx) {
+      //Получение пиксельных данных для контекста
       this.snapshot = this.ctx.getImageData(
         0,
         0,
@@ -145,21 +147,35 @@ class Core {
       );
       this.isDrawing = true;
       const shape = this.options.figure as FiguresNames;
+      const isFill = shape === "pencil" || shape === "eraser" || shape === "line";
+      if(isFill) {
         this.currentShape = new figures[shape](
           this.options.stroke,
           this.options.color,
-          this.ctx,
-          point.x,
-          point.y,
-          point.x,
-          point.y,
+          x,
+          y,
+          x,
+          y
+        );
+      } else {
+        this.currentShape = new figures[shape](
+          this.options.stroke,
+          this.options.color,
+          x,
+          y,
+          x,
+          y,
           this.options.fill
         );
-      this.action = {
-        name: "draw",
-        targetX: point.x,
-        targetY: point.y,
-      };
+      }
+      this.shapes.push(this.currentShape);
+    }
+  }
+
+  private onMouseDown = (e: MouseEvent) => {
+    const point = this.transformPoint(e);
+    if (this.options.draw) {
+      this.startDrawing(point.x, point.y);
     } else {
       for (let shape of this.shapes.reverse()) {
         if (shape.mouseInShape(point.x, point.y)) {
@@ -191,8 +207,7 @@ class Core {
   private onMouseUp = () => {
     if (this.options.draw) {
       this.isDrawing = false;
-      if(this.currentShape) {
-        this.pushShape(this.currentShape);
+      if (this.currentShape) {
         this.currentShape = null;
       }
     }
@@ -201,33 +216,27 @@ class Core {
 
   private onMouseMove = (e: MouseEvent) => {
     const point = this.transformPoint(e);
-
-    if (this.action) {
-      if (this.options.draw && this.action.name === "draw") {
-        this.draw(point.x, point.y);
-      } else {
-        if (this.action.x && this.action.y)
-          if (
-            this.action.name === "drag" &&
-            this.action.element &&
-            this.canvas
-          ) {
-            this.dragShape(
-              this.action.element,
-              this.action.targetX + point.x - this.action.x,
-              this.action.targetY + point.y - this.action.y
-            );
-          } else if (this.action.name === "scroll") {
-            // Скролл использует не масштабированную точку, так как сам же на неё повлиял бы
-            this.scroll({
-              x:
-                this.action.targetX -
-                (e.clientX - this.metrics.left - this.action.x),
-              y:
-                this.action.targetY -
-                (e.clientY - this.metrics.top - this.action.y),
-            });
-          }
+    if (this.options.draw) {
+      this.draw(point.x, point.y);
+    } else {
+      if(this.action){
+        if (this.action.name === "drag" && this.action.element && this.canvas) {
+          this.dragShape(
+            this.action.element,
+            this.action.targetX + point.x - this.action.x,
+            this.action.targetY + point.y - this.action.y
+          );
+        } else if (this.action.name === "scroll") {
+          // Скролл использует не масштабированную точку, так как сам же на неё повлиял бы
+          this.scroll({
+            x:
+              this.action.targetX -
+              (e.clientX - this.metrics.left - this.action.x),
+            y:
+              this.action.targetY -
+              (e.clientY - this.metrics.top - this.action.y),
+          });
+        }
       }
     }
   };
@@ -262,7 +271,7 @@ class Core {
       this.ctx.save();
       if (this.currentShape) {
         this.currentShape.changePath(offsetX, offsetY);
-        this.pushShape(this.currentShape);
+        this.shapes.splice(-1, 1, this.currentShape);
       }
       this.ctx.restore();
     }
@@ -271,11 +280,14 @@ class Core {
   private reDraw = () => {
     if (this.ctx) {
       this.ctx.save();
-      this.ctx.clearRect(0, 0, this.metrics.width, this.metrics.height);
+      this.ctx.fillStyle = "#fff";
+      this.ctx.fillRect(0, 0, this.metrics.width, this.metrics.height);
       this.ctx.translate(-this.metrics.scrollX, -this.metrics.scrollY);
       this.ctx.scale(this.metrics.zoom, this.metrics.zoom);
       for (let shape of this.shapes) {
-        shape.draw();
+        this.ctx.save();
+        shape.draw(this.ctx);
+        this.ctx.restore();
         if (
           this.action &&
           this.action.name === "generate" &&
@@ -294,26 +306,16 @@ class Core {
     }
   };
 
-  private pushShape(element: ShapeInstance) {
-    if (
-      this.action &&
-      this.shapes.at(-1)?.startX !== this.action.targetX &&
-      this.shapes.at(-1)?.startY !== this.action.targetY
-    ) {
-      this.shapes.push(element);
-    } else {
-      this.shapes.splice(-1, 1, element);
-    }
-  }
-
   private transformPoint(e: MouseEvent) {
     return {
-      x:
+      x: Math.round(
         (e.clientX - this.metrics.left + this.metrics.scrollX) /
-        this.metrics.zoom,
-      y:
+          this.metrics.zoom
+      ),
+      y: Math.round(
         (e.clientY - this.metrics.top + this.metrics.scrollY) /
-        this.metrics.zoom,
+          this.metrics.zoom
+      ),
     };
   }
 
@@ -334,18 +336,17 @@ class Core {
   }
 
   generate() {
-    for (let i = 0; i < 20000; i++) {
+    for (let i = 0; i < 2000; i++) {
       if (this.ctx)
         this.shapes.push(
           new figures.circle(
             this.options.stroke,
             this.options.color,
-            this.ctx,
             i * 49 + 45 + this.metrics.scrollX,
             30 + this.metrics.scrollY,
             i * 49 + 25 + this.metrics.scrollX,
             30 + this.metrics.scrollY,
-            this.options.fill,
+            this.options.fill
           )
         );
     }

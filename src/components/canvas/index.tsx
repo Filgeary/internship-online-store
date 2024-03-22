@@ -1,10 +1,10 @@
-import { FC, useEffect, useMemo, useRef, useState } from "react";
+import { FC, useEffect, useMemo, useRef } from "react";
 import { cn as bem } from "@bem-react/classname";
+import Core from "./core";
 import { CanvasPropsType } from "./type";
 import "./style.css";
-import Core from "./core";
 
-export const Canvas: FC<CanvasPropsType> = ({ color, stroke, figure, fill, action, draw, labelGenerate }) => {
+export const Canvas: FC<CanvasPropsType> = ({ color, stroke, figure, fill, draw, labelClear, labelSave, labelGenerate }) => {
   const cn = bem("Canvas");
 
   const rootRef = useRef<HTMLDivElement>(null);
@@ -19,22 +19,21 @@ export const Canvas: FC<CanvasPropsType> = ({ color, stroke, figure, fill, actio
 
   useEffect(() => {
     core.changeOptions({ color, stroke, figure, fill, draw });
-
-    if(action === 'clear') {
-      core.onClear();
-    } else if(action === 'save') {
-      core.onSave();
-    }
-  }, [color, stroke, figure, fill, action, draw]);
+  }, [color, stroke, figure, fill, draw]);
 
   return (
     <>
-      <button
-        className={cn("generate")}
-        onClick={() => core.generate()}
-      >
-        {labelGenerate}
-      </button>
+      <div className={cn("buttons")}>
+        <button className={cn("clear")} onClick={() => core.onClear()}>
+          {labelClear}
+        </button>
+        <button className={cn("save")} onClick={() => core.onSave()}>
+          {labelSave}
+        </button>
+        <button className={cn("generate")} onClick={() => core.generate()}>
+          {labelGenerate}
+        </button>
+      </div>
       <div className={cn()} ref={rootRef} />
     </>
   );

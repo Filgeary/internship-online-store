@@ -5,13 +5,12 @@ class Eraser extends Pencil {
   constructor(
     stroke: number,
     color: string,
-    ctx: CanvasRenderingContext2D,
     offsetX: number,
     offsetY: number,
     startX: number,
     startY: number
   ) {
-    super(stroke, color, ctx, offsetX, offsetY, startX, startY);
+    super(stroke, color, offsetX, offsetY, startX, startY);
     this.color = "#ffffff";
   }
 }

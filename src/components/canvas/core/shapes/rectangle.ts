@@ -2,12 +2,12 @@ import Shape from "./shape";
 import { Size } from "./type";
 
 class Rectangle extends Shape {
-  size = {width: 0, height: 0};
+  size = { width: 0, height: 0 };
 
-  draw() {
-    this.ctx.lineCap = "round";
+  draw(ctx: CanvasRenderingContext2D) {
+    ctx.lineCap = "round";
     const path = new Path2D();
-    this.ctx.beginPath();
+    ctx.beginPath();
     path.rect(
       this.offsetX,
       this.offsetY,
@@ -15,12 +15,12 @@ class Rectangle extends Shape {
       this.startY - this.offsetY
     );
     if (this.fill) {
-      this.ctx.fillStyle = this.color;
-      this.ctx.fill(path);
+      ctx.fillStyle = this.color;
+      ctx.fill(path);
     } else {
-      this.ctx.strokeStyle = this.color;
-      this.ctx.lineWidth = this.stroke;
-      this.ctx.stroke(path);
+      ctx.strokeStyle = this.color;
+      ctx.lineWidth = this.stroke;
+      ctx.stroke(path);
     }
     this.size = {
       width: this.startX - this.offsetX,
@@ -37,7 +37,7 @@ class Rectangle extends Shape {
 
   mouseInShape(x: number, y: number) {
     const rotate = this.startY - this.offsetY > 0;
-    if(!rotate) {
+    if (!rotate) {
       if (
         this.size &&
         x < this.offsetX &&
@@ -47,13 +47,15 @@ class Rectangle extends Shape {
       ) {
         return true;
       }
-    } else if(this.size &&
-        x > this.offsetX &&
-        x < this.offsetX + this.size.width &&
-        y > this.offsetY &&
-        y < this.offsetY + this.size.height) {
-          return true
-      }
+    } else if (
+      this.size &&
+      x > this.offsetX &&
+      x < this.offsetX + this.size.width &&
+      y > this.offsetY &&
+      y < this.offsetY + this.size.height
+    ) {
+      return true;
+    }
     return false;
   }
 }

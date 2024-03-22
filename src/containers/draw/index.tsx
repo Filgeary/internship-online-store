@@ -1,7 +1,6 @@
 import { useMemo, useState } from "react";
 import { Panel } from "@src/components/panel";
 import { Canvas } from "@src/components/canvas";
-import { FigureType } from "@src/components/canvas/type";
 import {
   Circle,
   Eraser,
@@ -21,7 +20,6 @@ export const Draw = () => {
     figure: 'pencil',
     fill: false,
     draw: true,
-    name: "",
   });
   const { t } = useTranslate();
 
@@ -58,18 +56,17 @@ export const Draw = () => {
         figures={options.figures}
         options={options.stroke}
         labelFill={t("draw.fill")}
-        labelClear={t("draw.clear")}
-        labelSave={t("draw.save")}
         labelDraw={t("draw.draw")}
-        />
+      />
       <Canvas
         stroke={action.stroke}
         color={action.color}
         figure={action.figure}
         fill={action.fill}
-        action={action.name}
         draw={action.draw}
         labelGenerate={t("draw.generate")}
+        labelClear={t("draw.clear")}
+        labelSave={t("draw.save")}
       />
     </>
   );

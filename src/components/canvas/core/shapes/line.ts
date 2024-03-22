@@ -2,15 +2,14 @@ import { getSegmentLength } from "@src/utils/get-segment-length";
 import Shape from "./shape";
 
 class Line extends Shape {
-
-  draw() {
-    this.ctx.beginPath();
-    this.ctx.moveTo(this.startX, this.startY);
-    this.ctx.lineTo(this.offsetX, this.offsetY);
-    this.ctx.strokeStyle = this.color;
-    this.ctx.lineCap = this.ctx.lineJoin = "round";
-    this.ctx.lineWidth = this.stroke;
-    this.ctx.stroke();
+  draw(ctx: CanvasRenderingContext2D) {
+    ctx.beginPath();
+    ctx.moveTo(this.startX, this.startY);
+    ctx.lineTo(this.offsetX, this.offsetY);
+    ctx.strokeStyle = this.color;
+    ctx.lineCap = ctx.lineJoin = "round";
+    ctx.lineWidth = this.stroke;
+    ctx.stroke();
   }
 
   override move(x: number, y: number) {
