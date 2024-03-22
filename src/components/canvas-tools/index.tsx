@@ -1,7 +1,8 @@
 import { memo, useCallback } from "react";
 import { cn as bem } from "@bem-react/classname";
 import "./style.css";
-import Figure from "@src/containers/draw-canvas/figures";
+import Figure from "../draw/figures";
+// import Figure from "@src/containers/draw-canvas/figures";
 
 interface ICanvasTools {
   figures: { render: React.ReactNode; value: Figure }[];

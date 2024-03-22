@@ -1,4 +1,3 @@
-import Canvas from "@src/components/canvas";
 import CanvasTools from "@src/components/canvas-tools";
 import line from "./figures/line/line.svg";
 import eraser from "./figures/eraser/eraser.svg";
@@ -7,6 +6,19 @@ import rectangle from "./figures/rectangle/rectangle.svg";
 import triangle from "./figures/triangle/triangle.svg";
 import circle from "./figures/circle/circle.svg";
 import { memo, useMemo, useState } from "react";
+// import {
+//   Line,
+//   Eraser,
+//   Pencil,
+//   Triangle,
+//   Rectangle,
+//   Circle,
+// } from "./figures/export-figures";
+// import Figure from "./figures";
+import SideLayout from "@src/components/side-layout";
+import Draw from "@src/components/draw";
+
+import Figure from "@src/components/draw/figures";
 import {
   Line,
   Eraser,
@@ -14,9 +26,7 @@ import {
   Triangle,
   Rectangle,
   Circle,
-} from "./figures/export-figures";
-import Figure from "./figures";
-import SideLayout from "@src/components/side-layout";
+} from "@src/components/draw/figures/export-figures";
 
 function DrawCanvas() {
   const [strokeStyle, setStrokeStyle] = useState<string>("#000000");
@@ -62,7 +72,8 @@ function DrawCanvas() {
           lineWidth={lineWidth}
         />
       </SideLayout>
-      <Canvas strokeStyle={strokeStyle} lineWidth={lineWidth} figure={figure} isFill={isFill}/>
+      <Draw strokeStyle={strokeStyle} lineWidth={lineWidth} figure={figure} isFill={isFill}/>
+      {/* <Canvas strokeStyle={strokeStyle} lineWidth={lineWidth} figure={figure} isFill={isFill}/> */}
     </>
   );
 }
