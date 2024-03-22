@@ -22,6 +22,7 @@ export function ChatProvider({ children }: ChatProviderProps) {
   const chatService = useServices().chat;
   const { messages, waiting, connected } = useSyncExternalStore(
     (listener) => chatService.subscribe(listener),
+    () => chatService.getSnapshot(),
     () => chatService.getSnapshot()
   );
 

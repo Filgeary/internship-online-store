@@ -22,7 +22,7 @@ function CatalogModal() {
   const closeParentFn = useCloseParentFn(modalId);
 
   useEffect(() => {
-    const name = `catalog-${window.crypto.randomUUID()}`;
+    const name = `catalog-${window.crypto?.randomUUID()}`;
 
     setCatalogName(name);
 

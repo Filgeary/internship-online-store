@@ -1,8 +1,11 @@
-import Autocomplete from '@src/components/autocomplete';
-import { useCatalogContext } from '../catalog';
 import { useEffect, useMemo, useState } from 'react';
-import useStore from '@src/hooks/use-store';
+
+import Autocomplete from '@src/components/autocomplete';
 import sliceLongString from '@src/utils/slice-long-string';
+
+import useStore from '@src/hooks/use-store';
+import { useCatalogContext } from '../catalog';
+
 import { TOption } from '@src/components/autocomplete/types';
 
 function CatalogCountry() {
@@ -69,10 +72,7 @@ function CatalogCountry() {
   return (
     <Autocomplete.Root
       value={select.country}
-      // isMultiple={false}
       isMultiple={true}
-      // onSelected={(country) => callbacks.onCountrySelected(country._id)}
-      // onSelected={(country) => alert(JSON.stringify(country))}
       onRemoveCodes={callbacks.onManyCountriesSelected}
       options={options.countriesDefault}
       smooth={true}

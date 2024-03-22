@@ -1,6 +1,6 @@
 import './style.css';
 
-import React, { memo, useLayoutEffect, useRef } from 'react';
+import React, { memo, useEffect, useLayoutEffect, useRef } from 'react';
 import { TOption } from '../types';
 
 import { cn as bem } from '@bem-react/classname';

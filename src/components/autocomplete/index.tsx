@@ -67,7 +67,7 @@ function Autocomplete(props: AutocompleteProps) {
   } = props;
 
   const cn = bem('Autocomplete');
-  const uid = useMemo(() => window.crypto.randomUUID(), []);
+  const uid = useMemo(() => window.crypto?.randomUUID(), []);
 
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState('');
@@ -274,7 +274,7 @@ function Autocomplete(props: AutocompleteProps) {
     setSelected(Array.isArray(props.value) ? props.value : [props.value]);
   }, [props.value]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (selected.length > max) {
       alert(`Максимум ${max} выбранных стран!`);
       setSelected(selected.slice(0, max));

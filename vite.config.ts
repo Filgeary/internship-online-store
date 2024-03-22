@@ -42,5 +42,17 @@ export default defineConfig({
   },
   preview: {
     port: 5000,
+
+    proxy: {
+      '/api/v1': {
+        target: 'http://example.front.ylab.io',
+        changeOrigin: true,
+        secure: false,
+      },
+      '/chat/v1': {
+        target: 'ws://example.front.ylab.io/chat',
+        ws: true,
+      },
+    },
   },
 });

@@ -85,7 +85,7 @@ class ChatService {
    * Отправить сообщение
    */
   sendMessage(message: string, author: TProfile | TAuthor) {
-    const uuid = window.crypto.randomUUID();
+    const uuid = window.crypto?.randomUUID();
     const bodyObj = {
       method: 'post',
       payload: {

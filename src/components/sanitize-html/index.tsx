@@ -4,7 +4,7 @@ import React, { memo } from 'react';
 import DOMPurify from 'dompurify';
 import htmlToReact from 'html-to-react';
 
-import Fancybox from '../fancybox';
+// import Fancybox from '../fancybox';
 
 const defaultOptions = {
   ALLOWED_TAGS: ['b', 'i', 'em', 'strong', 'u', 'marquee', 'a', 'img'],
@@ -33,27 +33,27 @@ function SanitizeHtml(props: SanitizeHtmlProps) {
   const processNodeDefinitions = htmlToReact.ProcessNodeDefinitions();
 
   const instructions = [
-    {
-      shouldProcessNode: (node: TNode) => {
-        return node.name === 'img';
-      },
-      processNode: (node: TNode) => {
-        return (
-          <Fancybox
-            options={{
-              Carousel: {
-                infinite: false,
-              },
-            }}
-            as={as}
-          >
-            <a data-fancybox='gallery' href={node.attribs.src}>
-              {React.createElement(node.name, { ...node.attribs, className: 'sanitize-img' })}
-            </a>
-          </Fancybox>
-        );
-      },
-    },
+    // {
+    //   shouldProcessNode: (node: TNode) => {
+    //     return node.name === 'img';
+    //   },
+    //   processNode: (node: TNode) => {
+    //     return (
+    //       <Fancybox
+    //         options={{
+    //           Carousel: {
+    //             infinite: false,
+    //           },
+    //         }}
+    //         as={as}
+    //       >
+    //         <a data-fancybox='gallery' href={node.attribs.src}>
+    //           {React.createElement(node.name, { ...node.attribs, className: 'sanitize-img' })}
+    //         </a>
+    //       </Fancybox>
+    //     );
+    //   },
+    // },
 
     {
       shouldProcessNode: () => {

@@ -8,7 +8,7 @@ abstract class Shape {
   panOffset: TCoords;
 
   constructor(panOffset: TCoords) {
-    this.id = window.crypto.randomUUID();
+    this.id = window.crypto?.randomUUID();
     this.panOffset = panOffset;
   }
 

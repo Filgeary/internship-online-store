@@ -17,7 +17,7 @@ class ModalsState extends StoreModule<TModalsState, TModalsConfig> {
    */
   open: <T>(name: TModalsNames) => Promise<T> | undefined = (name: TModalsNames) => {
     if (this.config.onlyUnique && this.getState().mapOfOpened[name]) return;
-    const id = self.crypto.randomUUID();
+    const id = self.crypto?.randomUUID();
 
     const promise = new Promise((resolve, reject) => {
       this.setState({

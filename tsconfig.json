@@ -2,7 +2,7 @@
   "compilerOptions": {
     "outDir": "./dist/",
     "sourceMap": true,
-    "module": "es6",
+    "module": "ESNext",
     "target": "es5",
     "jsx": "react-jsx",
     "allowJs": true,
@@ -17,7 +17,6 @@
       "@src/*": ["./src/*"],
       "*": ["./types/*.d.ts"]
     },
-    "lib": ["DOM", "ES2023"],
     "typeRoots": ["./node_modules/@types", "./types", "./src/custom.d.ts"]
   }
 }
