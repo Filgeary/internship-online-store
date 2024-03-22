@@ -2,6 +2,8 @@ import * as figures from "./shapes/exports";
 import { getPaddingSize } from "@src/utils/get-padding-size";
 import { Action, Options, ScrollParams, ZoomParams } from "./type";
 import { FiguresNames, ShapeInstance } from "./shapes/type";
+import { Ball } from "./shapes/ball";
+import randomIntFromRange from "@src/utils/random-range";
 
 class Core {
   // DOM элемент, в котором будет создана канва
@@ -23,6 +25,7 @@ class Core {
     fill: false,
     draw: true,
   };
+  balls: Ball[] = []
 
   //снимок канвы
   snapshot: ImageData | null = null;
@@ -59,6 +62,7 @@ class Core {
       this.ctx.imageSmoothingEnabled = false;
       this.resize();
       this.reDraw();
+      this.generate();
       // this.resizeObserver = new ResizeObserver(this.resize);
       // this.resizeObserver.observe(this.root, {box: "content-box"});
     }
@@ -288,18 +292,6 @@ class Core {
         this.ctx.save();
         shape.draw(this.ctx);
         this.ctx.restore();
-        if (
-          this.action &&
-          this.action.name === "generate" &&
-          shape instanceof figures.circle
-        ) {
-          const time = performance.now();
-          shape.animate(
-            time,
-            (this.metrics.height - 25 + this.metrics.scrollY) /
-              this.metrics.zoom
-          );
-        }
       }
       this.ctx.restore();
       requestAnimationFrame(this.reDraw);
@@ -336,28 +328,29 @@ class Core {
   }
 
   generate() {
-    for (let i = 0; i < 2000; i++) {
-      if (this.ctx)
-        this.shapes.push(
-          new figures.circle(
-            this.options.stroke,
-            this.options.color,
-            i * 49 + 45 + this.metrics.scrollX,
-            30 + this.metrics.scrollY,
-            i * 49 + 25 + this.metrics.scrollX,
-            30 + this.metrics.scrollY,
-            this.options.fill
-          )
-        );
+    this.balls = [];
+    for (let i = 0; i < 600; i++) {
+      const radius = randomIntFromRange(8, 20);
+      const x = randomIntFromRange(radius, this.metrics.width - radius);
+      const y = randomIntFromRange(0, this.metrics.height - radius);
+      const dx = randomIntFromRange(-3, 3)
+      const dy = randomIntFromRange(-2, 2)
+      this.balls.push(new Ball(x, y, dx, dy, radius));
+	  }
+    this.animate();
+  }
+
+  animate = () => {
+	  requestAnimationFrame(this.animate);
+    if(this.ctx) {
+	    this.ctx.clearRect(0, 0, this.metrics.width, this.metrics.height);
+      for (let i = 0; i < this.balls.length; i++) {
+        const ball = this.balls[i] as Ball;
+        ball.update(this.ctx, this.metrics.height, this.metrics.width);
+      }
     }
-    this.action = {
-      name: "generate",
-      x: 0,
-      y: 30,
-      targetX: 0,
-      targetY: 30,
-    };
   }
 }
 
 export default Core;
+//для оптимизации рендеринга с множеством элементов разбивать на кусочки шахматная доска
