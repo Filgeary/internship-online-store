@@ -1,12 +1,15 @@
+import { IFreeDraw } from "@src/store/canvas/types"
 import Tool from "../tool"
 
 class Brush extends Tool {
     canvas!: HTMLCanvasElement | null // Ссылка на элемент canvas, к которому привязана кисть
     mouseDown!: boolean // Флаг, указывающий, нажата ли кнопка мыши
+    figures: IFreeDraw | null
 
     constructor(canvas: HTMLCanvasElement | null) {
         super(canvas) // Вызываем конструктор родительского класса
         this.listen() // Устанавливаем обработчики событий для рисования
+        this.figures = null
     }
     
     listen() {
@@ -25,6 +28,8 @@ class Brush extends Tool {
     // Обработчик события отпускания кнопки мыши
     mouseUpHandler(e: MouseEvent) {
         this.mouseDown = false
+        const allFigures = this.allFiguresTool as any
+        this.allFiguresTool = [...allFigures, this.figures]
     }
 
     // Обработчик события нажатия кнопки мыши
@@ -34,6 +39,8 @@ class Brush extends Tool {
             this.ctx.beginPath() // Начинаем новый путь рисования
             const rect = this.canvas!.getBoundingClientRect() // Получаем размеры и позицию холста
             this.ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top) // Используем clientX и clientY относительно холста
+            const startPoint = { x: e.clientX - rect.left, y: e.clientY - rect.top }
+            this.figures = { type: 'freeDraw', points: [startPoint] }
             // e.target && this.ctx.moveTo(e.pageX - e.target.offsetLeft, e.pageY - e.target.offsetTop)
         }
     }
@@ -42,6 +49,8 @@ class Brush extends Tool {
     mouseMoveHandler(e: MouseEvent) {
         if (this.mouseDown  && e.target instanceof HTMLElement) {
             const rect = this.canvas!.getBoundingClientRect()
+            const currentPoint = { x: e.clientX - rect.left, y: e.clientY - rect.top }
+            this.figures && this.figures.points.push(currentPoint) // Добавляем текущую точку к массиву точек
             this.draw(e.clientX - rect.left, e.clientY - rect.top) // Рисуем по указанным координатам
             // this.draw(e.pageX - e.target.offsetLeft, e.pageY - e.target.offsetTop) 
         }

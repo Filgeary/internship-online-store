@@ -1,7 +1,11 @@
-import React, { memo } from "react"
+import React, { memo, useEffect, useState } from "react"
 import { cn as bem } from "@bem-react/classname"
 import useStore from "@src/hooks/use-store"
 import "./style.css"
+import Tool from "../../tools/tool"
+import useSelector from "@src/hooks/use-selector"
+import { StoreState } from "@src/store/types"
+import Fall from "../../tools/fall"
 
 const SettingBar: React.FC = () => {
   const cn = bem("Setting_bar")
@@ -27,7 +31,6 @@ const SettingBar: React.FC = () => {
         id="stroke-color"
         type="color"
       />
-      <button className={cn('arrow')} onClick={() => {}}/>
     </div>
   )
 }

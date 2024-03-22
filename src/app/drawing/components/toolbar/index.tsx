@@ -10,6 +10,7 @@ import Circle from '../../tools/circle'
 import Eraser from '../../tools/eraser'
 import Line from '../../tools/line'
 import Pointer from '../../tools/pointer'
+import Fall from '../../tools/fall'
 
 const Toolbar: React.FC = () => {
 
@@ -20,7 +21,8 @@ const Toolbar: React.FC = () => {
 
     const select = useSelector((state: StoreState) => ({
         canvas: state.canvas.canvas,
-        figures: state.canvas.figures
+        figures: state.canvas.figures,
+        tool: state.canvas.tool
       }));
 
     const changeColor = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -39,17 +41,25 @@ const Toolbar: React.FC = () => {
   }
 
   const onTool = (name: string) => {
+    if(nameTool === 'fall') {
+      const animationId = select.tool!.animationId
+      cancelAnimationFrame(animationId)
+    }
     setNameTool(name)
     store.actions.canvas.setFigures()
     if(name === 'freeDraw') store.actions.canvas.setTool(new Brush(select.canvas), 'freeDraw')
     if(name === 'rectangle') store.actions.canvas.setTool(new Rectangle(select.canvas), 'rectangle')
     if(name === 'circle') store.actions.canvas.setTool(new Circle(select.canvas), 'circle')
     if(name === 'eraser') store.actions.canvas.setTool(new Eraser(select.canvas), 'eraser')
-    if(name === 'line') store.actions.canvas.setTool(new Line(select.canvas), 'line')
+    if(name === 'line') {
+      store.actions.canvas.setTool(new Line(select.canvas), 'line')
+      store.actions.canvas.setStrokeColor('black')
+    }
   }
 
   useEffect(() => {
     if(select.figures.length > 0 && nameTool === "pointer") store.actions.canvas.setTool(new Pointer(select.canvas, select.figures), 'pointer')
+    if(select.figures.length > 0 && nameTool === "fall") store.actions.canvas.setTool(new Fall(select.canvas, select.figures), 'fall')
   }, [select.figures])
 
     return (
@@ -62,6 +72,7 @@ const Toolbar: React.FC = () => {
             <button className={cn('btn', {line: true})} onClick={() => onTool('line')}/>
             <input  className={cn('btn', {color: true})} onChange={e => changeColor(e)} style={{marginLeft:10}} type="color"/>
             <button className={cn('btn', {pointer: true})} onClick={() => onTool('pointer')}/>
+            <button className={cn('btn', {arrow: true})} onClick={() => onTool('fall')}/>
             <button className={cn('btn', {undo: true})} onClick={() => store.actions.canvas.undo()}/>
             <button className={cn('btn', {redo: true})} onClick={() => store.actions.canvas.redo()}/>
             <button className={cn('btn', {save: true})}  onClick={() => download()}/>

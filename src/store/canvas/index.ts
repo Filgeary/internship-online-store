@@ -49,7 +49,7 @@ class CanvasState extends StoreModule<ICanvasState> {
 }
 
   /**
-   * Изменение свойства "fillColor"
+   * Изменение цвета 
    */
   setFillColor(color: string) {
     const currentTool = this.getState().tool
@@ -61,7 +61,7 @@ class CanvasState extends StoreModule<ICanvasState> {
   }
 
   /**
-   * Изменение свойства "strokeColor"
+   * Изменение обводки 
    */
   setStrokeColor(color: string) {
     const currentTool = this.getState().tool
@@ -73,7 +73,7 @@ class CanvasState extends StoreModule<ICanvasState> {
   }
 
   /**
-   * Изменение свойства "lineWidth"
+   * Изменение ширины
    */
   setLineWidth(width: number) {
     const currentTool = this.getState().tool

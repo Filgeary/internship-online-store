@@ -32,11 +32,6 @@ const Canvas: React.FC = () => {
     store.actions.canvas.setTool(new Brush(canvasRef.current), 'freeDraw')
   }, [])
 
-  useEffect(() => {
-    console.log('Сработал useEffect и select.figures!.allFiguresTool ===', select.figures && select.figures.allFiguresTool)
-  }, [store])
-
-
   return (
     <div className={cn()}>
         <canvas onMouseDown={() => mouseDownHandler()} width={600} height={400} ref={canvasRef}></canvas>

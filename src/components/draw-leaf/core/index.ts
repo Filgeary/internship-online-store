@@ -208,7 +208,7 @@ class Core {
       x: ((e.clientX - this.metrics.left) + this.metrics.scrollX) / this.metrics.zoom,
       y: ((e.clientY - this.metrics.top) + this.metrics.scrollY) / this.metrics.zoom,
     }
-    console.log('Сработал onMouseMove, this.action.name===', this.action!.name)
+    
     if (this.action) {
       if (this.action.name === 'drag' && this.action.element) {
         this.action.element.setPosition({

@@ -15,7 +15,7 @@ class Pointer extends Tool {
 
     constructor(canvas: HTMLCanvasElement | null, shapes: (ICircle | IRectangle | ILine | IFreeDraw)[] | null) {
         super(canvas) // Вызываем конструктор родительского класса
-        this.shapes = shapes; // Инициализируем массив фигур
+        this.shapes = shapes // Инициализируем массив фигур
         this.listen() // Устанавливаем обработчики событий для перемещения фигур
     }
     
@@ -43,17 +43,20 @@ class Pointer extends Tool {
         // Проверяем, есть ли фигура в точке клика
         this.selectedShape = this.getShapeAtPosition(mouseX, mouseY)
         
-        if (this.selectedShape) {
+        if (this.selectedShape && this.selectedShape.type === 'line') {
+            this.startX = this.selectedShape.startX
+            this.startY = this.selectedShape.startY
+        } else {
             this.startX = mouseX
             this.startY = mouseY
         }
 
         // Если выбранная фигура - линия, сохраняем ее начальные координаты
         if (this.selectedShape && this.selectedShape.type === 'line') {
-            this.selectedShapeStartX = this.selectedShape.startX;
-            this.selectedShapeStartY = this.selectedShape.startY;
-            this.selectedShapeEndX = this.selectedShape.endX;
-            this.selectedShapeEndY = this.selectedShape.endY;
+            this.selectedShapeStartX = this.selectedShape.startX
+            this.selectedShapeStartY = this.selectedShape.startY
+            this.selectedShapeEndX = this.selectedShape.endX
+            this.selectedShapeEndY = this.selectedShape.endY
         }
     }
 
@@ -73,7 +76,12 @@ class Pointer extends Tool {
                 this.selectedShape.startY = this.selectedShapeStartY + deltaY
                 this.selectedShape.endX = this.selectedShapeEndX + deltaX
                 this.selectedShape.endY = this.selectedShapeEndY + deltaY
-             } else {
+             } else if (this.selectedShape.type === 'freeDraw') {
+                for (const point of this.selectedShape.points) {
+                    point.x += deltaX
+                    point.y += deltaY
+                }
+              } else {
                 const selected = this.selectedShape as any
                 selected.x += deltaX
                 selected.y += deltaY
@@ -81,10 +89,12 @@ class Pointer extends Tool {
 
             // Перерисовываем холст
             this.redrawCanvas()
-            
+
             // Обновляем начальные координаты
+            if (this.selectedShape && this.selectedShape.type !== 'line') {
             this.startX = mouseX
             this.startY = mouseY
+            }
         }
     }
 
@@ -113,6 +123,16 @@ class Pointer extends Tool {
                 this.ctx.lineTo(shape.endX, shape.endY)
                 this.ctx.stroke()
             }
+            if(shape.type === 'freeDraw') {
+                if (shape.points.length > 1) {
+                    this.ctx.beginPath()
+                    this.ctx.moveTo(shape.points[0].x, shape.points[0].y)
+                    for (let i = 1; i < shape.points.length; i++) {
+                        this.ctx.lineTo(shape.points[i].x, shape.points[i].y)
+                    }
+                    this.ctx.stroke()
+                }
+            }
         }
     }
 
@@ -124,77 +144,71 @@ class Pointer extends Tool {
                 case 'circle':
                     const distance = Math.sqrt((x - shape.x) ** 2 + (y - shape.y) ** 2)
                     if (distance <= shape.radius) {
-                        return shape;
+                        return shape
                     }
-                    break;
+                    break
                 case 'rectangle':
                     if (x >= shape.x && x <= shape.x + shape.width && y >= shape.y && y <= shape.y + shape.height) {
-                        return shape;
+                        return shape
                     }
-                    break;
+                    break
                 case 'line':
 
-                //     // Проверяем, находится ли указатель мыши на линии
-                // const distanceFromStart = Math.sqrt((x - shape.startX) ** 2 + (y - shape.startY) ** 2)
-                // const distanceFromEnd = Math.sqrt((x - shape.endX) ** 2 + (y - shape.endY) ** 2)
-                // const length = Math.sqrt((shape.startX - shape.endX) ** 2 + (shape.startY - shape.endY) ** 2)
+                    // Проверяем, находится ли указатель мыши на линии
+                const distanceFromStart = Math.sqrt((x - shape.startX) ** 2 + (y - shape.startY) ** 2)
+                const distanceFromEnd = Math.sqrt((x - shape.endX) ** 2 + (y - shape.endY) ** 2)
+                const length = Math.sqrt((shape.startX - shape.endX) ** 2 + (shape.startY - shape.endY) ** 2)
 
-                // // Проверяем, ближе ли указатель мыши к началу или концу линии, с учетом погрешности
-                // const epsilon = 5; // погрешность
-                // if (distanceFromStart + distanceFromEnd >= length - epsilon && distanceFromStart + distanceFromEnd <= length + epsilon) {
-                //   return shape
-                // }
-
-                // Проверяем, находится ли точка на линии
-                const onLine = this.isPointOnLine(x, y, shape.startX, shape.startY, shape.endX, shape.endY);
-                if (onLine) {
-                    return shape;
+                // Проверяем, ближе ли указатель мыши к началу или концу линии, с учетом погрешности
+                const epsilon = 5 // погрешность
+                if (distanceFromStart + distanceFromEnd >= length - epsilon && distanceFromStart + distanceFromEnd <= length + epsilon) {
+                  return shape
                 }
                       break;
                 case 'freeDraw':
                     if (this.isPointInPath(x, y, shape.points)) {
-                         return shape;
+                         return shape
                     }
-                      break;
+                      break
                 default:
-                    break;
+                    break
             }
         }
-        return null;
-    }
-    
-    isPointOnLine(x: number, y: number, x1: number, y1: number, x2: number, y2: number) {
-        // Проверяем, лежит ли точка в пределах отрезка, а не только на нем
-        const dxc = x - x1;
-        const dyc = y - y1;
-        const dxl = x2 - x1;
-        const dyl = y2 - y1;
-    
-        const cross = dxc * dyl - dyc * dxl;
-        if (cross !== 0) return false;
-    
-        if (Math.abs(dxl) >= Math.abs(dyl)) {
-            return dxl > 0 ? (x1 <= x && x <= x2) || (x2 <= x && x <= x1) : (x2 <= x && x <= x1) || (x1 <= x && x <= x2);
-        } else {
-            return dyl > 0 ? (y1 <= y && y <= y2) || (y2 <= y && y <= y1) : (y2 <= y && y <= y1) || (y1 <= y && y <= y2);
-        }
+        return null
     }
 
     // Метод для определения принадлежности точки пути (используется для freeDraw)
     isPointInPath(x: number, y: number, points: { x: number, y: number }[]) {
-        if (points.length < 2) return false;
+    
+    if (points.length < 2) return false
 
-        let inside = false;
-        for (let i = 0, j = points.length - 1; i < points.length; j = i++) {
-            const xi = points[i].x, yi = points[i].y;
-            const xj = points[j].x, yj = points[j].y;
+    let inside = false
+    const epsilon = 1
+    for (let i = 0, j = points.length - 1; i < points.length; j = i++) {
+        const xi = points[i].x, yi = points[i].y
+        const xj = points[j].x, yj = points[j].y
 
-            const intersect = ((yi > y) !== (yj > y))
-                && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
-            if (intersect) inside = !inside;
-        }
+        // Добавляем погрешность к границам пути
+        const xiMin = Math.min(xi, xj) - epsilon
+        const xiMax = Math.max(xi, xj) + epsilon
+        const yiMin = Math.min(yi, yj) - epsilon
+        const yiMax = Math.max(yi, yj) + epsilon
 
-        return inside;
+        // Проверяем, если точка (x, y) находится в окрестности линии
+        if (x >= xiMin && x <= xiMax && y >= yiMin && y <= yiMax) return true
+
+        // Проверяем, если точка (x, y) находится между точками i и j
+        const intersect = ((yi > y) !== (yj > y)) &&
+            (x < (xj - xi) * (y - yi) / (yj - yi) + xi)
+
+        // Инвертируем значение inside, если точка находится между точками i и j
+        if (intersect) inside = !inside
+
+        // Если точка совпадает с одной из точек пути, считаем ее внутри фигуры
+        if ((xi === x && yi === y) || (xj === x && yj === y)) return true
+    }
+
+    return inside
     }
 }
 

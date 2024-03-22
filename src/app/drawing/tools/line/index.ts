@@ -1,3 +1,4 @@
+import { ILine } from "@src/store/canvas/types"
 import Tool from "../tool"
 
 class Line extends Tool {
@@ -6,10 +7,12 @@ class Line extends Tool {
     currentX!: number
     currentY!: number
     saved: any
+    figures: ILine | null
 
     constructor(canvas: HTMLCanvasElement | null) {
         super(canvas) // Вызываем конструктор родительского класса
         this.listen() // Устанавливаем обработчики событий для рисования
+        this.figures = null
     }
     
     listen() {
@@ -23,6 +26,8 @@ class Line extends Tool {
     // Обработчик события отпускания кнопки мыши
     mouseUpHandler(e: MouseEvent) {
         this.mouseDown = false
+        const allFigures = this.allFiguresTool as any
+        this.allFiguresTool = [...allFigures, this.figures]
     }
 
     // Обработчик события нажатия кнопки мыши
@@ -35,6 +40,15 @@ class Line extends Tool {
           this.ctx.beginPath()
           this.ctx.moveTo(this.currentX, this.currentY )
           this.saved = this.canvas!.toDataURL()
+
+           // Сохраняем координаты линии
+           this.figures = {
+            type: 'line', 
+            startX: this.currentX, 
+            startY: this.currentY, 
+            endX: this.currentX, 
+            endY: this.currentY
+        }
         }
     }
 
@@ -42,7 +56,12 @@ class Line extends Tool {
     mouseMoveHandler(e: MouseEvent) {
         if (this.mouseDown  && e.target instanceof HTMLElement) {
             const rect = this.canvas!.getBoundingClientRect()
-            this.draw(e.clientX - rect.left, e.clientY - rect.top) // Рисуем по указанным координатам
+            const newX = e.clientX - rect.left
+            const newY = e.clientY - rect.top
+            this.draw(newX, newY) // Рисуем по текущим координатам
+            // Обновляем конечные координаты линии
+            this.figures!.endX = newX
+            this.figures!.endY = newY
         }
     }
 
