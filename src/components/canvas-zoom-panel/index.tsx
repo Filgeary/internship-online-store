@@ -12,13 +12,13 @@ const zoomPanelIconsMap = {
 type TCanvasZoomModes = keyof typeof zoomPanelIconsMap;
 
 type Props = {
-  currentScale: number;
+  currentZoom: number;
   onZoomIn: () => void;
   onZoomOut: () => void;
   resetScale: () => void;
 };
 
-const CanvasZoomPanel = ({ currentScale, onZoomIn, onZoomOut, resetScale }: Props) => {
+const CanvasZoomPanel = ({ currentZoom, onZoomIn, onZoomOut, resetScale }: Props) => {
   const cn = bem('CanvasZoomPanel');
 
   return (
@@ -39,7 +39,7 @@ const CanvasZoomPanel = ({ currentScale, onZoomIn, onZoomOut, resetScale }: Prop
                 onClick={resetScale}
                 title='Reset zoom'
               >
-                {currentScale * 100}%
+                {new Intl.NumberFormat(undefined, { style: 'percent' }).format(currentZoom)}
               </button>
             );
           }
@@ -53,7 +53,7 @@ const CanvasZoomPanel = ({ currentScale, onZoomIn, onZoomOut, resetScale }: Prop
             >
               <Icon
                 size={24}
-                color='white'
+                color='hsl(0, 0%, 80%)'
               />
             </button>
           );

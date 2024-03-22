@@ -1,3 +1,4 @@
+import { getRandomNumberByRange } from '@src/utils/getRandomNumberByRange';
 import { IFigure } from './types';
 
 abstract class Figure implements IFigure {
@@ -5,6 +6,7 @@ abstract class Figure implements IFigure {
   protected figurePath: Path2D | undefined;
   protected x: number;
   protected y: number;
+  protected speed: number;
   protected strokeStyle: string;
   protected defaultStrokeStyle: string;
   protected fillStyle: string;
@@ -16,6 +18,7 @@ abstract class Figure implements IFigure {
     this.figurePath = undefined;
     this.x = 0;
     this.y = 0;
+    this.speed = 1;
     this.strokeStyle = '#eee';
     this.defaultStrokeStyle = this.strokeStyle;
     this.fillStyle = 'transparent';
@@ -55,6 +58,11 @@ abstract class Figure implements IFigure {
 
   unselect() {
     this.strokeStyle = this.defaultStrokeStyle;
+  }
+
+  animateFallDown() {
+    this.y += this.speed;
+    this.speed += getRandomNumberByRange(0, 1);
   }
 }
 

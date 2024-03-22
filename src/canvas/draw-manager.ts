@@ -1,4 +1,5 @@
 import { config as initialCanvasState } from './config';
+import { MAX_ZOOM, MIN_ZOOM } from './constants';
 import { Circle, DrawByHand, Line, Rect, Text, Triangle } from './figures';
 
 import type { TCanvasModes } from '@src/components/canvas-panel/types';
@@ -16,6 +17,9 @@ type TInitialCanvasState = typeof initialCanvasState;
 
 export class DrawManager {
   private ctx: CanvasRenderingContext2D;
+  private scale: number;
+  private scaleOffset: { x: number; y: number };
+  private isPlayingAnimation: boolean;
   private mode: TCanvasModes;
   private figures: TFigureEntity[];
   private selectedFigure: TFigureEntity | null;
@@ -29,6 +33,9 @@ export class DrawManager {
 
   constructor(ctx: CanvasRenderingContext2D, initialState: TInitialCanvasState) {
     this.ctx = ctx;
+    this.scale = 1;
+    this.scaleOffset = { x: 0, y: 0 };
+    this.isPlayingAnimation = false;
     this.mode = initialState.mode;
     this.figures = [];
     this.selectedFigure = null;
@@ -82,6 +89,12 @@ export class DrawManager {
     this.init();
   };
 
+  private playAnimationFallDown = () => {
+    this.figures.forEach(figure => {
+      figure.instance.animateFallDown();
+    });
+  };
+
   // get & set mode
   // ============================================
 
@@ -127,8 +140,12 @@ export class DrawManager {
     }
   };
 
-  // move canvas
+  // others
   // ============================================
+
+  setPlay = () => {
+    this.isPlayingAnimation = !this.isPlayingAnimation;
+  };
 
   moveCanvas = ({ deltaX, deltaY }: { deltaX: number; deltaY: number }) => {
     this.figures.forEach(figure => {
@@ -139,28 +156,97 @@ export class DrawManager {
     });
   };
 
-  // others
-  // ============================================
+  zoomIn({ x, y, zoomDelta }: { x: number; y: number; zoomDelta: number }) {
+    this.setAdjustedScaleOffsetByMousePoint({ x, y, zoomDelta, isZoomIn: true });
+  }
 
-  getFigures = () => {
-    return this.figures;
-  };
+  zoomOut({ x, y, zoomDelta }: { x: number; y: number; zoomDelta: number }) {
+    this.setAdjustedScaleOffsetByMousePoint({ x, y, zoomDelta, isZoomIn: false });
+  }
 
   // clear & draw canvas
   // ============================================
 
   clear = () => {
+    this.ctx.setTransform(1, 0, 0, 1, 0, 0);
     this.figures = [];
     this.initFigure();
   };
 
   drawAll = () => {
     this.reset();
+    const { x: scaleOffsetX, y: scaleOffsetY } = this.scaleOffset;
+
+    this.ctx.translate(-scaleOffsetX, -scaleOffsetY);
+    this.ctx.scale(this.scale, this.scale);
     this.figures.forEach(figure => figure.instance.draw());
+
+    if (this.isPlayingAnimation) {
+      this.playAnimationFallDown();
+    }
+
+    // reverse scale/translate
+    this.ctx.scale(1 / this.scale, 1 / this.scale);
+    this.ctx.translate(scaleOffsetX, scaleOffsetY);
+  };
+
+  // getters
+  // ============================================
+
+  getFigures = () => {
+    return this.figures;
   };
 
   // Setters for common properties
   // ============================================
+
+  setScale(scale: number) {
+    this.scale = scale;
+    this.setAdjustedScaleOffsetByCanvasCenter();
+  }
+
+  setScaleOffset({ x, y }: { x: number; y: number }) {
+    this.scaleOffset = { x, y };
+  }
+
+  setAdjustedScaleOffsetByCanvasCenter() {
+    const scaledWidth = this.ctx.canvas.width * this.scale;
+    const scaledHeight = this.ctx.canvas.height * this.scale;
+    const scaleOffsetX = (scaledWidth - this.ctx.canvas.width) / 2;
+    const scaleOffsetY = (scaledHeight - this.ctx.canvas.height) / 2;
+    this.setScaleOffset({ x: scaleOffsetX, y: scaleOffsetY });
+  }
+
+  setAdjustedScaleOffsetByMousePoint({
+    x,
+    y,
+    zoomDelta,
+    isZoomIn,
+  }: {
+    x: number;
+    y: number;
+    zoomDelta: number;
+    isZoomIn: boolean;
+  }) {
+    const scalingValue = isZoomIn ? this.scale + zoomDelta : this.scale - zoomDelta;
+    const scaledX = x * scalingValue;
+    const scaledY = y * scalingValue;
+    if (isZoomIn) {
+      this.scale = +Math.min(MAX_ZOOM, this.scale + zoomDelta).toFixed(2);
+    } else {
+      this.scale = +Math.max(MIN_ZOOM, this.scale - zoomDelta).toFixed(2);
+    }
+    const scaleOffsetX = Math.floor((scaledX - x) / this.scale) * this.scale;
+    const scaleOffsetY = Math.floor((scaledY - y) / this.scale) * this.scale;
+    this.setScaleOffset({ x: scaleOffsetX, y: scaleOffsetY });
+  }
+
+  setZoomCenterToCanvasCenter() {
+    this.scaleOffset = {
+      x: 0,
+      y: 0,
+    };
+  }
 
   setStrokeStyle(color: string) {
     this.strokeStyle = color;

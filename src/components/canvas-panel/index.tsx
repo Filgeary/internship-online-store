@@ -5,6 +5,7 @@ import {
   Minus,
   MousePointer,
   Move,
+  Play,
   RefreshCw,
   Square,
   Triangle,
@@ -33,6 +34,7 @@ export const drawModeIconsMap = {
 
 export const actionsIconsMap = {
   reset: RefreshCw,
+  play: Play,
 };
 
 type Props = {
@@ -109,7 +111,7 @@ const CanvasPanel = ({ onChangeAction, onChangeMode, activeMode }: Props) => {
             >
               <Icon
                 size={28}
-                color='white'
+                color={action === 'play' ? 'red' : 'white'}
               />
             </button>
           );

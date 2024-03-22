@@ -1,6 +1,7 @@
 export interface IFigure {
   init: () => void;
   draw: () => void;
+  animateFallDown: () => void;
   updatePosition: ({ deltaX, deltaY }: { deltaX: number; deltaY: number }) => void;
   select: () => void;
   unselect: () => void;
