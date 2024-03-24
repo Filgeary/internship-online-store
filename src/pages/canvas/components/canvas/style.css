@@ -1,14 +1,27 @@
-.CanvasContainer {
+.CanvasComponent {
+  flex: 1 1 auto;
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   padding: 20px;
 }
 
-.CanvasComponent {
+.CanvasContainer {
+  flex: 1 1 auto;
+  width: 100%;
+  height: 100%;
+
+}
+
+.CanvasComponent-ca {
   margin: 10px 0;
   border: 1px #535353 solid;
   box-shadow: 0 0 5px 0 #535353;
+}
+
+.CanvasGenerate {
+
 }
 
 .CanvasColorSelect {

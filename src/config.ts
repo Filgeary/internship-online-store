@@ -1,5 +1,4 @@
-import {AllModules, ImportModules, TModulesConfig} from "@src/shared/store/types";
-import {number} from "prop-types";
+import {ImportModules, TModulesConfig} from "@src/shared/store/types";
 
 
 const isProduction = process.env.NODE_ENV === 'production';

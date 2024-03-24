@@ -8,3 +8,5 @@ export type TShapesOptions = {
   value: keysShape,
   title: string
 }
+export const figures = {Circle: shapes.Circle, Rectangle: shapes.Rectangle, Triangle: shapes.Triangle}
+export type TFiguresKeys = keyof typeof figures
