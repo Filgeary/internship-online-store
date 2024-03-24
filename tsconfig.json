@@ -1,16 +1,23 @@
 {
   "compilerOptions": {
+    "lib": [
+      "dom",
+      "esnext",
+      "DOM.Iterable"
+    ],
     "target": "es2022",
-    "module": "ES2022",
+    "module": "ESNext",
     "allowJs": true,
     "jsx": "react-jsx",
+    "sourceMap": true,
     "moduleResolution": "node",
-    "outDir": "./dist",
+    "outDir": "../dist",
     "strict": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
+    "isolatedModules": true,
     "noEmit": true,
     "noUncheckedIndexedAccess": true,
     "noImplicitAny": true,
@@ -20,6 +27,17 @@
     },
     "types": ["vite/client", "node"]
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist"]
+  "ts-node": {
+    "esm": true,
+    "transpileOnly": true,
+    "experimentalSpecifierResolution": "node",
+    "files": true,
+  },
+  "include": ["src/**/*", "src/server.ts", "server/index.ts"],
+  "exclude": ["node_modules", "dist"],
+  "references": [
+    {
+      "path": "./tsconfig.node.json"
+    }
+  ]
 }

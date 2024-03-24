@@ -1,4 +1,4 @@
-import {ChangeEvent, LegacyRef, forwardRef, memo, useCallback, useLayoutEffect, useState} from 'react';
+import {ChangeEvent, LegacyRef, forwardRef, memo, useCallback, useEffect, useLayoutEffect, useState} from 'react';
 import {cn as bem} from '@bem-react/classname';
 import debounce from 'lodash.debounce';
 import type { InputProps } from './type';
@@ -23,7 +23,7 @@ const Input = forwardRef(function Input(
   };
 
   // Обновление стейта, если передан новый value
-  useLayoutEffect(() => setValue(props.value), [props.value]);
+  useEffect(() => setValue(props.value), [props.value]);
 
   const cn = bem("Input");
   return (
