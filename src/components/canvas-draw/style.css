@@ -1,20 +1,9 @@
 .DrawCanvas {
   display: flex;
   flex-direction: column;
-}
-.DrawCanvas-canvas {
-  display: block;
-}
-
-
-.DrawCanvas-config{
-    display: flex;
-    justify-content: space-between;
-    padding: 20px;
-    border-top: 1px solid #dddddd;
-    border-bottom: 1px solid #dddddd;
-}
-.DrawCanvas-selections{
-    display: flex;
-    gap: 10px;
+  box-shadow: 0px 0px 15px 5px #dddddd;
+  position: relative;
+  overflow: hidden;
+  height: 550px;
+  width: 984px;
 }

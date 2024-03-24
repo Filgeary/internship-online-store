@@ -1,17 +1,17 @@
 {
   "title": "Магазин",
-  "catalog":"Каталог",
-  "catalog.modal":"Добавить выбранные товары",
+  "catalog": "Каталог",
+  "catalog.modal": "Добавить выбранные товары",
   "menu.main": "Главная",
-  "menu.chat":"Чат",
-  "menu.canvas":"Canvas",
+  "menu.chat": "Чат",
+  "menu.canvas": "Canvas",
   "basket.title": "Корзина",
   "basket.open": "Перейти",
   "basket.close": "Закрыть",
   "basket.inBasket": "В корзине",
   "basket.empty": "пусто",
   "basket.total": "Итого",
-  "basket.select.more":"Выбрать ещё товар",
+  "basket.select.more": "Выбрать ещё товар",
   "basket.unit": "шт",
   "basket.delete": "Удалить",
   "basket.articles": {
@@ -28,10 +28,8 @@
   "auth.signIn": "Войти",
   "session.signIn": "Вход",
   "session.signOut": "Выход",
-  "count.counter":"Количество товара",
-  "count.form.title":"Введите количество товара",
-  "count.form.ok":"Ок",
-  "count.form.cancel":"Отмена",
-  "canvas.clear":"Очистить"
-
+  "count.counter": "Количество товара",
+  "count.form.title": "Введите количество товара",
+  "count.form.ok": "Ок",
+  "count.form.cancel": "Отмена"
 }

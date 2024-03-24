@@ -5,6 +5,9 @@ import path from "path";
 export default defineConfig({
   root: "src",
   base: "./",
+  optimizeDeps: {
+    exclude: ['js-big-decimal']
+ },
   build: {
     outDir: "../dist",
     assetsDir: "./",

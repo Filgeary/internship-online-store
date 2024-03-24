@@ -1,17 +1,17 @@
 {
   "title": "Shop",
-  "catalog":"Catalog",
-  "catalog.modal":"Add selected articles",
+  "catalog": "Catalog",
+  "catalog.modal": "Add selected articles",
   "menu.main": "Main",
-  "menu.chat":"Chat",
-  "menu.canvas":"Canvas",
+  "menu.chat": "Chat",
+  "menu.canvas": "Canvas",
   "basket.title": "Cart",
   "basket.open": "Open",
   "basket.close": "Close",
   "basket.inBasket": "In cart",
   "basket.empty": "empty",
   "basket.total": "Total",
-  "basket.select.more":"Select more article",
+  "basket.select.more": "Select more article",
   "basket.unit": "pcs",
   "basket.delete": "Delete",
   "basket.articles": {
@@ -26,9 +26,8 @@
   "auth.signIn": "Sign in",
   "session.signIn": "Sign In",
   "session.signOut": "Sign Out",
-  "count.counter":"Quantity of the article",
-  "count.form.title":"Enter the quantity of the article",
-  "count.form.ok":"Ok",
-  "count.form.cancel":"Cancel",
-  "canvas.clear":"Clear"
+  "count.counter": "Quantity of the article",
+  "count.form.title": "Enter the quantity of the article",
+  "count.form.ok": "Ok",
+  "count.form.cancel": "Cancel"
 }

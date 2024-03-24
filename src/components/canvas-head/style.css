@@ -1,0 +1,28 @@
+.CanvasHead {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #dddddd;
+  gap: 15px;
+  position: relative;
+}
+
+.CanvasHead-item {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.4s ease-out !important;
+}
+
+.CanvasHead-item:hover {
+  transform: scale(1.3);
+}
+
+.CanvasHead-input {
+  width: 77px;
+  font-size: 16px;
+  padding: 2px;
+  margin: 5px;
+}
