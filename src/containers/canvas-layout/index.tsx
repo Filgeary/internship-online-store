@@ -4,7 +4,7 @@ import CanvasTool from "../../components/canvas-tool";
 import CanvasDisplay from "../../components/canvas-display";
 
 export type CanvasAction = {
-  type: "clear" | "triangle" | "square" | "circle" | "line";
+  type: "clear" | "triangle" | "square" | "circle" | "line" | "fall" | "show";
   color?: string;
   lineWidth?: number;
 }

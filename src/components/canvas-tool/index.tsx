@@ -15,6 +15,8 @@ function CanvasTool(props: CanvasToolPropsType) {
   const [sliderValue, setSliderValue] = useState(props.currentAction.lineWidth);
 
   const callbacks = {
+    show: () => props.changeActionType({...props.currentAction, type: "show"}),
+    falling: () => props.changeActionType({...props.currentAction, type: "fall"}),
     clearCanvas: () =>
       props.changeActionType({ ...props.currentAction, type: "clear" }),
     drawTriangle: () =>
@@ -43,7 +45,9 @@ function CanvasTool(props: CanvasToolPropsType) {
         <button onClick={callbacks.drawSquare}>Квадрат</button>
         <button onClick={callbacks.drawCircle}>Круг</button>
         <button onClick={callbacks.drawLine}>Линия</button>
+        <button onClick={callbacks.falling}>Падение</button>
         <button onClick={callbacks.clearCanvas}>Очистить</button>
+        <button onClick={callbacks.show}>Вечеринка</button>
       </div>
       <div className={s.Wrapper}>
         <button onClick={callbacks.changePicker} className={s.ColorButton}>
