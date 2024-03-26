@@ -6,8 +6,8 @@ export default defineConfig({
   root: "src",
   base: "./",
   optimizeDeps: {
-    exclude: ['js-big-decimal']
- },
+    exclude: ["js-big-decimal"],
+  },
   build: {
     outDir: "../dist",
     assetsDir: "./",
@@ -21,9 +21,7 @@ export default defineConfig({
   },
   ssr: {
     // Названия пакетов, которые нужно добавить в сборку при SSR вместо импорта из node_modules
-    noExternal: [
-      'redux-thunk'
-    ]
+    noExternal: ["redux-thunk"],
   },
   server: {
     host: true,

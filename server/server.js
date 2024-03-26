@@ -33,26 +33,33 @@ if (isDev) {
 
 app.use("*", async (req, res, next) => {
   const url = req.originalUrl;
+
   let template;
+
   let render;
   
   try {
     if (isDev) {
       const rootTemplate = await fs.readFile("./src/index.html", "utf-8");
       template = await vite.transformIndexHtml(url, rootTemplate);
-      render = (await vite.ssrLoadModule("./src/entry-server.tsx")).render;
+      render = (await vite.ssrLoadModule("./entry-server.tsx")).render;
     } else {
       template = await fs.readFile("./dist/client/index.html", "utf-8");
       render = (
         await import("../dist/server/entry-server.js")
       ).render;
     }
+
     const renderer = render({ url: url });
     const html = template.replace(`<!--root-->`, renderer);
     res.status(200).set({ "Content-Type": "text/html" }).end(html);
+
   } catch (e) {
+
     if(e instanceof Error) {
+
       if(isDev) vite?.ssrFixStacktrace(e);
+      
       next(e);
     }
   }
