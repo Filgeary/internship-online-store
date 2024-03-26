@@ -21,7 +21,9 @@ function Main() {
   };
 
   useInit(async () => {
-    await Promise.all([store.actions.catalog.initParams(), store.actions.categories.load()]);
+    if (store.getState().catalog.list.length === 0) await store.actions.catalog.initParams();
+    if (store.getState().categories.list.length === 0) await store.actions.categories.load();
+    // await Promise.all([store.actions.catalog.initParams(), store.actions.categories.load()]);
   });
 
   return (
@@ -35,7 +37,7 @@ function Main() {
       <Catalog stateName={options.stateName as 'catalog'}>
         <CatalogFilter />
         <CatalogList />
-        {/* <CatalogFilter /> */}
+        <CatalogFilter />
       </Catalog>
     </PageLayout>
   );

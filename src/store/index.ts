@@ -10,6 +10,8 @@ import {
 } from './types';
 
 import { TConfig, TConfigModules, TConfigModulesKeys } from '@src/config';
+import { update } from 'immupdate';
+import { mergeDeep } from 'immutable';
 
 type TListeners = Array<(...args: any[]) => void>;
 
@@ -43,22 +45,17 @@ class Store {
     const modulesKeys = Object.keys(modules) as TDefaultKeysModules[];
     for (const name of modulesKeys) {
       this.create(name);
+
+      // Инициализация данных с ssr
+      const storeModule = this.actions[name];
+      if (name in tmp) {
+        const moduleState = storeModule.getState();
+        // @ts-ignore
+        const nextModuleState = mergeDeep(moduleState, tmp[name]);
+        // @ts-ignore
+        storeModule.setState(nextModuleState);
+      }
     }
-
-    const catalogStore = this.actions['catalog'];
-    const categoriesStore = this.actions['categories'];
-
-    catalogStore.setState({
-      ...catalogStore.getState(),
-      //@ts-ignore
-      ...tmp.catalog,
-    });
-
-    categoriesStore.setState({
-      ...categoriesStore.getState(),
-      //@ts-ignore
-      ...tmp.categories,
-    });
   }
 
   /**

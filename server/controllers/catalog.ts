@@ -8,6 +8,9 @@ async function catalogController(params: TParams, method: TMethod) {
     catalog: {
       list: result.items,
       count: result.items.length,
+      params: {
+        category: params.category || '',
+      },
     },
   };
 }
