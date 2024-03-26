@@ -3,15 +3,17 @@ import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import { ServicesContext } from "./context";
 import { I18nProvider } from "./i18n/context";
-import App from "./app";
 import Services from "./services";
 import config from "./config";
+import App from "./app";
+
 
 const services = new Services(config);
 
 const root = createRoot(document.getElementById("root")!);
 
 // Первый рендер приложения
+
 root.render(
   <Provider store={services.redux}>
     <ServicesContext.Provider value={services}>

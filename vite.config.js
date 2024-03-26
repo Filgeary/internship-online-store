@@ -13,14 +13,18 @@ export default defineConfig({
     assetsDir: "./",
     emptyOutDir: true,
   },
-
   plugins: [react()],
   resolve: {
     alias: {
       "@src": path.resolve(__dirname, "./src"),
     },
   },
-
+  ssr: {
+    // Названия пакетов, которые нужно добавить в сборку при SSR вместо импорта из node_modules
+    noExternal: [
+      'redux-thunk'
+    ]
+  },
   server: {
     host: true,
     port: 8010,

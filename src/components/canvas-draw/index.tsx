@@ -1,8 +1,9 @@
-import { memo, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { memo, useMemo, useRef, useState } from "react";
 import CanvasHead from "../canvas-head";
 import { cn as bem } from "@bem-react/classname";
 import "./style.css";
 import Draw from "./draw";
+import { useIsomorphicLayoutEffect } from "usehooks-ts";
 
 const CanvasDraw = () => {
   const cn = bem("DrawCanvas");
@@ -11,7 +12,7 @@ const CanvasDraw = () => {
   const refRoot = useRef<HTMLDivElement>(null);
   const draw = useMemo(() => new Draw(count), [count]);
 
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     if (refRoot.current) draw.mount(refRoot.current);
     return () => draw.unmount();
   }, [count]);

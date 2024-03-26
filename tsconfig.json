@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "target": "ES6", //
-    "lib": ["dom", "dom.iterable", "esnext"], //
+    "target": "ESNext", //
+    "lib": ["DOM", "DOM.Iterable", "ESNext"], //
     "outDir": "dist",
     "allowJs": true, //
     "skipLibCheck": true, //
@@ -9,7 +9,7 @@
     "allowImportingTsExtensions": true, //
     "strict": true, //
     "noFallthroughCasesInSwitch": true, //
-    "module": "esnext", //
+    "module": "ESNext", //
     "moduleResolution": "Node", //
     "resolveJsonModule": true, //
     "noImplicitAny": true, //

@@ -1,11 +1,11 @@
 import { TConfig } from "@src/config";
 import StoreModule from "../module";
 import simplifyErrors from "@src/utils/simplify-errors";
-import { TUser } from '@src/store/profile/types';
+import { TUser } from "@src/store/profile/types";
 
 type TSessionState = {
-  user: TUser ;
-  token?: string | null;
+  user: TUser;
+  token: string | null;
   errors?: any;
   waiting?: boolean;
   exists?: boolean;
@@ -18,7 +18,7 @@ type TConfigSession = {
  * Сессия
  */
 class SessionState extends StoreModule<TSessionState, TConfigSession> {
-  config!: TConfig["store"]["modules"]["session"];
+  declare config: TConfig["store"]["modules"]["session"];
   /**
    * Начальное состояние
    * @return {Object}
@@ -28,7 +28,7 @@ class SessionState extends StoreModule<TSessionState, TConfigSession> {
       user: {} as TUser,
       token: null,
       errors: null,
-      waiting: true,
+      waiting: false,
       exists: false,
     };
   }
@@ -160,7 +160,8 @@ class SessionState extends StoreModule<TSessionState, TConfigSession> {
    * Сброс ошибок авторизации
    */
   resetErrors() {
-    this.setState({ ...this.initState(), errors: null });
+    this.setState({ ...this.initState(), errors: null }),
+      "Сброс ошибок авторизации";
   }
 }
 

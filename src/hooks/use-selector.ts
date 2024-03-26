@@ -1,7 +1,8 @@
-import { useLayoutEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import shallowequal from "shallowequal";
 import useStore from "./use-store";
 import { TNewStoreState } from "@src/store/types";
+import { useIsomorphicLayoutEffect } from "usehooks-ts";
 
 
 /**
@@ -27,7 +28,7 @@ export default function useSelector<T>(
   }, []); // Нет зависимостей - исполнится один раз
 
   // Отписка от store при демонтировании компонента
-  useLayoutEffect(() => unsubscribe, [unsubscribe]);
+  useIsomorphicLayoutEffect(() => unsubscribe, [unsubscribe]);
 
   return state;
 }
