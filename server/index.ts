@@ -56,20 +56,23 @@ async function createServer() {
 
     const params = qs.parse(url.slice(2)) as TParams;
 
-    // Обработка запросов для инициализации стора каталога
-    const catalog = await catalogController(params, method);
-    ssrData = {
-      ...ssrData,
-      ...catalog,
-    };
+    // Запросы за каталогом и категориями - только на корне
+    if (url === '/') {
+      // Обработка запросов для инициализации стора каталога
+      const catalog = await catalogController(params, method);
+      ssrData = {
+        ...ssrData,
+        ...catalog,
+      };
 
-    // Запрос за категориями
-    const categories = await categoriesController(params, method);
-    console.log({ categories });
-    ssrData = {
-      ...ssrData,
-      ...categories,
-    };
+      // Запрос за категориями
+      const categories = await categoriesController(params, method);
+      console.log({ categories });
+      ssrData = {
+        ...ssrData,
+        ...categories,
+      };
+    }
 
     try {
       if (isDev) {

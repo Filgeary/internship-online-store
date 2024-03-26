@@ -1,5 +1,5 @@
 import './style.css';
-import { memo, useEffect, useState } from 'react';
+import { memo, useEffect, useLayoutEffect, useState } from 'react';
 
 import { cn as bem } from '@bem-react/classname';
 
@@ -36,7 +36,7 @@ function MessagesArea() {
     },
   };
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const previousScrollPosition = messagesAreaRef.current.scrollHeight - previousHeight;
 
     const scrollableDistance =

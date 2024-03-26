@@ -36,7 +36,7 @@ class ApiService {
   static async categories(params: TParams, method: TMethod): Promise<TResponse> {
     const response = await apiInstance[method]('/categories', {
       params: {
-        fields: '_iid,title,parent(_id)',
+        fields: '_id,title,parent(_id)',
         limit: '*',
       },
     });
