@@ -6,7 +6,7 @@ import Services from '@src/services';
 export default function createStoreRedux(services: Services, config = {}) {
   return createStore(
     combineReducers(reducers),
-    undefined
-    // applyMiddleware(thunk.withExtraArgument(services))
+    undefined,
+    applyMiddleware(thunk.withExtraArgument(services))
   );
 }

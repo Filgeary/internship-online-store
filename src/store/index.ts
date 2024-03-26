@@ -28,6 +28,7 @@ class Store {
     this.config = config as TConfig['store'];
     this.listeners = []; // Слушатели изменений состояния
     this.state = initState as TGlobalState;
+    const tmp = { ...initState };
     /** {{
      * basket: BasketState,
      * catalog: CatalogState,
@@ -43,6 +44,21 @@ class Store {
     for (const name of modulesKeys) {
       this.create(name);
     }
+
+    const catalogStore = this.actions['catalog'];
+    const categoriesStore = this.actions['categories'];
+
+    catalogStore.setState({
+      ...catalogStore.getState(),
+      //@ts-ignore
+      ...tmp.catalog,
+    });
+
+    categoriesStore.setState({
+      ...categoriesStore.getState(),
+      //@ts-ignore
+      ...tmp.categories,
+    });
   }
 
   /**

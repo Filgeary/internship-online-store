@@ -3,7 +3,7 @@ import exclude from '@src/utils/exclude';
 import { TCatalogConfig, TCatalogState } from './types';
 
 /**
- * Состояние каталога - параметры фильтра исписок товара
+ * Состояние каталога - параметры фильтра и список товаров
  */
 class CatalogState extends StoreModule<TCatalogState, TCatalogConfig> {
   readonly config: TCatalogConfig;

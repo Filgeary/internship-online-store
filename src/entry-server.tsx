@@ -9,14 +9,14 @@ import { I18nProvider } from './i18n/context';
 import { ChatProvider } from './chat/context';
 import config from './config';
 import App from './app';
-
-const services = new Services(config);
+import createStoreRedux from './store-redux';
 
 type TProps = {
   path: string;
+  initialState: object;
 };
 
-React.useLayoutEffect = React.useEffect;
+// React.useLayoutEffect = React.useEffect;
 if (!global.window) {
   global.window = {} as Window & typeof globalThis;
 }
@@ -25,9 +25,14 @@ if (!global.document) {
   global.document = {} as Document;
 }
 
-export const render = ({ path }: TProps) => {
+export const render = ({ path, initialState }: TProps) => {
+  const services = new Services(config, initialState);
+
+  console.log('initialState:', initialState);
+  const store = createStoreRedux(services);
+
   return renderToString(
-    <Provider store={services.redux}>
+    <Provider store={store}>
       <ServicesContext.Provider value={services}>
         <I18nProvider>
           <ChatProvider>

@@ -4,7 +4,7 @@ import React, {
   memo,
   useContext,
   useEffect,
-  useLayoutEffect,
+  useId,
   useMemo,
   useRef,
   useState,
@@ -67,7 +67,8 @@ function Autocomplete(props: AutocompleteProps) {
   } = props;
 
   const cn = bem('Autocomplete');
-  const uid = useMemo(() => window.crypto?.randomUUID(), []);
+  // const uid = useMemo(() => window.crypto?.randomUUID(), []);
+  const uid = useId();
 
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState('');

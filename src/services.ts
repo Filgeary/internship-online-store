@@ -13,8 +13,11 @@ class Services {
   _redux: ReturnType<typeof createStoreRedux>;
   _chat: ChatService;
 
-  constructor(config: TConfig) {
+  readonly initState: object;
+
+  constructor(config: TConfig, initState = {}) {
     this.config = config;
+    this.initState = initState;
   }
 
   /**
@@ -34,7 +37,8 @@ class Services {
    */
   get store(): Store {
     if (!this._store) {
-      this._store = new Store(this, this.config.store);
+      console.log('Уже в стейте:', { ...this.initState });
+      this._store = new Store(this, this.config.store, this.initState);
     }
     return this._store;
   }

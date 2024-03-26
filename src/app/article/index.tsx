@@ -19,8 +19,8 @@ function Article() {
   const store = useStore();
 
   const dispatch = useDispatch<any>();
-  // Параметры из пути /articles/:id
 
+  // Параметры из пути /articles/:id
   const params = useParams();
 
   useInit(() => {

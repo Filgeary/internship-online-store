@@ -1,6 +1,6 @@
 import './style.css';
 
-import React, { memo, useEffect, useLayoutEffect, useRef } from 'react';
+import React, { memo, useEffect, useRef } from 'react';
 import { TOption } from '../types';
 
 import { cn as bem } from '@bem-react/classname';
@@ -35,7 +35,7 @@ function AutocompleteVariant(props: AutocompleteVariantProps) {
     },
   };
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     return () => {
       if (innerRef.current === firstActiveOptionRef.current) {
         firstActiveOptionRef.current = innerRef.current.nextElementSibling as HTMLDivElement;
