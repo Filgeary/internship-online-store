@@ -33,7 +33,7 @@ class Store {
     const module = modules[name] as importModules[Key];
     const newModule = new module(
       this,
-      name,
+      name as KeysCopiedStores,
       this.config?.modules[name] || {}
     ) as TActions[Key];
     this.actions[name] = newModule;
@@ -48,10 +48,7 @@ class Store {
     const newModule = new module(
       this,
       name,
-      {
-        ...this.config?.modules[base],
-        ...this.config?.modules[name],
-      } || {}
+      this.config?.modules[name]
     ) as TActions[T];
     this.actions[name] = newModule;
     this.state[name] = this.actions[name]!.initState() as TState[T];

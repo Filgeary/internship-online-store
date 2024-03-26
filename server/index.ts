@@ -2,9 +2,13 @@ import express from "express";
 import fs from "fs/promises";
 import path from "path";
 import { ViteDevServer } from "vite";
+import { createProxyMiddleware } from 'http-proxy-middleware';
+import * as dotenv from 'dotenv';
+
+dotenv.config();
 
 const isProduction = process.env.NODE_ENV === "production";
-const port = process.env.PORT || 8010;
+const port = Number(process.env.PORT) || 8010;
 
 const app = express();
 let vite: ViteDevServer;
@@ -18,19 +22,22 @@ if (!isProduction) {
 
   app.use(vite.middlewares);
 } else {
-  app.use(
-    express.static(
-      path.resolve(path.resolve(process.cwd(), "dist/client")),
-      { index: false }
-    )
-  );
+  const apiProxy = createProxyMiddleware({
+    target: process.env.API_BASE,
+    changeOrigin: true,
+    secure: false,
+  });
+
+  app.use('/api/v1', apiProxy);
+
+  app.use(express.static(path.resolve("./dist/client"), { index: false }));
 }
 
 app.use("*", async (req, res, next) => {
   const url = req.originalUrl;
   let template: string;
   let render: ({path}: {path: string}) => string;
-
+  
   try {
     if (!isProduction) {
       const rootTemplate = await fs.readFile("src/index.html", "utf-8");

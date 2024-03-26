@@ -29,7 +29,6 @@ class CategoriesState extends StoreModule<InitialStateCategories> {
     const res = await this.services.api.request({
       url: `/api/v1/categories?fields=_id,title,parent(_id)&limit=*`,
     });
-
     if (res.status === 200) {
       // Товар загружен успешно
       this.setState(

@@ -7,6 +7,7 @@ import Services from "./services";
 import config from "./config";
 
 const services = new Services(config);
+
 if (!global.window) {
   global.window = {} as Window & typeof globalThis;
 }
@@ -18,7 +19,6 @@ if (!global.document) {
 type PropsRender = {
   path: string
 }
-// React.useLayoutEffect = React.useEffect
 
 export const render = ({ path }: PropsRender) => {
   return renderToString(
