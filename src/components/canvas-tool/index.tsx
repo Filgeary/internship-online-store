@@ -1,13 +1,15 @@
 import { memo, useState } from "react";
 import s from "./style.module.css";
 import { CanvasAction } from "../../containers/canvas-layout";
-import { SketchPicker } from "react-color";
+import SketchPicker2 from "react-color";
 import RangeSlider from "../range-slider/RangeSlider";
 
 type CanvasToolPropsType = {
   currentAction: CanvasAction;
   changeActionType: (type: CanvasAction) => void;
 };
+
+const { SketchPicker } = SketchPicker2;
 
 function CanvasTool(props: CanvasToolPropsType) {
   const [color, setColor] = useState(props.currentAction.color || "#000");

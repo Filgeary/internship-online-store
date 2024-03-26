@@ -11,7 +11,8 @@ export default defineConfig({
       output: {
         entryFileNames: 'index.js'
       }
-    }
+    },
+    cssCodeSplit: false,
   },
   server: {
     port: 3000,
@@ -35,4 +36,7 @@ export default defineConfig({
       '@src': path.resolve(__dirname, './src'),
     },
   },
+  css: {
+    modules: true,
+  }
 });
