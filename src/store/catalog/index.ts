@@ -92,15 +92,15 @@ class CatalogState extends StoreModule<IIinitCatalogState> {
       exclude(params, this.initState().params)
     ).toString();
     const url =
-      window.location.pathname +
+      window?.location.pathname +
       (urlSearch ? `?${urlSearch}` : "") +
-      window.location.hash;
+      window?.location.hash;
 
     if (!hide) {
       if (replaceHistory) {
-        window.history.replaceState({}, "", url);
+        window?.history.replaceState({}, "", url);
       } else {
-        window.history.pushState({}, "", url);
+        window?.history.pushState({}, "", url);
       }
     }
 

@@ -8,7 +8,7 @@ interface IProfileCardProps {
       name: string
       phone: string
     }
-    email: string
+    email?: string
   }
 }
 

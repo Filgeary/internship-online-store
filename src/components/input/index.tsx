@@ -1,4 +1,4 @@
-import {memo, useCallback, useLayoutEffect, useState, FC} from 'react'
+import {memo, useCallback, useEffect, useState, FC} from 'react'
 import {cn as bem} from '@bem-react/classname'
 import debounce from 'lodash.debounce'
 import './style.css'
@@ -30,7 +30,7 @@ const Input: FC<IInputProps> = (props) => {
   }
 
   // Обновление стейта, если передан новый value
-  useLayoutEffect(() => setValue(props.value), [props.value])
+  useEffect(() => setValue(props.value), [props.value])
 
   const cn = bem('Input')
   return (

@@ -7,14 +7,14 @@ import './style.css'
 interface IItemBasketProps {
   item: {
     _id: string | number
-    title: string
-    price: number
+    title?: string
+    price?: number
     amount?: number
   }
   link: string
   onLink: () => void
   onRemove: (id: string | number) => void
-  labelCurr: string
+  labelCurr?: string
   labelDelete: string
   labelUnit: string
 }

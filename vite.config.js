@@ -8,7 +8,7 @@ import path from 'path'
 export default defineConfig({
     root: 'src',
     build: {
-      outDir: '../dist',
+      outDir: 'src/dist',
       emptyOutDir: true,
       sourcemap: true,
     },
@@ -27,7 +27,7 @@ export default defineConfig({
         react(),
         tsconfigPaths(),
         createHtmlPlugin({
-          entry: "index.jsx",
+          entry: "entry-client.tsx",
           template: "index.html",
           inject: {
             data: {

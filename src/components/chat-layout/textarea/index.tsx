@@ -1,7 +1,6 @@
 import React, {
   useState,
   ChangeEvent,
-  useLayoutEffect,
   useCallback,
   memo,
   useEffect,
@@ -47,10 +46,10 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, IProps>(
       };
 
     useEffect(() => {
-      showPicker && window.scrollTo(0,document.body.scrollHeight)
+      showPicker && window?.scrollTo(0,document.body.scrollHeight)
     }, [showPicker])
 
-    useLayoutEffect(() => setMessage(value), [value])
+    useEffect(() => setMessage(value), [value])
 
     return (
       <>

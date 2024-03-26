@@ -18,7 +18,7 @@ interface IArticleCardProps {
     price: number
   }
   onAdd: (id: string) => void
-  t: (text: string) => string
+  t: any
 }
 
 const ArticleCard: React.FC<IArticleCardProps> = ({article, onAdd, t}) => {

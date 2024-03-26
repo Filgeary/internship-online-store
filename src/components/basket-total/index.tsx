@@ -5,7 +5,7 @@ import './style.css'
 
 interface IBasketTotalProps {
   sum?: number
-  t: (text: string, number?: number) => string
+  t: any
 }
 const BasketTotal: FC<IBasketTotalProps> = ({ sum = 0, t }) => {
   const cn = bem('BasketTotal')

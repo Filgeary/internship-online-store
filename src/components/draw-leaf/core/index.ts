@@ -41,13 +41,13 @@ class Core {
     this.root.appendChild(this.canvas)
 
     // Отслеживаем изменение размеров окна (хотя лучше повесить ResizeObserver на root)
-    window.addEventListener('resize', this.resize)
+    window?.addEventListener('resize', this.resize)
     // Нажатие мышки отслеживается только в рамках канвы
     this.canvas.addEventListener('mousedown', this.onMouseDown)
     // Перемещение и отпускание кнопки мышки отслеживаем в рамках всего окна
     // чтобы не ломалась логика, если после нажатия мышь случайна вышла за рамки канвы
-    window.addEventListener('mousemove', this.onMouseMove)
-    window.addEventListener('mouseup', this.onMouseUp)
+    window?.addEventListener('mousemove', this.onMouseMove)
+    window?.addEventListener('mouseup', this.onMouseUp)
     this.canvas.addEventListener('wheel', this.onMouseWheel)
 
     this.ctx = this.canvas.getContext('2d', {alpha: false})
@@ -68,9 +68,9 @@ class Core {
   unmount() {
     // Отписка от всех событий
     if (this.canvas) {
-      window.removeEventListener('resize', this.resize)
-      window.removeEventListener('mousemove', this.onMouseMove)
-      window.removeEventListener('mouseup', this.onMouseUp)
+      window?.removeEventListener('resize', this.resize)
+      window?.removeEventListener('mousemove', this.onMouseMove)
+      window?.removeEventListener('mouseup', this.onMouseUp)
       this.canvas.removeEventListener('mousedown', this.onMouseDown)
       this.canvas.removeEventListener('wheel', this.onMouseWheel)
       // Удаление канвы
@@ -90,7 +90,7 @@ class Core {
       this.metrics.top = rect.top
       this.metrics.width = this.root.offsetWidth
       this.metrics.height = this.root.offsetHeight
-      this.metrics.dpr = window.devicePixelRatio
+      this.metrics.dpr = window?.devicePixelRatio
       // Физический размер канвы с учётом плотности пикселей (т.е. канва может быть в разы больше)
       this.canvas.width = this.metrics.width * this.metrics.dpr
       this.canvas.height = this.metrics.height * this.metrics.dpr

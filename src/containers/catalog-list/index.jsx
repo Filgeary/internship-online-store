@@ -10,7 +10,7 @@ import modalsActions from '@src/store-redux/modals/actions'
 import generateUniqueId from "@src/utils/unicque_id"
 import { useDispatch } from "react-redux"
 
-function CatalogList({stateName}) {
+function CatalogList({stateName, goods}) {
   const store = useStore();
   const dispatch = useDispatch();
   const selectRef = useRef();
@@ -86,10 +86,11 @@ function CatalogList({stateName}) {
         />
     ), [callbacks.openModal, t, callbacks.changeSelected]),
   };
-
+  console.log('goods', goods)
+  console.log('select.list', select.list)
   return (
     <Spinner active={select.waiting}>
-      <List list={select.list} renderItem={renders.item}/>
+      <List list={goods} renderItem={renders.item}/>
       <Pagination count={select.count} page={select.page} limit={select.limit}
                   onChange={callbacks.onPaginate} makeLink={callbacks.makePaginatorLink}/>
     </Spinner>

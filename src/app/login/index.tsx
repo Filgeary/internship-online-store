@@ -1,59 +1,61 @@
-import {memo, useCallback, useState} from "react";
-import useTranslate from "@src/hooks/use-translate";
-import Head from "@src/components/head";
-import LocaleSelect from "@src/containers/locale-select";
-import Navigation from "@src/containers/navigation";
-import PageLayout from "@src/components/page-layout";
-import Input from "@src/components/input";
-import Field from "@src/components/field";
-import SideLayout from "@src/components/side-layout";
-import TopHead from "@src/containers/top-head";
-import {useLocation, useNavigate} from "react-router-dom";
-import useStore from "@src/hooks/use-store";
-import useSelector from "@src/hooks/use-selector";
-import useInit from "@src/hooks/use-init";
+import {memo, useCallback, useState} from "react"
+import useTranslate from "@src/hooks/use-translate"
+import Head from "@src/components/head"
+import LocaleSelect from "@src/containers/locale-select"
+import Navigation from "@src/containers/navigation"
+import PageLayout from "@src/components/page-layout"
+import Input from "@src/components/input"
+import Field from "@src/components/field"
+import SideLayout from "@src/components/side-layout"
+import TopHead from "@src/containers/top-head"
+import {useLocation, useNavigate} from "react-router-dom"
+import useStore from "@src/hooks/use-store"
+import useSelector from "@src/hooks/use-selector"
+import useInit from "@src/hooks/use-init"
+import { StoreState } from "@src/store/types"
 
 
 function Login() {
 
-  const {t} = useTranslate();
-  const location = useLocation();
-  const navigate = useNavigate();
-  const store = useStore();
+  const {t} = useTranslate()
+  const location = useLocation()
+  const navigate = useNavigate()
+  const store = useStore()
 
   useInit(() => {
-    store.actions.session.resetErrors();
+    store.actions.session.resetErrors()
   })
 
-  const select = useSelector(state => ({
+  const select = useSelector((state: StoreState) => ({
     waiting: state.session.waiting,
-    errors: state.session.errors
-  }));
+    errors: state.session.errors as any
+  }))
 
   const [data, setData] = useState({
     login: '',
     password: ''
-  });
+  })
 
   const callbacks = {
     // Колбэк на ввод в элементах формы
-    onChange: useCallback((value, name) => {
-      setData(prevData => ({...prevData, [name]: value}));
+    onChange: useCallback((value: string, name: string | undefined) => {
+      // @ts-ignore
+      setData(prevData => ({...prevData, [name]: value}))
     }, []),
 
     // Отправка данных формы для авторизации
-    onSubmit: useCallback((e) => {
-      e.preventDefault();
+    onSubmit: useCallback((e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault()
       store.actions.session.signIn(data, () => {
         // Возврат на страницу, с которой пришли
         const back = location.state?.back && location.state?.back !== location.pathname
           ? location.state?.back
-          : '/';
-        navigate(back);
-      });
+          : '/'
+        navigate(back)
+      })
 
     }, [data, location.state])
-  };
+  }
 
   return (
     <PageLayout>
@@ -79,7 +81,7 @@ function Login() {
         </form>
       </SideLayout>
     </PageLayout>
-  );
+  )
 }
 
-export default memo(Login);
+export default memo(Login)

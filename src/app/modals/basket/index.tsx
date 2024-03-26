@@ -1,35 +1,35 @@
-import {memo, useCallback, useEffect} from 'react';
-import {useDispatch, useStore as useStoreRedux} from 'react-redux';
-import useStore from "@src/hooks/use-store";
-import useSelector from "@src/hooks/use-selector";
-import {useSelector as useSelectorRedux} from 'react-redux';
-import useInit from "@src/hooks/use-init";
-import useTranslate from "@src/hooks/use-translate";
-import ItemBasket from "@src/components/item-basket";
-import List from "@src/components/list";
-import ModalLayout from "@src/components/modal-layout";
-import BasketTotal from "@src/components/basket-total";
-import modalsActions from '@src/store-redux/modals/actions';
+import {memo, useCallback, useEffect} from 'react'
+import {useDispatch, useStore as useStoreRedux} from 'react-redux'
+import useStore from "@src/hooks/use-store"
+import useSelector from "@src/hooks/use-selector"
+import {useSelector as useSelectorRedux} from 'react-redux'
+import useInit from "@src/hooks/use-init"
+import useTranslate from "@src/hooks/use-translate"
+import ItemBasket from "@src/components/item-basket"
+import List from "@src/components/list"
+import ModalLayout from "@src/components/modal-layout"
+import BasketTotal from "@src/components/basket-total"
+import modalsActions from '@src/store-redux/modals/actions'
 import Button from '@src/components/button'
 import codeGenerator from "@src/utils/code-generator"
 import generateUniqueId from "@src/utils/unicque_id"
-import closeId from '@src/utils/closeId';
+import closeId from '@src/utils/closeId'
 
 
 function Basket() {
 
-  const store = useStore();
-  const dispatch = useDispatch();
+  const store = useStore()
+  const dispatch = useDispatch()
 
-  const select = useSelector(state => ({
+  const select = useSelector((state: any) => ({
     list: state.basket.list,
     amount: state.basket.amount,
     sum: state.basket.sum,
     selected: state.basket.selected
-  }));
+  }))
 
-  const statusCatalogModal = useSelectorRedux(state => state.modals.statusCatalogModal);
-  const stateModal = useSelectorRedux(state => state.modals.modals)
+  const statusCatalogModal = useSelectorRedux((state: any) => state.modals.statusCatalogModal)
+  const stateModal = useSelectorRedux((state: any) => state.modals.modals)
 
   const id = generateUniqueId()
 
@@ -40,7 +40,7 @@ function Basket() {
 
   const callbacks = {
     // Удаление из корзины
-    removeFromBasket: useCallback(_id => store.actions.basket.removeFromBasket(_id), [store]),
+    removeFromBasket: useCallback((id: string | number) => store.actions.basket.removeFromBasket(id as string), [store]),
     // Закрытие модалки
     closeModal: useCallback(() => {
       // dispatch(modalsActions.closeModal('basket', id))
@@ -56,7 +56,7 @@ function Basket() {
   const {t} = useTranslate();
 
   const renders = {
-    itemBasket: useCallback((item) => (
+    itemBasket: useCallback((item: {_id: string | number}) => (
       <ItemBasket item={item}
                   link={`/articles/${item._id}`}
                   onRemove={callbacks.removeFromBasket}

@@ -11,7 +11,7 @@ import CatalogList from "@src/containers/catalog-list"
 import LocaleSelect from "@src/containers/locale-select"
 import TopHead from "@src/containers/top-head"
 
-function Main() {
+function Main({goods}: {goods: any}) {
 
   const store = useStore();
 
@@ -33,7 +33,7 @@ function Main() {
       </Head>
       <Navigation/>
       <CatalogFilter/>
-      <CatalogList stateName='catalog'/>
+      <CatalogList stateName='catalog' goods={goods}/>
     </PageLayout>
   );
 }

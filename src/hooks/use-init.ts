@@ -13,9 +13,9 @@ export default function useInit(initFunc: (arg?: Event | boolean) => void, depen
     // компонент об изменениях, поэтому хук можно явно подписать на событие изменения истории
     // браузера (если нужно отреагировать на изменения search-параметров при переходе по истории)
     if (backForward) {
-      window.addEventListener('popstate', initFunc);
+      window?.addEventListener('popstate', initFunc);
       return () => {
-        window.removeEventListener('popstate', initFunc);
+        window?.removeEventListener('popstate', initFunc);
       };
     }
   }, depends);

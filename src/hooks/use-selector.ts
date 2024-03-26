@@ -1,4 +1,4 @@
-import {useLayoutEffect, useMemo, useState} from "react"
+import {useEffect, useMemo, useState} from "react"
 import shallowequal from 'shallowequal'
 import useStore from "./use-store"
 
@@ -20,7 +20,7 @@ export default function useSelector<State, Selected>(selectorFunc: SelectorFunc<
     });
   }, [store, selectorFunc]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     return () => unsubscribe();
   }, [unsubscribe]);
 

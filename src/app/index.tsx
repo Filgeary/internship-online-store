@@ -19,19 +19,19 @@ import {useSelector as useSelectorRedux} from 'react-redux'
  * Приложение
  * @returns {React.ReactElement}
  */
-function App() {
+function App({goods}: {goods: any}) {
 
   const store = useStore()
   useInit(async () => {
     await store.actions.session.remind()
   })
 
-  const activeModal = useSelectorRedux(state => state.modals.activeModal);
+  const activeModal = useSelectorRedux((state: any) => state.modals.activeModal);
 
   return (
     <>
       <Routes>
-        <Route path={''} element={<Main/>}/>
+        <Route path={''} element={<Main goods={goods}/>}/>
         <Route path={'/articles/:id'} element={<Article/>}/>
         <Route path={"/login"} element={<Login/>}/>
         <Route path={"/leaf"} element={<LeafFall/>}/>

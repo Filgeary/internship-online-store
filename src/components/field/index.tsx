@@ -3,9 +3,9 @@ import {cn as bem} from '@bem-react/classname'
 import './style.css'
 
 interface IFieldProps {
-  label: ReactNode
+  label?: ReactNode
   error?: ReactNode
-  children: ReactNode
+  children?: ReactNode
 }
 
 const Field: FC<IFieldProps> = ({ label, error, children }) =>{
