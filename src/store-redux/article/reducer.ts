@@ -10,10 +10,7 @@ export const initialState: TArticleState = {
 };
 
 // Обработчик действий
-function reducer(
-  state = initialState,
-  action: { type: string; payload: { data: any } }
-) {
+function reducer(state = initialState, action: { type: string; payload: { data: any } }) {
   switch (action.type) {
     case 'article/load-start':
       return { ...state, data: {}, waiting: true };

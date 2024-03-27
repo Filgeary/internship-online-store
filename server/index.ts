@@ -9,9 +9,9 @@ import qs from 'query-string';
 import type { ViteDevServer } from 'vite';
 import type { TMethod, TParams } from './types';
 
-import { API_URL, WS_CHAT_URL } from './config';
+import { API_URL, PORT, WS_CHAT_URL } from './config';
 
-import { catalogController, categoriesController } from './controllers';
+import { catalogController, categoriesController, articleController } from './controllers';
 
 const isDev = process.env.NODE_ENV === 'development';
 const isProd = !isDev;
@@ -54,10 +54,14 @@ async function createServer() {
     const method = req.method.toLowerCase() as TMethod;
     let ssrData = {};
 
+    console.log({ url });
+
     const params = qs.parse(url.slice(2)) as TParams;
+    const paramsKeys = Object.keys(params);
+    const rootParams = ['query', 'sort', 'category', 'countries'];
 
     // Запросы за каталогом и категориями - только на корне
-    if (url === '/') {
+    if (url === '/' || paramsKeys.some((val) => rootParams.includes(val))) {
       // Обработка запросов для инициализации стора каталога
       const catalog = await catalogController(params, method);
       ssrData = {
@@ -67,10 +71,23 @@ async function createServer() {
 
       // Запрос за категориями
       const categories = await categoriesController(params, method);
-      console.log({ categories });
       ssrData = {
         ...ssrData,
         ...categories,
+      };
+    }
+
+    // Запросы за товаром - на странице товара
+    if (/.+\/.+/i.test(url)) {
+      const articleId = url.split('/').at(-1);
+      const updatedParams = {
+        ...params,
+        articleId,
+      };
+      const article = await articleController(updatedParams, method);
+      ssrData = {
+        ...ssrData,
+        ...article,
       };
     }
 
@@ -104,7 +121,7 @@ async function createServer() {
     }
   });
 
-  app.listen(5000, () => {
+  app.listen(PORT, () => {
     console.log('Started');
   });
 }

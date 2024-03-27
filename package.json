@@ -5,8 +5,8 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "NODE_ENV=development npx tsx server/index.ts",
-    "prod": "NODE_ENV=production npx tsx server/index.ts",
+    "dev": "NODE_ENV=development PORT=5000 npx tsx server/index.ts",
+    "prod": "NODE_ENV=production PORT=5000 npx tsx server/index.ts",
     "start": "vite serve",
     "build:client": "vite build --outDir ../dist/client --ssrManifest",
     "build:server": "vite build --outDir ../dist/server --ssr entry-server.tsx",

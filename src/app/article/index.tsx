@@ -1,40 +1,37 @@
 import { memo, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
+
 import useStore from '@src/hooks/use-store';
 import useTranslate from '@src/hooks/use-translate';
 import useInit from '@src/hooks/use-init';
+import { useAppSelector } from '@src/hooks/use-selector';
+
 import PageLayout from '@src/components/page-layout';
 import Head from '@src/components/head';
-import Navigation from '@src/containers/navigation';
 import Spinner from '@src/components/spinner';
 import ArticleCard from '@src/components/article-card';
+
+import Navigation from '@src/containers/navigation';
 import LocaleSelect from '@src/containers/locale-select';
 import TopHead from '@src/containers/top-head';
-import { useDispatch, useSelector } from 'react-redux';
-import shallowequal from 'shallowequal';
-import articleActions from '@src/store-redux/article/actions';
-import { TReduxState } from '@src/store-redux/types';
 
 function Article() {
   const store = useStore();
-
-  const dispatch = useDispatch<any>();
 
   // Параметры из пути /articles/:id
   const params = useParams();
 
   useInit(() => {
-    //store.actions.article.load(params.id);
-    dispatch(articleActions.load(params.id));
+    // Будем запрашивать товар только если его нету
+    if (!Object.keys(store.getState().article.data).length) {
+      store.actions.article.load(params.id);
+    }
   }, [params.id]);
 
-  const select = useSelector(
-    (state: TReduxState) => ({
-      article: state.article.data,
-      waiting: state.article.waiting,
-    }),
-    shallowequal
-  ); // Нужно указать функцию для сравнения свойства объекта, так как хуком вернули объект
+  const select = useAppSelector((state) => ({
+    article: state.article.data,
+    waiting: state.article.waiting,
+  }));
 
   const { t } = useTranslate();
 
@@ -45,6 +42,22 @@ function Article() {
       [store]
     ),
   };
+
+  const isReady = (article: object): article is TArticle => {
+    return (article as TArticle).title !== 'undefined';
+  };
+
+  if (!isReady(select.article)) {
+    return (
+      <PageLayout>
+        <TopHead />
+        <Head title={'Загрузка товара...'}>
+          <LocaleSelect />
+        </Head>
+        <Navigation />
+      </PageLayout>
+    );
+  }
 
   return (
     <PageLayout>

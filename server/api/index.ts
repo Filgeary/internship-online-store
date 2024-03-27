@@ -1,8 +1,9 @@
 import axios from 'axios';
 import { TMethod, TParams } from '../types';
+import { PORT } from '../config';
 
 export const apiInstance = axios.create({
-  baseURL: 'http://localhost:5000/api/v1',
+  baseURL: `http://localhost:${PORT}/api/v1`,
 });
 
 type TResponse = {
@@ -41,6 +42,18 @@ class ApiService {
       },
     });
     const result = response.data.result;
+
+    return result;
+  }
+
+  static async singleArticle(params: TParams, method: TMethod): Promise<TResponse> {
+    const response = await apiInstance[method](`/articles/${params.articleId}`, {
+      params: {
+        fields: '*,madeIn(title,code),category(title)',
+      },
+    });
+    const result = response.data.result;
+    console.log('Single article: ', result);
 
     return result;
   }

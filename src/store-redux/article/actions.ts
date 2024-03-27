@@ -8,11 +8,7 @@ export default {
    * @return {Function}
    */
   load: (id: string | number) => {
-    return async (
-      dispatch: TReduxDispatch,
-      getState: () => TReduxState,
-      services: Services
-    ) => {
+    return async (dispatch: TReduxDispatch, getState: () => TReduxState, services: Services) => {
       // Сброс текущего товара и установка признака ожидания загрузки
       dispatch({ type: 'article/load-start' });
 

@@ -5,4 +5,5 @@ export type TParams = {
   countries: string;
   sort: string;
   page: string | number;
+  articleId: string;
 };
