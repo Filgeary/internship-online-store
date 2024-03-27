@@ -28,7 +28,6 @@ if (!global.document) {
 export const render = ({ path, initialState }: TProps) => {
   const services = new Services(config, initialState);
 
-  console.log('initialState:', initialState);
   const store = createStoreRedux(services);
 
   return renderToString(
