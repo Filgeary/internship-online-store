@@ -171,3 +171,7 @@ Rewrite from `webpack` to `vite`.
 - Перемещение фигур мышкой (drag-n-drop)
 - Сделать анимацию фигур по законам свободного падения ?!
 - Вынести логику из компонента
+
+## SSR (`/ssr`)
+
+- Add SSR via `renderToString`
