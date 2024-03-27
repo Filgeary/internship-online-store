@@ -1,26 +1,24 @@
-import { Suspense, lazy } from "react";
+import { lazy } from "react";
 import { Routes, Route } from "react-router-dom";
 import useStore from "@src/hooks/use-store";
 import useInit from "@src/hooks/use-init";
 import Protected from "@src/containers/protected";
 import Modals from "@src/containers/modals";
 import CanvasPage from "./canvas-page";
-import Spinner from "@src/components/spinner";
 
 // Синхронный импорт
-//import Main from "./main";
+import Main from "./main";
 //import Article from "./article";
 //import Login from "./login";
 //import Profile from "./profile";
 //import Chat from "./chat-page";
 
 // Динамический импорт станиц
-const Main = lazy(()=>import("./main"))
-const Article = lazy(()=>import("./article"))
-const Profile = lazy(()=>import("./profile"))
-const Login = lazy(()=>import("./login"))
-const Chat = lazy(()=>import("./chat-page"))
-
+//const Main = lazy(()=>import("./main"))
+const Article = lazy(() => import("./article"));
+const Profile = lazy(() => import("./profile"));
+const Login = lazy(() => import("./login"));
+const Chat = lazy(() => import("./chat-page"));
 
 /**
  * Приложение
@@ -33,7 +31,7 @@ function App(): React.ReactElement {
   });
 
   return (
-    <Suspense fallback={<Spinner />}>
+    <>
       <Routes>
         <Route path={"/"} element={<Main />} />
         <Route path={"/articles/:id"} element={<Article />} />
@@ -57,7 +55,7 @@ function App(): React.ReactElement {
         <Route path={"/canvas"} element={<CanvasPage />} />
       </Routes>
       <Modals />
-    </Suspense>
+    </>
   );
 }
 
