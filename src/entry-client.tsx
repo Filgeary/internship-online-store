@@ -7,8 +7,13 @@ import { I18nProvider } from "./i18n/context";
 import Services from "./services";
 import config from "./config";
 
-const services = new Services(config);
+// @ts-ignore
+const data = window.__SSR_DATA__
+// @ts-ignore
+ delete window.__SSR_DATA__
 
+
+const services = new Services(config);
 
   hydrateRoot(
     document.getElementById("root") as HTMLElement,
