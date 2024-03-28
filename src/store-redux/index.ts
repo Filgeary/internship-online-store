@@ -3,13 +3,13 @@ import {
   combineReducers,
   legacy_createStore as createStore,
 } from "redux";
-import thunk from "redux-thunk";
+import { withExtraArgument } from "redux-thunk";
 import * as reducers from "./exports";
 
 export default function createStoreRedux(services: any, config = {}) {
   return createStore(
     combineReducers(reducers),
     undefined,
-   applyMiddleware(thunk.withExtraArgument(services))
+    applyMiddleware(withExtraArgument(services))
   );
 }

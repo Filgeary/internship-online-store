@@ -20,15 +20,16 @@ async function createServer() {
 
     app.use(vite.middlewares);
   } else {
-    const apiProxy = createProxyMiddleware({
-      target: apiBase,
-      changeOrigin: true,
-      secure: false,
-    });
-
-    app.use("/api/v1", apiProxy);
     app.use(express.static(path.resolve("./dist/client"), { index: false }));
   }
+
+  const apiProxy = createProxyMiddleware({
+    target: apiBase,
+    changeOrigin: true,
+    secure: false,
+  });
+
+  app.use("/api/v1", apiProxy);
 
   app.use("*", async (req, res, next) => {
     const url = req.originalUrl;

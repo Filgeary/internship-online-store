@@ -1,4 +1,4 @@
-import  { renderToString } from "react-dom/server";
+import { renderToPipeableStream, renderToString } from "react-dom/server";
 import App from "./app";
 import { Provider } from "react-redux";
 import { StaticRouter } from "react-router-dom/server";
@@ -7,16 +7,14 @@ import { I18nProvider } from "./i18n/context";
 import Services from "./services";
 import config from "./config";
 
-
-const services = new Services(config);
-
 type TProps = {
   url: string;
 };
 
-
 export function render({ url }: TProps) {
-  return renderToString(
+  const services = new Services(config);
+
+  return renderToPipeableStream(
     <Provider store={services.redux}>
       <ServicesContext.Provider value={services}>
         <I18nProvider>

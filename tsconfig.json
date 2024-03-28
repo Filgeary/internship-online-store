@@ -21,6 +21,6 @@
       "@src/*": ["./src/*"] // alias
     }
   },
-  "include": ["src"], // включения
+  "include": ["src"], // включения "src/entry-client.tsx", "src/entry-server.tsx"
   "exclude": ["node_modules", "src/**/*.test.ts", "src/**/*.spec.ts"] // исключения
 }

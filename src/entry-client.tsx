@@ -9,16 +9,18 @@ import config from "./config";
 
 const services = new Services(config);
 
-hydrateRoot(
-  document.getElementById("root") as HTMLElement,
 
-  <Provider store={services.redux}>
-    <ServicesContext.Provider value={services}>
-      <I18nProvider>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
-      </I18nProvider>
-    </ServicesContext.Provider>
-  </Provider>
-);
+  hydrateRoot(
+    document.getElementById("root") as HTMLElement,
+
+    <Provider store={services.redux}>
+      <ServicesContext.Provider value={services}>
+        <I18nProvider>
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        </I18nProvider>
+      </ServicesContext.Provider>
+    </Provider>
+  );
+

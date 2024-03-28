@@ -10,8 +10,9 @@ export default defineConfig({
   },
   build: {
     outDir: "../dist",
-    assetsDir: "./",
+   // assetsDir: "./",
     emptyOutDir: true,
+   // ssrEmitAssets: true,
   },
   plugins: [react()],
   resolve: {
@@ -19,10 +20,10 @@ export default defineConfig({
       "@src": path.resolve(__dirname, "./src"),
     },
   },
-  ssr: {
+/*   ssr: {
     // Названия пакетов, которые нужно добавить в сборку при SSR вместо импорта из node_modules
     noExternal: ["redux-thunk"],
-  },
+  }, */
   server: {
     host: true,
     port: 8010,
