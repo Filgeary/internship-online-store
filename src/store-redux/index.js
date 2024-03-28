@@ -6,6 +6,6 @@ export default function createStoreRedux(services, config = {}) {
   return createStore(
     combineReducers(reducers),
     undefined,
-    //applyMiddleware(thunk.withExtraArgument(services))
+    applyMiddleware(thunk.withExtraArgument(services))
   );
 }
