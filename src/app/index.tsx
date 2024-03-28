@@ -19,7 +19,7 @@ import {useSelector as useSelectorRedux} from 'react-redux'
  * Приложение
  * @returns {React.ReactElement}
  */
-function App({goods}: {goods: any}) {
+function App() {
 
   const store = useStore()
   useInit(async () => {
@@ -31,7 +31,7 @@ function App({goods}: {goods: any}) {
   return (
     <>
       <Routes>
-        <Route path={''} element={<Main goods={goods}/>}/>
+        <Route path={''} element={<Main />}/>
         <Route path={'/articles/:id'} element={<Article/>}/>
         <Route path={"/login"} element={<Login/>}/>
         <Route path={"/leaf"} element={<LeafFall/>}/>

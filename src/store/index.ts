@@ -1,28 +1,30 @@
 import * as modules from './exports'
 import { IConfig } from '../config'
 import Services from '../services' 
-import type { Actions, StoreState, ImportModules, IKeysModules, TActions } from './types.ts';
+import type { Actions, StoreState, ImportModules, IKeysModules, TActions } from './types.ts'
 
 /**
  * Хранилище состояния приложения
  */
 class Store {
-  services: Services;
-  config: IConfig["store"];
-  listeners: Array<((...arg: any[]) => void)>;
-  actions: Actions & Record<string, any>;
-  state: StoreState  & Record<string, any>;
+  services: Services
+  config: IConfig["store"]
+  listeners: Array<((...arg: any[]) => void)>
+  actions: Actions & Record<string, any>
+  state: StoreState  & Record<string, any>
+  initialStateFromServer: object
 
   constructor(
     services: Services,
     // config = {} as IConfig["store"],
     config: IConfig | {} = {},
-    initState = {} as StoreState
+    initState = {},
   ) {
-    this.services = services;
-    this.config = config as IConfig["store"];
-    this.listeners = []; // Слушатели изменений состояния
-    this.state = initState as StoreState;
+    this.services = services
+    this.config = config as IConfig["store"]
+    this.listeners = [] // Слушатели изменений состояния
+    this.state = initState as StoreState
+    this.initialStateFromServer = {...initState}
     /** @type {{
      * basket: BasketState,
      * catalog: CatalogState,
@@ -37,38 +39,31 @@ class Store {
      * chat: ChatState
      * canvas: CanvasState
      * }} */
-    this.actions = {} as Actions;
-    const keys = Object.keys(modules) as IKeysModules[];
+    this.actions = {} as Actions
+    const keys = Object.keys(modules) as IKeysModules[]
     for (const name of keys) {
-      this.create(name);
+      this.create(name)
+      const storeModule = this.actions[name]
+      console.log('storeModule', storeModule)
+      console.log('storeModule', storeModule.name)
     }
+    console.log("this.initialStateFromServer", this.initialStateFromServer)
   }
 
   create<Key extends IKeysModules>(name: Key) {
-    const b = modules[name] as ImportModules[Key];
-    const a = new b(this, name, this.config?.modules.session || {}) as Actions[Key];
-    this.actions[name] = a;
-    this.state[name] = this.actions[name].initState() as StoreState[Key];
+    const b = modules[name] as ImportModules[Key]
+    const a = new b(this, name, this.config?.modules.session || {}) as Actions[Key]
+    this.actions[name] = a
+    this.state[name] = this.actions[name].initState() as StoreState[Key]
   }
-
-  // create<Key extends IKeysModules>(name: Key) {
-  //   const module = modules[name] as ImportModules[Key];
-  //   const newModule = new module(
-  //     this,
-  //     name,
-  //     this.config?.modules.session || {}
-  //   ) as TActions[Key];
-  //   this.actions[name] = newModule;
-  //   this.state[name] = this.actions[name].initState() as StoreState[Key];
-  // }
 
 
   /**
    * Удаление копии стейта
    */
   delete<Key extends IKeysModules>(name: Key) {
-    delete this.actions[name];
-    delete this.state[name];
+    delete this.actions[name]
+    delete this.state[name]
   }
   /**
    * Подписка слушателя на изменения состояния
@@ -79,8 +74,8 @@ class Store {
     this.listeners.push(listener);
     // Возвращается функция для удаления добавленного слушателя
     return () => {
-      this.listeners = this.listeners.filter((item) => item !== listener);
-    };
+      this.listeners = this.listeners.filter((item) => item !== listener)
+    }
   }
 
   /**

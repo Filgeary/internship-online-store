@@ -30,8 +30,6 @@ export default {
    */
   closeModal: (id) => (dispatch, getState, services) => {
     const newModals = getState().modals.modals.filter((item) => item.id !== id)
-    console.log('getState().modals.modals', getState().modals.modals)
-    console.log('newModals', newModals)
     dispatch({type: 'modal/close', payload: {modals: newModals}})
     if(getState().modals.modals.length < 1) getState().modals.activeModal = false
   },

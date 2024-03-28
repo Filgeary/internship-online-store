@@ -10,10 +10,10 @@ import modalsActions from '@src/store-redux/modals/actions'
 import generateUniqueId from "@src/utils/unicque_id"
 import { useDispatch } from "react-redux"
 
-function CatalogList({stateName, goods}) {
-  const store = useStore();
-  const dispatch = useDispatch();
-  const selectRef = useRef();
+function CatalogList({stateName}) {
+  const store = useStore()
+  const dispatch = useDispatch()
+  const selectRef = useRef()
   const [chosenProductId, setChosenProductId] = useState(null)
 
   const select = useSelector((state) => ({
@@ -24,7 +24,7 @@ function CatalogList({stateName, goods}) {
     waiting: state[stateName].waiting,
     quantity: state.basket.quantity,
     selected: state.basket.selected
-  }));
+  }))
 
   const idModal = generateUniqueId()
 
@@ -85,16 +85,15 @@ function CatalogList({stateName, goods}) {
         hideLink={stateName === 'catalog_modal' ? false : true}
         />
     ), [callbacks.openModal, t, callbacks.changeSelected]),
-  };
-  console.log('goods', goods)
-  console.log('select.list', select.list)
+  }
+
   return (
     <Spinner active={select.waiting}>
-      <List list={goods} renderItem={renders.item}/>
+      <List list={select.list} renderItem={renders.item}/>
       <Pagination count={select.count} page={select.page} limit={select.limit}
                   onChange={callbacks.onPaginate} makeLink={callbacks.makePaginatorLink}/>
     </Spinner>
-  );
+  )
 }
 
-export default memo(CatalogList);
+export default memo(CatalogList)

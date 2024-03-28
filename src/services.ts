@@ -10,10 +10,11 @@ class Services {
   private _socket?: WebSocketService
   private _store?: Store
   private _redux?: any
+  readonly initState: object
 
-
-  constructor(config: IConfig) {
-    this.config = config;
+  constructor(config: IConfig, initState = {}) {
+    this.config = config
+    this.initState = initState
   }
 
   /**
@@ -44,7 +45,7 @@ class Services {
    */
   get store(): Store {
     if (!this._store) {
-      this._store = new Store(this, this.config.store);
+      this._store = new Store(this, this.config.store, this.initState);
     }
     return this._store;
   }

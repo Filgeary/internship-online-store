@@ -10,8 +10,7 @@ import debounce from "lodash.debounce";
 import PropTypes from "prop-types";
 import DOMPurify from "dompurify";
 import Picker from "emoji-picker-react";
-import { createNoise2D } from "simplex-noise";
-import { createStore, combineReducers } from "redux";
+import _objectSpread from "@babel/runtime/helpers/esm/objectSpread2";
 const ServicesContext = React.createContext(null);
 const title$1 = "Shop";
 const en = {
@@ -189,10 +188,8 @@ const modalsActions = {
    * Закрытие модалки
    * @param name  
    */
-  closeModal: (id) => (dispatch, getState, services2) => {
+  closeModal: (id) => (dispatch, getState, services) => {
     const newModals = getState().modals.modals.filter((item) => item.id !== id);
-    console.log("getState().modals.modals", getState().modals.modals);
-    console.log("newModals", newModals);
     dispatch({ type: "modal/close", payload: { modals: newModals } });
     if (getState().modals.modals.length < 1)
       getState().modals.activeModal = false;
@@ -766,7 +763,7 @@ const Spinner = ({ active, children }) => {
   }
 };
 const Spinner$1 = memo(Spinner);
-function CatalogList({ stateName, goods }) {
+function CatalogList({ stateName }) {
   const store = useStore();
   const dispatch = useDispatch();
   const selectRef = useRef();
@@ -835,8 +832,6 @@ function CatalogList({ stateName, goods }) {
       }
     ), [callbacks.openModal, t, callbacks.changeSelected])
   };
-  console.log("goods", goods);
-  console.log("select.list", select.list);
   return /* @__PURE__ */ jsxs(Spinner$1, { active: select.waiting, children: [
     /* @__PURE__ */ jsx(List$1, { list: select.list, renderItem: renders.item }),
     /* @__PURE__ */ jsx(
@@ -888,7 +883,7 @@ function TopHead() {
   ] });
 }
 const TopHead$1 = memo(TopHead);
-function Main({ goods }) {
+function Main() {
   const store = useStore();
   useInit(async () => {
     await Promise.all([
@@ -903,7 +898,7 @@ function Main({ goods }) {
     /* @__PURE__ */ jsx(Head$1, { title: t("title"), children: /* @__PURE__ */ jsx(LocaleSelect$1, {}) }),
     /* @__PURE__ */ jsx(Navigation$1, {}),
     /* @__PURE__ */ jsx(CatalogFilter, {}),
-    /* @__PURE__ */ jsx(CatalogList$1, { stateName: "catalog", goods })
+    /* @__PURE__ */ jsx(CatalogList$1, { stateName: "catalog" })
   ] });
 }
 const Main$1 = memo(Main);
@@ -947,10 +942,10 @@ const articleActions = {
    * @return {Function}
    */
   load: (id) => {
-    return async (dispatch, getState, services2) => {
+    return async (dispatch, getState, services) => {
       dispatch({ type: "article/load-start" });
       try {
-        const res = await services2.api.request({
+        const res = await services.api.request({
           url: `/api/v1/articles/${id}?fields=*,madeIn(title,code),category(title)`
         });
         dispatch({ type: "article/load-success", payload: { data: res.data.result } });
@@ -1693,6 +1688,109 @@ class Figure {
     ctx.fillStyle = "#777";
     ctx.fillRect(this.x, this.y, this.width, this.height);
   }
+}
+const F2 = 0.5 * (Math.sqrt(3) - 1);
+const G2 = (3 - Math.sqrt(3)) / 6;
+const fastFloor = (x) => Math.floor(x) | 0;
+const grad2 = /* @__PURE__ */ new Float64Array([
+  1,
+  1,
+  -1,
+  1,
+  1,
+  -1,
+  -1,
+  -1,
+  1,
+  0,
+  -1,
+  0,
+  1,
+  0,
+  -1,
+  0,
+  0,
+  1,
+  0,
+  -1,
+  0,
+  1,
+  0,
+  -1
+]);
+function createNoise2D(random = Math.random) {
+  const perm = buildPermutationTable(random);
+  const permGrad2x = new Float64Array(perm).map((v) => grad2[v % 12 * 2]);
+  const permGrad2y = new Float64Array(perm).map((v) => grad2[v % 12 * 2 + 1]);
+  return function noise2D(x, y) {
+    let n0 = 0;
+    let n1 = 0;
+    let n2 = 0;
+    const s = (x + y) * F2;
+    const i = fastFloor(x + s);
+    const j = fastFloor(y + s);
+    const t = (i + j) * G2;
+    const X0 = i - t;
+    const Y0 = j - t;
+    const x0 = x - X0;
+    const y0 = y - Y0;
+    let i1, j1;
+    if (x0 > y0) {
+      i1 = 1;
+      j1 = 0;
+    } else {
+      i1 = 0;
+      j1 = 1;
+    }
+    const x1 = x0 - i1 + G2;
+    const y1 = y0 - j1 + G2;
+    const x2 = x0 - 1 + 2 * G2;
+    const y2 = y0 - 1 + 2 * G2;
+    const ii = i & 255;
+    const jj = j & 255;
+    let t0 = 0.5 - x0 * x0 - y0 * y0;
+    if (t0 >= 0) {
+      const gi0 = ii + perm[jj];
+      const g0x = permGrad2x[gi0];
+      const g0y = permGrad2y[gi0];
+      t0 *= t0;
+      n0 = t0 * t0 * (g0x * x0 + g0y * y0);
+    }
+    let t1 = 0.5 - x1 * x1 - y1 * y1;
+    if (t1 >= 0) {
+      const gi1 = ii + i1 + perm[jj + j1];
+      const g1x = permGrad2x[gi1];
+      const g1y = permGrad2y[gi1];
+      t1 *= t1;
+      n1 = t1 * t1 * (g1x * x1 + g1y * y1);
+    }
+    let t2 = 0.5 - x2 * x2 - y2 * y2;
+    if (t2 >= 0) {
+      const gi2 = ii + 1 + perm[jj + 1];
+      const g2x = permGrad2x[gi2];
+      const g2y = permGrad2y[gi2];
+      t2 *= t2;
+      n2 = t2 * t2 * (g2x * x2 + g2y * y2);
+    }
+    return 70 * (n0 + n1 + n2);
+  };
+}
+function buildPermutationTable(random) {
+  const tableSize = 512;
+  const p = new Uint8Array(tableSize);
+  for (let i = 0; i < tableSize / 2; i++) {
+    p[i] = i;
+  }
+  for (let i = 0; i < tableSize / 2 - 1; i++) {
+    const r = i + ~~(random() * (256 - i));
+    const aux = p[i];
+    p[i] = p[r];
+    p[r] = aux;
+  }
+  for (let i = 256; i < tableSize; i++) {
+    p[i] = p[i - 256];
+  }
+  return p;
 }
 function randomItem(items) {
   return items[Math.floor(Math.random() * items.length)];
@@ -2725,7 +2823,7 @@ function Drawing() {
   ] });
 }
 const Drawing$1 = memo(Drawing);
-function App({ goods }) {
+function App() {
   const store = useStore();
   useInit(async () => {
     await store.actions.session.remind();
@@ -2733,7 +2831,7 @@ function App({ goods }) {
   const activeModal = useSelector$1((state) => state.modals.activeModal);
   return /* @__PURE__ */ jsxs(Fragment, { children: [
     /* @__PURE__ */ jsxs(Routes, { children: [
-      /* @__PURE__ */ jsx(Route, { path: "", element: /* @__PURE__ */ jsx(Main$1, { goods }) }),
+      /* @__PURE__ */ jsx(Route, { path: "", element: /* @__PURE__ */ jsx(Main$1, {}) }),
       /* @__PURE__ */ jsx(Route, { path: "/articles/:id", element: /* @__PURE__ */ jsx(Article$1, {}) }),
       /* @__PURE__ */ jsx(Route, { path: "/login", element: /* @__PURE__ */ jsx(Login$1, {}) }),
       /* @__PURE__ */ jsx(Route, { path: "/leaf", element: /* @__PURE__ */ jsx(LeafFall$1, {}) }),
@@ -2749,8 +2847,8 @@ class APIService {
    * @param services {Services} Менеджер сервисов
    * @param config {Object}
    */
-  constructor(services2, config2 = {}) {
-    this.services = services2;
+  constructor(services, config2 = {}) {
+    this.services = services;
     this.config = config2;
     this.defaultHeaders = {
       "Content-Type": "application/json"
@@ -2793,8 +2891,8 @@ class APIService {
   }
 }
 class WebSocketService {
-  constructor(services2, config2 = {}) {
-    this.services = services2;
+  constructor(services, config2 = {}) {
+    this.services = services;
     this.config = config2;
   }
   /**
@@ -2999,11 +3097,11 @@ class BasketState extends StoreModule {
     await this.addingSelectedProducts();
   }
 }
-function isPlainObject(value) {
+function isPlainObject$1(value) {
   return value && (!value.__proto__ || Object.getPrototypeOf(value).constructor.name === "Object");
 }
 function exclude(objectSrc, objectExc) {
-  if (isPlainObject(objectSrc) && isPlainObject(objectExc)) {
+  if (isPlainObject$1(objectSrc) && isPlainObject$1(objectExc)) {
     const result = {};
     const keys = Object.keys(objectSrc);
     for (const key of keys) {
@@ -3772,16 +3870,20 @@ const modules = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.definePrope
   session: SessionState
 }, Symbol.toStringTag, { value: "Module" }));
 class Store {
-  constructor(services2, config2 = {}, initState = {}) {
-    this.services = services2;
+  constructor(services, config2 = {}, initState = {}) {
+    this.services = services;
     this.config = config2;
     this.listeners = [];
     this.state = initState;
+    this.initialStateFromServer = { ...initState };
     this.actions = {};
     const keys = Object.keys(modules);
     for (const name of keys) {
       this.create(name);
+      const storeModule = this.actions[name];
+      console.log("storeModule", storeModule);
     }
+    console.log("this.initialStateFromServer", this.initialStateFromServer);
   }
   create(name) {
     var _a;
@@ -3790,16 +3892,6 @@ class Store {
     this.actions[name] = a;
     this.state[name] = this.actions[name].initState();
   }
-  // create<Key extends IKeysModules>(name: Key) {
-  //   const module = modules[name] as ImportModules[Key];
-  //   const newModule = new module(
-  //     this,
-  //     name,
-  //     this.config?.modules.session || {}
-  //   ) as TActions[Key];
-  //   this.actions[name] = newModule;
-  //   this.state[name] = this.actions[name].initState() as StoreState[Key];
-  // }
   /**
    * Удаление копии стейта
    */
@@ -3854,6 +3946,279 @@ class Store {
       listener(this.state);
   }
 }
+function formatProdErrorMessage(code) {
+  return "Minified Redux error #" + code + "; visit https://redux.js.org/Errors?code=" + code + " for the full message or use the non-minified dev environment for full errors. ";
+}
+var $$observable = function() {
+  return typeof Symbol === "function" && Symbol.observable || "@@observable";
+}();
+var randomString = function randomString2() {
+  return Math.random().toString(36).substring(7).split("").join(".");
+};
+var ActionTypes = {
+  INIT: "@@redux/INIT" + randomString(),
+  REPLACE: "@@redux/REPLACE" + randomString(),
+  PROBE_UNKNOWN_ACTION: function PROBE_UNKNOWN_ACTION() {
+    return "@@redux/PROBE_UNKNOWN_ACTION" + randomString();
+  }
+};
+function isPlainObject(obj) {
+  if (typeof obj !== "object" || obj === null)
+    return false;
+  var proto = obj;
+  while (Object.getPrototypeOf(proto) !== null) {
+    proto = Object.getPrototypeOf(proto);
+  }
+  return Object.getPrototypeOf(obj) === proto;
+}
+function createStore(reducer2, preloadedState, enhancer) {
+  var _ref2;
+  if (typeof preloadedState === "function" && typeof enhancer === "function" || typeof enhancer === "function" && typeof arguments[3] === "function") {
+    throw new Error(formatProdErrorMessage(0));
+  }
+  if (typeof preloadedState === "function" && typeof enhancer === "undefined") {
+    enhancer = preloadedState;
+    preloadedState = void 0;
+  }
+  if (typeof enhancer !== "undefined") {
+    if (typeof enhancer !== "function") {
+      throw new Error(formatProdErrorMessage(1));
+    }
+    return enhancer(createStore)(reducer2, preloadedState);
+  }
+  if (typeof reducer2 !== "function") {
+    throw new Error(formatProdErrorMessage(2));
+  }
+  var currentReducer = reducer2;
+  var currentState = preloadedState;
+  var currentListeners = [];
+  var nextListeners = currentListeners;
+  var isDispatching = false;
+  function ensureCanMutateNextListeners() {
+    if (nextListeners === currentListeners) {
+      nextListeners = currentListeners.slice();
+    }
+  }
+  function getState() {
+    if (isDispatching) {
+      throw new Error(formatProdErrorMessage(3));
+    }
+    return currentState;
+  }
+  function subscribe(listener) {
+    if (typeof listener !== "function") {
+      throw new Error(formatProdErrorMessage(4));
+    }
+    if (isDispatching) {
+      throw new Error(formatProdErrorMessage(5));
+    }
+    var isSubscribed = true;
+    ensureCanMutateNextListeners();
+    nextListeners.push(listener);
+    return function unsubscribe() {
+      if (!isSubscribed) {
+        return;
+      }
+      if (isDispatching) {
+        throw new Error(formatProdErrorMessage(6));
+      }
+      isSubscribed = false;
+      ensureCanMutateNextListeners();
+      var index = nextListeners.indexOf(listener);
+      nextListeners.splice(index, 1);
+      currentListeners = null;
+    };
+  }
+  function dispatch(action) {
+    if (!isPlainObject(action)) {
+      throw new Error(formatProdErrorMessage(7));
+    }
+    if (typeof action.type === "undefined") {
+      throw new Error(formatProdErrorMessage(8));
+    }
+    if (isDispatching) {
+      throw new Error(formatProdErrorMessage(9));
+    }
+    try {
+      isDispatching = true;
+      currentState = currentReducer(currentState, action);
+    } finally {
+      isDispatching = false;
+    }
+    var listeners = currentListeners = nextListeners;
+    for (var i = 0; i < listeners.length; i++) {
+      var listener = listeners[i];
+      listener();
+    }
+    return action;
+  }
+  function replaceReducer(nextReducer) {
+    if (typeof nextReducer !== "function") {
+      throw new Error(formatProdErrorMessage(10));
+    }
+    currentReducer = nextReducer;
+    dispatch({
+      type: ActionTypes.REPLACE
+    });
+  }
+  function observable() {
+    var _ref;
+    var outerSubscribe = subscribe;
+    return _ref = {
+      /**
+       * The minimal observable subscription method.
+       * @param {Object} observer Any object that can be used as an observer.
+       * The observer object should have a `next` method.
+       * @returns {subscription} An object with an `unsubscribe` method that can
+       * be used to unsubscribe the observable from the store, and prevent further
+       * emission of values from the observable.
+       */
+      subscribe: function subscribe2(observer) {
+        if (typeof observer !== "object" || observer === null) {
+          throw new Error(formatProdErrorMessage(11));
+        }
+        function observeState() {
+          if (observer.next) {
+            observer.next(getState());
+          }
+        }
+        observeState();
+        var unsubscribe = outerSubscribe(observeState);
+        return {
+          unsubscribe
+        };
+      }
+    }, _ref[$$observable] = function() {
+      return this;
+    }, _ref;
+  }
+  dispatch({
+    type: ActionTypes.INIT
+  });
+  return _ref2 = {
+    dispatch,
+    subscribe,
+    getState,
+    replaceReducer
+  }, _ref2[$$observable] = observable, _ref2;
+}
+function assertReducerShape(reducers2) {
+  Object.keys(reducers2).forEach(function(key) {
+    var reducer2 = reducers2[key];
+    var initialState2 = reducer2(void 0, {
+      type: ActionTypes.INIT
+    });
+    if (typeof initialState2 === "undefined") {
+      throw new Error(formatProdErrorMessage(12));
+    }
+    if (typeof reducer2(void 0, {
+      type: ActionTypes.PROBE_UNKNOWN_ACTION()
+    }) === "undefined") {
+      throw new Error(formatProdErrorMessage(13));
+    }
+  });
+}
+function combineReducers(reducers2) {
+  var reducerKeys = Object.keys(reducers2);
+  var finalReducers = {};
+  for (var i = 0; i < reducerKeys.length; i++) {
+    var key = reducerKeys[i];
+    if (typeof reducers2[key] === "function") {
+      finalReducers[key] = reducers2[key];
+    }
+  }
+  var finalReducerKeys = Object.keys(finalReducers);
+  var shapeAssertionError;
+  try {
+    assertReducerShape(finalReducers);
+  } catch (e) {
+    shapeAssertionError = e;
+  }
+  return function combination(state, action) {
+    if (state === void 0) {
+      state = {};
+    }
+    if (shapeAssertionError) {
+      throw shapeAssertionError;
+    }
+    var hasChanged = false;
+    var nextState = {};
+    for (var _i = 0; _i < finalReducerKeys.length; _i++) {
+      var _key = finalReducerKeys[_i];
+      var reducer2 = finalReducers[_key];
+      var previousStateForKey = state[_key];
+      var nextStateForKey = reducer2(previousStateForKey, action);
+      if (typeof nextStateForKey === "undefined") {
+        action && action.type;
+        throw new Error(formatProdErrorMessage(14));
+      }
+      nextState[_key] = nextStateForKey;
+      hasChanged = hasChanged || nextStateForKey !== previousStateForKey;
+    }
+    hasChanged = hasChanged || finalReducerKeys.length !== Object.keys(state).length;
+    return hasChanged ? nextState : state;
+  };
+}
+function compose() {
+  for (var _len = arguments.length, funcs = new Array(_len), _key = 0; _key < _len; _key++) {
+    funcs[_key] = arguments[_key];
+  }
+  if (funcs.length === 0) {
+    return function(arg) {
+      return arg;
+    };
+  }
+  if (funcs.length === 1) {
+    return funcs[0];
+  }
+  return funcs.reduce(function(a, b) {
+    return function() {
+      return a(b.apply(void 0, arguments));
+    };
+  });
+}
+function applyMiddleware() {
+  for (var _len = arguments.length, middlewares = new Array(_len), _key = 0; _key < _len; _key++) {
+    middlewares[_key] = arguments[_key];
+  }
+  return function(createStore2) {
+    return function() {
+      var store = createStore2.apply(void 0, arguments);
+      var _dispatch = function dispatch() {
+        throw new Error(formatProdErrorMessage(15));
+      };
+      var middlewareAPI = {
+        getState: store.getState,
+        dispatch: function dispatch() {
+          return _dispatch.apply(void 0, arguments);
+        }
+      };
+      var chain = middlewares.map(function(middleware) {
+        return middleware(middlewareAPI);
+      });
+      _dispatch = compose.apply(void 0, chain)(store.dispatch);
+      return _objectSpread(_objectSpread({}, store), {}, {
+        dispatch: _dispatch
+      });
+    };
+  };
+}
+function createThunkMiddleware(extraArgument) {
+  var middleware = function middleware2(_ref) {
+    var dispatch = _ref.dispatch, getState = _ref.getState;
+    return function(next) {
+      return function(action) {
+        if (typeof action === "function") {
+          return action(dispatch, getState, extraArgument);
+        }
+        return next(action);
+      };
+    };
+  };
+  return middleware;
+}
+var thunk = createThunkMiddleware();
+thunk.withExtraArgument = createThunkMiddleware;
 const initialState$1 = {
   data: {},
   waiting: false
@@ -3895,16 +4260,17 @@ const reducers = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProp
   article: reducer$1,
   modals: reducer
 }, Symbol.toStringTag, { value: "Module" }));
-function createStoreRedux(services2, config2 = {}) {
+function createStoreRedux(services, config2 = {}) {
   return createStore(
     combineReducers(reducers),
-    void 0
-    // applyMiddleware(thunk.withExtraArgument(services))
+    void 0,
+    applyMiddleware(thunk.withExtraArgument(services))
   );
 }
 class Services {
-  constructor(config2) {
+  constructor(config2, initState = {}) {
     this.config = config2;
+    this.initState = initState;
   }
   /**
    * Сервис АПИ
@@ -3932,7 +4298,7 @@ class Services {
    */
   get store() {
     if (!this._store) {
-      this._store = new Store(this, this.config.store);
+      this._store = new Store(this, this.config.store, this.initState);
     }
     return this._store;
   }
@@ -3967,10 +4333,11 @@ const config = {
   },
   redux: {}
 };
-const services = new Services(config);
 const render = ({ path, data }) => {
+  const services = new Services(config, data);
+  console.log("в entry-server data===", data);
   return renderToString(
-    /* @__PURE__ */ jsx(Provider, { store: services.redux, children: /* @__PURE__ */ jsx(ServicesContext.Provider, { value: services, children: /* @__PURE__ */ jsx(I18nProvider, { children: /* @__PURE__ */ jsx(StaticRouter, { location: path, children: /* @__PURE__ */ jsx(App, { goods: data }) }) }) }) })
+    /* @__PURE__ */ jsx(Provider, { store: services.redux, children: /* @__PURE__ */ jsx(ServicesContext.Provider, { value: services, children: /* @__PURE__ */ jsx(I18nProvider, { children: /* @__PURE__ */ jsx(StaticRouter, { location: path, children: /* @__PURE__ */ jsx(App, {}) }) }) }) })
   );
 };
 export {

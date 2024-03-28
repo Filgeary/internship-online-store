@@ -12,15 +12,16 @@ interface Props {
   data: any
 }
 
-const services = new Services(config)
-
 export const render = ({ path, data }: Props) => {
+  const services = new Services(config, data)
+  console.log('в entry-server data===', data)
+  
   return renderToString(
      <Provider store={services.redux}>
       <ServicesContext.Provider value={services}>
         <I18nProvider>
           <StaticRouter location={path}>
-            <App goods={data}/>
+            <App />
           </StaticRouter>
         </I18nProvider>
       </ServicesContext.Provider>

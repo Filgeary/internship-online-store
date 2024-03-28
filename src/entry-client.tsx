@@ -12,15 +12,15 @@ import config from "./config"
 // @ts-ignore
  delete window.__SSR_DATA__
 
-const services = new Services(config)
+const services = new Services(config, {...data})
 
 hydrateRoot(
-  document.getElementById("root") as HTMLElement,
+  document.getElementById?.("root") as HTMLElement,
    <Provider store={services.redux}>
     <ServicesContext.Provider value={services}>
       <I18nProvider>
         <BrowserRouter>
-          <App goods={data || []}/>
+          <App/>
         </BrowserRouter>
       </I18nProvider>
     </ServicesContext.Provider>

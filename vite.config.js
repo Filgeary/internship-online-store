@@ -25,19 +25,25 @@ export default defineConfig({
     plugins: [
         // htmlPurge(),
         react(),
-        tsconfigPaths(),
-        createHtmlPlugin({
-          entry: "entry-client.tsx",
-          template: "index.html",
-          inject: {
-            data: {
-              title: "Simple SPA",
-              injectScript: `<script type='module' src="./inject.jsx"></script>`,
-            },
-          },
-        }
-    ),
+    //     tsconfigPaths(),
+    //     createHtmlPlugin({
+    //       entry: "entry-client.tsx",
+    //       template: "index.html",
+    //       inject: {
+    //         data: {
+    //           title: "Simple SPA",
+    //           injectScript: `<script type='module' src="./inject.jsx"></script>`,
+    //         },
+    //       },
+    //     }
+    // ),
     ],
+    ssr: {
+      // Названия пакетов, которые нужно добавить в сборку при SSR вместо импорта из node_modules
+      noExternal: [
+        'redux', 'redux-thunk', 'simplex-noise'
+      ]
+    },
     server: {
       host: true,
       port: 8010,

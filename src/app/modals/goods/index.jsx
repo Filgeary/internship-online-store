@@ -1,5 +1,5 @@
 import {memo, useCallback, useRef} from 'react';
-import {useDispatch, useStore as useStoreRedux} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import useInit from '@src/hooks/use-init';
 import useStore from "@src/hooks/use-store";
 import useTranslate from "@src/hooks/use-translate";
