@@ -32,7 +32,7 @@ class APIService {
     timeout,
     ...options
   }: TRequest): Promise<TResponse<T>> {
-    if (!url.match(/^(http|\/\/)/)) url = this.config.baseUrl + url;
+    if (!/^(http|\/\/)/.test(url)) url = this.config.baseUrl + url;
 
     let timerOfErr = null;
     if (Number.isFinite(timeout)) {
@@ -63,7 +63,10 @@ class APIService {
         headers: res.headers,
       };
     } catch (err) {
-      throw new Error('Ошибка на сервере, попробуйте позже...');
+      console.log(err);
+      throw new Error(
+        `Ошибка на сервере, попробуйте позже... ${url} ${/^(http|\/\/)/.test(url) ? 'true' : 'false'}`
+      );
     }
   }
 

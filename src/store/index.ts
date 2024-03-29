@@ -10,7 +10,6 @@ import {
 } from './types';
 
 import { TConfig, TConfigModules, TConfigModulesKeys } from '@src/config';
-import { update } from 'immupdate';
 import { mergeDeep } from 'immutable';
 
 type TListeners = Array<(...args: any[]) => void>;

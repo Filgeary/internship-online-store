@@ -1,5 +1,6 @@
 import express from 'express';
 import { createProxyMiddleware } from 'http-proxy-middleware';
+import ReactDOMServer from 'react-dom/server';
 
 import fs from 'node:fs/promises';
 import path from 'node:path';
@@ -21,7 +22,7 @@ console.log({ isDev, isProd });
 async function createServer() {
   const app = express();
   let vite: ViteDevServer | null = null;
-  let render: ({ path }: { path: string; initialState: object }) => string | null = null;
+  let render: ({ path }: { path: string; initialState: object }) => Record<string, any> = null;
   let template: string = '';
 
   if (isDev) {
@@ -106,10 +107,19 @@ async function createServer() {
 
       const jsonSsrData = JSON.stringify(ssrData);
       const appendedScript = `<script>window.__SSR_DATA__=${jsonSsrData}</script>`;
-      const appHtml = render({ path: url, initialState: ssrData }); // @TODO прокидывать data
+      // const appHtml = render({ path: url, initialState: ssrData }); // @TODO прокидывать data
+      const { app, services } = render({ path: url, initialState: {} });
+
+      const htmlWithoutData = ReactDOMServer.renderToString(app);
+
+      console.log('Promises arr:', services.suspense.promisesArr);
+      await services.suspense.execAllPromises();
+
+      const htmlWithData = ReactDOMServer.renderToString(app);
+      console.log(htmlWithData);
 
       const resHtml = template
-        .replace('<!-- ROOT -->', appHtml)
+        .replace('<!-- ROOT -->', htmlWithData)
         .replace('<!-- SSR_DATA -->', appendedScript);
 
       res.status(200).set({ 'Content-type': 'text/html' }).end(resHtml);
@@ -125,5 +135,7 @@ async function createServer() {
     console.log('Started');
   });
 }
+
+process.on('unhandledRejection', () => {});
 
 createServer();

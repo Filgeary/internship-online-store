@@ -5,6 +5,7 @@ import { TConfig } from './config';
 import APIService from './api';
 import Store from './store';
 import ChatService from './chat';
+import SuspenseService from './suspense';
 
 class Services {
   config: TConfig;
@@ -12,6 +13,7 @@ class Services {
   _store: Store;
   _redux: ReturnType<typeof createStoreRedux>;
   _chat: ChatService;
+  _suspense: SuspenseService;
 
   readonly initState: object;
 
@@ -61,6 +63,16 @@ class Services {
       this._chat = new ChatService(this, this.config.chat);
     }
     return this._chat;
+  }
+
+  /**
+   * Сервис суспенса для SSR
+   */
+  get suspense() {
+    if (!this._suspense) {
+      this._suspense = new SuspenseService();
+    }
+    return this._suspense;
   }
 }
 

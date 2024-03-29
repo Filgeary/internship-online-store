@@ -1,4 +1,6 @@
 import { useEffect } from 'react';
+import useServices from './use-services';
+import useStore from './use-store';
 
 /**
  * Хук для асинхронных расчётов, которые будут исполнены при первом рендере или изменении depends.
@@ -11,6 +13,15 @@ export default function useInit(
   depends: unknown[] = [],
   backForward = false
 ) {
+  console.log('Global is:', typeof global);
+  // Ветка выполнения на сервере
+  if (typeof global === 'object') {
+    const promiseRes = initFunc();
+    const services = useServices();
+
+    services.suspense.appendPromise(promiseRes);
+  }
+
   useEffect(() => {
     initFunc(false);
     // Если в истории браузера меняются только search-параметры, то react-router не оповестит
@@ -25,4 +36,4 @@ export default function useInit(
   }, depends);
 }
 
-export type TInitFunction = (e: Event | boolean) => Promise<unknown> | unknown;
+export type TInitFunction = (e?: Event | boolean) => Promise<unknown>;

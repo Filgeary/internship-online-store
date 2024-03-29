@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { memo, useEffect } from 'react';
 
 import useTranslate from '@src/hooks/use-translate';
 import Navigation from '@src/containers/navigation';
@@ -21,10 +21,12 @@ function Main() {
   };
 
   useInit(async () => {
-    if (store.getState().catalog.list.length === 0) await store.actions.catalog.initParams();
-    if (store.getState().categories.list.length === 0) await store.actions.categories.load();
-    // await Promise.all([store.actions.catalog.initParams(), store.actions.categories.load()]);
+    await Promise.all([store.actions.catalog.initParams(), store.actions.categories.load()]);
   });
+
+  useEffect(() => {
+    console.log('@', store.getState());
+  }, [store]);
 
   return (
     <PageLayout>

@@ -28,10 +28,9 @@ if (!global.document) {
 export const render = ({ path, initialState }: TProps) => {
   const services = new Services(config, initialState);
 
-  const store = createStoreRedux(services);
-
-  return renderToString(
-    <Provider store={store}>
+  // const htmlRender = renderToString(
+  const app = (
+    <Provider store={services.redux}>
       <ServicesContext.Provider value={services}>
         <I18nProvider>
           <ChatProvider>
@@ -43,4 +42,6 @@ export const render = ({ path, initialState }: TProps) => {
       </ServicesContext.Provider>
     </Provider>
   );
+
+  return { app, services };
 };

@@ -99,7 +99,7 @@ class SessionState extends StoreModule<TSessionState, TSessionConfig> {
    * @return {Promise<void>}
    */
   async remind(): Promise<void> {
-    const token = localStorage.getItem('token');
+    const token = window.localStorage?.getItem('token');
     if (token) {
       // Устанавливаем токен в АПИ
       this.services.api.setHeader(this.config.tokenHeader, token);

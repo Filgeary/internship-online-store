@@ -35,7 +35,7 @@ class CatalogState extends StoreModule<TCatalogState, TCatalogConfig> {
    * @return {Promise<void>}
    */
   async initParams(newParams: TCatalogState['params'] | {} = {}): Promise<void> {
-    const urlParams = new URLSearchParams(window.location.search);
+    const urlParams = new URLSearchParams(window.location?.search);
     const validParams: Record<string, any> = {};
     if (!this.config.ignoreUrlOnInit) {
       if (urlParams.has('page')) validParams.page = Number(urlParams.get('page')) || 1;
@@ -89,13 +89,13 @@ class CatalogState extends StoreModule<TCatalogState, TCatalogConfig> {
     // Сохранить параметры в адрес страницы
     const urlSearch = new URLSearchParams(exclude(params, this.initState().params)).toString();
     const url =
-      window.location.pathname + (urlSearch ? `?${urlSearch}` : '') + window.location.hash;
+      window.location?.pathname + (urlSearch ? `?${urlSearch}` : '') + window.location?.hash;
 
     if (!this.config.ignoreUrl) {
       if (replaceHistory) {
-        window.history.replaceState({}, '', url);
+        window.history?.replaceState({}, '', url);
       } else {
-        window.history.pushState({}, '', url);
+        window.history?.pushState({}, '', url);
       }
     }
 

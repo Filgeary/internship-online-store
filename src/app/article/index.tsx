@@ -21,11 +21,8 @@ function Article() {
   // Параметры из пути /articles/:id
   const params = useParams();
 
-  useInit(() => {
-    // Будем запрашивать товар только если его нету
-    if (!Object.keys(store.getState().article.data).length) {
-      store.actions.article.load(params.id);
-    }
+  useInit(async () => {
+    store.actions.article.load(params.id);
   }, [params.id]);
 
   const select = useAppSelector((state) => ({
