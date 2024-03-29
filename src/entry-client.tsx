@@ -1,4 +1,4 @@
-import { createRoot } from 'react-dom/client';
+import { hydrateRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 
@@ -10,10 +10,8 @@ import Services from './services';
 
 const services = new Services(config);
 
-const root = createRoot(document.getElementById('root') as HTMLElement);
-
-// Первый рендер приложения
-root.render(
+hydrateRoot(
+  document.getElementById('root') as HTMLElement,
   <Provider store={services.redux}>
     <ServicesContext.Provider value={services}>
       <I18nProvider>

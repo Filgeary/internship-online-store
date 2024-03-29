@@ -1,6 +1,8 @@
 import { cn as bem } from '@bem-react/classname';
 import debounce from 'lodash.debounce';
-import React, { memo, useCallback, useLayoutEffect, useState } from 'react';
+import React, { memo, useCallback, useState } from 'react';
+
+import { useIsomorphicLayoutEffect } from '@src/hooks/useIsomorphicLayoutEffect';
 
 import './style.css';
 
@@ -31,7 +33,7 @@ function Input(props: Props) {
   };
 
   // Обновление state, если передан новый value
-  useLayoutEffect(() => setInternalInputValue(props.value), [props.value]);
+  useIsomorphicLayoutEffect(() => setInternalInputValue(props.value), [props.value]);
 
   return (
     <input

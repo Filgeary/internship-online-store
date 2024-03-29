@@ -1,10 +1,11 @@
 import { cn as bem } from '@bem-react/classname';
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ArrowDownCircle as ArrowDownCircleIcon } from 'react-feather';
 import { useInView } from 'react-intersection-observer';
 
 import ChatMessage from '@src/components/chat-message';
 import { useScroll } from '@src/hooks/use-scroll';
+import { useIsomorphicLayoutEffect } from '@src/hooks/useIsomorphicLayoutEffect';
 
 import type { IMessage } from '@src/hooks/use-chat';
 import type { IUserSession } from '@src/types/IUserSession';
@@ -44,7 +45,7 @@ const ChatList = ({ isInitialFetching, messages, user, uniqueUUIDs, onScrollTop 
   }, [messages]);
 
   // restore scroll position on load previous messages
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     if (
       messagesUListRef.current &&
       prevScrollHeight &&

@@ -1,4 +1,5 @@
-import { useLayoutEffect, useState } from 'react';
+import { useState } from 'react';
+import { useIsomorphicLayoutEffect } from './useIsomorphicLayoutEffect';
 
 export const useOverflowWindowHeight = (ref: React.RefObject<any>, deps: any[], minHeight = 0) => {
   const [refCoords, setRefCoords] = useState({
@@ -7,7 +8,7 @@ export const useOverflowWindowHeight = (ref: React.RefObject<any>, deps: any[], 
   });
 
   // listen deps & set ref height
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     const { top = 0, height = 0 } = ref.current?.getBoundingClientRect() ?? {};
 
     setRefCoords({

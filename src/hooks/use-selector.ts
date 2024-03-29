@@ -1,6 +1,8 @@
-import { useLayoutEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import shallowequal from 'shallowequal';
+
 import useStore from './use-store';
+import { useIsomorphicLayoutEffect } from './useIsomorphicLayoutEffect';
 
 import type { TRootState } from '@src/store';
 
@@ -19,7 +21,7 @@ export default function useSelector<T>(selectorFunc: (state: TRootState) => T): 
   }, []); // Нет зависимостей - исполнится один раз
 
   // Отписка от store при демонтировании компонента
-  useLayoutEffect(() => unsubscribe, [unsubscribe]);
+  useIsomorphicLayoutEffect(() => unsubscribe, [unsubscribe]);
 
   return state;
 }
