@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useId } from 'react';
 import useServices from './use-services';
 import useStore from './use-store';
 
@@ -14,16 +14,30 @@ export default function useInit(
   backForward = false
 ) {
   console.log('Global is:', typeof global);
+  const promiseId = useId();
+  const services = useServices();
+
   // Ветка выполнения на сервере
   if (typeof global === 'object') {
     const promiseRes = initFunc();
-    const services = useServices();
+    //@ts-ignore
+    promiseRes.promiseId = promiseId;
 
+    //@ts-ignore
     services.suspense.appendPromise(promiseRes);
   }
 
+  setTimeout(() => {
+    console.log(services.suspense.executedPromises);
+  }, 1000);
+  console.log('Client:', promiseId);
+
   useEffect(() => {
-    initFunc(false);
+    //@ts-ignore
+    if (!window.__SSR_REQUESTS__.includes(promiseId)) {
+      // return;
+      initFunc(false);
+    }
     // Если в истории браузера меняются только search-параметры, то react-router не оповестит
     // компонент об изменениях, поэтому хук можно явно подписать на событие изменения истории
     // браузера (если нужно отреагировать на изменения search-параметров при переходе по истории)

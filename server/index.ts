@@ -105,18 +105,22 @@ async function createServer() {
           .render;
       }
 
-      const jsonSsrData = JSON.stringify(ssrData);
-      const appendedScript = `<script>window.__SSR_DATA__=${jsonSsrData}</script>`;
-      // const appHtml = render({ path: url, initialState: ssrData }); // @TODO прокидывать data
       const { app, services } = render({ path: url, initialState: {} });
 
       const htmlWithoutData = ReactDOMServer.renderToString(app);
 
-      console.log('Promises arr:', services.suspense.promisesArr);
       await services.suspense.execAllPromises();
 
       const htmlWithData = ReactDOMServer.renderToString(app);
       console.log(htmlWithData);
+
+      const jsonSsrData = JSON.stringify(services.store.getState());
+      let t = services.store.getState();
+      setTimeout(() => {
+        console.log('finally:', t);
+      }, 1000);
+      const jsonRequestsOnSsrData = JSON.stringify(services.suspense.executedPromises);
+      const appendedScript = `<script>window.__SSR_DATA__=${jsonSsrData};window.__SSR_REQUESTS__=${jsonRequestsOnSsrData}</script>`;
 
       const resHtml = template
         .replace('<!-- ROOT -->', htmlWithData)

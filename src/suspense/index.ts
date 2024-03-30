@@ -1,10 +1,13 @@
+type TUpgradedPromise = Promise<unknown> & { promiseId: string };
+
 class SuspenseService {
-  promisesArr: Promise<unknown>[] = [];
+  promisesArr: TUpgradedPromise[] = [];
+  executedPromises: string[] = [];
 
   /**
    * Добавить промис в массив промисов
    */
-  appendPromise(promise: Promise<unknown>) {
+  appendPromise(promise: TUpgradedPromise) {
     this.promisesArr.push(promise);
   }
 
@@ -12,8 +15,13 @@ class SuspenseService {
    * Запустить все промисы из массива
    */
   async execAllPromises() {
-    Promise.all(this.promisesArr);
-    this.promisesArr = [];
+    return Promise.all(this.promisesArr).then(() => {
+      this.promisesArr.forEach((promise) => {
+        this.executedPromises.push(promise.promiseId);
+      });
+
+      this.promisesArr = [];
+    });
   }
 }
 

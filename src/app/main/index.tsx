@@ -24,10 +24,6 @@ function Main() {
     await Promise.all([store.actions.catalog.initParams(), store.actions.categories.load()]);
   });
 
-  useEffect(() => {
-    console.log('@', store.getState());
-  }, [store]);
-
   return (
     <PageLayout>
       <TopHead />
