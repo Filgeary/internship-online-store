@@ -13,6 +13,7 @@ class BasketState extends StoreModule<TBasketState> {
       sum: 0,
       amount: 0,
       active: "",
+      waiting:false
     };
   }
 
@@ -110,15 +111,6 @@ class BasketState extends StoreModule<TBasketState> {
     );
   }
 
-  /* removeFromActive() {
-    this.setState(
-      {
-        ...this.getState(),
-        active: "",
-      },
-      "Удаление активного itema"
-    );
-  } */
 }
 
 export default BasketState;

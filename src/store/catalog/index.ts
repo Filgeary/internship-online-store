@@ -34,7 +34,11 @@ class CatalogState extends StoreModule<TCatalogState> {
    * @return {Promise<void>}
    */
   async initParams(newParams = {}): Promise<void> {
-    const urlParams = new URLSearchParams(window.location.search);
+    let urlParams;
+    if (typeof window !== "undefined") {
+      urlParams = new URLSearchParams(window.location?.search);
+    } else urlParams = new URLSearchParams();
+
     let validParams = {} as TParams;
 
     if (urlParams.has("page"))
@@ -96,14 +100,16 @@ class CatalogState extends StoreModule<TCatalogState> {
       let urlSearch = new URLSearchParams(
         exclude(params, this.initState().params) as any
       ).toString();
-      const url =
-        window.location.pathname +
-        (urlSearch ? `?${urlSearch}` : "") +
-        window.location.hash;
-      if (replaceHistory) {
-        window.history.replaceState({}, "", url);
-      } else {
-        window.history.pushState({}, "", url);
+      if (typeof window !== "undefined") {
+        const url =
+          window.location.pathname +
+          (urlSearch ? `?${urlSearch}` : "") +
+          window.location.hash;
+        if (replaceHistory) {
+          window.history.replaceState({}, "", url);
+        } else {
+          window.history.pushState({}, "", url);
+        }
       }
     }
 

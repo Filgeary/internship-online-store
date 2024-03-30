@@ -13,11 +13,11 @@ const config = {
         // Названия токена в АПИ
         tokenHeader: "X-Token",
       },
-     
     },
   },
   api: {
-    baseUrl: "",
+    baseUrl:
+      typeof window !== "undefined" ? "" : "http://example.front.ylab.io",
   },
   chat: {
     baseUrl: "ws://example.front.ylab.io",
@@ -40,6 +40,5 @@ export type TConfigStore = {
     baseUrl: string;
   };
 };
-
 
 export default config;

@@ -8,9 +8,9 @@ import Services from "./services";
 import config from "./config";
 
 // @ts-ignore
-const data = window.__SSR_DATA__
+const data = window.__SSR_STATE__
 // @ts-ignore
- delete window.__SSR_DATA__
+ delete window.__SSR_STATE__
 
 
 const services = new Services(config);

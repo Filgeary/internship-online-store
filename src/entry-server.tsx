@@ -9,31 +9,12 @@ import config from "./config";
 
 type TProps = {
   url: string;
-  data: any;
 };
 
-export function render({ url, data }: TProps) {
+export function render({ url }: TProps) {
   const services = new Services(config);
-  services.store.actions.catalog.setState({
-    list: [...data.catalog],
-    params: {
-      page: 0,
-      limit: 0,
-      sort: null,
-      query: null,
-      category: undefined,
-      madeIn: null,
-    },
-    count: 0,
-    selectedItems: [],
-    waiting: false,
-  });
-  services.store.actions.categories.setState({
-    list: [...data.categories],
-    waiting: false,
-  });
 
-  return renderToString(
+  const app = (
     <Provider store={services.redux}>
       <ServicesContext.Provider value={services}>
         <I18nProvider>
@@ -44,4 +25,6 @@ export function render({ url, data }: TProps) {
       </ServicesContext.Provider>
     </Provider>
   );
+
+  return { app, services };
 }

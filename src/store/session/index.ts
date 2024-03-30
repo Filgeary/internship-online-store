@@ -96,7 +96,9 @@ class SessionState extends StoreModule<TSessionState, TConfigSession> {
         method: "DELETE",
       });
       // Удаляем токен
-      window.localStorage.removeItem("token");
+      if (typeof window !== "undefined") {
+        window.localStorage.removeItem("token");
+      }
       // Удаляем заголовок
       this.services.api.setHeader(this.config.tokenHeader, null);
     } catch (error) {
@@ -110,7 +112,10 @@ class SessionState extends StoreModule<TSessionState, TConfigSession> {
    * @return {Promise<void>}
    */
   async remind(): Promise<void> {
-    const token = localStorage.getItem("token");
+    let token;
+    if (typeof window !== "undefined") {
+      token = localStorage.getItem("token");
+    }
     if (token) {
       // Устанавливаем токен в АПИ
       this.services.api.setHeader(this.config.tokenHeader, token);

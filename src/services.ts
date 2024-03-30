@@ -1,5 +1,6 @@
 import APIService from "./api";
 import { TConfig } from "./config";
+import SsrPromisesService from "./ssr-promises";
 import Store from "./store";
 import createStoreRedux from "./store-redux";
 import WSService from "./ws";
@@ -10,9 +11,13 @@ class Services {
   _ws: WSService | null = null;
   _store: Store | null = null;
   _redux: any;
+  _ssrPromises: SsrPromisesService | undefined;
 
-  constructor(config: TConfig) {
+  readonly initState: object;
+
+  constructor(config: TConfig, initState = {}) {
     this.config = config;
+    this.initState = initState;
   }
 
   /**
@@ -56,6 +61,13 @@ class Services {
       this._redux = createStoreRedux(this, this.config.redux);
     }
     return this._redux;
+  }
+
+  get ssrPromises() {
+    if (!this._ssrPromises) {
+      this._ssrPromises = new SsrPromisesService();
+    }
+    return this._ssrPromises;
   }
 }
 

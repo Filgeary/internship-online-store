@@ -39,9 +39,11 @@ function SelectCustom({
   const refSelect = useRef<Array<HTMLDivElement | null>>([]);
 
   useInit(() => {
-    const html = document.querySelector("html");
-    if (html) {
-      html.style.overflow = open ? "hidden" : "auto";
+    if (typeof document !== 'undefined') {
+      const html = document.querySelector("html");
+      if (html) {
+        html.style.overflow = open ? "hidden" : "auto";
+      }
     }
     if (
       refOptions.current !== null &&
