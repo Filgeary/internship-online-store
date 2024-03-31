@@ -7,7 +7,7 @@ import useServices from "./use-services";
  * @param depends {Array} Значения при смене которых callback снова исполнится.
  * @param options {{backForward}}
  */
-type TInitFunction = (e?: Event | boolean ) => void | Promise<unknown>;
+type TInitFunction = (e?: Event | boolean ) => void;
 
 export default function useInit(
   initFunc: TInitFunction,
@@ -15,18 +15,20 @@ export default function useInit(
   backForward = false
 ) {
   const services = useServices();
+  
+  if (!services.ssrPromises.ssrRender && services.store.actions.categories.getState().list.length>0) {
+    services.ssrPromises.clear()
+  }else if(!services.ssrPromises.ssrRender && services.store.actions.categories.getState().list.length<=0){
+    console.log('false', 'ssr');
 
-  
-  console.log(services.ssrPromises.ssrRender);
-  
-  if (services.ssrPromises.ssrRender) {
     const pr = initFunc();
     services.ssrPromises.addPromise(pr);
-   // services.ssrPromises.ssrRender = false;
   }
 
   useEffect(() => {
-    if (!services.ssrPromises.ssrRender) {
+    if (services.ssrPromises.ssrRender) {
+      console.log('true', 'client');
+      
       initFunc(false);
       // Если в истории браузера меняются только search-параметры, то react-router не оповестит
       // компонент об изменениях, поэтому хук можно явно подписать на событие изменения истории

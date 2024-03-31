@@ -1,9 +1,7 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import shallowequal from "shallowequal";
 import useStore from "./use-store";
 import { TNewStoreState } from "@src/store/types";
-import { useIsomorphicLayoutEffect } from "usehooks-ts";
-
 
 /**
  * Хук для выборки данных из store и отслеживания их изменения
@@ -17,10 +15,10 @@ export default function useSelector<T>(
 
   const [state, setState] = useState<T>(() => selectorFunc(store.getState()));
 
-  const unsubscribe:any = useMemo(() => {
+  const unsubscribe: any = useMemo(() => {
     // Подписка. Возврат функции для отписки
     return store.subscribe(() => {
-      const newState:T = selectorFunc(store.getState());
+      const newState: T = selectorFunc(store.getState());
       setState((prevState) =>
         shallowequal(prevState, newState) ? prevState : newState
       );
@@ -28,7 +26,7 @@ export default function useSelector<T>(
   }, []); // Нет зависимостей - исполнится один раз
 
   // Отписка от store при демонтировании компонента
-  useIsomorphicLayoutEffect(() => unsubscribe, [unsubscribe]);
+  useEffect(() => unsubscribe, [unsubscribe]);
 
   return state;
 }

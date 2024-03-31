@@ -10,9 +10,9 @@ import BasketTotal from "@src/components/basket-total";
 import modalsActions from "@src/store-redux/modals/actions";
 import { useSelector as useSelectorRedux } from "react-redux";
 import useInit from "@src/hooks/use-init";
-import { TArticleState } from "@src/store/article/types";
 import { TReducer } from "@src/store-redux/modals/reducer";
 import { TCloseModal } from "@src/containers/modals";
+import { TArticleState } from "@src/store/catalog/types";
 
 
 function Basket(props: TCloseModal) {

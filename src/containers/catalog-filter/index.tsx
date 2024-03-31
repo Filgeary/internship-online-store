@@ -9,7 +9,6 @@ import treeToList from "@src/utils/tree-to-list";
 import listToTree from "@src/utils/list-to-tree";
 import { TCountries } from "@src/store/countries";
 import SelectCustom from "@src/components/select-custom";
-import useInit from "@src/hooks/use-init";
 
 export type TCatalogFilter = {
   storeName: "catalog";

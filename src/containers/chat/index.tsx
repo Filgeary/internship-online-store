@@ -1,4 +1,4 @@
-import { memo, useRef, useState } from "react";
+import { memo, useState } from "react";
 import useStore from "@src/hooks/use-store";
 
 import useInit from "@src/hooks/use-init";

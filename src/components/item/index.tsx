@@ -4,8 +4,7 @@ import numberFormat from "@src/utils/number-format";
 import "./style.css";
 import { Link } from "react-router-dom";
 import useSelector from "@src/hooks/use-selector";
-import { TArticle } from "@src/store/article/types";
-import { TItem } from "@src/store/catalog/types";
+import { TArticle, TItem } from "@src/store/catalog/types";
 import { TKey, TKeyModules } from "@src/store/types";
 
 

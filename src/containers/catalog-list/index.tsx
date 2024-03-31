@@ -9,7 +9,8 @@ import Spinner from "@src/components/spinner";
 import { useDispatch } from "react-redux";
 import modalsActions from "@src/store-redux/modals/actions";
 import { useSelector as useSelectorRedux } from "react-redux";
-import { TArticle } from "@src/store/article/types";
+import { TArticle } from "@src/store/catalog/types";
+
 
 
 export type TCatalogList = {

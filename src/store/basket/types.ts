@@ -6,6 +6,6 @@ export type TBasketState = {
   list: TBasketArticle[];
   sum: number;
   amount: number;
-  active: string | number;
+  active?: any;
   waiting?: boolean;
 };

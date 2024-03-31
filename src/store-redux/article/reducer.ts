@@ -1,4 +1,4 @@
-import { TArticle, TArticleState } from "@src/store/article/types";
+import { TArticle, TArticleState } from "@src/store/catalog/types";
 
 // Начальное состояние
 export const initialState: TArticleState = {
@@ -16,7 +16,9 @@ function reducer(
       return { ...state, data: {}, waiting: true };
 
     case "article/load-success":
-      console.log(`Информация о товаре "${action.payload.data.title}" загружена`);
+      console.log(
+        `Информация о товаре "${action.payload.data.title}" загружена`
+      );
       return { ...state, data: action.payload.data, waiting: false };
 
     case "article/load-error":

@@ -1,7 +1,7 @@
 import { memo } from "react";
 import "./style.css";
-import { TArticle } from "@src/store/article/types";
 import { TBasketArticle } from "@src/store/basket/types";
+import { TArticle } from "@src/store/catalog/types";
 
 type TListProps = {
   list: TArticle[] | TBasketArticle[];

@@ -1,20 +1,24 @@
 class SsrPromisesService {
-  ssrPromises: Promise<unknown>[] = [];
-  ssrRender: boolean = true;
+  ssrPromisesArr: Promise<unknown>[] = [];
+  ssrRender: boolean = false;
 
   /**
    * Добавить промис в массив промисов
    */
-  addPromise(promise:any) {
-    this.ssrPromises.push(promise);
+  addPromise(promise: any) {
+    this.ssrPromisesArr.push(promise);
   }
 
+
+  clear(){
+    this.ssrPromisesArr = [];
+    this.ssrRender = true;
+  }
   /**
    * Запустить все промисы из массива
    */
   async donePromises() {
-    await Promise.all(this.ssrPromises);
-    this.ssrPromises = [];
+    await Promise.all(this.ssrPromisesArr);
   }
 }
 

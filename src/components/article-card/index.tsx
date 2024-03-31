@@ -2,8 +2,8 @@ import { memo } from "react";
 import { cn as bem } from "@bem-react/classname";
 import numberFormat from "@src/utils/number-format";
 import "./style.css";
-import { TArticle } from "@src/store/article/types";
 import { TDictionaryKeys } from "@src/i18n/translations";
+import { TArticle } from "@src/store/catalog/types";
 
 type TArticleCardProps = {
   article: TArticle;

@@ -22,9 +22,10 @@ function Article() {
 
   const params = useParams();
 
-  useInit(() => {
+  
+ useInit(() => {
     dispatch(articleActions.load(params.id as string));
-  }, [params.id]);
+  }, [params.id]); 
 
   const select = useSelectorRedux(
     (state: any) => ({

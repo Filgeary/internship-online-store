@@ -2,13 +2,13 @@ import {
   SetStateAction,
   memo,
   useCallback,
+  useEffect,
   useState,
 } from "react";
 import { cn as bem } from "@bem-react/classname";
 import debounce from "lodash.debounce";
-
 import "./style.css";
-import { useIsomorphicLayoutEffect } from "usehooks-ts";
+
 
 type TInputProps = {
   value: any ;
@@ -37,7 +37,7 @@ function Input(props: TInputProps) {
   };
 
   // Обновление стейта, если передан новый value
-  useIsomorphicLayoutEffect(() => setValue(props.value), [props.value]);
+  useEffect(() => setValue(props.value), [props.value]);
 
   const cn = bem("Input");
   return (
