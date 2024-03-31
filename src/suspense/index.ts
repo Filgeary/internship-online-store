@@ -1,4 +1,4 @@
-type TUpgradedPromise = Promise<unknown> & { promiseId: string };
+import { TUpgradedPromise } from './types';
 
 class SuspenseService {
   promisesArr: TUpgradedPromise[] = [];
@@ -15,11 +15,10 @@ class SuspenseService {
    * Запустить все промисы из массива
    */
   async execAllPromises() {
-    return Promise.all(this.promisesArr).then(() => {
+    return await Promise.all(this.promisesArr).then(() => {
       this.promisesArr.forEach((promise) => {
         this.executedPromises.push(promise.promiseId);
       });
-
       this.promisesArr = [];
     });
   }

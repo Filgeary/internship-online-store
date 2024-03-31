@@ -26,7 +26,7 @@ if (!global.document) {
 }
 
 export const render = ({ path, initialState }: TProps) => {
-  const services = new Services(config, initialState);
+  const services = new Services(config, { ...initialState });
 
   // const htmlRender = renderToString(
   const app = (

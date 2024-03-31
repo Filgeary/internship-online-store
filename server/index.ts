@@ -52,45 +52,8 @@ async function createServer() {
 
   app.use('*', async (req, res, next) => {
     const url = req.originalUrl;
-    const method = req.method.toLowerCase() as TMethod;
-    let ssrData = {};
 
     console.log({ url });
-
-    const params = qs.parse(url.slice(2)) as TParams;
-    const paramsKeys = Object.keys(params);
-    const rootParams = ['query', 'sort', 'category', 'countries'];
-
-    // Запросы за каталогом и категориями - только на корне
-    if (url === '/' || paramsKeys.some((val) => rootParams.includes(val))) {
-      // Обработка запросов для инициализации стора каталога
-      const catalog = await catalogController(params, method);
-      ssrData = {
-        ...ssrData,
-        ...catalog,
-      };
-
-      // Запрос за категориями
-      const categories = await categoriesController(params, method);
-      ssrData = {
-        ...ssrData,
-        ...categories,
-      };
-    }
-
-    // Запросы за товаром - на странице товара
-    if (/.+\/.+/i.test(url)) {
-      const articleId = url.split('/').at(-1);
-      const updatedParams = {
-        ...params,
-        articleId,
-      };
-      const article = await articleController(updatedParams, method);
-      ssrData = {
-        ...ssrData,
-        ...article,
-      };
-    }
 
     try {
       if (isDev) {
@@ -112,14 +75,10 @@ async function createServer() {
       await services.suspense.execAllPromises();
 
       const htmlWithData = ReactDOMServer.renderToString(app);
-      console.log(htmlWithData);
 
       const jsonSsrData = JSON.stringify(services.store.getState());
-      let t = services.store.getState();
-      setTimeout(() => {
-        console.log('finally:', t);
-      }, 1000);
       const jsonRequestsOnSsrData = JSON.stringify(services.suspense.executedPromises);
+
       const appendedScript = `<script>window.__SSR_DATA__=${jsonSsrData};window.__SSR_REQUESTS__=${jsonRequestsOnSsrData}</script>`;
 
       const resHtml = template

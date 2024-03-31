@@ -64,9 +64,7 @@ class APIService {
       };
     } catch (err) {
       console.log(err);
-      throw new Error(
-        `Ошибка на сервере, попробуйте позже... ${url} ${/^(http|\/\/)/.test(url) ? 'true' : 'false'}`
-      );
+      throw new Error(`Ошибка на сервере, попробуйте позже...`);
     }
   }
 

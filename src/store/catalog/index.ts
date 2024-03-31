@@ -85,6 +85,7 @@ class CatalogState extends StoreModule<TCatalogState, TCatalogConfig> {
       },
       'Установлены параметры каталога'
     );
+    console.log('Ставлю waiting: true в каталоге');
 
     // Сохранить параметры в адрес страницы
     const urlSearch = new URLSearchParams(exclude(params, this.initState().params)).toString();
@@ -138,6 +139,8 @@ class CatalogState extends StoreModule<TCatalogState, TCatalogConfig> {
 
       this.setState(newState, 'Загружен список товаров из АПИ');
     } catch (err) {
+      console.log('Получил ошибку');
+      console.log(err);
       alert(err.message);
     }
   }

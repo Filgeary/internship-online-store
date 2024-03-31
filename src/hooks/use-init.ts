@@ -1,6 +1,7 @@
 import { useEffect, useId } from 'react';
 import useServices from './use-services';
 import useStore from './use-store';
+import { TUpgradedPromise } from '@src/suspense/types';
 
 /**
  * Хук для асинхронных расчётов, которые будут исполнены при первом рендере или изменении depends.
@@ -19,25 +20,20 @@ export default function useInit(
 
   // Ветка выполнения на сервере
   if (typeof global === 'object') {
-    const promiseRes = initFunc();
-    //@ts-ignore
+    // Чтобы не выполнялся второй раз на сервере
+    if (services.suspense.executedPromises.includes(promiseId)) return;
+
+    const promiseRes = initFunc() as TUpgradedPromise;
     promiseRes.promiseId = promiseId;
 
-    //@ts-ignore
     services.suspense.appendPromise(promiseRes);
   }
 
-  setTimeout(() => {
-    console.log(services.suspense.executedPromises);
-  }, 1000);
-  console.log('Client:', promiseId);
-
   useEffect(() => {
-    //@ts-ignore
     if (!window.__SSR_REQUESTS__.includes(promiseId)) {
-      // return;
       initFunc(false);
     }
+
     // Если в истории браузера меняются только search-параметры, то react-router не оповестит
     // компонент об изменениях, поэтому хук можно явно подписать на событие изменения истории
     // браузера (если нужно отреагировать на изменения search-параметров при переходе по истории)
