@@ -1,5 +1,8 @@
+import cors from 'cors';
 import express from 'express';
 import fs from 'node:fs/promises';
+
+import { logger } from './src/utils/logger';
 
 // Constants
 const isProduction = process.env.NODE_ENV === 'production';
@@ -16,6 +19,9 @@ const ssrManifest = isProduction
 const app = express();
 
 // Add Vite or respective production middlewares
+/**
+ * @type {import('vite').ViteDevServer}
+ */
 let vite;
 if (!isProduction) {
   const { createServer } = await import('vite');
@@ -28,45 +34,66 @@ if (!isProduction) {
 } else {
   const compression = (await import('compression')).default;
   const sirv = (await import('sirv')).default;
+
+  const { createProxyMiddleware } = await import('http-proxy-middleware');
+  const apiProxy = createProxyMiddleware('/api/v1', {
+    target: 'http://example.front.ylab.io',
+    secure: false,
+    changeOrigin: true,
+  });
+  app.use(cors());
+  app.use(apiProxy);
+
   app.use(compression());
-  app.use(base, sirv('./dist/client', { extensions: [] }));
+  app.use(base, sirv('./dist/client', { extensions: ['js', 'css', 'ico'] }));
 }
 
 // Serve HTML
 app.use('*', async (req, res) => {
   try {
-    const url = req.originalUrl.replace(base, '');
-    console.log('🚀 => app.use => req.originalUrl:', req.originalUrl);
-    console.log('🚀 => app.use => url:', url);
+    const originalUrl = req.originalUrl;
+    logger.info('originalUrl:', originalUrl);
 
     let template;
     let render;
+
     if (!isProduction) {
       // Always read fresh template in development
       template = await fs.readFile('./index.html', 'utf-8');
-      template = await vite.transformIndexHtml(url, template);
+      template = await vite.transformIndexHtml(originalUrl, template);
       render = (await vite.ssrLoadModule('/src/entry-server.tsx')).render;
     } else {
       template = templateHtml;
       // eslint-disable-next-line import/no-unresolved
-      render = (await import('./dist/server/entry-server.mjs')).render;
+      render = (await import('./dist/server/entry-server.js')).render;
     }
 
-    const rendered = await render({ url, ssrManifest });
+    const { originalHtml, originalHead, ssr } = await render({
+      url: originalUrl,
+      ssrManifest,
+      title: isProduction ? 'Prod' : 'Dev',
+    });
+    await ssr.executeAllPromises();
+    const { secondHtml } = await render({
+      url: originalUrl,
+      newHtmlTemplate: originalHtml,
+      ssrManifest,
+      title: isProduction ? 'Prod' : 'Dev',
+    });
 
-    const html = template
-      .replace(`<!--app-head-->`, rendered.head ?? '')
-      .replace(`<!--app-html-->`, rendered.html ?? '');
+    const htmlTemplate = template
+      .replace(`<!--app-head-->`, originalHead ?? '')
+      .replace(`<!--app-html-->`, secondHtml ?? '');
 
-    res.status(200).set({ 'Content-Type': 'text/html' }).send(html);
+    res.status(200).set({ 'Content-Type': 'text/html' }).send(htmlTemplate);
   } catch (e) {
     vite?.ssrFixStacktrace(e);
-    console.log(e.stack);
+    logger.error(e.stack);
     res.status(500).end(e.stack);
   }
 });
 
 // Start http server
 app.listen(port, () => {
-  console.log(`Server started at http://localhost:${port}`);
+  logger.success(`Server started at http://localhost:${port}`);
 });

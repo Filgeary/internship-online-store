@@ -18,10 +18,16 @@ function Article() {
   const { t } = useTranslate();
   const { id } = useParams();
 
-  useInit(() => {
-    if (!id) return;
-    store.actions.article.load(id);
-  }, [id]);
+  useInit(
+    async () => {
+      if (!id) return;
+      await store.actions.article.load(id);
+    },
+    [id],
+    {
+      ssrKey: 'article',
+    },
+  );
 
   const select = useSelector(state => ({
     article: state.article.data,

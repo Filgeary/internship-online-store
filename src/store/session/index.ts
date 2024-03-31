@@ -100,6 +100,9 @@ class SessionState extends StoreModule<InitialSessionState, SessionConfig> {
    * По токену восстановление сессии
    */
   async remind() {
+    if (import.meta.env.SSR) {
+      return;
+    }
     const token = localStorage.getItem('token');
 
     if (token) {

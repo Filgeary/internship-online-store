@@ -1,4 +1,5 @@
 import APIService from './api';
+import SSRService from './ssr';
 import Store from './store';
 import createStoreRedux from './store-redux';
 
@@ -11,12 +12,21 @@ class Services {
   #api: APIService | null;
   #store: Store | null;
   #redux: any;
+  #ssr: SSRService | null;
 
   constructor(config: TConfig) {
     this.config = config;
     this.#api = null;
     this.#store = null;
     this.#redux = null;
+    this.#ssr = null;
+  }
+
+  get ssr() {
+    if (!this.#ssr) {
+      this.#ssr = new SSRService(this, this.config.ssr);
+    }
+    return this.#ssr;
   }
 
   get api() {

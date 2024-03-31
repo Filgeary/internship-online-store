@@ -174,4 +174,5 @@ Rewrite from `webpack` to `vite`.
 
 ## SSR (`/ssr`)
 
-- Add SSR via `renderToString`
+- add SSR via `renderToString`
+- provide initialState to server rendering

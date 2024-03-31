@@ -51,6 +51,9 @@ class CatalogState extends StoreModule<InitialCatalogState, CatalogConfig> {
    * Восстановление из адреса
    */
   async initParams(newParams: InitialCatalogState['params'] | object = {}) {
+    if (import.meta.env.SSR) {
+      return;
+    }
     const shouldWriteToBrowserHistory =
       this.name !== 'catalog' ? this.config.shouldWriteToBrowserHistory : true;
 

@@ -32,6 +32,11 @@ export type TConfig = {
     log: boolean;
     modules: TAllConfigs;
   };
+  ssr: {
+    isActive: boolean;
+    isFirstRender: boolean;
+    initPromises: Record<string, Promise<any>>[] | null;
+  };
 };
 
 /**

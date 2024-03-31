@@ -24,7 +24,10 @@ function Main() {
       await Promise.all([store.actions.catalog.initParams(), store.actions.categories.load()]);
     },
     [],
-    true,
+    {
+      ssrKey: 'main',
+      backForward: true,
+    },
   );
 
   return (
