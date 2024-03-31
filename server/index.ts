@@ -5,14 +5,9 @@ import ReactDOMServer from 'react-dom/server';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
-import qs from 'query-string';
-
 import type { ViteDevServer } from 'vite';
-import type { TMethod, TParams } from './types';
 
 import { API_URL, PORT, WS_CHAT_URL } from './config';
-
-import { catalogController, categoriesController, articleController } from './controllers';
 
 const isDev = process.env.NODE_ENV === 'development';
 const isProd = !isDev;
@@ -34,7 +29,7 @@ async function createServer() {
     });
     app.use(vite.middlewares);
   } else {
-    app.use(express.static(path.resolve(process.cwd(), 'dist', 'client')));
+    app.use(express.static(path.resolve(process.cwd(), 'dist', 'client'), { index: false }));
   }
 
   const apiProxy = createProxyMiddleware({
@@ -52,6 +47,24 @@ async function createServer() {
 
   app.use('*', async (req, res, next) => {
     const url = req.originalUrl;
+
+    console.log({ window: global.window });
+    // Блокировка чтобы не потерять window у другого пользователя
+    await new Promise((resolve) => {
+      const started = performance.now();
+
+      setInterval(() => {
+        if (!global.window) resolve(null);
+        const step = performance.now();
+
+        if (started - step > 1500) resolve(null);
+      }, 10);
+    });
+    global.window = {
+      location: {
+        search: url.slice(1),
+      },
+    } as Window & typeof globalThis;
 
     console.log({ url });
 
@@ -86,6 +99,8 @@ async function createServer() {
         .replace('<!-- SSR_DATA -->', appendedScript);
 
       res.status(200).set({ 'Content-type': 'text/html' }).end(resHtml);
+
+      delete global.window;
     } catch (error) {
       if (isDev) {
         vite.ssrFixStacktrace(error);
