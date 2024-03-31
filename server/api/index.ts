@@ -53,7 +53,6 @@ class ApiService {
       },
     });
     const result = response.data.result;
-    console.log('Single article: ', result);
 
     return result;
   }

@@ -16,7 +16,7 @@ import ProfileCard from '@src/components/profile-card';
 function Profile() {
   const store = useStore();
 
-  useInit(() => {
+  useInit(async () => {
     store.actions.profile.load();
   }, []);
 

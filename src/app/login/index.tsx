@@ -19,7 +19,7 @@ function Login() {
   const navigate = useNavigate();
   const store = useStore();
 
-  useInit(() => {
+  useInit(async () => {
     store.actions.session.resetErrors();
     store.actions.session.resetWaiting();
   });

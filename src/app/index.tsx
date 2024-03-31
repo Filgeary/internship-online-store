@@ -21,9 +21,13 @@ function App() {
   const store = useStore();
   const contentRef = useRef(null);
 
-  useInit(async () => {
-    await store.actions.session.remind();
-  });
+  useInit(
+    async () => {
+      await store.actions.session.remind();
+    },
+    [],
+    { clientSide: true }
+  );
 
   return (
     <>

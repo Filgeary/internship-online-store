@@ -1,6 +1,5 @@
 import { useEffect, useId } from 'react';
 import useServices from './use-services';
-import useStore from './use-store';
 import { TUpgradedPromise } from '@src/suspense/types';
 
 /**
@@ -12,21 +11,22 @@ import { TUpgradedPromise } from '@src/suspense/types';
 export default function useInit(
   initFunc: TInitFunction,
   depends: unknown[] = [],
-  backForward = false
+  options: TInitOptions = { clientSide: false, backForward: false }
 ) {
-  console.log('Global is:', typeof global);
   const promiseId = useId();
   const services = useServices();
 
-  // Ветка выполнения на сервере
-  if (typeof global === 'object') {
-    // Чтобы не выполнялся второй раз на сервере
-    if (services.suspense.executedPromises.includes(promiseId)) return;
+  if (!options.clientSide) {
+    // Ветка выполнения на сервере
+    if (typeof global === 'object') {
+      // Чтобы не выполнялся второй раз на сервере
+      if (services.suspense.executedPromises.includes(promiseId)) return;
 
-    const promiseRes = initFunc() as TUpgradedPromise;
-    promiseRes.promiseId = promiseId;
+      const promiseRes = initFunc() as TUpgradedPromise;
+      promiseRes.promiseId = promiseId;
 
-    services.suspense.appendPromise(promiseRes);
+      services.suspense.appendPromise(promiseRes);
+    }
   }
 
   useEffect(() => {
@@ -37,7 +37,7 @@ export default function useInit(
     // Если в истории браузера меняются только search-параметры, то react-router не оповестит
     // компонент об изменениях, поэтому хук можно явно подписать на событие изменения истории
     // браузера (если нужно отреагировать на изменения search-параметров при переходе по истории)
-    if (backForward) {
+    if (options.backForward) {
       window.addEventListener('popstate', initFunc);
       return () => {
         window.removeEventListener('popstate', initFunc);
@@ -47,3 +47,7 @@ export default function useInit(
 }
 
 export type TInitFunction = (e?: Event | boolean) => Promise<unknown>;
+export type TInitOptions = {
+  clientSide?: boolean;
+  backForward?: boolean;
+};
