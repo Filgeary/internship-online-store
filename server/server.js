@@ -48,21 +48,18 @@ async function createServer() {
       }
 
       const { app, services } = render({ url });
-      const htmlRender = ReactDOMServer.renderToString(app);
+      ReactDOMServer.renderToString(app);
       await services.ssrPromises.donePromises();
-
       const htmlRenderSecond = ReactDOMServer.renderToString(app);
 
-      const initialState = `<script id="preload">
+     /*  const initialState = `<script id="preload">
         window.__SSR_STATE__ =${JSON.stringify(services.store.getState())}
-        </script>`;
-      let html = template.replace(
-        `<!--root-->`,
-        `${htmlRenderSecond}${initialState}`
-      );
+        </script>`; */
 
-      const renderer = render({ url: url });
-      // const html = template.replace(`<!--root-->`, renderer);
+      let html = template
+        .replace(`<!--root-->`, htmlRenderSecond)
+        //.replace(`<!--data-->`, initialState);
+
       res.status(200).set({ "Content-Type": "text/html" }).end(html);
     } catch (e) {
       if (e instanceof Error) {

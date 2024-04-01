@@ -13,11 +13,8 @@ class Services {
   _redux: any;
   _ssrPromises: SsrPromisesService | undefined;
 
-  readonly initState: object;
-
-  constructor(config: TConfig, initState = {}) {
+  constructor(config: TConfig) {
     this.config = config;
-    this.initState = initState;
   }
 
   /**

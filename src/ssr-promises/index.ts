@@ -11,14 +11,14 @@ class SsrPromisesService {
 
 
   clear(){
-    this.ssrPromisesArr = [];
     this.ssrRender = true;
   }
   /**
    * Запустить все промисы из массива
-   */
-  async donePromises() {
-    await Promise.all(this.ssrPromisesArr);
+  */
+ async donePromises() {
+   await Promise.all(this.ssrPromisesArr);
+   this.ssrPromisesArr = [];
   }
 }
 

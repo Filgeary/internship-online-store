@@ -37,7 +37,7 @@ class CatalogState extends StoreModule<TCatalogState> {
     let urlParams;
     if (typeof window !== "undefined") {
       urlParams = new URLSearchParams(window.location?.search);
-    } else urlParams = new URLSearchParams();
+    } else urlParams = new URLSearchParams("");
 
     let validParams = {} as TParams;
 
@@ -102,13 +102,13 @@ class CatalogState extends StoreModule<TCatalogState> {
       ).toString();
       if (typeof window !== "undefined") {
         const url =
-          window.location.pathname +
+          window.location?.pathname +
           (urlSearch ? `?${urlSearch}` : "") +
-          window.location.hash;
+          window.location?.hash;
         if (replaceHistory) {
-          window.history.replaceState({}, "", url);
+          window.history?.replaceState({}, "", url);
         } else {
-          window.history.pushState({}, "", url);
+          window.history?.pushState({}, "", url);
         }
       }
     }
