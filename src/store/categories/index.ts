@@ -1,4 +1,5 @@
 import { isSuccessResponse } from '@src/api';
+import { logger } from '@src/utils/logger';
 import StoreModule from '../module';
 
 import type { ICategories } from '@src/types/ICategory';
@@ -7,6 +8,8 @@ type InitialCategoriesState = {
   list: any[];
   waiting: boolean;
 };
+
+const isSSR = import.meta.env.SSR;
 
 /**
  * Список категорий
@@ -30,6 +33,8 @@ class CategoriesState extends StoreModule<InitialCategoriesState> {
     });
 
     if (isSuccessResponse(res.data)) {
+      if (isSSR) logger.success('categories loaded from ssr'.toUpperCase());
+
       // Товар загружен успешно
       this.setState(
         {

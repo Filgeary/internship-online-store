@@ -1,5 +1,6 @@
 import { isSuccessResponse } from '@src/api';
 import exclude from '@src/utils/exclude';
+import { logger } from '@src/utils/logger';
 import StoreModule from '../module';
 
 import type { IArticle, IArticles } from '@src/types/IArticle';
@@ -21,6 +22,9 @@ type InitialCatalogState = {
 type CatalogConfig = {
   shouldWriteToBrowserHistory: boolean;
 };
+
+const isSSR = import.meta.env.SSR;
+const URLSearchParams = isSSR ? (await import('node:url')).URLSearchParams : window.URLSearchParams;
 
 /**
  * Состояние каталога - параметры фильтра и список товара
@@ -51,15 +55,12 @@ class CatalogState extends StoreModule<InitialCatalogState, CatalogConfig> {
    * Восстановление из адреса
    */
   async initParams(newParams: InitialCatalogState['params'] | object = {}) {
-    if (import.meta.env.SSR) {
-      return;
-    }
     const shouldWriteToBrowserHistory =
       this.name !== 'catalog' ? this.config.shouldWriteToBrowserHistory : true;
 
-    const urlParams = new URLSearchParams(
-      shouldWriteToBrowserHistory ? window.location.search : '',
-    );
+    const urlParams = !isSSR
+      ? new URLSearchParams(shouldWriteToBrowserHistory ? window.location.search : '')
+      : new URLSearchParams('');
     const validParams = {} as InitialCatalogState['params'];
     if (urlParams.has('page')) validParams.page = Number(urlParams.get('page')) || 1;
     if (urlParams.has('limit'))
@@ -103,7 +104,7 @@ class CatalogState extends StoreModule<InitialCatalogState, CatalogConfig> {
     const urlSearch = new URLSearchParams(exclude(params, this.initState().params)).toString();
     let url;
 
-    if (shouldWriteToBrowserHistory) {
+    if (shouldWriteToBrowserHistory && !isSSR) {
       url = window.location.pathname + (urlSearch ? `?${urlSearch}` : '') + window.location.hash;
 
       if (replaceHistory) {
@@ -138,6 +139,8 @@ class CatalogState extends StoreModule<InitialCatalogState, CatalogConfig> {
     });
 
     if (isSuccessResponse(res.data)) {
+      if (isSSR) logger.success('catalog loaded from ssr'.toUpperCase());
+
       this.setState(
         {
           ...this.getState(),

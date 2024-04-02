@@ -3,23 +3,26 @@ import SSRService from './ssr';
 import Store from './store';
 import createStoreRedux from './store-redux';
 
-import type { TConfig } from './store';
+import type { TConfig, TRootState } from './store';
 
 export type TServices = Services;
 
 class Services {
+  readonly initialState: TRootState;
   config: TConfig;
   #api: APIService | null;
   #store: Store | null;
-  #redux: any;
+  #redux: ReturnType<typeof createStoreRedux> | null;
   #ssr: SSRService | null;
 
-  constructor(config: TConfig) {
+  constructor(config: TConfig, initState = {}) {
+    this.initialState = {} as TRootState;
     this.config = config;
     this.#api = null;
     this.#store = null;
     this.#redux = null;
     this.#ssr = null;
+    this.initialState = { ...this.initialState, ...structuredClone(initState) };
   }
 
   get ssr() {
@@ -38,7 +41,7 @@ class Services {
 
   get store() {
     if (!this.#store) {
-      this.#store = new Store(this, this.config.store);
+      this.#store = new Store(this, this.config.store, this.initialState);
     }
     return this.#store;
   }

@@ -1,3 +1,5 @@
+// TODO: replace axios with native fetch, use 20 nodejs
+// FIXME: CORS
 import axios from 'axios';
 
 import type { TServices } from '@src/services';

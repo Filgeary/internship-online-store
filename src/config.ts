@@ -8,7 +8,7 @@ const isProduction = process.env.NODE_ENV === 'production';
 const config: TConfig = {
   store: {
     // Логировать установку состояния?
-    log: false,
+    log: !isProduction,
     // Настройки модулей состояния
     modules: {
       session: {
@@ -32,9 +32,7 @@ const config: TConfig = {
   },
   redux: {},
   ssr: {
-    isActive: true,
-    isFirstRender: true,
-    initPromises: null,
+    isActive: Boolean(import.meta.env.SSR),
   },
 };
 

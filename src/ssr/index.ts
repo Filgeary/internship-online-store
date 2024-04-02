@@ -32,12 +32,16 @@ class SSRService {
     return this.state.has(key);
   }
 
+  isPending(key: string) {
+    return this.state.get(key)?.isPending;
+  }
+
   getPromise(key: string) {
     return this.state.get(key);
   }
 
   setPromiseAndExecute(key: string, promise: Promise<unknown> | unknown) {
-    logger.info('setPromiseAndExecute', key, JSON.stringify(promise));
+    logger.info('setPromiseAndExecute', key);
 
     this.state.set(key, {
       isPending: true,
@@ -45,32 +49,47 @@ class SSRService {
     });
   }
 
-  executeAllPromises() {
-    for (const [key, value] of this.state.entries()) {
-      if (value.isPending && value.promise instanceof Promise) {
-        value.promise
-          .then(() => {
-            this.setPromiseAsComplete(key);
-          })
-          .catch(e => {
-            logger.error(e);
-          });
+  async executeAllPromises() {
+    const promisesNeedToExecute = [];
+    logger.info(' start executeAllPromises\n'.padStart(30, '>'));
+
+    for (const [key, awaitedTask] of this.state.entries()) {
+      if (awaitedTask.isPending && awaitedTask.promise instanceof Promise) {
+        promisesNeedToExecute.push(awaitedTask.promise);
+        this.setPendingStatusAsFalse(key);
       }
     }
-    logger.warn('executeAllPromises');
+
+    if (promisesNeedToExecute.length) {
+      await Promise.all(promisesNeedToExecute)
+        .then(() => {
+          logger.success('All Promises done => only from Backend'.toUpperCase());
+        })
+        .catch(e => {
+          logger.error(e);
+        });
+    }
+
+    logger.info(' end executeAllPromises\n'.padStart(30, '<'));
   }
 
   deletePromise(key: string) {
-    logger.warn('deletePromise', key);
+    logger.info('deletePromise', key);
     this.state.delete(key);
   }
 
-  setPromiseAsComplete(key: string) {
+  setPendingStatusAsFalse(key: string) {
     if (this.state.has(key)) {
       const foundedPromise = this.state.get(key);
       if (foundedPromise) {
         this.state.set(key, { ...foundedPromise, isPending: false });
-        logger.info('setPromiseAsComplete', key, JSON.stringify(foundedPromise.isPending));
+        setTimeout(() => {
+          logger.info(
+            'setPendingStatusAsFalse',
+            key,
+            `isPending: ${this.state.get(key)?.isPending}`,
+          );
+        }, 0);
       }
     }
   }

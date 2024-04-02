@@ -11,13 +11,15 @@ export default function useInit(
   depends: any[] = [],
   { ssrKey, backForward = false }: { ssrKey?: string; backForward?: boolean } = {},
 ) {
-  const ssr = useServices().ssr;
-  if (ssr.config.isActive && ssrKey) {
-    if (!ssr.hasKey(ssrKey)) {
+  const ssrService = useServices().ssr;
+
+  if (ssrService.config.isActive && ssrKey) {
+    if (!ssrService.hasKey(ssrKey)) {
+      logger.info('useInit', ssrKey);
       try {
         const promiseLike = initFunc();
         if (promiseLike instanceof Promise) {
-          ssr.setPromiseAndExecute(ssrKey, promiseLike);
+          ssrService.setPromiseAndExecute(ssrKey, promiseLike);
         }
       } catch (e) {
         logger.error(e);
@@ -26,11 +28,12 @@ export default function useInit(
   }
 
   useEffect(() => {
-    if (!ssrKey || !ssr.hasKey(ssrKey)) {
+    if (!ssrKey || !ssrService.hasKey(ssrKey)) {
+      logger.info('useInit', 'useEffect', ssrKey);
       initFunc();
     } else {
       if (ssrKey) {
-        ssr.deletePromise(ssrKey);
+        ssrService.deletePromise(ssrKey);
       }
     }
     // Если в истории браузера меняются только search-параметры, то react-router не оповестит

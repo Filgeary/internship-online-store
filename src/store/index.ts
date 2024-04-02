@@ -34,8 +34,6 @@ export type TConfig = {
   };
   ssr: {
     isActive: boolean;
-    isFirstRender: boolean;
-    initPromises: Record<string, Promise<any>>[] | null;
   };
 };
 
@@ -52,23 +50,43 @@ class Store {
   constructor(
     services: TServices,
     config = {} as TConfig['store'],
-    initState: TRootState | object = {},
+    initState = {} as TRootState, // usually from SSR
   ) {
     this.services = services;
     this.config = config as TConfig['store'];
     this.listeners = [];
-    this.state = initState as TRootState;
+    this.state = {} as TRootState;
     this.actions = {} as TActions;
-    for (const name of Object.keys(modules) as TKeyOfModules[]) {
-      this.initModule(name);
+    this.state = { ...this.state, ...structuredClone(initState) };
+    for (const moduleName of Object.keys(modules) as TKeyOfModules[]) {
+      this.initModule(moduleName, initState[moduleName]);
     }
+    console.log('🚀 => Store => this.state:', this.state);
   }
 
-  initModule<K extends TKeyOfModules>(name: K) {
-    const module = modules[name] as TTypeOfModules[K];
-    const newModule = new module(this, name, this.config?.modules[name] || {}) as TActions[K];
-    this.actions[name] = newModule;
-    this.state[name] = this.actions[name].initState() as TRootState[K];
+  initModule<ModuleName extends TKeyOfModules>(
+    name: ModuleName,
+    initState?: TRootState[ModuleName],
+  ) {
+    if (!this.actions[name]) {
+      if (!modules[name]) {
+        throw new Error(`Module ${name} not found`);
+      }
+
+      const moduleConstructor = modules[name] as TTypeOfModules[ModuleName];
+      const newModule = new moduleConstructor(
+        this,
+        name,
+        this.config?.modules[name] || {},
+      ) as TActions[ModuleName];
+      this.actions[name] = newModule;
+      this.state[name] = initState
+        ? (this.actions[name].setState(
+            initState as any,
+            `initModule: ${name}`,
+          ) as unknown as TRootState[ModuleName])
+        : (this.actions[name].initState() as TRootState[ModuleName]);
+    }
   }
 
   createSlice<T extends TExtendedKeyOfModules<TKeyOfModules>, U extends TKeyOfModules>(

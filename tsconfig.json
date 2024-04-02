@@ -8,7 +8,7 @@
     "allowJs": true
   },
   "exclude": ["node_modules", "dist"],
-  "include": ["src"],
+  "include": ["src", "@types"],
   "ts-node": {
     "esm": true,
     "experimentalSpecifierResolution": "node",
