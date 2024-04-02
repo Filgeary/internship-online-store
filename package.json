@@ -8,7 +8,9 @@
     "build": "vite build",
     "preview": "vite preview",
     "test": "jest",
-    "serv": "cross-env NODE_ENV=development node server"
+    "serv": "cross-env NODE_ENV=development node server",
+    "build:client": "vite build --outDir ../dist/srv/client",
+    "build:server": "npm run build && vite build --outDir ../dist/srv/server --ssr server/entry-server.tsx"
   },
   "repository": {
     "type": "git",
@@ -31,6 +33,7 @@
     "lodash.debounce": "^4.0.8",
     "lodash.throttle": "^4.1.1",
     "prop-types": "^15.8.1",
+    "qs": "^6.12.0",
     "rc-slider": "^10.5.0",
     "react": "^18.2.0",
     "react-color": "^2.19.3",

@@ -9,6 +9,7 @@ import { ExtendedModulesKeys, ModulesKeys, StoreActionsType, StoreStateType } fr
  * Хранилище состояния приложения
  */
 class Store {
+  preloaded: boolean;
   services: Services;
   config: ConfigStoreType;
   actions: StoreActionsType;
@@ -20,25 +21,33 @@ class Store {
    * @param config {Object}
    * @param initState {Object}
    */
-  constructor(services: Services, config: ConfigStoreType, initState = {}) {
+  constructor(services: Services, config: ConfigStoreType, initState:StoreStateType = undefined) {
     this.services = services;
     this.config = config;
     this.listeners = []; // Слушатели изменений состояния
-
     this.actions = {} as StoreActionsType;
-    this.state = initState as StoreStateType;
+
+    if(!initState) {
+      this.state = {} as StoreStateType;
+      this.preloaded = false;
+    } else {
+      this.state = initState;
+      this.preloaded = true;
+    }
 
     for (const name of Object.keys(modules) as ModulesKeys[]) {
       this.create(name)
       // this.actions[name] = new modules[name as StoreModulesKeys](this, name as StoreModulesKeys, this.config?.modules[name] || {});
       // this.state[name] = this.actions[name as StoreModulesKeys].initState();
     }
+
   }
 
   create<Key extends ModulesKeys>(name: Key) {
     let a = this.config?.modules[name] as ConfigModulesType[Key];
     this.actions[name] = new modules[name](this, name, a) as StoreActionsType[Key];
-    this.state[name] = this.actions[name].initState() as StoreStateType[Key];
+    if(!this.state[name])
+      this.state[name] = this.actions[name].initState() as StoreStateType[Key];
   }
 
   createModule<Key extends ExtendedModulesKeys<U>, U extends ModulesKeys>(name: Key, base: ModulesKeys) {

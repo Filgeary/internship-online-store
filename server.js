@@ -1,9 +1,9 @@
 import fs from "node:fs";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
 import express from "express";
 import { createServer as createViteServer } from "vite";
 import dotenv from "dotenv";
+import React from "react";
+import ReactDOMServer from "react-dom/server";
 
 const isProduction = process.env.NODE_ENV === "production";
 
@@ -23,22 +23,42 @@ async function createServer() {
 
   app.use(vite.middlewares);
 
+  app.use(express.static("./dist/srv/client/assets"));
+
   app.use("*", async (req, res, next) => {
     const url = req.originalUrl;
+
+    // const managerCreator = (await vite.ssrLoadModule("./src/server/manager.ts")).manager;
+    // const manager = managerCreator();
+    // const services =  await manager.prepareData(url);
+
     try {
       let template = fs.readFileSync("./src/index.html", "utf-8");
       template = await vite.transformIndexHtml(url, template);
 
       const render = (await vite.ssrLoadModule("./src/server/entry-server.tsx")).render;
-      const htmlString = render({ url });
 
-      let html = template.replace(`<!--ssr-outlet-->`, htmlString);
+      const { app, services } = render({ url });
+      let htmlRender = ReactDOMServer.renderToString(app);
 
-      const css = fs.readFileSync(`./dist/assets/index.css`, "utf-8");
+      await services.promises.waitPromises();
+
+      htmlRender = ReactDOMServer.renderToString(app);
+
+      const initialState = `<script id="preload">
+        window.__STATE_NAMES__=${JSON.stringify(services.promises.names)}
+        window.__PRELOADED_STATE__ =${JSON.stringify(services.store.getState())}
+        </script>`
+
+      let html = template.replace(`<!--ssr-outlet-->`, `${htmlRender}${initialState}`);
+
+      const css = fs.readFileSync(`./dist/style.css`, "utf-8");
 
       html = html.replace(`<style></style>`, `<style>${css}</style>`);
 
       res.status(200).set({ "Content-Type": "text/html" }).end(html);
+
+      console.log(req);
     } catch (error) {
       vite.ssrFixStacktrace(error);
       next(error);

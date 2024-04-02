@@ -1,4 +1,4 @@
-import { ModulesKeys, ModulesType } from "../store/types";
+import { ModulesKeys, ModulesType, StoreStateType } from "../store/types";
 
 export type ConfigType = {
   store: ConfigStoreType;
@@ -28,4 +28,11 @@ export type ConfigChatType = {
   url: string;
 }
 
+
+export type ServicesConfigType = {
+  config?: ConfigType;
+  storeState?: StoreStateType;
+  initials?: string[];
+  SSR?: boolean;
+}
 

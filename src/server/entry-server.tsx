@@ -3,14 +3,17 @@ import { ServicesContext } from "../context";
 import { I18nProvider } from "../i18n/context";
 import App from "../app";
 import Services from "../services";
-import config from "../config";
-import ReactDOMServer from "react-dom/server";
+import baseConfig from "../config";
 import { StaticRouter } from "react-router-dom/server";
 
-const services = new Services(config);
 
 export function render({url}: {url: string}) {
-  const htmlRender = ReactDOMServer.renderToString(
+  const config = JSON.parse(JSON.stringify(baseConfig));
+  config.store.modules.catalog.changeUrl = false;
+  config.api.baseUrl = "http://example.front.ylab.io";
+  const services = new Services({config, SSR: true});
+
+    const app = (
     <Provider store={services.redux}>
       <ServicesContext.Provider value={services}>
         <I18nProvider>
@@ -20,7 +23,7 @@ export function render({url}: {url: string}) {
         </I18nProvider>
       </ServicesContext.Provider>
     </Provider>
-  );
+    )
 
-  return htmlRender;
+  return { app , services};
 }

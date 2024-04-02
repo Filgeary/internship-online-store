@@ -7,7 +7,15 @@ import Services from "../services";
 import config from "../config";
 import ReactDOM from "react-dom/client";
 
-const services = new Services(config);
+//@ts-ignore
+const storeState = window.__PRELOADED_STATE__;
+//@ts-ignore
+const initials = window.__STATE_NAMES__;
+const services = new Services({config, storeState, initials});
+const script = document.getElementById("preload");
+console.log(initials)
+console.log(storeState);
+script.parentNode.removeChild(script);
 
 ReactDOM.hydrateRoot(
   document.getElementById("root"),

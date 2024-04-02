@@ -1,14 +1,13 @@
 import { defineConfig } from "vite";
-import simpleHtmlPlugin from "vite-plugin-simple-html";
 import react from "@vitejs/plugin-react";
 import path from "path";
-import css from "vite-plugin-css";
+
 
 export default defineConfig({
   root: "src",
   build: {
-    cssCodeSplit: true,
-    outDir: "./dist",
+    cssCodeSplit: false,
+    outDir: "../dist",
     rollupOptions: {
       output: {
         entryFileNames: "[name].js",
@@ -38,6 +37,7 @@ export default defineConfig({
     alias: {
       "@src": path.resolve(__dirname, "./src"),
     },
+    extensions: ['.js', '.jsx', '.ts', '.tsx'],
   },
 
   mode: process.env.NODE_ENV,

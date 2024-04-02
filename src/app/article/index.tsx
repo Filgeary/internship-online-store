@@ -24,7 +24,7 @@ function Article() {
   useInit(() => {
     store.actions.article.load(params.id);
     //dispatch(articleActions.load(params.id));
-  }, [params.id]);
+  }, [params.id], "article");
 
   const select = useSelector(state => ({
     article: state.article.data,

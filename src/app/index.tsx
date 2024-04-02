@@ -17,9 +17,11 @@ import Canvas from './canvas';
 function App() {
 
   const store = useStore();
-  useInit(async () => {
-    await store.actions.session.remind();
-  })
+  if(typeof window !== "undefined"){
+    useInit(async () => {
+      await store.actions.session.remind();
+    })
+  }
 
   return (
     <>

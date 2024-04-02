@@ -46,7 +46,7 @@ function Modals() {
     }
 
     setModals(arr)
-  }, [select.modals])
+  }, [select.modals], "modals")
 
   return (
     <>

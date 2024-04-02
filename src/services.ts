@@ -2,18 +2,27 @@ import APIService from "./api";
 import SocketFactoryService from "./socket";
 import Store from "./store";
 import createStoreRedux from "./store-redux";
-import { ConfigType } from "./types/config";
+import { StoreStateType } from "./store/types";
+import { ConfigType, ServicesConfigType } from "./types/config";
+import { PromiseService } from "./utils/promise";
 
 class Services {
   config: ConfigType;
+  SSR: boolean
   private _api: APIService;
   private _store: Store;
   private _redux: ReturnType<typeof createStoreRedux>;
   private _socketFactory: SocketFactoryService;
+  private _promises: PromiseService;
+  private storeState: StoreStateType;
+  private initials: string[]
   //private _chat: ChatService;
 
-  constructor(config: ConfigType) {
-    this.config = config;
+  constructor(config: ServicesConfigType) {
+    this.config = config.config;
+    this.storeState = config.storeState;
+    this.SSR = config.SSR ? true : false;
+    this.initials = config.initials;
   }
 
   /**
@@ -33,7 +42,7 @@ class Services {
    */
   get store(): Store {
     if (!this._store) {
-      this._store = new Store(this, this.config.store);
+      this._store = new Store(this, this.config.store, this.storeState);
     }
     return this._store;
   }
@@ -55,6 +64,14 @@ class Services {
       this._socketFactory = new SocketFactoryService(this, this.config.sockets);
    }
     return this._socketFactory;
+  }
+
+  get promises(): PromiseService {
+    if(!this._promises) {
+      this._promises = new PromiseService(this.initials);
+    }
+
+    return this._promises;
   }
 }
 

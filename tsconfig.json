@@ -11,11 +11,15 @@
     "allowSyntheticDefaultImports": true,
     "noFallthroughCasesInSwitch": true,
     "module": "ESNext", // esnext
-    "target": "es5",
+    "target": "ESNext",
     "jsx": "react-jsx",
     "allowJs": true,
     "moduleResolution": "Bundler",
     "resolveJsonModule": true,
     "isolatedModules": true
-  }
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx"
+  ]
 }
