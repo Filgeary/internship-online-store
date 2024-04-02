@@ -8,7 +8,7 @@ import path from 'path'
 export default defineConfig({
     root: 'src',
     build: {
-      outDir: 'src/dist',
+      outDir: path.resolve(__dirname, '../dist'),
       emptyOutDir: true,
       sourcemap: true,
     },

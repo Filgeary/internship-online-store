@@ -33,7 +33,11 @@ class CatalogState extends StoreModule<IIinitCatalogState> {
    * @return {Promise<void>}
    */
   async initParams(newParams: object = {}): Promise<void> {
-    const urlParams = new URLSearchParams(window.location.search);
+    let urlParams
+    if (typeof window !== "undefined") {
+      urlParams = new URLSearchParams(window.location?.search)
+    } else urlParams = new URLSearchParams('')
+
     let validParams: IValidParams = {};
     if (urlParams.has("page"))
       validParams.page = Number(urlParams.get("page")) || 1;
@@ -90,7 +94,8 @@ class CatalogState extends StoreModule<IIinitCatalogState> {
     // Сохранить параметры в адрес страницы
     let urlSearch = new URLSearchParams(
       exclude(params, this.initState().params)
-    ).toString();
+    ).toString()
+    if (typeof window !== "undefined") {
     const url =
       window?.location.pathname +
       (urlSearch ? `?${urlSearch}` : "") +
@@ -103,6 +108,7 @@ class CatalogState extends StoreModule<IIinitCatalogState> {
         window?.history.pushState({}, "", url);
       }
     }
+  }
 
     const apiParams = exclude(
       {

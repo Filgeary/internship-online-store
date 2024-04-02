@@ -2,6 +2,7 @@ import * as modules from './exports'
 import { IConfig } from '../config'
 import Services from '../services' 
 import type { Actions, StoreState, ImportModules, IKeysModules, TActions } from './types.ts'
+import { mergeDeep } from 'immutable';
 
 /**
  * Хранилище состояния приложения
@@ -12,19 +13,20 @@ class Store {
   listeners: Array<((...arg: any[]) => void)>
   actions: Actions & Record<string, any>
   state: StoreState  & Record<string, any>
-  initialStateFromServer: object
+  initialStateFromServer: unknown
 
   constructor(
     services: Services,
     // config = {} as IConfig["store"],
     config: IConfig | {} = {},
     initState = {},
+    initialStateFromServer: Record<string, unknown>
   ) {
     this.services = services
     this.config = config as IConfig["store"]
     this.listeners = [] // Слушатели изменений состояния
     this.state = initState as StoreState
-    this.initialStateFromServer = {...initState}
+    this.initialStateFromServer = initialStateFromServer
     /** @type {{
      * basket: BasketState,
      * catalog: CatalogState,
@@ -43,11 +45,14 @@ class Store {
     const keys = Object.keys(modules) as IKeysModules[]
     for (const name of keys) {
       this.create(name)
-      const storeModule = this.actions[name]
-      console.log('storeModule', storeModule)
-      console.log('storeModule', storeModule.name)
     }
-    console.log("this.initialStateFromServer", this.initialStateFromServer)
+
+    const keyFromServer = Object.keys(initialStateFromServer)
+    for(const name of keyFromServer) {
+      const storeModule = this.actions[name].getState()
+      const newModuleState = mergeDeep(storeModule, initialStateFromServer[name] as Record<string, unknown>)
+      this.actions[name].setState(newModuleState)
+    }
   }
 
   create<Key extends IKeysModules>(name: Key) {

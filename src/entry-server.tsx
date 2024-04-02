@@ -8,23 +8,24 @@ import Services from "./services"
 import config from "./config"
 
 interface Props {
-  path: string
-  data: any
+  url: string
+  // services: Services
 }
 
-export const render = ({ path, data }: Props) => {
-  const services = new Services(config, data)
-  console.log('в entry-server data===', data)
+export const render = ({ url }: Props) => {
   
-  return renderToString(
+  const services = new Services(config)
+  
+  const app = (
      <Provider store={services.redux}>
       <ServicesContext.Provider value={services}>
         <I18nProvider>
-          <StaticRouter location={path}>
+          <StaticRouter location={url}>
             <App />
           </StaticRouter>
         </I18nProvider>
       </ServicesContext.Provider>
      </Provider>
   )
+  return {app, services}
 }

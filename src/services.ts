@@ -3,19 +3,32 @@ import WebSocketService from "./socket"
 import Store from "./store"
 import createStoreRedux from "./store-redux"
 import { IConfig } from "./config"
+import ServiceServer from "./service-server"
 
 class Services {
   config: IConfig
+  private _server?: ServiceServer
   private _api?: APIService
   private _socket?: WebSocketService
   private _store?: Store
   private _redux?: any
-  readonly initState: object
+  readonly initState: Record<string, unknown>
 
   constructor(config: IConfig, initState = {}) {
     this.config = config
     this.initState = initState
   }
+
+    /**
+   * Сервис Server
+   * @returns {ServiceServer}
+   */
+    get server(): ServiceServer {
+      if (!this._server) {
+        this._server = new ServiceServer(this);
+      }
+      return this._server;
+    }
 
   /**
    * Сервис АПИ
@@ -45,7 +58,7 @@ class Services {
    */
   get store(): Store {
     if (!this._store) {
-      this._store = new Store(this, this.config.store, this.initState);
+      this._store = new Store(this, this.config.store, {}, this.initState);
     }
     return this._store;
   }

@@ -19,7 +19,7 @@ const config = {
     baseUrl: ''
   },
   socket: {
-    baseUrl: ''
+    baseUrl: typeof window !== "undefined" ? "" : "http://example.front.ylab.io"
   },
   redux: {}
 }

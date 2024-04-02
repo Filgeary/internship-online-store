@@ -20,8 +20,8 @@ function Main() {
       store.actions.catalog.initParams(),
       store.actions.categories.load(),
       store.actions.countries.load()
-    ]);
-  }, [], true);
+    ])
+  }, [], true)
 
   const {t} = useTranslate()
 

@@ -12,9 +12,10 @@ import config from "./config"
 // @ts-ignore
  delete window.__SSR_DATA__
 
-const services = new Services(config, {...data})
+const services = new Services(config, data)
 
-hydrateRoot(
+// export const root = hydrateRoot(
+  hydrateRoot(
   document.getElementById?.("root") as HTMLElement,
    <Provider store={services.redux}>
     <ServicesContext.Provider value={services}>
