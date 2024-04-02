@@ -19,7 +19,7 @@ function Main() {
       store.actions.categories.load(),
       store.actions.countries.load()
     ]);
-  }, [], true);
+  }, [], {ssrKey: "main.init", backForward: true});
 
   const {t} = useTranslate();
 

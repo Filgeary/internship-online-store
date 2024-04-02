@@ -38,7 +38,7 @@ class CatalogState extends StoreModule<InitialStateCatalog, InitConfigCatalog> {
    * @return {Promise<void>}
    */
   async initParams(newParams: Partial<Params> = {}): Promise<void> {
-    const urlParams = new URLSearchParams(window.location.search);
+    const urlParams = new URLSearchParams(import.meta.env.SSR ? "" : window.location.search);
     let validParams: Partial<Params> = {};
 
     if (!this.config.ignoreURL) {
@@ -100,13 +100,13 @@ class CatalogState extends StoreModule<InitialStateCatalog, InitConfigCatalog> {
         exclude(params, this.initState().params)
       ).toString();
       const url =
-        window.location.pathname +
+        (import.meta.env.SSR ? "" : window.location.pathname) +
         (urlSearch ? `?${urlSearch}` : "") +
-        window.location.hash;
+        (import.meta.env.SSR ? "" : window.location?.hash);
         if (replaceHistory) {
-          window.history.replaceState({}, "", url);
+          window.history?.replaceState({}, "", url);
       } else {
-        window.history.pushState({}, "", url);
+        window.history?.pushState({}, "", url);
       }
     }
 
@@ -127,7 +127,7 @@ class CatalogState extends StoreModule<InitialStateCatalog, InitConfigCatalog> {
         "search[madeIn]": "",
       }
     );
-    
+
     const res = await this.services.api.request({
       url: `/api/v1/articles?${new URLSearchParams(apiParams)}`,
     });

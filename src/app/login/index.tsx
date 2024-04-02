@@ -23,7 +23,7 @@ function Login() {
 
   useInit(() => {
     store.actions.session.resetErrors();
-  })
+  }, [])
 
   const select = useSelector((state) => ({
     waiting: state.session.waiting,

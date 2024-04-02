@@ -98,7 +98,7 @@ class SessionState extends StoreModule<InitialStateSession, InitConfigSession> {
    * @return {Promise<void>}
   */
  async remind(): Promise<void> {
-   const token = localStorage.getItem("token");
+   const token = import.meta.env.SSR ? undefined : localStorage.getItem("token");
    if (token) {
      // Устанавливаем токен в АПИ
      this.services.api.setHeader(this.config.tokenHeader, token);

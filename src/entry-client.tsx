@@ -7,11 +7,14 @@ import Services from "./services";
 import config from "./config";
 import './global.css';
 
-const services = new Services(config);
+const services = new Services(config, window.__INITIAL_DATA__);
+const script = document.getElementById("preload");
+if(script)
+document.body.removeChild(script);
+delete window.__INITIAL_DATA__;
 
 const root = document.getElementById("root") as HTMLElement;
 if(!root) throw new Error("Failed to find the root element");
-
 // Первый рендер приложения
 hydrateRoot(
   root,

@@ -19,7 +19,7 @@ function App(): React.ReactElement {
   const store = useStore();
   useInit(async () => {
     await store.actions.session.remind();
-  })
+  }, [])
 
   return (
     <>

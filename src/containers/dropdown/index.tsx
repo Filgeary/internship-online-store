@@ -14,7 +14,7 @@ function Dropdown(props: DropdownType) {
   const store = useStore();
   const [search, setSearch] = useState('');
   const [selected, setSelected] = useState<Country[]>([]);
-  const [countries, setCountries] = useState<Country[]>([]);
+  const [countries, setCountries] = useState<Country[]>(props.options);
 
   const select = useSelector((state) => ({
     waiting: state.countries.waiting,

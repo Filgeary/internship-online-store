@@ -28,7 +28,7 @@ export default defineConfig(({ mode, isSsrBuild }) => {
       port: Number(env.PORT),
       proxy: {
         "/api/v1": {
-          target: env.API_BASE,
+          target: env.API_URL,
           secure: false,
           changeOrigin: true,
         },

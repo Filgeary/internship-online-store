@@ -19,9 +19,9 @@ function Article() {
 
   const params = useParams();
 
-  useInit(() => {
-    store.actions.article.load(params.id!);
-  }, [params.id]);
+  useInit(async () => {
+    await store.actions.article.load(params.id!);
+  }, [params.id], {ssrKey: "article.init"});
 
   const select = useSelector((state) => ({
     article: state.article.data,
