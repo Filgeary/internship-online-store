@@ -28,7 +28,7 @@ class SessionState extends StoreModule<InitialSessionState, SessionConfig> {
       user: null,
       token: null,
       errors: null,
-      waiting: true,
+      waiting: false,
       exists: false,
     };
   }
@@ -100,6 +100,7 @@ class SessionState extends StoreModule<InitialSessionState, SessionConfig> {
    * По токену восстановление сессии
    */
   async remind() {
+    // TODO: need new auth flow on SSR
     if (import.meta.env.SSR) {
       return;
     }

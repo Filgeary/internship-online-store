@@ -24,6 +24,7 @@ type CatalogConfig = {
 };
 
 const isSSR = import.meta.env.SSR;
+// FIXME: make Router Service, URLSearchParams doesn't work in SSR correctly
 const URLSearchParams = isSSR ? (await import('node:url')).URLSearchParams : window.URLSearchParams;
 
 /**
@@ -86,6 +87,11 @@ class CatalogState extends StoreModule<InitialCatalogState, CatalogConfig> {
    * Установка параметров и загрузка списка товаров
    */
   async setParams(newParams: InitialCatalogState['params'] | object = {}, replaceHistory = false) {
+    if (this.getState().waiting) {
+      logger.warn('Catalog is loading, again! Please check your requests');
+      return;
+    }
+
     const shouldWriteToBrowserHistory =
       this.name !== 'catalog' ? this.config.shouldWriteToBrowserHistory : true;
     const params = { ...this.getState().params, ...newParams };

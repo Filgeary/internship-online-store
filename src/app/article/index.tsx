@@ -25,7 +25,7 @@ function Article() {
     },
     [id],
     {
-      ssrKey: 'article',
+      ssrKey: 'article/' + id,
     },
   );
 
