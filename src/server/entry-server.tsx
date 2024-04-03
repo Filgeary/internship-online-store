@@ -12,7 +12,7 @@ export function render({url}: {url: string}) {
   config.store.modules.catalog.changeUrl = false;
   config.api.baseUrl = "http://example.front.ylab.io";
   const services = new Services({config, SSR: true});
-
+  console.log(url)
     const app = (
     <Provider store={services.redux}>
       <ServicesContext.Provider value={services}>

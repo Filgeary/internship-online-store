@@ -58,7 +58,6 @@ async function createServer() {
 
       res.status(200).set({ "Content-Type": "text/html" }).end(html);
 
-      console.log(req);
     } catch (error) {
       vite.ssrFixStacktrace(error);
       next(error);
