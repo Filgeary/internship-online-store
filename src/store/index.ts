@@ -19,14 +19,14 @@ class Store {
   ) {
     this.services = services;
     this.config = config;
+    this.state = {} as TState;
     this.listeners = []; // Слушатели изменений состояния
-    this.state = initState;
-
     this.actions = {} as TActions;
     const keys = Object.keys(modules) as keyModules[];
     for (const name of keys) {
       this.create(name);
     }
+    this.state = { ...this.state, ...initState};
   }
 
   create<Key extends keyModules>(name: Key) {
@@ -97,14 +97,14 @@ class Store {
    */
   setState(newState: TState, description = "setState") {
     if (this.config.log) {
-      // console.group(
-      //   `%c${"store.setState"} %c${description}`,
-      //   `color: ${"#777"}; font-weight: normal`,
-      //   `color: ${"#333"}; font-weight: bold`
-      // );
-      // console.log(`%c${"prev:"}`, `color: ${"#d77332"}`, this.state);
-      // console.log(`%c${"next:"}`, `color: ${"#2fa827"}`, newState);
-      // console.groupEnd();
+      console.group(
+        `%c${"store.setState"} %c${description}`,
+        `color: ${"#777"}; font-weight: normal`,
+        `color: ${"#333"}; font-weight: bold`
+      );
+      console.log(`%c${"prev:"}`, `color: ${"#d77332"}`, this.state);
+      console.log(`%c${"next:"}`, `color: ${"#2fa827"}`, newState);
+      console.groupEnd();
     }
     this.state = newState;
     // Вызываем всех слушателей

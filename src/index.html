@@ -4,10 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Simple SPA</title>
+  <base href="/">
 </head>
 <body>
   <div id="root"><!--ssr-outlet--></div>
   <!--ssr-preload-->
-  <script type="module" src="entry-client.tsx"></script>
+  <script type="module" defer src="entry-client.tsx"></script>
 </body>
 </html>

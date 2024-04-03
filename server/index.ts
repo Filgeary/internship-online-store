@@ -16,7 +16,6 @@ const base = process.env.BASE_URL || "/"
 const app = express();
 let vite: ViteDevServer;
 
-
 if (!isProduction) {
   const { createServer } = await import("vite");
   vite = await createServer({
@@ -39,7 +38,7 @@ if (!isProduction) {
 
 app.use(express.json());
 
-app.use("*", async (req, res, next) => {
+app.use("/*", async (req, res, next) => {
   const url = req.originalUrl;
   let template: string;
   let render: TRender;
@@ -56,15 +55,17 @@ app.use("*", async (req, res, next) => {
         await import("../dist/server/entry-server.js")
         ).render;
       }
+
       const { app, services } = render({ path: url });
+
+      services.ssr.setPath(req._parsedUrl?.search);
 
       renderToString(app);
       await services.ssr.execute();
-
       const renderer = renderToString(app);
+
       const store = services.store.getState();
-      const initialState = `<script id="preload"
-      >window.__INITIAL_DATA__ = ${JSON.stringify(store).replace(
+      const initialState = `<script id="preload">window.__PRELOADED_STATE__ = ${JSON.stringify(store).replace(
         /</g,
         "\\u003c"
         )}</script>`;

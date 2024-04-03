@@ -14,6 +14,7 @@ export default function useInit(
   options: Partial<TInitOptions> = {}
 ) {
   const SSR = useServices().ssr;
+
   if (import.meta.env.SSR && options.ssrKey) {
     if (!SSR.has(options.ssrKey)) {
       try {
@@ -26,10 +27,14 @@ export default function useInit(
   }
 
   useEffect(() => {
-    if (!options.ssrKey || !SSR.has(options.ssrKey)) {
-      initFunc(false);
+    if ((!options.ssrKey || !SSR.has(options.ssrKey)) && !import.meta.env.SSR) {
+      if(!SSR.config.isFirstRender) {
+        initFunc(false);
+      } else {
+        SSR.config.isFirstRender = false;
+      }
     } else {
-      if(options.ssrKey) SSR.delete(options.ssrKey)
+      if (options.ssrKey && SSR.has(options.ssrKey)) SSR.delete(options.ssrKey);
     }
     // Если в истории браузера меняются только search-параметры, то react-router не оповестит
     // компонент об изменениях, поэтому хук можно явно подписать на событие изменения истории

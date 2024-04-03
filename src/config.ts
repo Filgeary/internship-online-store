@@ -29,8 +29,11 @@ const config: Config = {
     },
   },
   api: {
-    baseUrl: "",
+    baseUrl: import.meta.env.SSR ? "http://example.front.ylab.io" : "",
   },
+  ssr: {
+    isFirstRender: true,
+  }
 };
 
 export default config;

@@ -1,8 +1,6 @@
 import Services from "@src/services";
 import type { ConfigApi } from "./type";
 
-const baseUrl = "http://example.front.ylab.io";
-
 class APIService {
   services: Services;
   config: ConfigApi;
@@ -30,7 +28,7 @@ class APIService {
     ...options
   }: Partial<Request>) {
     if (!url?.match(/^(http|\/\/)/)) {
-      url = import.meta.env.SSR ? baseUrl + url : this.config.baseUrl + url;
+      url = this.config.baseUrl + url;
     }
 
     const res = await fetch(url, {

@@ -1,12 +1,13 @@
 import Services from "@src/services";
-import { TPromiseState } from "./type";
+import { ConfigSSR, TPromiseState } from "./type";
 
 class SSRService {
   services: Services;
-  config;
+  config: ConfigSSR;
   private state: TPromiseState = new Map();
+  searchPath: string = '';
 
-  constructor(services: Services, config = {}) {
+  constructor(services: Services, config = {} as ConfigSSR) {
     this.services = services;
     this.config = config;
   }
@@ -39,6 +40,14 @@ class SSRService {
    */
   delete(key: string) {
     this.state.delete(key);
+  }
+
+  /**
+   * Установка пути
+   * @param path
+   */
+  setPath(path: string) {
+    this.searchPath = path;
   }
 }
 

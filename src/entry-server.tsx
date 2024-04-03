@@ -9,10 +9,6 @@ if (!global.window) {
   global.window = {} as Window & typeof globalThis;
 }
 
-if (!global.document) {
-  global.document = {} as Document;
-}
-
 type PropsRender = {
   path: string
 }

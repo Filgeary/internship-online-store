@@ -38,7 +38,7 @@ class CatalogState extends StoreModule<InitialStateCatalog, InitConfigCatalog> {
    * @return {Promise<void>}
    */
   async initParams(newParams: Partial<Params> = {}): Promise<void> {
-    const urlParams = new URLSearchParams(import.meta.env.SSR ? "" : window.location.search);
+    const urlParams = new URLSearchParams(import.meta.env.SSR ? this.services.ssr.searchPath : window.location.search);
     let validParams: Partial<Params> = {};
 
     if (!this.config.ignoreURL) {
