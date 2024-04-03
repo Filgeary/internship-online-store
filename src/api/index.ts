@@ -1,7 +1,3 @@
-// TODO: replace axios with native fetch, use 20 nodejs
-// FIXME: CORS
-import axios from 'axios';
-
 import type { TServices } from '@src/services';
 import type { TConfig } from '@src/store';
 import type { TErrorResponse, TResponse, TSuccessResponse } from '@src/types';
@@ -14,10 +10,6 @@ export function isSuccessResponse<T>(res: TResponse<T>): res is TSuccessResponse
 export function isErrorResponse<T>(res: TResponse<T>): res is TErrorResponse {
   return Boolean((res as TErrorResponse).error);
 }
-
-const axiosInstance = axios.create({
-  baseURL: 'http://example.front.ylab.io',
-});
 
 class APIService {
   services: TServices;
@@ -44,20 +36,20 @@ class APIService {
   }: {
     url: string;
     method?: RequestInit['method'];
-    headers?: any;
-    body?: any;
+    headers?: HeadersInit;
+    body?: BodyInit;
   }) {
     if (!url.match(/^(http|\/\/)/)) url = this.config.baseUrl + url;
 
-    const res = await axiosInstance(url, {
+    const res = await fetch(url, {
       method,
       headers: { ...this.defaultHeaders, ...headers },
-      data: body,
+      body,
       ...options,
     });
 
     return {
-      data: (await res.data) as TResponse<T>,
+      data: (await res.json()) as TResponse<T>,
       status: res.status,
       headers: res.headers,
     };

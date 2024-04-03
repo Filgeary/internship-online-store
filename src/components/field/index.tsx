@@ -1,5 +1,6 @@
 import { cn as bem } from '@bem-react/classname';
-import React, { memo } from 'react';
+import * as React from 'react';
+import { memo } from 'react';
 
 import './style.css';
 

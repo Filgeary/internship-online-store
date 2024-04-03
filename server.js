@@ -1,5 +1,4 @@
 /* eslint-disable import/no-named-as-default-member */
-import cors from 'cors';
 import express from 'express';
 import fs from 'node:fs/promises';
 import { renderToString } from 'react-dom/server';
@@ -44,7 +43,6 @@ if (!isProduction) {
     changeOrigin: true,
   });
   app.use(apiProxy);
-  app.use(cors());
   app.use(express.json());
 
   app.use(compression());
@@ -94,7 +92,6 @@ app.use('*', async (req, res) => {
     const stateDump = services.store.getState();
     logger.success('server.js => stateDump is Ready');
 
-    // TODO: simplify this
     const scriptAsStringWithState = `<script id="__INITIAL_STATE__" type="application/json">${JSON.stringify(stateDump)}</script>`;
     const scriptAsStringWithJobsDump = `<script id="__INITIAL_JOBS_DUMP__" type="application/json">${JSON.stringify(initialJobsDump)}</script>`;
 

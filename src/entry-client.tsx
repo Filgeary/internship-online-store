@@ -14,9 +14,14 @@ const initialJobsDump = window.__INITIAL_JOBS_DUMP__.textContent;
 const services = new Services(config, JSON.parse(initialState || '{}'));
 services.ssr.initWithStateDump(JSON.parse(initialJobsDump || '{}'));
 
-// FIXME: don't work it
-delete window.__INITIAL_STATE__;
-delete window.__INITIAL_JOBS_DUMP__;
+window.__INITIAL_STATE__ = null;
+window.__INITIAL_JOBS_DUMP__ = null;
+
+// remove script tags with __INITIAL_STATE__ and __INITIAL_JOBS_DUMP__
+setTimeout(() => {
+  const scripts = document.querySelectorAll('script[id^="__INITIAL_"]');
+  scripts.forEach(script => script.remove());
+}, 0);
 
 hydrateRoot(
   document.getElementById('root') as HTMLElement,

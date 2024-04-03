@@ -1,6 +1,6 @@
 import { cn as bem } from '@bem-react/classname';
 import debounce from 'lodash.debounce';
-import React, { memo, useCallback, useState } from 'react';
+import { memo, useCallback, useState } from 'react';
 
 import { useIsomorphicLayoutEffect } from '@src/hooks/useIsomorphicLayoutEffect';
 

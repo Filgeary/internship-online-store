@@ -61,7 +61,7 @@ class Store {
     for (const moduleName of Object.keys(modules) as TKeyOfModules[]) {
       this.initModule(moduleName, initState[moduleName]);
     }
-    console.log('🚀 => Store => this.state:', this.state);
+    console.log('🚀 => Store => constructor => this.state:', this.state);
   }
 
   initModule<ModuleName extends TKeyOfModules>(

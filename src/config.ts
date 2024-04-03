@@ -1,6 +1,7 @@
 import type { TConfig } from './store';
 
 const isProduction = process.env.NODE_ENV === 'production';
+const isSSR = import.meta.env.SSR;
 
 /**
  * Настройки сервисов
@@ -28,11 +29,11 @@ const config: TConfig = {
     },
   },
   api: {
-    baseUrl: '',
+    baseUrl: isSSR ? 'http://example.front.ylab.io' : '',
   },
   redux: {},
   ssr: {
-    isActive: Boolean(import.meta.env.SSR),
+    isActive: isSSR,
   },
 };
 
