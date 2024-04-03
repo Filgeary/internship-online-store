@@ -17,16 +17,16 @@ function Main() {
 
   useInit(async () => {
     await Promise.all([
-      store.actions.catalog.initParams(),
-      store.actions.categories.load(),
-      store.actions.countries.load()
+       store.actions.catalog.initParams(),
+       store.actions.categories.load(),
+       store.actions.countries.load()
     ])
   }, [], true)
 
   const {t} = useTranslate()
 
   return (
-    <PageLayout>
+     <PageLayout>
       <TopHead/>
       <Head title={t('title')}>
         <LocaleSelect/>
@@ -34,7 +34,7 @@ function Main() {
       <Navigation/>
       <CatalogFilter/>
       <CatalogList stateName='catalog' />
-    </PageLayout>
+     </PageLayout>
   );
 }
 

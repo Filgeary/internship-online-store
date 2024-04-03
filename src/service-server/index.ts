@@ -3,13 +3,13 @@ import Services from "../services"
 class ServiceServer {
     services: Services
     promisesArray: Promise<any>[] = []
+    ssrRender: boolean = false
 
     constructor(services: Services,) {
         this.services = services
     }
 
     addPromise(promise: Promise<any>) {
-        console.log('promise', promise)
         this.promisesArray.push(promise)
     }
 
@@ -25,6 +25,11 @@ class ServiceServer {
             throw error; // Можно выбросить ошибку дальше для обработки в вызывающем коде
         }
     }
+
+    clear(){
+        this.ssrRender = true
+      }
+    
 }
 
 export default ServiceServer

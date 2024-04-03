@@ -16,7 +16,7 @@ const config = {
     }
   },
   api: {
-    baseUrl: ''
+    baseUrl: typeof window !== "undefined" ? "" : "http://example.front.ylab.io"
   },
   socket: {
     baseUrl: typeof window !== "undefined" ? "" : "http://example.front.ylab.io"

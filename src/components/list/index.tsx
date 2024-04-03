@@ -10,13 +10,14 @@ interface IListProps {
 
 const List: FC<IListProps> = ({ list, renderItem }) => {
   return (
-    <div className='List'>{
+    <>
+      {
       list.map(item =>
         <div key={item._id} className='List-item'>
           {renderItem(item)}
         </div>
       )}
-    </div>
+    </>
   )
 }
 

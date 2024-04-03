@@ -58,7 +58,7 @@ class Services {
    */
   get store(): Store {
     if (!this._store) {
-      this._store = new Store(this, this.config.store, {}, this.initState);
+      this._store = new Store(this, this.config.store, this.initState);
     }
     return this._store;
   }

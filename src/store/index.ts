@@ -13,20 +13,20 @@ class Store {
   listeners: Array<((...arg: any[]) => void)>
   actions: Actions & Record<string, any>
   state: StoreState  & Record<string, any>
-  initialStateFromServer: unknown
+  // initialStateFromServer: unknown
 
   constructor(
     services: Services,
     // config = {} as IConfig["store"],
     config: IConfig | {} = {},
     initState = {},
-    initialStateFromServer: Record<string, unknown>
+    // initialStateFromServer: Record<string, unknown>
   ) {
     this.services = services
     this.config = config as IConfig["store"]
     this.listeners = [] // Слушатели изменений состояния
-    this.state = initState as StoreState
-    this.initialStateFromServer = initialStateFromServer
+    this.state = {} as StoreState
+    // this.initialStateFromServer = initialStateFromServer
     /** @type {{
      * basket: BasketState,
      * catalog: CatalogState,
@@ -46,13 +46,8 @@ class Store {
     for (const name of keys) {
       this.create(name)
     }
-
-    const keyFromServer = Object.keys(initialStateFromServer)
-    for(const name of keyFromServer) {
-      const storeModule = this.actions[name].getState()
-      const newModuleState = mergeDeep(storeModule, initialStateFromServer[name] as Record<string, unknown>)
-      this.actions[name].setState(newModuleState)
-    }
+    this.state = mergeDeep(this.state, initState)
+    // this.actions.catalog.setState()
   }
 
   create<Key extends IKeysModules>(name: Key) {

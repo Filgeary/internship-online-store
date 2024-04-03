@@ -81,15 +81,14 @@ class CatalogState extends StoreModule<IIinitCatalogState> {
   ): Promise<void> {
     const params: IParams = { ...this.getState().params, ...newParams }
 
-    // Установка новых параметров и признака загрузки
+    // Установка новых параметров
     this.setState(
       {
         ...this.getState(),
-        params,
-        waiting: true,
+        params
       },
       "Установлены параметры каталога"
-    );
+    )
 
     // Сохранить параметры в адрес страницы
     let urlSearch = new URLSearchParams(

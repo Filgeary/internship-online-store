@@ -41,8 +41,6 @@ const createServer = async () => {
     const url = req.originalUrl
     let template, render
 
-    console.log('url', url)
-
     try {
       if (process.env.NODE_ENV === "development") {
         template = fs.readFileSync(path.resolve("src/index.html"), "utf-8")  // Чтение шаблона в режиме разработки
@@ -77,14 +75,16 @@ const createServer = async () => {
 
       const htmlRenderSecond = ReactDOMServer.renderToString(app)
 
-      // const initialState = `<script id="preload">
-      //   window.__SSR_DATA__ =${JSON.stringify(services.store.getState())}
-      //   </script>`
+      services.server.clear()
+
+      const data = `<script id="preload">
+        window.__SSR_DATA__ =${JSON.stringify(services.store.getState())}
+        </script>`
 
 
       const html = template
-        .replace(`<!--ssr-outlet-->`, `${htmlRenderSecond}${initialState}`)  // Замена метки на HTML контент
-        //.replace(`<!--ssr-data-->`, data)   // Вставка данных о контенте
+        .replace(`<!--ssr-outlet-->`, htmlRenderSecond)  // Замена метки на HTML контент
+        .replace(`<!--ssr-data-->`, data)   // Вставка данных о контенте
 
       res.status(200).set({"Content-Type": "text/html"}).end(html)   // Отправка ответа с HTML контентом
     } catch (error) {

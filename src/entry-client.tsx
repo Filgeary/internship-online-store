@@ -8,11 +8,12 @@ import Services from "./services"
 import config from "./config"
 
 // @ts-ignore
- const data = window.__SSR_DATA__
-// @ts-ignore
- delete window.__SSR_DATA__
+const data = window.__SSR_DATA__
 
 const services = new Services(config, data)
+
+// @ts-ignore
+delete window.__SSR_DATA__
 
 // export const root = hydrateRoot(
   hydrateRoot(
