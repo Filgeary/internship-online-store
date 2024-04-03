@@ -1,5 +1,4 @@
-import React, {ReactNode, memo} from "react";
-import PropTypes from "prop-types";
+import React, {memo} from "react";
 import {cn as bem} from '@bem-react/classname';
 import type { SideLayoutProps } from "./type";
 import './style.css';

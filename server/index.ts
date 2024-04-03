@@ -33,7 +33,10 @@ if (!isProduction) {
       secure: false,
     })
   );
-  app.use(express.static(path.resolve("./dist/client"), { index: false }));
+  const compression = (await import("compression")).default;
+  const sirv = (await import("sirv")).default;
+  app.use(compression());
+  app.use(base, sirv(path.resolve("./dist/client"), { extensions: [] }));
 }
 
 app.use(express.json());
