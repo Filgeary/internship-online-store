@@ -28,7 +28,7 @@ class Store {
     this.services = services;
     this.config = config as TConfigStore["store"];
     this.listeners = []; // Слушатели изменений состояния
-    this.state = initState as TNewStoreState;
+    this.state = {} as TNewStoreState;
     /** @type {{
      * basket: BasketState,
      * catalog: CatalogState,
@@ -38,9 +38,11 @@ class Store {
      * profile: ProfileState
      * }} */
     this.actions = {} as TActions;
+    
     for (const name of Object.keys(modules) as TKeyModules[]) {
       this.create(name);
     }
+    this.state={...this.state, ...initState}
   }
 
   create<Key extends TKeyModules>(name: Key) {

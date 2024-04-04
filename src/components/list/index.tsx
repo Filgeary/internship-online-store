@@ -10,13 +10,13 @@ type TListProps = {
 
 function List({ list, renderItem }: TListProps) {
   return (
-    <div className="List">
+    <>
       {list.map((item) => (
         <div key={item._id} className="List-item">
           {renderItem(item)}
         </div>
       ))}
-    </div>
+    </>
   );
 }
 

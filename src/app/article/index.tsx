@@ -13,27 +13,33 @@ import TopHead from "@src/containers/top-head";
 import { useDispatch, useSelector as useSelectorRedux } from "react-redux";
 import shallowequal from "shallowequal";
 import articleActions from "@src/store-redux/article/actions";
+import useSelector from "@src/hooks/use-selector";
 
 function Article() {
   const store = useStore();
 
-  const dispatch = useDispatch<any>();
+  //const dispatch = useDispatch<any>();
   // Параметры из пути /articles/:id
 
   const params = useParams();
 
-  
- useInit(() => {
-    dispatch(articleActions.load(params.id as string));
-  }, [params.id]); 
+  useInit(async () => {
+    await store.actions.article.load(params.id);
+    // dispatch(articleActions.load(params.id as string));
+  }, [params.id]);
 
-  const select = useSelectorRedux(
+  /*  const select = useSelectorRedux(
     (state: any) => ({
       article: state.article.data,
       waiting: state.article.waiting,
     }),
     shallowequal
-  ); // Нужно указать функцию для сравнения свойства объекта, так как хуком вернули объект
+  ); */ // Нужно указать функцию для сравнения свойства объекта, так как хуком вернули объект
+
+  const select = useSelector((state) => ({
+    article: state.article.data,
+    waiting: state.article.waiting,
+  }));
 
   const { t } = useTranslate();
 

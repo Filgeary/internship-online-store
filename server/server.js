@@ -6,7 +6,7 @@ import ReactDOMServer from "react-dom/server";
 
 const isDev = process.env.NODE_ENV === "development";
 const port = Number(process.env.PORT) || 8010;
-const apiBase = process.env.API_BASE || "http://example.front.ylab.io";
+const apiBase = "http://example.front.ylab.io";
 
 async function createServer() {
   const app = express();
@@ -24,13 +24,13 @@ async function createServer() {
     app.use(express.static(path.resolve("./dist/client"), { index: false }));
   }
 
-  const apiProxy = createProxyMiddleware({
+  /*   const apiProxy = createProxyMiddleware({
     target: apiBase,
     changeOrigin: true,
     secure: false,
   });
 
-  app.use("/api/v1", apiProxy);
+  app.use("/api/v1", apiProxy);  */
 
   app.use("*", async (req, res, next) => {
     const url = req.originalUrl;
@@ -48,18 +48,18 @@ async function createServer() {
       }
 
       const { app, services } = render({ url });
+
       ReactDOMServer.renderToString(app);
-      await services.ssrPromises.donePromises();
+      await services.ssr.donePromises();
       const htmlRenderSecond = ReactDOMServer.renderToString(app);
 
-     /*  const initialState = `<script id="preload">
-        window.__SSR_STATE__ =${JSON.stringify(services.store.getState())}
-        </script>`; */
+      const initialState = `<script id="preload">window.__SSR_STATE__ =${JSON.stringify(
+        services.store.getState()
+      )}</script>`;
 
       let html = template
         .replace(`<!--root-->`, htmlRenderSecond)
-        //.replace(`<!--data-->`, initialState);
-
+        .replace(`<!--data-->`, initialState);
       res.status(200).set({ "Content-Type": "text/html" }).end(html);
     } catch (e) {
       if (e instanceof Error) {

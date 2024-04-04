@@ -11,6 +11,7 @@ type TProps = {
   url: string;
 };
 
+
 export function render({ url }: TProps) {
   const services = new Services(config);
 

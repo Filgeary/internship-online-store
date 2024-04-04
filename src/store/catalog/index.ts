@@ -100,6 +100,7 @@ class CatalogState extends StoreModule<TCatalogState> {
       let urlSearch = new URLSearchParams(
         exclude(params, this.initState().params) as any
       ).toString();
+      
       if (typeof window !== "undefined") {
         const url =
           window.location?.pathname +

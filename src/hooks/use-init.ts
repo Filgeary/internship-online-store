@@ -15,27 +15,27 @@ export default function useInit(
   backForward = false
 ) {
   const services = useServices();
-
   if (
-    !services.ssrPromises.ssrRender &&
-    services.store.actions.catalog.getState().list.length > 0
+    (services.ssr.ssrRender &&
+      services.store.actions.catalog.getState().list.length > 0) ||
+    (services.ssr.ssrRender &&
+      services.store.actions.article.getState().data.title)
   ) {
-    services.ssrPromises.clear();
+    services.ssr.clear();
   } else if (
-    !services.ssrPromises.ssrRender &&
-    services.store.actions.catalog.getState().list.length <= 0
+    (services.ssr.ssrRender &&
+      services.store.actions.catalog.getState().list.length <= 0) ||
+    (services.ssr.ssrRender &&
+      !services.store.actions.article.getState().data.title)
   ) {
     const pr = initFunc();
-    services.ssrPromises.addPromise(pr);
+    services.ssr.addPromise(pr);
 
     console.log("ssr");
   }
 
   useEffect(() => {
-    if (
-      services.ssrPromises.ssrRender &&
-      services.store.actions.catalog.getState().list.length > 0
-    ) {
+    if (!services.ssr.ssrRender) {
       initFunc(false);
       // Если в истории браузера меняются только search-параметры, то react-router не оповестит
       // компонент об изменениях, поэтому хук можно явно подписать на событие изменения истории

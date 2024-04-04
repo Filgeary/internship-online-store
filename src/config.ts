@@ -16,8 +16,7 @@ const config = {
     },
   },
   api: {
-    baseUrl:
-      typeof window !== "undefined" ? "" : "http://example.front.ylab.io",
+    baseUrl: typeof window !== "undefined" ? "" : "http://example.front.ylab.io"
   },
   chat: {
     baseUrl: "ws://example.front.ylab.io",

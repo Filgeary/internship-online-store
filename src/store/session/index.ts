@@ -61,7 +61,7 @@ class SessionState extends StoreModule<TSessionState, TConfigSession> {
         );
 
         // Запоминаем токен, чтобы потом автоматически аутентифицировать юзера
-        window.localStorage.setItem("token", res.data.result.token);
+        window?.localStorage.setItem("token", res.data.result.token);
 
         // Устанавливаем токен в АПИ
         this.services.api.setHeader(
@@ -96,9 +96,9 @@ class SessionState extends StoreModule<TSessionState, TConfigSession> {
         method: "DELETE",
       });
       // Удаляем токен
-      if (typeof window !== "undefined") {
-        window.localStorage.removeItem("token");
-      }
+
+      window?.localStorage.removeItem("token");
+
       // Удаляем заголовок
       this.services.api.setHeader(this.config.tokenHeader, null);
     } catch (error) {
@@ -126,7 +126,7 @@ class SessionState extends StoreModule<TSessionState, TConfigSession> {
 
       if (res.data.error) {
         // Удаляем плохой токен
-        window.localStorage.removeItem("token");
+        window?.localStorage.removeItem("token");
         this.services.api.setHeader(this.config.tokenHeader, null);
         this.setState(
           {

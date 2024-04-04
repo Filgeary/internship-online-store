@@ -4,7 +4,7 @@ import path from "path";
 
 export default defineConfig({
   root: "src",
-  base: "./",
+  base: "/",
   optimizeDeps: {
     exclude: ["js-big-decimal"],
   },
