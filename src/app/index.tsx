@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import { Route, Routes } from 'react-router-dom';
 
 import useInit from '@src/hooks/use-init';
@@ -21,23 +22,25 @@ function App() {
 
   return (
     <>
-      <Routes>
-        {publicRoutes.map(({ path, element: Component }) => (
-          <Route
-            key={path}
-            path={path}
-            element={<Component />}
-          />
-        ))}
+      <Suspense fallback={<h2>Loading...</h2>}>
+        <Routes>
+          {publicRoutes.map(({ path, element: Component }) => (
+            <Route
+              key={path}
+              path={path}
+              element={<Component />}
+            />
+          ))}
 
-        {protectedRoutes.map(({ path, element: Component }) => (
-          <Route
-            key={path}
-            path={path}
-            element={<Component.render />}
-          />
-        ))}
-      </Routes>
+          {protectedRoutes.map(({ path, element: Component }) => (
+            <Route
+              key={path}
+              path={path}
+              element={<Component.render />}
+            />
+          ))}
+        </Routes>
+      </Suspense>
 
       <Modals />
     </>

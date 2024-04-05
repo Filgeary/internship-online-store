@@ -21,8 +21,8 @@ function Login() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  useInit(() => {
-    store.actions.session.resetErrors();
+  useInit(async () => {
+    await store.actions.session.resetErrors();
   });
 
   const select = useSelector(state => ({

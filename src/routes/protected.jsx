@@ -1,6 +1,8 @@
-import ChatPage from '../app/chat';
-import Profile from '../app/profile';
-import Protected from '../containers/protected';
+import { lazy } from 'react';
+
+const ChatPage = lazy(() => import('../app/chat'));
+const Profile = lazy(() => import('../app/profile'));
+const Protected = lazy(() => import('../containers/protected'));
 
 export const protectedRoutes = [
   {

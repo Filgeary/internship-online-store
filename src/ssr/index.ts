@@ -40,15 +40,23 @@ class SSRService {
     return this.state.get(key);
   }
 
-  setPromiseAndExecute(key: string, promise: Promise<unknown> | unknown) {
+  addPromise(key: string, promise: Promise<unknown>) {
     logger.info('setPromiseAndExecute', key);
 
     this.state.set(key, {
       isPending: true,
-      promise: promise,
+      promise: promise
+        .then(() => {
+          this.setPendingStatusAsFalse(key);
+        })
+        .catch((e: any) => {
+          this.setPendingStatusAsFalse(key);
+          logger.error(e);
+        }),
     });
   }
 
+  // need only with renderToString, use await executeAllPromises => renderToString
   async executeAllPromises() {
     const promisesNeedToExecute = [];
     logger.info(' start executeAllPromises\n'.padStart(30, '>'));
@@ -91,6 +99,13 @@ class SSRService {
           );
         }, 0);
       }
+    }
+  }
+
+  throwPromiseToSuspense(key: string) {
+    if (this.state.has(key)) {
+      logger.info('throwPromiseToSuspense', key);
+      throw this.state.get(key)?.promise;
     }
   }
 

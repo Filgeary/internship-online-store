@@ -7,6 +7,7 @@ import App from './app';
 import config from './config';
 import { ServicesContext } from './context';
 import { I18nProvider } from './i18n/context';
+import Root from './root';
 import Services from './services';
 
 // eslint-disable-next-line import/no-named-as-default-member
@@ -16,18 +17,16 @@ export async function render({
   url,
   ssrManifest,
   title,
-  initState,
 }: {
   url: string;
   ssrManifest: any;
   title: string;
-  initState: object;
 }) {
   if (ssrManifest) {
     // TODO: where append ssrManifest?
   }
 
-  const services = new Services(config, initState);
+  const services = new Services(config, {});
 
   const appJSX = (
     <Provider store={services.redux}>
@@ -43,5 +42,17 @@ export async function render({
 
   const headJSX = <title>{title}</title>;
 
-  return { appJSX, headJSX, services };
+  const root = (
+    <Root
+      app={appJSX}
+      head={headJSX}
+    />
+  );
+
+  const injections = {
+    stateDump: () => services.store.getState(),
+    initialJobsDump: () => services.ssr.getStateOfPromisesAsDump(),
+  };
+
+  return { root, injections };
 }

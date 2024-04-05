@@ -16,8 +16,8 @@ function Profile() {
   const store = useStore();
   const { t } = useTranslate();
 
-  useInit(() => {
-    store.actions.profile.load();
+  useInit(async () => {
+    await store.actions.profile.load();
   }, []);
 
   const select = useSelector(state => ({

@@ -176,3 +176,4 @@ Rewrite from `webpack` to `vite`.
 
 - add SSR via `renderToString`
 - provide initialState to server rendering
+- add SSR via `renderToPipeableStream`

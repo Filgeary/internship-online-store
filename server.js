@@ -1,9 +1,30 @@
 /* eslint-disable import/no-named-as-default-member */
 import express from 'express';
 import fs from 'node:fs/promises';
-import { renderToString } from 'react-dom/server';
+import { Writable } from 'node:stream';
+import { renderToPipeableStream } from 'react-dom/server';
 
 import { logger } from './src/utils/logger';
+const IS_SSR_MODE = true;
+
+class RenderStream extends Writable {
+  chunks = [];
+  render = '';
+
+  getRender() {
+    return this.render;
+  }
+
+  _write(chunk, encoding, callback) {
+    this.chunks.push(chunk);
+    callback();
+  }
+
+  _final(callback) {
+    this.render = Buffer.concat(this.chunks).toString();
+    callback();
+  }
+}
 
 // Constants
 const isProduction = process.env.NODE_ENV === 'production';
@@ -72,36 +93,57 @@ app.use('*', async (req, res) => {
       render = (await import('./dist/server/entry-server.js')).render;
     }
 
-    const { appJSX, headJSX, services } = await render({
+    // send HTML directly if SSR is not active
+    if (!IS_SSR_MODE) {
+      res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+      res.end(template);
+      return;
+    }
+
+    const { root, injections } = await render({
       url: originalUrl,
       ssrManifest,
       title: isProduction ? `Prod | SSR React app` : `Dev | SSR React app`,
-      initState: {},
     });
-    renderToString(appJSX); // initial render
-    const headAsString = renderToString(headJSX);
 
-    const ssrService = services.ssr;
-    await ssrService.executeAllPromises();
-    const initialJobsDump = ssrService.getStateOfPromisesAsDump();
-    logger.success('server.js => Jobs Dump is Ready:');
-    logger.info(JSON.stringify(initialJobsDump, null, 2));
+    // react-dom/server renderToPipeableStream
+    const renderStream = new RenderStream();
+    const htmlStream = renderToPipeableStream(root, {
+      bootstrapModules: ['/src/entry-client.tsx'],
+      onShellReady() {
+        logger.success('server.js => onShellReady | PIPE STREAM');
+      },
+      onAllReady() {
+        res.setHeader('Content-Type', 'text/html');
+        res.statusCode = 200;
+        htmlStream.pipe(renderStream);
+        logger.success('server.js => onAllReady');
+      },
+      onError(err) {
+        if (err instanceof Error) {
+          vite?.ssrFixStacktrace(err);
+          logger.error(err.stack);
+          res.status(500).end(err.stack);
+        }
+      },
+    });
 
-    const appAsStringWithData = renderToString(appJSX);
+    renderStream.on('finish', () => {
+      logger.success('server.js => on finish | PIPE STREAM');
+      const renderStreamResult = renderStream.getRender();
+      const stateDump = injections.stateDump();
+      const initialJobsDump = injections.initialJobsDump();
 
-    const stateDump = services.store.getState();
-    logger.success('server.js => stateDump is Ready');
+      const initialStateString = `<script id="__INITIAL_STATE__">window.__INITIAL_STATE__ = ${JSON.stringify(stateDump)}</script>`;
+      const initialJobsDumpString = `<script id="__INITIAL_JOBS_DUMP__">window.__INITIAL_JOBS_DUMP__ = ${JSON.stringify(initialJobsDump)}</script>`;
 
-    const scriptAsStringWithState = `<script id="__INITIAL_STATE__" type="application/json">${JSON.stringify(stateDump)}</script>`;
-    const scriptAsStringWithJobsDump = `<script id="__INITIAL_JOBS_DUMP__" type="application/json">${JSON.stringify(initialJobsDump)}</script>`;
+      const htmlTemplate = renderStreamResult.replace(
+        '</head>',
+        initialStateString + initialJobsDumpString + '</head>',
+      );
 
-    const htmlTemplate = template
-      .replace(`<!--app-head-->`, headAsString ?? '')
-      .replace(`<!--app-html-->`, appAsStringWithData ?? '')
-      .replace(`<!--app-data-->`, scriptAsStringWithState ?? '')
-      .replace(`<!--app-jobs-dump-->`, scriptAsStringWithJobsDump ?? '');
-
-    res.status(200).set({ 'Content-Type': 'text/html' }).send(htmlTemplate);
+      res.status(200).set({ 'Content-Type': 'text/html' }).send(htmlTemplate);
+    });
   } catch (e) {
     vite?.ssrFixStacktrace(e);
     logger.error(e.stack);
