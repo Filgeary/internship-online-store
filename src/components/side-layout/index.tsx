@@ -8,13 +8,14 @@ type Props = {
   children: React.ReactNode;
   side?: 'start' | 'end' | 'between' | 'center';
   padding?: 'small' | 'medium';
+  direction?: 'row' | 'column';
 };
 
-function SideLayout({ children, side, padding }: Props) {
+function SideLayout({ children, side, padding, direction }: Props) {
   const cn = bem('SideLayout');
 
   return (
-    <div className={cn({ side, padding })}>
+    <div className={cn({ side, padding, direction })}>
       {React.Children.map(children, (child, index) => (
         <div
           key={index}

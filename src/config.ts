@@ -26,6 +26,7 @@ const config: TConfig = {
       categories: {},
       locale: {},
       countries: {},
+      worker: {},
     },
   },
   api: {

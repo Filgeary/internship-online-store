@@ -1,3 +1,4 @@
+export { default as worker } from './../app/worker/store';
 export { default as article } from './article';
 export { default as basket } from './basket';
 export { default as catalog } from './catalog';
