@@ -89,6 +89,7 @@ app.use('*', async (req, res) => {
       render = (await vite.ssrLoadModule('/src/entry-server.tsx')).render;
     } else {
       template = templateHtml;
+      // @ts-expect-error Unable to resolve type in dist folder
       // eslint-disable-next-line import/no-unresolved
       render = (await import('./dist/server/entry-server.js')).render;
     }
@@ -100,16 +101,14 @@ app.use('*', async (req, res) => {
       return;
     }
 
-    const { root, injections } = await render({
+    const { Root, injections } = await render({
       url: originalUrl,
       ssrManifest,
-      title: isProduction ? `Prod | SSR React app` : `Dev | SSR React app`,
     });
 
     // react-dom/server renderToPipeableStream
     const renderStream = new RenderStream();
-    const htmlStream = renderToPipeableStream(root, {
-      bootstrapModules: ['/src/entry-client.tsx'],
+    const htmlStream = renderToPipeableStream(Root, {
       onShellReady() {
         logger.success('server.js => onShellReady | PIPE STREAM');
       },
@@ -137,10 +136,9 @@ app.use('*', async (req, res) => {
       const initialStateString = `<script id="__INITIAL_STATE__">window.__INITIAL_STATE__ = ${JSON.stringify(stateDump)}</script>`;
       const initialJobsDumpString = `<script id="__INITIAL_JOBS_DUMP__">window.__INITIAL_JOBS_DUMP__ = ${JSON.stringify(initialJobsDump)}</script>`;
 
-      const htmlTemplate = renderStreamResult.replace(
-        '</head>',
-        initialStateString + initialJobsDumpString + '</head>',
-      );
+      const htmlTemplate = template
+        .replace('</head>', initialStateString + initialJobsDumpString + '</head>')
+        .replace('<!--app-html-->', renderStreamResult);
 
       res.status(200).set({ 'Content-Type': 'text/html' }).send(htmlTemplate);
     });

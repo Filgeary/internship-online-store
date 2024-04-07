@@ -7,28 +7,19 @@ import App from './app';
 import config from './config';
 import { ServicesContext } from './context';
 import { I18nProvider } from './i18n/context';
-import Root from './root';
 import Services from './services';
 
 // eslint-disable-next-line import/no-named-as-default-member
 React.useLayoutEffect = React.useEffect;
 
-export async function render({
-  url,
-  ssrManifest,
-  title,
-}: {
-  url: string;
-  ssrManifest: any;
-  title: string;
-}) {
+export async function render({ url, ssrManifest }: { url: string; ssrManifest: any }) {
   if (ssrManifest) {
     // TODO: where append ssrManifest?
   }
 
   const services = new Services(config, {});
 
-  const appJSX = (
+  const Root = (
     <Provider store={services.redux}>
       <ServicesContext.Provider value={services}>
         <I18nProvider>
@@ -40,19 +31,10 @@ export async function render({
     </Provider>
   );
 
-  const headJSX = <title>{title}</title>;
-
-  const root = (
-    <Root
-      app={appJSX}
-      head={headJSX}
-    />
-  );
-
   const injections = {
     stateDump: () => services.store.getState(),
     initialJobsDump: () => services.ssr.getStateOfPromisesAsDump(),
   };
 
-  return { root, injections };
+  return { Root, injections };
 }

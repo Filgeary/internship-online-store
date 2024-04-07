@@ -17,7 +17,6 @@ export default defineConfig({
         changeOrigin: true,
       },
     },
-    hmr: false, // it doesn't work with renderToPipeableStream
   },
   build: {
     target: 'esnext',
