@@ -9,6 +9,7 @@ const url = 'ws://example.front.ylab.io/chat';
 const createUUID = () => self.crypto.randomUUID();
 
 export interface IMessage {
+  __isGithubUser: any;
   _id: string;
   _key: string;
   text: string;
@@ -22,7 +23,7 @@ export interface IMessage {
       };
     };
   };
-  dateCreate: Date;
+  dateCreate: string;
 }
 
 type TResponse =

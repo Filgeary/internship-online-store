@@ -1,22 +1,24 @@
 import StoreModule from '@src/store/module';
-import type { TMessage } from '../types';
 // eslint-disable-next-line import/default
-import WorkerGithub from '../workers/worker-github?worker';
+import WorkerGithub from '../workers/worker-chat-bot?worker';
+
+import type { IMessage } from '@src/hooks/use-chat';
+import type { PartialDeep } from 'type-fest';
 
 type InitialWorkerState = {
   worker: Worker | null;
-  message: TMessage | null;
+  message: PartialDeep<IMessage>;
 };
 
 class WorkerState extends StoreModule<InitialWorkerState> {
   initState(): InitialWorkerState {
     return {
       worker: null,
-      message: null,
+      message: {} as PartialDeep<IMessage>,
     };
   }
 
-  private setMessage(message: TMessage) {
+  private setMessage(message: PartialDeep<IMessage>) {
     this.setState({ ...this.getState(), message }, 'Message received');
   }
 
@@ -51,7 +53,7 @@ class WorkerState extends StoreModule<InitialWorkerState> {
     const worker = this.getState().worker;
     if (worker) {
       worker.terminate();
-      this.setState({ ...this.getState(), worker: null, message: null }, 'Worker destroyed');
+      this.setState({ ...this.getState(), worker: null, message: {} }, 'Worker destroyed');
     }
   }
 }

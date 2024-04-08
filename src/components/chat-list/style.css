@@ -4,6 +4,7 @@
   padding: 12px 32px;
   margin: 0;
   max-height: 500px;
+  max-width: 1100px;
   overflow: auto;
   width: 100%;
 }
@@ -16,6 +17,9 @@
 }
 
 .ChatList-icon {
+  bottom: 5.8%;
+  right: 4%;
+  position: absolute;
   display: flex;
   margin-left: auto;
   align-items: center;

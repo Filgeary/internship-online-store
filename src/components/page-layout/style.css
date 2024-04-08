@@ -7,6 +7,14 @@ body {
   padding: 0;
   background: #535353;
   font-family: sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+pre {
+  margin: 0;
+  white-space: pre-wrap;
+  font-family: 'Space Grotesk', system-ui, sans-serif;
 }
 
 .PageLayout {

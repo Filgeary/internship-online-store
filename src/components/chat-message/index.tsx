@@ -11,10 +11,15 @@ type Props = {
   message: IMessage;
   isOwnMessage: boolean;
   isMessageDelivered: boolean;
+  renderMessageText?: (data: any) => React.ReactNode;
 };
 
-const ChatMessage = ({ message, isOwnMessage, isMessageDelivered }: Props) => {
+const ChatMessage = ({ message, isOwnMessage, isMessageDelivered, renderMessageText }: Props) => {
   const cn = bem('ChatMessage');
+
+  if (!message || Object.keys(message).length === 0) {
+    return null;
+  }
 
   return (
     <li
@@ -43,7 +48,11 @@ const ChatMessage = ({ message, isOwnMessage, isMessageDelivered }: Props) => {
         className={cn('content')}
       >
         {!isOwnMessage && <div className={cn('username')}>{message.author.profile.name}</div>}
-        <div>{message.text}</div>
+        <div>
+          {renderMessageText && message.__isGithubUser
+            ? renderMessageText(message.text)
+            : message.text}
+        </div>
         <div className={cn('metadata')}>
           <span>{formatDateToHoursAndMinutes(message)}</span>
           {isMessageDelivered && (

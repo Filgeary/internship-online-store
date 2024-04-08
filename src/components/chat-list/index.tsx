@@ -18,9 +18,19 @@ type Props = {
   user: IUserSession['user'] | null;
   uniqueUUIDs: string[] | null;
   onScrollTop: () => void;
+  styles?: React.CSSProperties;
+  renderMessageText?: (data: any) => React.ReactNode;
 };
 
-const ChatList = ({ isInitialFetching, messages, user, uniqueUUIDs, onScrollTop }: Props) => {
+const ChatList = ({
+  isInitialFetching,
+  messages,
+  user,
+  uniqueUUIDs,
+  onScrollTop,
+  styles,
+  renderMessageText,
+}: Props) => {
   const cn = bem('ChatList');
   const [isLoadingOnScrollTop, setIsLoadingOnScrollTop] = useState(false);
   const divBottomRef = useRef<HTMLDivElement>(null);
@@ -76,22 +86,25 @@ const ChatList = ({ isInitialFetching, messages, user, uniqueUUIDs, onScrollTop 
       <ul
         ref={messagesUListRef}
         className={cn()}
+        style={styles}
       >
-        <div ref={divTopRef} />
-        {messages.map(message => {
-          const isOwnMessage = message.author.username === user?.username;
-          const isMessageDelivered = uniqueUUIDs?.includes(message._key);
-
-          return (
-            <ChatMessage
-              key={message._id}
-              message={message}
-              isOwnMessage={isOwnMessage}
-              isMessageDelivered={Boolean(isMessageDelivered)}
-            />
-          );
-        })}
-        <div ref={divBottomRef} />
+        <div>
+          <div ref={divTopRef} />
+          {messages?.map(message => {
+            const isOwnMessage = message.author?.username === user?.username;
+            const isMessageDelivered = uniqueUUIDs?.includes(message._key);
+            return (
+              <ChatMessage
+                key={message._id}
+                message={message}
+                isOwnMessage={isOwnMessage}
+                isMessageDelivered={Boolean(isMessageDelivered)}
+                renderMessageText={renderMessageText}
+              />
+            );
+          })}
+          <div ref={divBottomRef} />
+        </div>
       </ul>
 
       <button
@@ -101,7 +114,7 @@ const ChatList = ({ isInitialFetching, messages, user, uniqueUUIDs, onScrollTop 
       >
         <ArrowDownCircleIcon
           size={40}
-          color='#eee'
+          color='#555'
         />
       </button>
     </>

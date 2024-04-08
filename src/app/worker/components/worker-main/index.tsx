@@ -1,8 +1,8 @@
 import SideLayout from '@src/components/side-layout';
-import type { TMessage } from '../types';
+import type { TMessageWorkerMain } from '../../types';
 
 type Props = {
-  message: TMessage | null;
+  message: TMessageWorkerMain | null;
   postMessage: (message: string) => void;
 };
 
