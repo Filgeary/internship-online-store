@@ -10,7 +10,7 @@ export class PromiseService {
   addPromise<T>(promise: Promise<T>, key: string) {
     this.names.push(key);
     this.promises.push(promise);
-    console.log(promise)
+    console.log(promise, key);
   }
 
   isAdded(key: string) {

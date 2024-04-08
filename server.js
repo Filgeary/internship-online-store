@@ -3,7 +3,7 @@ import express from "express";
 import { createServer as createViteServer } from "vite";
 import dotenv from "dotenv";
 import React from "react";
-import ReactDOMServer from "react-dom/server";
+import ReactDOMServer, { renderToPipeableStream } from "react-dom/server";
 
 const isProduction = process.env.NODE_ENV === "production";
 
@@ -27,7 +27,7 @@ async function createServer() {
 
   app.use("*", async (req, res, next) => {
     const url = req.originalUrl;
-
+    console.log(url);
     // const managerCreator = (await vite.ssrLoadModule("./src/server/manager.ts")).manager;
     // const manager = managerCreator();
     // const services =  await manager.prepareData(url);
@@ -39,6 +39,17 @@ async function createServer() {
       const render = (await vite.ssrLoadModule("./src/server/entry-server.tsx")).render;
 
       const { app, services } = render({ url });
+
+      // const stream = renderToPipeableStream(React.createElement(app));
+      // stream.pipe(res, {end: false});
+
+      // stream.on("end", () => {
+      //   const initialState = `<script id="preload">
+      //     window.__STATE_NAMES__=${JSON.stringify(services.promises.names)}
+      //     window.__PRELOADED_STATE__ =${JSON.stringify(services.store.getState())}
+      //     </script>`
+      // })
+
       let htmlRender = ReactDOMServer.renderToString(app);
 
       await services.promises.waitPromises();

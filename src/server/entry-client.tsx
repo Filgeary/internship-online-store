@@ -12,9 +12,10 @@ const storeState = window.__PRELOADED_STATE__;
 //@ts-ignore
 const initials = window.__STATE_NAMES__;
 const services = new Services({config, storeState, initials});
-const script = document.getElementById("preload");
-console.log(initials)
+
 console.log(storeState);
+console.log(initials);
+const script = document.getElementById("preload");
 script.parentNode.removeChild(script);
 
 ReactDOM.hydrateRoot(

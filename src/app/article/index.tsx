@@ -21,8 +21,8 @@ function Article() {
 
   const params = useParams();
 
-  useInit(() => {
-    store.actions.article.load(params.id);
+  useInit( async () => {
+    await store.actions.article.load(params.id);
     //dispatch(articleActions.load(params.id));
   }, [params.id], "article");
 
@@ -36,12 +36,12 @@ function Article() {
   const callbacks = {
     // Добавление в корзину
     addToBasket: useCallback((_id: string, _title: string) => {
-      store.actions.modals.open("addToBasket").then( result => {
+      store.actions.modals.open("addToBasket", { title: select.article.title, count: 1}).then( result => {
         if(result) {
           store.actions.basket.addToBasket(_id, result)
         }
       });
-    }, [store]),
+    }, [store, select]),
   }
 
   return (

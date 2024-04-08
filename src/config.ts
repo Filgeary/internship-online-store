@@ -8,7 +8,7 @@ const isProduction = process.env.NODE_ENV === 'production';
 const config: ConfigType = {
   store: {
     // Логировать установку состояния?
-    log: !isProduction,
+    log: isProduction,
     // Настройки модулей состояния
     modules: {
       session: {

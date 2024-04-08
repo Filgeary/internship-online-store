@@ -10,6 +10,8 @@ import CatalogList from "../../containers/catalog-list";
 import LocaleSelect from "../../containers/locale-select";
 import TopHead from "../../containers/top-head";
 
+//const CatalogList = lazy(() => import('../../containers/catalog-list'));
+
 function Main() {
 
   const store = useStore();

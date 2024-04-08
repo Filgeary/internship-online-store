@@ -1,14 +1,23 @@
 import {Routes, Route} from 'react-router-dom';
 import useStore from "../hooks/use-store";
 import useInit from "../hooks/use-init";
-import Main from "./main";
-import Article from "./article";
-import Login from "./login";
-import Profile from "./profile";
 import Protected from "../containers/protected";
 import Modals from '../containers/modals';
-import Chat from './chat';
-import Canvas from './canvas';
+import { Suspense, lazy } from 'react';
+
+// import Main from "./main";
+// import Article from "./article";
+// import Login from "./login";
+// import Profile from "./profile";
+// import Chat from './chat';
+// import Canvas from './canvas';
+
+const Main = lazy(() => import('./main'));
+const Article = lazy(() => import('./article'));
+const Login = lazy(() => import('./login'));
+const Profile = lazy(() => import('./profile'));
+const Chat = lazy(() => import('./chat'));
+const Canvas = lazy(() => import('./canvas'));
 
 /**
  * Приложение
@@ -25,14 +34,16 @@ function App() {
 
   return (
     <>
-      <Routes>
-        <Route path={''} element={<Main/>}/>
-        <Route path={'/articles/:id'} element={<Article/>}/>
-        <Route path={"/login"} element={<Login/>}/>
-        <Route path={"/profile"} element={<Protected redirect='/login'><Profile/></Protected>}/>
-        <Route path={"/chat"} element={<Protected redirect='/login'><Chat/></Protected>}/>
-        <Route path={"/canvas"} element={<Canvas/>}/>
-      </Routes>
+      <Suspense fallback={<div>Loading...</div>}>
+        <Routes>
+          <Route path={''} element={<Main/>}/>
+          <Route path={'/articles/:id'} element={<Article/>}/>
+          <Route path={"/login"} element={<Login/>}/>
+          <Route path={"/profile"} element={<Protected redirect='/login'><Profile/></Protected>}/>
+          <Route path={"/chat"} element={<Protected redirect='/login'><Chat/></Protected>}/>
+          <Route path={"/canvas"} element={<Canvas/>}/>
+        </Routes>
+      </Suspense>
 
       <Modals />
     </>

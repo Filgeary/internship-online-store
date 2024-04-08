@@ -17,7 +17,7 @@ export default function useInit(initFunc, depends = [], ssr = undefined, backFor
 
   useEffect(() => {
     if(!services.promises.isAdded(ssr)) {
-      initFunc(false);
+      const pr = initFunc(false);
       // Если в истории браузера меняются только search-параметры, то react-router не оповестит
       // компонент об изменениях, поэтому хук можно явно подписать на событие изменения истории
       // браузера (если нужно отреагировать на изменения search-параметров при переходе по истории)
@@ -27,6 +27,7 @@ export default function useInit(initFunc, depends = [], ssr = undefined, backFor
           window.removeEventListener("popstate", initFunc);
         };
       }
+     // throw(pr);
     } else {
       services.promises.delete(ssr)
     }
