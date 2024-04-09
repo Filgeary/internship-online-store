@@ -1,5 +1,5 @@
-import { Suspense } from 'react';
 import GlobalLoader from '@src/components/global-loader';
+import { Suspense } from 'react';
 
 function withLoader(WrappedComponent: React.ComponentType) {
   return (props?: object) => (
