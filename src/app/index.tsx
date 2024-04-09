@@ -11,6 +11,7 @@ import Login from "./login";
 import Profile from "./profile";
 import Chat from "./chat-page";
 
+const Admin = lazy(() => import("./admin"));
 /**
  * Приложение
  * @returns {React.ReactElement}
@@ -28,6 +29,9 @@ function App(): React.ReactElement {
         <Route path={"/"} element={<Main />} />
         <Route path={"/articles/:id"} element={<Article />} />
         <Route path={"/login"} element={<Login />} />
+       
+          <Route path={"/admin"} element={<Admin />} />
+      
         <Route
           path={"/profile"}
           element={

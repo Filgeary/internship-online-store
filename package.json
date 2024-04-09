@@ -25,6 +25,7 @@
   "homepage": "https://github.com/ylabio/react-webinar-3#readme",
   "dependencies": {
     "@bem-react/classname": "^1.6.0",
+    "antd": "^5.16.1",
     "express": "^4.19.2",
     "lodash.debounce": "^4.0.8",
     "lodash.throttle": "^4.1.1",
