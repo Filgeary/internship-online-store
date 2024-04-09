@@ -1,9 +1,11 @@
 {
   "compilerOptions": {
+    "allowJs": true,
     "outDir": "dist",
     "target": "ES5", //Указывает, какую версию JavaScript должен генерировать компилятор
     "module": "ESNext", //Использует синтаксис модулей ECMAScript Next (наиболее современный синтаксис модулей)
     "moduleResolution": "node", //Компилятор будет использовать Node.js-подобный алгоритм разрешения модулей.
+    "allowSyntheticDefaultImports": true,
     "lib": [
       // Список библиотек, которые будут доступны во время компиляции ("DOM" для доступа к браузерным API и "ESNext" для современных возможностей JavaScript)
       "DOM",

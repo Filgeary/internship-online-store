@@ -8,19 +8,19 @@ import Services from "./services"
 import config from "./config"
 
 interface Props {
-  url: string
+  path: string
   // services: Services
 }
 
-export const render = ({ url }: Props) => {
-  
+export const render = ({ path }: Props) => {
+  console.log('url', path)
   const services = new Services(config)
   
   const app = (
      <Provider store={services.redux}>
       <ServicesContext.Provider value={services}>
         <I18nProvider>
-          <StaticRouter location={url}>
+          <StaticRouter location={path}>
             <App />
           </StaticRouter>
         </I18nProvider>

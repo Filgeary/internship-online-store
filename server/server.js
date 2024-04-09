@@ -37,7 +37,7 @@ const createServer = async () => {
   app.use("/api/v1", apiProxy);
 
 
-  app.use("*", async (req, res, next) => {  // Middleware для обработки всех запросов
+  app.use("/*", async (req, res, next) => {  // Middleware для обработки всех запросов
     const url = req.originalUrl
     let template, render
 
@@ -57,17 +57,7 @@ const createServer = async () => {
         render = (await import("../dist/server/entry-server.js")).render  // Загрузка и рендеринг серверного кода в продакшене
       }
 
-      // const responseForCatalog = await fetch(`http://example.front.ylab.io/api/v1/articles?limit=10&skip=0`)
-      // const resultForCatalog = await responseForCatalog.json()
-
-      // const allResult = {catalog: {list: resultForCatalog.result.items}} 
-
-      // const appHtml = await render({path: url, data: allResult})  // Рендеринг HTML контента с использованием серверного кода
-      // const data = `<script>window.__SSR_DATA__=${JSON.stringify(
-      //  allResult
-      // )}</script>`  // Подготовка данных для передачи на клиент
-
-      const { app, services } = render({ url })
+      const { app, services } = render({ path: url })
 
       ReactDOMServer.renderToString(app)
 
@@ -75,7 +65,7 @@ const createServer = async () => {
 
       const htmlRenderSecond = ReactDOMServer.renderToString(app)
 
-      services.server.clear()
+      // services.server.clear()
 
       const data = `<script id="preload">
         window.__SSR_DATA__ =${JSON.stringify(services.store.getState())}

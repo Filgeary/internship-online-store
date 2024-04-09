@@ -13,7 +13,7 @@ export default function useInit(initFunc: (arg?: Event | boolean) => void, depen
   }
 
   useEffect(() => {
-    if(services.server.ssrRender) {
+    if(!services.server.ssrRender) {
      initFunc(false);
     // Если в истории браузера меняются только search-параметры, то react-router не оповестит
     // компонент об изменениях, поэтому хук можно явно подписать на событие изменения истории

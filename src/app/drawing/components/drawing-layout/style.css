@@ -6,3 +6,34 @@
   background-color: #F6F6F6;
   margin-top: 40px;
 }
+
+@keyframes slidein {
+  0% {
+    /* transform: translateX(90%); */
+    width: 0%;
+  }
+  100% {
+    /* transform: translateX(5%); */
+    width: 100%;
+  }
+}
+
+.Drawing_layout-animation_block {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: initial;
+}
+
+.Drawing_layout-block {
+  display: flex;
+  height: 20px;
+  justify-content: center;
+  align-items: center;
+  background-color: #6200ff;
+  animation: 4s linear 4s infinite alternate slidein;
+}
+
+.Drawing_layout-button {
+  cursor: pointer;
+}
