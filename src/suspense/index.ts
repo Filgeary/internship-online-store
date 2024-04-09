@@ -15,7 +15,7 @@ class SuspenseService {
    * Запустить все промисы из массива
    */
   async execAllPromises() {
-    return await Promise.all(this.promisesArr).then(() => {
+    await Promise.all(this.promisesArr).then(() => {
       this.promisesArr.forEach((promise) => {
         this.executedPromises.push(promise.promiseId);
       });

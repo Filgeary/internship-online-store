@@ -92,6 +92,8 @@ async function createServer() {
       const jsonSsrData = JSON.stringify(services.store.getState());
       const jsonRequestsOnSsrData = JSON.stringify(services.suspense.executedPromises);
 
+      console.log({ jsonSsrData });
+
       const appendedScript = `<script>window.__SSR_DATA__=${jsonSsrData};window.__SSR_REQUESTS__=${jsonRequestsOnSsrData}</script>`;
 
       const resHtml = template

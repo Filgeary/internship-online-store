@@ -31,6 +31,8 @@ class ArticleState extends StoreModule<TArticleState, TArticleConfig> {
         url: `/api/v1/articles/${id}?fields=*,madeIn(title,code),category(title)`,
       });
 
+      console.log('@', res.data.result);
+
       // Товар загружен успешно
       this.setState(
         {
@@ -39,6 +41,8 @@ class ArticleState extends StoreModule<TArticleState, TArticleConfig> {
         },
         'Загружен товар из АПИ'
       );
+
+      console.log('@@@', this.getState().data);
     } catch (e) {
       // Ошибка при загрузке
       // @todo В стейт можно положить информацию об ошибке

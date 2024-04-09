@@ -22,7 +22,8 @@ function Article() {
   const params = useParams();
 
   useInit(async () => {
-    store.actions.article.load(params.id);
+    console.log('here');
+    await store.actions.article.load(params.id);
   }, [params.id]);
 
   const select = useAppSelector((state) => ({
