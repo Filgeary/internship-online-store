@@ -8,3 +8,4 @@ export { default as session } from './session';
 export { default as profile } from './profile';
 export { default as countries } from './countries';
 export { default as art } from './art';
+export { default as admin } from './admin';

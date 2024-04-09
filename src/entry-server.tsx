@@ -11,6 +11,9 @@ import config from './config';
 import App from './app';
 import createStoreRedux from './store-redux';
 
+import { ConfigProvider } from 'antd';
+import ruRU from 'antd/locale/ru_RU';
+
 type TProps = {
   path: string;
   initialState: object;
@@ -35,7 +38,9 @@ export const render = ({ path, initialState }: TProps) => {
         <I18nProvider>
           <ChatProvider>
             <StaticRouter location={path}>
-              <App />
+              <ConfigProvider locale={ruRU}>
+                <App />
+              </ConfigProvider>
             </StaticRouter>
           </ChatProvider>
         </I18nProvider>

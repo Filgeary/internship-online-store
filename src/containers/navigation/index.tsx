@@ -40,6 +40,7 @@ function Navigation() {
         { key: 1, title: t('menu.main'), link: '/' },
         { key: 2, title: t('menu.community'), link: '/community' },
         { key: 3, title: t('menu.art'), link: '/art' },
+        { key: 4, title: t('menu.admin'), link: '/admin' },
       ],
       [t]
     ),

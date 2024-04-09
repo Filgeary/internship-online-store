@@ -8,6 +8,9 @@ import { ChatProvider } from './chat/context';
 import config from './config';
 import App from './app';
 
+import { ConfigProvider } from 'antd';
+import ruRU from 'antd/locale/ru_RU';
+
 declare global {
   interface Window {
     __SSR_DATA__: object; // Состояние с сервера
@@ -29,7 +32,9 @@ export const root = hydrateRoot(
       <I18nProvider>
         <ChatProvider>
           <BrowserRouter>
-            <App />
+            <ConfigProvider locale={ruRU}>
+              <App />
+            </ConfigProvider>
           </BrowserRouter>
         </ChatProvider>
       </I18nProvider>
