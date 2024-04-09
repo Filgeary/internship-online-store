@@ -9,6 +9,7 @@ import Protected from "@src/containers/protected";
 import Modals from '../containers/modals';
 import { ChatPage } from './chat-page';
 import { CanvasPage } from './canvas-page';
+import { WebWorkerPage } from './worker';
 
 /**
  * Приложение
@@ -28,6 +29,7 @@ function App(): React.ReactElement {
         <Route path={"/articles/:id"} element={<Article />} />
         <Route path={"/login"} element={<Login />} />
         <Route path={"/draw"} element={<CanvasPage />} />
+        <Route path={"/worker"} element={<WebWorkerPage />}></Route>
         <Route
           path={"/profile"}
           element={

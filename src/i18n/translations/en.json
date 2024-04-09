@@ -57,5 +57,8 @@
     "save": "Save image",
     "draw": "Draw",
     "generate": "Animation"
+  },
+  "worker": {
+    "title": "Web Workers"
   }
 }

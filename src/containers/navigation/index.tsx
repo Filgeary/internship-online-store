@@ -35,6 +35,7 @@ function Navigation() {
       () => [
         { key: 1, title: t("menu.main"), link: "/" },
         { key: 2, title: t("draw.title"), link: "/draw" },
+        { key: 3, title: t("worker.title"), link: "/worker" },
       ],
       [t]
     ),
