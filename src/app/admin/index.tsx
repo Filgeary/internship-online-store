@@ -1,60 +1,110 @@
 import React from "react";
-import { Layout, Flex } from "antd";
-import PageLayout from "@src/components/page-layout";
+import {
+  AppstoreOutlined,
+  BarChartOutlined,
+  CloudOutlined,
+  ShopOutlined,
+  TeamOutlined,
+  UploadOutlined,
+  UserOutlined,
+  VideoCameraOutlined,
+} from "@ant-design/icons";
+import type { MenuProps } from "antd";
+import { Layout, Menu, theme } from "antd";
+import Navigation from "@src/containers/navigation";
 
-const { Header, Footer, Sider, Content } = Layout;
 
-const headerStyle: React.CSSProperties = {
-  textAlign: "center",
-  color: "#fff",
-  height: 64,
-  paddingInline: 48,
-  lineHeight: "64px",
-  backgroundColor: "#4096ff",
-};
+const { Header, Content, Footer, Sider } = Layout;
 
-const contentStyle: React.CSSProperties = {
-  textAlign: "center",
-  minHeight: 120,
-  lineHeight: "120px",
-  color: "#fff",
-  backgroundColor: "#0958d9",
-};
+const items: MenuProps["items"] = [
+  UserOutlined,
+  VideoCameraOutlined,
+  UploadOutlined,
+  BarChartOutlined,
+  CloudOutlined,
+  AppstoreOutlined,
+  TeamOutlined,
+  ShopOutlined,
+  UserOutlined,
+  VideoCameraOutlined,
+  UploadOutlined,
+  BarChartOutlined,
+  CloudOutlined,
+  AppstoreOutlined,
+  TeamOutlined,
+  ShopOutlined,
+  UserOutlined,
+  VideoCameraOutlined,
+  UploadOutlined,
+  BarChartOutlined,
+  CloudOutlined,
+  AppstoreOutlined,
+  TeamOutlined,
+  ShopOutlined,
+].map((icon, index) => ({
+  key: String(index + 1),
+  icon: React.createElement(icon),
+  label: `nav ${index + 1}`,
+}));
 
-const siderStyle: React.CSSProperties = {
-  textAlign: "center",
-  lineHeight: "120px",
-  color: "#fff",
-  backgroundColor: "#1677ff",
-};
+const Admin: React.FC = () => {
+  const {
+    token: { colorBgContainer, borderRadiusLG },
+  } = theme.useToken();
 
-const footerStyle: React.CSSProperties = {
-  textAlign: "center",
-  color: "#fff",
-  backgroundColor: "#4096ff",
-};
+  return (
 
-const layoutStyle = {
-  //borderRadius: 8,
-  overflow: "hidden",
-  width: "calc(100%)",
-  maxWidth: "calc(100% )",
-  minHeight:'100vh'
-};
-
-const Admin: React.FC = () => (
-  <PageLayout>
-    <Layout style={layoutStyle}>
-      <Sider width="25%" style={siderStyle}>
-        Sider
-      </Sider>
-      <Layout>
-        <Header style={headerStyle}>Header</Header>
-        <Content style={contentStyle}>Content</Content>
-        <Footer style={footerStyle}>Footer</Footer>
+      <Layout hasSider>
+        <Sider
+          style={{
+            overflow: "auto",
+            height: "100vh",
+            position: "fixed",
+            left: 0,
+            top: 0,
+            bottom: 0,
+          }}
+        >
+          <div className="demo-logo-vertical" />
+          <Menu
+            theme="dark"
+            mode="inline"
+            defaultSelectedKeys={["4"]}
+            items={items}
+          />
+        </Sider>
+        <Layout style={{ marginLeft: 200 }}>
+          <Header style={{ padding: 0, background: colorBgContainer }} >
+            <Navigation />
+          </Header>
+          <Content style={{ margin: "24px 16px 0", overflow: "initial" }}>
+            <div
+              style={{
+                padding: 24,
+                textAlign: "center",
+                background: colorBgContainer,
+                borderRadius: borderRadiusLG,
+              }}
+            >
+              <p>long content</p>
+              {
+                // indicates very long content
+                Array.from({ length: 100 }, (_, index) => (
+                  <React.Fragment key={index}>
+                    {index % 20 === 0 && index ? "more" : "..."}
+                    <br />
+                  </React.Fragment>
+                ))
+              }
+            </div>
+          </Content>
+          <Footer style={{ textAlign: "center" }}>
+            Ant Design ©{new Date().getFullYear()} Created by Ant UED
+          </Footer>
+        </Layout>
       </Layout>
-    </Layout>
-  </PageLayout>
-);
+  
+  );
+};
 
 export default Admin;

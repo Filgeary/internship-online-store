@@ -10,6 +10,7 @@ import Article from "./article";
 import Login from "./login";
 import Profile from "./profile";
 import Chat from "./chat-page";
+import Spinner from "@src/components/spinner";
 
 const Admin = lazy(() => import("./admin"));
 /**
@@ -29,9 +30,16 @@ function App(): React.ReactElement {
         <Route path={"/"} element={<Main />} />
         <Route path={"/articles/:id"} element={<Article />} />
         <Route path={"/login"} element={<Login />} />
-       
-          <Route path={"/admin"} element={<Admin />} />
-      
+
+        <Route
+          path={"/admin"}
+          element={
+            <Suspense fallback={<Spinner />}>
+              <Admin />
+            </Suspense>
+          }
+        />
+
         <Route
           path={"/profile"}
           element={
