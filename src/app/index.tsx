@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, lazy } from 'react';
 import { Routes, Route } from 'react-router-dom';
 
 import useStore from '@src/hooks/use-store';
@@ -13,6 +13,15 @@ import Article from './article';
 import Login from './login';
 import Profile from './profile';
 import Art from './art';
+
+import withLoader from '@src/hoc/with-loader';
+
+const LazyMain = withLoader(lazy(() => import('./main')));
+const LazyCommunity = withLoader(lazy(() => import('./community')));
+const LazyArticle = withLoader(lazy(() => import('./article')));
+const LazyLogin = withLoader(lazy(() => import('./login')));
+const LazyProfile = withLoader(lazy(() => import('./profile')));
+const LazyArt = withLoader(lazy(() => import('./art')));
 
 /**
  * Приложение
