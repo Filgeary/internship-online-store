@@ -12,6 +12,11 @@ type TProps = {
   data: any;
   onDelete: (id: string) => void;
   onEdit: (id: string) => void;
+  onPaginationChange: (page: number, pageSize: number) => void;
+  totalPagination?: number;
+  pageSize: number;
+  page: number;
+  loading?: boolean;
 };
 
 function PaginationTable(props: TProps) {
@@ -23,8 +28,6 @@ function PaginationTable(props: TProps) {
       key: 'operation',
       fixed: 'right',
       render: (value, record, index) => {
-        console.log({ value, record, index });
-
         return (
           <>
             <Space size={'middle'}>
@@ -53,15 +56,19 @@ function PaginationTable(props: TProps) {
       },
     },
   ];
+  const extendedData = [...Array(props.pageSize * (props.page - 1)).fill({}), ...data];
 
   return (
     <Table
+      loading={props.loading || false}
       columns={extendedColumns}
-      dataSource={data}
+      dataSource={extendedData}
       pagination={{
-        defaultPageSize: 5,
+        total: props.totalPagination || data.length,
+        pageSize: props.pageSize,
         showSizeChanger: true,
         pageSizeOptions: [5, 10, 15],
+        onChange: props.onPaginationChange,
       }}
     />
   );

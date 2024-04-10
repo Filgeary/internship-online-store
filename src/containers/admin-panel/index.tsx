@@ -1,4 +1,6 @@
 import React, { useState, memo, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+
 import {
   DesktopOutlined,
   FileOutlined,
@@ -7,15 +9,18 @@ import {
   UserOutlined,
 } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
-import { Breadcrumb, Layout, Menu, theme, Tabs, Modal, Button } from 'antd';
-import { Link } from 'react-router-dom';
-
-import PaginationTable from '@src/components/pagination-table';
+import { Breadcrumb, Layout, Menu, theme, Tabs } from 'antd';
 
 import { useAppSelector } from '@src/hooks/use-selector';
 import useStore from '@src/hooks/use-store';
+
+import PaginationTable from '@src/components/pagination-table';
 import FormEditArticle from '@src/components/form-edit-article';
+import FormEditCity from '@src/components/form-edit-city';
+
 import { TCatalogArticle } from '@src/store/catalog/types';
+import { TCity } from '@src/store/admin/types';
+import EditModal from '@src/components/edit-modal';
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -57,55 +62,94 @@ function AdminPanel() {
 
   const select = useAppSelector((state) => ({
     articles: state.admin.articles.list,
+    articlesFetching: state.admin.articles.fetching,
     activeArticleId: state.admin.articles.active,
     activeArticleFetching: state.admin.articles.activeFetching,
+    articlesLimitByPage: state.admin.articles.limit,
+    totalArticlesCount: state.admin.articles.count,
+    articlesPage: state.admin.articles.page,
+
     cities: state.admin.cities.list,
+    citiesFetching: state.admin.cities.fetching,
+    activeCityId: state.admin.cities.active,
+    activeCityFetching: state.admin.cities.activeFetching,
+    citiesPage: state.admin.cities.page,
+    citiesLimitByPage: state.admin.cities.limit,
+    totalCitiesCount: state.admin.cities.count,
   }));
 
   const [activeArticle, setActiveArticle] = useState<TCatalogArticle>(null);
-
-  useEffect(() => {
-    setActiveArticle(select.articles.find((article) => article._id === select.activeArticleId));
-  }, [select.activeArticleId]);
+  const [activeCity, setActiveCity] = useState<TCity>(null);
 
   const handlers = {
     onDeleteArticle: (id: string) => store.actions.admin.removeArticle(id),
     onDeleteCity: (id: string) => store.actions.admin.removeCity(id),
 
     onEditArticle: (id: string) => {
-      console.log(`Буду редактировать товар: ${id}`);
       store.actions.admin.setActiveArticle(id);
     },
     onEditCity: (id: string) => {
-      console.log(`Буду редактировать товар: ${id}`);
+      store.actions.admin.setActiveCity(id);
     },
     onActiveArticleChange: (key: string, val: string | number) => {
-      console.log({ key, val });
-
       setActiveArticle((prevActiveArticle) => ({
         ...prevActiveArticle,
         [key]: val,
       }));
     },
+    onActiveCityChange: (key: string, val: string | number) => {
+      setActiveCity((prevActiveCity) => ({
+        ...prevActiveCity,
+        [key]: val,
+      }));
+    },
+    onArticlesPaginationChange: (page: number, pageSize: number) => {
+      store.actions.admin.setArticlesPage(page);
+      store.actions.admin.setArticlesLimit(pageSize);
+    },
+    onCitiesPaginationChange: (page: number, pageSize: number) => {
+      store.actions.admin.setCitiesPage(page);
+      store.actions.admin.setCitiesLimit(pageSize);
+    },
   };
 
   const callbacks = {
     closeModalEditArticle: () => store.actions.admin.setActiveArticle(null),
-    editArticle: () => store.actions.admin.editArticle(activeArticle),
+    closeModalEditCity: () => store.actions.admin.setActiveCity(null),
+    editArticle: async () => {
+      await store.actions.admin.editArticle(activeArticle);
+      store.actions.admin.setActiveArticle(null);
+    },
+    editCity: async () => {
+      await store.actions.admin.editCity(activeCity);
+      store.actions.admin.setActiveCity(null);
+    },
   };
 
   const options = {
     isModalEditArticleActive: Boolean(select.activeArticleId),
+    isModalEditCityActive: Boolean(select.activeCityId),
   };
 
+  // Поиск активного товара
   useEffect(() => {
-    console.log('Продукты:', select.articles);
-    console.log('Города:', select.cities);
-  }, [select.articles]);
-
-  useEffect(() => {
-    console.log('Активный товар:', select.activeArticleId);
+    setActiveArticle(select.articles.find((article) => article._id === select.activeArticleId));
   }, [select.activeArticleId]);
+
+  // Поиск активного города
+  useEffect(() => {
+    setActiveCity(select.cities.find((city) => city._id === select.activeCityId));
+  }, [select.activeCityId]);
+
+  // Синхронизация текущих продуктов с текущей страницей
+  useEffect(() => {
+    store.actions.admin.fetchArticles();
+  }, [select.articlesPage, select.articlesLimitByPage]);
+
+  // Синхронизация городов с текущей страницей
+  useEffect(() => {
+    store.actions.admin.fetchCities();
+  }, [select.citiesPage, select.citiesLimitByPage]);
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
@@ -140,6 +184,11 @@ function AdminPanel() {
                     <PaginationTable
                       onDelete={handlers.onDeleteArticle}
                       onEdit={handlers.onEditArticle}
+                      onPaginationChange={handlers.onArticlesPaginationChange}
+                      totalPagination={select.totalArticlesCount}
+                      pageSize={select.articlesLimitByPage}
+                      page={select.articlesPage}
+                      loading={select.articlesFetching}
                       columns={[
                         {
                           title: 'Название',
@@ -166,6 +215,11 @@ function AdminPanel() {
                     <PaginationTable
                       onDelete={handlers.onDeleteCity}
                       onEdit={handlers.onEditCity}
+                      onPaginationChange={handlers.onCitiesPaginationChange}
+                      totalPagination={select.totalCitiesCount}
+                      pageSize={select.citiesLimitByPage}
+                      page={select.citiesPage}
+                      loading={select.citiesFetching}
                       columns={[
                         {
                           title: 'Название',
@@ -192,30 +246,28 @@ function AdminPanel() {
         <Footer style={{ textAlign: 'center' }}>Админ-панель {new Date().getFullYear()}</Footer>
       </Layout>
 
-      <Modal
+      <EditModal
         title={'Изменение товара'}
-        open={options.isModalEditArticleActive}
+        isOpen={options.isModalEditArticleActive}
+        isBtnsDisabled={select.activeArticleFetching}
         onCancel={callbacks.closeModalEditArticle}
-        footer={[
-          <Button disabled={select.activeArticleFetching} key='cancel' type='default'>
-            Отмена
-          </Button>,
-
-          <Button
-            disabled={select.activeArticleFetching}
-            key='submit'
-            type='primary'
-            onClick={callbacks.editArticle}
-          >
-            Изменить
-          </Button>,
-        ]}
+        onOk={callbacks.editArticle}
       >
         <FormEditArticle
           data={activeArticle || ({} as TCatalogArticle)}
           onChange={handlers.onActiveArticleChange}
         />
-      </Modal>
+      </EditModal>
+
+      <EditModal
+        title={'Изменение города'}
+        isOpen={options.isModalEditCityActive}
+        isBtnsDisabled={select.activeCityFetching}
+        onCancel={callbacks.closeModalEditCity}
+        onOk={callbacks.editCity}
+      >
+        <FormEditCity data={activeCity || ({} as TCity)} onChange={handlers.onActiveCityChange} />
+      </EditModal>
     </Layout>
   );
 }

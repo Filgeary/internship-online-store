@@ -22,7 +22,6 @@ function Article() {
   const params = useParams();
 
   useInit(async () => {
-    console.log('here');
     await store.actions.article.load(params.id);
   }, [params.id]);
 

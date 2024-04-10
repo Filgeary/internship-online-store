@@ -1,20 +1,26 @@
 import { TCatalogArticle } from '../catalog/types';
 import StoreModule from '../module';
 
-import { TAdminState } from './types';
+import { TAdminState, TCity } from './types';
 
 class AdminStore extends StoreModule<TAdminState> {
   initState(): TAdminState {
     return {
       articles: {
         list: [],
+        fetching: false,
         count: 0,
+        limit: 10,
+        page: 1,
         active: null,
         activeFetching: false,
       },
       cities: {
         list: [],
+        fetching: false,
         count: 0,
+        limit: 10,
+        page: 1,
         active: null,
         activeFetching: false,
       },
@@ -25,12 +31,22 @@ class AdminStore extends StoreModule<TAdminState> {
    * Запрос товаров из апи
    */
   async fetchArticles() {
+    this.setState({
+      ...this.getState(),
+      articles: {
+        ...this.getState().articles,
+        fetching: true,
+      },
+    });
+
     try {
+      const { limit, page } = this.getState().articles;
+      const skip = (page - 1) * limit;
       const res = await this.services.api.request<{
         items: TArticle[];
         count: number;
       }>({
-        url: `/api/v1/articles?limit=10&fields=items(_id, title, price)`,
+        url: `/api/v1/articles?limit=${limit}&skip=${skip}&fields=items(_id, title, price),count`,
         timeout: 5000,
       });
       const newState = {
@@ -45,6 +61,14 @@ class AdminStore extends StoreModule<TAdminState> {
       this.setState(newState, 'Загружен список товаров из АПИ для админки');
     } catch (err) {
       alert(err.message);
+    } finally {
+      this.setState({
+        ...this.getState(),
+        articles: {
+          ...this.getState().articles,
+          fetching: false,
+        },
+      });
     }
   }
 
@@ -52,12 +76,22 @@ class AdminStore extends StoreModule<TAdminState> {
    * Запрос городов из апи
    */
   async fetchCities() {
+    this.setState({
+      ...this.getState(),
+      cities: {
+        ...this.getState().cities,
+        fetching: true,
+      },
+    });
+
     try {
+      const { limit, page } = this.getState().cities;
+      const skip = (page - 1) * limit;
       const res = await this.services.api.request<{
         items: any[];
         count: number;
       }>({
-        url: `/api/v1/cities?limit=10&fields=items(_id, title, population)`,
+        url: `/api/v1/cities?limit=${limit}&skip=${skip}&fields=items(_id, title, population),count`,
         timeout: 5000,
       });
       const newState = {
@@ -72,6 +106,14 @@ class AdminStore extends StoreModule<TAdminState> {
       this.setState(newState, 'Загружен список товаров из АПИ для админки');
     } catch (err) {
       alert(err.message);
+    } finally {
+      this.setState({
+        ...this.getState(),
+        cities: {
+          ...this.getState().cities,
+          fetching: false,
+        },
+      });
     }
   }
 
@@ -188,6 +230,123 @@ class AdminStore extends StoreModule<TAdminState> {
         },
       });
     }
+  }
+
+  /**
+   * Изменить город
+   */
+  async editCity(city: TCity) {
+    this.setState({
+      ...this.getState(),
+      cities: {
+        ...this.getState().cities,
+        activeFetching: true,
+      },
+    });
+
+    console.log('Получил:', city);
+    try {
+      const response = await this.services.api.request({
+        url: `/api/v1/cities/${city._id}`,
+        method: 'PUT',
+        body: JSON.stringify(city),
+        timeout: 5000,
+      });
+
+      if (response.status === 200) {
+        this.setState({
+          ...this.getState(),
+          cities: {
+            ...this.getState().cities,
+            list: this.getState().cities.list.map((existCity) => {
+              if (existCity._id === city._id) {
+                return city;
+              }
+
+              return existCity;
+            }),
+          },
+        });
+      }
+    } catch (err) {
+      alert(err.message);
+    } finally {
+      this.setState({
+        ...this.getState(),
+        cities: {
+          ...this.getState().cities,
+          activeFetching: false,
+        },
+      });
+    }
+  }
+
+  /**
+   * Установить активный город
+   */
+  async setActiveCity(id: string) {
+    console.log('Делаю город активным:', id);
+    this.setState({
+      ...this.getState(),
+      cities: {
+        ...this.getState().cities,
+        active: id,
+      },
+    });
+  }
+
+  /**
+   * Установить страницу товаров
+   */
+  setArticlesPage(page: number) {
+    console.log('Поставлю текущую страницу товаров:', page);
+    this.setState({
+      ...this.getState(),
+      articles: {
+        ...this.getState().articles,
+        page,
+      },
+    });
+  }
+
+  /**
+   * Установить страницу городов
+   */
+  setCitiesPage(page: number) {
+    console.log('Поставлю текущую страницу городов:', page);
+    this.setState({
+      ...this.getState(),
+      cities: {
+        ...this.getState().cities,
+        page,
+      },
+    });
+  }
+
+  /**
+   * Установить лимит товаров на одной странице
+   */
+  setArticlesLimit(pageSize: number) {
+    this.setState({
+      ...this.getState(),
+      articles: {
+        ...this.getState().articles,
+        limit: pageSize,
+      },
+    });
+  }
+
+  /**
+   * Установить лимит товаров на одной странице
+   */
+  setCitiesLimit(pageSize: number) {
+    this.setState({
+      ...this.getState(),
+      cities: {
+        ...this.getState().cities,
+        limit: pageSize,
+      },
+    });
   }
 }
 
