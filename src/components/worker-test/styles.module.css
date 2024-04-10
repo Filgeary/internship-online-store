@@ -1,0 +1,36 @@
+.ButtonContainer {
+  display: flex;
+  gap: 25px;
+  margin-bottom: 25px;
+}
+
+.TextContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 200px;
+  padding: 5px;
+  border: 1px solid black;
+  border-radius: 5px;
+  word-wrap: break-word;
+}
+
+.Railway {
+  border: 1px solid black;
+  height: 40px;
+  padding: 5px;
+  margin-bottom: 5px;
+}
+
+@keyframes move {
+  from {left: 0px;}
+  to {left: calc(100% - 40px);}
+}
+
+.Slider {
+  position: relative;
+  height: 40px;
+  width: 40px;
+  background-color: green;
+  animation: move 4s infinite alternate;
+}

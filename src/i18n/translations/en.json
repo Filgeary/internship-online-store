@@ -3,6 +3,7 @@
   "menu.main": "Main",
   "menu.chat": "Chat",
   "menu.canvas": "Canvas",
+  "menu.webworker": "Webworker",
   "basket.title": "Cart",
   "basket.open": "Open",
   "basket.close": "Close",

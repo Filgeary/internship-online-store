@@ -18,6 +18,7 @@ const Login = lazy(() => import('./login'));
 const Profile = lazy(() => import('./profile'));
 const Chat = lazy(() => import('./chat'));
 const Canvas = lazy(() => import('./canvas'));
+const Webworker = lazy(() => import('./webworker'));
 
 /**
  * Приложение
@@ -42,6 +43,7 @@ function App() {
           <Route path={"/profile"} element={<Protected redirect='/login'><Profile/></Protected>}/>
           <Route path={"/chat"} element={<Protected redirect='/login'><Chat/></Protected>}/>
           <Route path={"/canvas"} element={<Canvas/>}/>
+          <Route path={"/webworker"} element={<Webworker/>}/>
         </Routes>
       </Suspense>
 
