@@ -39,7 +39,7 @@ const WorkerChatBot = ({
 
   return (
     <section className={cn()}>
-      <h1 className={cn('title')}>✨ Chatty Bolt</h1>
+      <h1 className={cn('title')}>✨ Chatty Bot</h1>
 
       <ChatList
         isInitialFetching={isInitialFetching}
