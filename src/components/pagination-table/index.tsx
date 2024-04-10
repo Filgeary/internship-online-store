@@ -65,6 +65,7 @@ function PaginationTable(props: TProps) {
       dataSource={extendedData}
       pagination={{
         total: props.totalPagination || data.length,
+        current: props.page,
         pageSize: props.pageSize,
         showSizeChanger: true,
         pageSizeOptions: [5, 10, 15],
