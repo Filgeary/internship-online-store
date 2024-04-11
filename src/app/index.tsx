@@ -1,8 +1,11 @@
+import type { ThemeConfig } from 'antd';
+import { ConfigProvider } from 'antd';
 import { Route, Routes } from 'react-router-dom';
 
 import Protected from '@src/containers/protected';
 import useInit from '@src/hooks/use-init';
 import useStore from '@src/hooks/use-store';
+import Admin from './admin';
 import Article from './article';
 import CanvasPage from './canvas-page';
 import ChatPage from './chat-page';
@@ -10,6 +13,8 @@ import Login from './login';
 import Main from './main';
 import Modals from './modals';
 import Profile from './profile';
+
+const themeToken: ThemeConfig['token'] = { fontFamily: 'system-ui', fontWeightStrong: 500 };
 
 function App() {
   const store = useStore();
@@ -52,6 +57,20 @@ function App() {
               <ChatPage />
             </Protected>
           }
+        />
+        <Route
+          path={'/admin/*'}
+          element={
+            <Protected redirect='/login'>
+              <ConfigProvider theme={{ token: themeToken }}>
+                <Admin />
+              </ConfigProvider>
+            </Protected>
+          }
+        />
+        <Route
+          path={'*'}
+          element={<Main />}
         />
       </Routes>
 
