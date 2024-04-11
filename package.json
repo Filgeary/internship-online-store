@@ -14,6 +14,7 @@
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
+    "@ant-design/icons": "^5.3.6",
     "@bem-react/classname": "^1.6.0",
     "antd": "^5.16.1",
     "lodash.debounce": "^4.0.8",
