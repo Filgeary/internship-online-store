@@ -22,6 +22,7 @@ function AdminModals() {
       >
         <FormEditArticle
           data={values.activeArticle || ({} as TCatalogArticle)}
+          categories={select.categories}
           onChange={handlers.onActiveArticleChange}
         />
       </EditModal>
@@ -36,6 +37,22 @@ function AdminModals() {
         <FormEditCity
           data={values.activeCity || ({} as TCity)}
           onChange={handlers.onActiveCityChange}
+        />
+      </EditModal>
+
+      <EditModal
+        title={'Добавление нового товара'}
+        isOpen={options.isModalAddArticleActive}
+        isBtnsDisabled={false}
+        isSubmitDisabled={options.isSubmitDisabledAddArticleModal}
+        submitText={'Добавить'}
+        onCancel={callbacks.closeModalAddArticle}
+        onOk={callbacks.addArticle}
+      >
+        <FormEditArticle
+          data={values.articleToAdd || ({} as TCatalogArticle)}
+          categories={select.categories}
+          onChange={handlers.onArticleToAddChange}
         />
       </EditModal>
     </>

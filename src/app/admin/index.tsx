@@ -11,7 +11,11 @@ function AdminPage() {
   const store = useStore();
 
   useInit(async () => {
-    await Promise.all([store.actions.admin.fetchArticles(), store.actions.admin.fetchCities()]);
+    await Promise.all([
+      store.actions.admin.fetchArticles(),
+      store.actions.admin.fetchCities(),
+      store.actions.categories.load(),
+    ]);
   });
 
   return (

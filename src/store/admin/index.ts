@@ -46,7 +46,7 @@ class AdminStore extends StoreModule<TAdminState> {
         items: TArticle[];
         count: number;
       }>({
-        url: `/api/v1/articles?limit=${limit}&skip=${skip}&fields=items(_id, title, price),count`,
+        url: `/api/v1/articles?limit=${limit}&skip=${skip}&fields=items(_id, title, price, category(_id, title)),count`,
         timeout: 5000,
       });
       const newState = {
@@ -103,7 +103,7 @@ class AdminStore extends StoreModule<TAdminState> {
         },
       };
 
-      this.setState(newState, 'Загружен список товаров из АПИ для админки');
+      this.setState(newState, 'Загружен список городов из АПИ для админки');
     } catch (err) {
       alert(err.message);
     } finally {
@@ -114,6 +114,74 @@ class AdminStore extends StoreModule<TAdminState> {
           fetching: false,
         },
       });
+    }
+  }
+
+  /**
+   * Запросить все города из апи
+   */
+  async fetchAllCities() {
+    this.setState({
+      ...this.getState(),
+      cities: {
+        ...this.getState().cities,
+        fetching: true,
+      },
+    });
+
+    try {
+      const res = await this.services.api.request<{
+        items: any[];
+        count: number;
+      }>({
+        url: `/api/v1/cities?limit=100&fields=items(_id, title, population),count`,
+        timeout: 5000,
+      });
+      const newState = {
+        ...this.getState(),
+        cities: {
+          ...this.getState().cities,
+          list: res.data.result.items,
+          count: res.data.result.count,
+        },
+      };
+
+      this.setState(newState, 'Загружен список городов из АПИ для админки');
+    } catch (err) {
+      alert(err.message);
+    } finally {
+      this.setState({
+        ...this.getState(),
+        cities: {
+          ...this.getState().cities,
+          fetching: false,
+        },
+      });
+    }
+  }
+
+  /**
+   * Добавить товар в БД
+   */
+  async addArticle(article: TCatalogArticle) {
+    const extendedArticle = {
+      ...article,
+      name: `article-test-${crypto.randomUUID()}`,
+      category: {
+        _id: article.category,
+        _type: 'category',
+      },
+    };
+
+    try {
+      const res = await this.services.api.request({
+        url: `/api/v1/articles`,
+        method: 'POST',
+        timeout: 5000,
+        body: JSON.stringify(extendedArticle),
+      });
+    } catch (err) {
+      alert(err.message);
     }
   }
 

@@ -8,11 +8,22 @@ type TProps = {
   onCancel: () => void;
   onOk: () => void;
   isBtnsDisabled?: boolean;
+  isSubmitDisabled?: boolean;
+  submitText?: string;
   children: React.ReactNode;
 };
 
 function EditModal(props: TProps) {
-  const { children, title, isOpen, isBtnsDisabled = false, onCancel, onOk } = props;
+  const {
+    children,
+    title,
+    isOpen,
+    isBtnsDisabled = false,
+    isSubmitDisabled = false,
+    onCancel,
+    onOk,
+    submitText = 'Изменить',
+  } = props;
 
   return (
     <Modal
@@ -20,12 +31,17 @@ function EditModal(props: TProps) {
       open={isOpen}
       onCancel={onCancel}
       footer={[
-        <Button disabled={isBtnsDisabled} key='cancel' type='default'>
+        <Button disabled={isBtnsDisabled} key='cancel' type='default' onClick={onCancel}>
           Отмена
         </Button>,
 
-        <Button disabled={isBtnsDisabled} key='submit' type='primary' onClick={onOk}>
-          Изменить
+        <Button
+          disabled={isBtnsDisabled || isSubmitDisabled}
+          key='submit'
+          type='primary'
+          onClick={onOk}
+        >
+          {submitText}
         </Button>,
       ]}
     >

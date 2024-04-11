@@ -95,33 +95,49 @@ function Admin(props: TProps) {
     citiesPage: state.admin.cities.page,
     citiesLimitByPage: state.admin.cities.limit,
     totalCitiesCount: state.admin.cities.count,
+
+    categories: state.categories.list,
   }));
 
   const [activeArticle, setActiveArticle] = useState<TCatalogArticle>(null);
   const [activeCity, setActiveCity] = useState<TCity>(null);
 
+  const [articleToAdd, setArticleToAdd] = useState<TCatalogArticle>();
+
+  const helpers = {
+    keyValueChanger: (
+      setterFunction: React.Dispatch<React.SetStateAction<any>>,
+      idIn: string[] = []
+    ) => {
+      return (key: string, val: any) => {
+        if (idIn.includes(key)) {
+          setterFunction((prev: any) => ({
+            ...prev,
+            [key]: {
+              ...prev[key],
+              _id: val,
+            },
+          }));
+        } else {
+          setterFunction((prev: any) => ({
+            ...prev,
+            [key]: val,
+          }));
+        }
+      };
+    },
+  };
+
   const handlers = {
     onDeleteArticle: (id: string) => store.actions.admin.removeArticle(id),
     onDeleteCity: (id: string) => store.actions.admin.removeCity(id),
+    onEditArticle: (id: string) => store.actions.admin.setActiveArticle(id),
+    onEditCity: (id: string) => store.actions.admin.setActiveCity(id),
 
-    onEditArticle: (id: string) => {
-      store.actions.admin.setActiveArticle(id);
-    },
-    onEditCity: (id: string) => {
-      store.actions.admin.setActiveCity(id);
-    },
-    onActiveArticleChange: (key: string, val: string | number) => {
-      setActiveArticle((prevActiveArticle) => ({
-        ...prevActiveArticle,
-        [key]: val,
-      }));
-    },
-    onActiveCityChange: (key: string, val: string | number) => {
-      setActiveCity((prevActiveCity) => ({
-        ...prevActiveCity,
-        [key]: val,
-      }));
-    },
+    onActiveArticleChange: helpers.keyValueChanger(setActiveArticle, ['category']),
+    onActiveCityChange: helpers.keyValueChanger(setActiveCity),
+    onArticleToAddChange: helpers.keyValueChanger(setArticleToAdd, ['category']),
+
     onArticlesPaginationChange: (page: number, pageSize: number) => {
       store.actions.admin.setArticlesPage(page);
       store.actions.admin.setArticlesLimit(pageSize);
@@ -130,11 +146,17 @@ function Admin(props: TProps) {
       store.actions.admin.setCitiesPage(page);
       store.actions.admin.setCitiesLimit(pageSize);
     },
+    onAddArticleBtnClick: () => {
+      setArticleToAdd({ title: '', price: 0, category: { _id: null } } as TCatalogArticle);
+    },
   };
+
+  console.log({ articleToAdd });
 
   const callbacks = {
     closeModalEditArticle: () => store.actions.admin.setActiveArticle(null),
     closeModalEditCity: () => store.actions.admin.setActiveCity(null),
+    closeModalAddArticle: () => setArticleToAdd(null),
     editArticle: async () => {
       await store.actions.admin.editArticle(activeArticle);
       store.actions.admin.setActiveArticle(null);
@@ -145,16 +167,26 @@ function Admin(props: TProps) {
     },
     setActiveArticle,
     setActiveCity,
+    addArticle: async () => {
+      console.log('addArticle:', articleToAdd);
+      await store.actions.admin.addArticle(articleToAdd);
+      setArticleToAdd(null);
+    },
   };
 
   const options = {
     isModalEditArticleActive: Boolean(select.activeArticleId),
     isModalEditCityActive: Boolean(select.activeCityId),
+    isModalAddArticleActive: Boolean(articleToAdd),
+    isSubmitDisabledAddArticleModal: articleToAdd
+      ? articleToAdd.title.length < 4 || articleToAdd.price <= 0 || !articleToAdd.category._id
+      : true,
   };
 
   const values = {
     activeArticle,
     activeCity,
+    articleToAdd,
   };
 
   // Поиск активного товара
