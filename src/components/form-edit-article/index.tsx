@@ -26,20 +26,16 @@ function FormEditArticle(props: TProps) {
     },
 
     onCategoryChange: (val: string) => {
-      console.log('category changed:', val);
       props.onChange('category', val);
     },
   };
 
-  console.log('categories in form:', props.categories);
   const options = {
     categories: props.categories?.map((category) => ({
       value: category._id,
       label: <span>{category.title}</span>,
     })),
   };
-
-  console.log('@', props.data);
 
   return (
     <Form variant='outlined'>

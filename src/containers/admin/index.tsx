@@ -102,7 +102,8 @@ function Admin(props: TProps) {
   const [activeArticle, setActiveArticle] = useState<TCatalogArticle>(null);
   const [activeCity, setActiveCity] = useState<TCity>(null);
 
-  const [articleToAdd, setArticleToAdd] = useState<TCatalogArticle>();
+  const [articleToAdd, setArticleToAdd] = useState<TCatalogArticle>(null);
+  const [cityToAdd, setCityToAdd] = useState<TCity>(null);
 
   const helpers = {
     keyValueChanger: (
@@ -137,6 +138,7 @@ function Admin(props: TProps) {
     onActiveArticleChange: helpers.keyValueChanger(setActiveArticle, ['category']),
     onActiveCityChange: helpers.keyValueChanger(setActiveCity),
     onArticleToAddChange: helpers.keyValueChanger(setArticleToAdd, ['category']),
+    onCityToAddChange: helpers.keyValueChanger(setCityToAdd),
 
     onArticlesPaginationChange: (page: number, pageSize: number) => {
       store.actions.admin.setArticlesPage(page);
@@ -149,14 +151,16 @@ function Admin(props: TProps) {
     onAddArticleBtnClick: () => {
       setArticleToAdd({ title: '', price: 0, category: { _id: null } } as TCatalogArticle);
     },
+    onAddCityBtnClick: () => {
+      setCityToAdd({ title: '', population: 0 } as TCity);
+    },
   };
-
-  console.log({ articleToAdd });
 
   const callbacks = {
     closeModalEditArticle: () => store.actions.admin.setActiveArticle(null),
     closeModalEditCity: () => store.actions.admin.setActiveCity(null),
     closeModalAddArticle: () => setArticleToAdd(null),
+    closeModalAddCity: () => setCityToAdd(null),
     editArticle: async () => {
       await store.actions.admin.editArticle(activeArticle);
       store.actions.admin.setActiveArticle(null);
@@ -165,21 +169,31 @@ function Admin(props: TProps) {
       await store.actions.admin.editCity(activeCity);
       store.actions.admin.setActiveCity(null);
     },
-    setActiveArticle,
-    setActiveCity,
     addArticle: async () => {
-      console.log('addArticle:', articleToAdd);
       await store.actions.admin.addArticle(articleToAdd);
       setArticleToAdd(null);
     },
+    addCity: async () => {
+      await store.actions.admin.addCity(cityToAdd);
+      setCityToAdd(null);
+    },
+
+    setActiveArticle,
+    setActiveCity,
   };
 
   const options = {
     isModalEditArticleActive: Boolean(select.activeArticleId),
     isModalEditCityActive: Boolean(select.activeCityId),
+
     isModalAddArticleActive: Boolean(articleToAdd),
     isSubmitDisabledAddArticleModal: articleToAdd
       ? articleToAdd.title.length < 4 || articleToAdd.price <= 0 || !articleToAdd.category._id
+      : true,
+
+    isModalAddCityActive: Boolean(cityToAdd),
+    isSubmitDisabledAddCityModal: cityToAdd
+      ? cityToAdd.title.length < 4 || cityToAdd.population <= 0
       : true,
   };
 
@@ -187,6 +201,7 @@ function Admin(props: TProps) {
     activeArticle,
     activeCity,
     articleToAdd,
+    cityToAdd,
   };
 
   // Поиск активного товара

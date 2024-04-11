@@ -3,6 +3,7 @@ import { memo } from 'react';
 import { Tabs, theme } from 'antd';
 
 import CitiesCharts from './cities-charts';
+import ArticlesCharts from './articles-charts';
 
 function AdminCharts() {
   const {
@@ -20,7 +21,7 @@ function AdminCharts() {
     >
       <Tabs
         items={[
-          { label: 'Товары', key: '1', children: <div>Графики для товаров</div> },
+          { label: 'Товары', key: '1', children: <ArticlesCharts /> },
           { label: 'Города', key: '2', children: <CitiesCharts /> },
         ]}
       />

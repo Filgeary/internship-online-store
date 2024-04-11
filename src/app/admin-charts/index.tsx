@@ -11,7 +11,10 @@ function AdminChartsPage() {
   const store = useStore();
 
   useInit(async () => {
-    await store.actions.admin.fetchAllCities();
+    await Promise.all([
+      store.actions.admin.fetchAllArticles(),
+      store.actions.admin.fetchAllCities(),
+    ]);
   });
 
   return (

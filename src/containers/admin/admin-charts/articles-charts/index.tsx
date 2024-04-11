@@ -4,16 +4,22 @@ import { XAxis, YAxis, CartesianGrid, Tooltip, Legend, Bar, BarChart } from 'rec
 
 import { useAppSelector } from '@src/hooks/use-selector';
 
-function CitiesCharts() {
+import totalSumMultiple from '@src/utils/total-sum-multiple';
+
+function ArticlesCharts() {
   const select = useAppSelector((state) => ({
-    cities: state.admin.cities.list,
+    articles: state.admin.articles.list,
   }));
+
+  const data = {
+    totalSum: totalSumMultiple(select.articles),
+  };
 
   return (
     <BarChart
       width={1024}
       height={300}
-      data={select.cities}
+      data={data.totalSum}
       margin={{
         top: 5,
         right: 30,
@@ -24,12 +30,12 @@ function CitiesCharts() {
     >
       <XAxis dataKey='title' scale='point' padding={{ left: 10, right: 10 }} />
       <YAxis />
-      <Tooltip labelFormatter={() => 'Население'} />
-      <Legend content={<div>Население</div>} />
+      <Tooltip labelFormatter={() => 'Цена'} />
+      <Legend content={<div>Цена за все товары</div>} />
       <CartesianGrid strokeDasharray='3 3' />
-      <Bar dataKey='population' fill='#8884d8' background={{ fill: '#eee' }} />
+      <Bar dataKey='price' fill='#8884d8' background={{ fill: '#eee' }} />
     </BarChart>
   );
 }
 
-export default memo(CitiesCharts);
+export default memo(ArticlesCharts);

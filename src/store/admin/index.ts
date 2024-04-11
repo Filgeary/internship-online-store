@@ -73,6 +73,50 @@ class AdminStore extends StoreModule<TAdminState> {
   }
 
   /**
+   * Запросить все товары
+   */
+  async fetchAllArticles() {
+    this.setState({
+      ...this.getState(),
+      articles: {
+        ...this.getState().articles,
+        fetching: true,
+      },
+    });
+
+    try {
+      const limit = 100;
+      const res = await this.services.api.request<{
+        items: TArticle[];
+        count: number;
+      }>({
+        url: `/api/v1/articles?limit=${limit}&fields=items(_id, title, price, category(_id, title)),count`,
+        timeout: 5000,
+      });
+      const newState = {
+        ...this.getState(),
+        articles: {
+          ...this.getState().articles,
+          list: res.data.result.items,
+          count: res.data.result.count,
+        },
+      };
+
+      this.setState(newState, 'Загружен список товаров из АПИ для админки');
+    } catch (err) {
+      alert(err.message);
+    } finally {
+      this.setState({
+        ...this.getState(),
+        articles: {
+          ...this.getState().articles,
+          fetching: false,
+        },
+      });
+    }
+  }
+
+  /**
    * Запрос городов из апи
    */
   async fetchCities() {
@@ -130,11 +174,12 @@ class AdminStore extends StoreModule<TAdminState> {
     });
 
     try {
+      const limit = 100;
       const res = await this.services.api.request<{
         items: any[];
         count: number;
       }>({
-        url: `/api/v1/cities?limit=100&fields=items(_id, title, population),count`,
+        url: `/api/v1/cities?limit=${limit}&fields=items(_id, title, population),count`,
         timeout: 5000,
       });
       const newState = {
@@ -186,7 +231,7 @@ class AdminStore extends StoreModule<TAdminState> {
   }
 
   /**
-   * Удалить товар из апи
+   * Удалить товар из БД
    */
   async removeArticle(id: string) {
     try {
@@ -212,7 +257,25 @@ class AdminStore extends StoreModule<TAdminState> {
   }
 
   /**
-   * Удалить город из апи
+   * Добавить город в БД
+   */
+  async addCity(city: TCity) {
+    console.log('Добавляю в БД:', city);
+
+    try {
+      const res = await this.services.api.request({
+        url: `/api/v1/cities`,
+        method: 'POST',
+        timeout: 5000,
+        body: JSON.stringify(city),
+      });
+    } catch (err) {
+      alert(err.message);
+    }
+  }
+
+  /**
+   * Удалить город из БД
    */
   async removeCity(id: string) {
     try {

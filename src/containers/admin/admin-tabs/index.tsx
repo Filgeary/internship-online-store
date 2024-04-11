@@ -96,7 +96,9 @@ function AdminPanelTabs() {
                   data={select.cities}
                 />
 
-                <Button type='primary'>Добавить</Button>
+                <Button type='primary' onClick={handlers.onAddCityBtnClick}>
+                  Добавить
+                </Button>
               </>
             ),
           },

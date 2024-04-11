@@ -55,6 +55,21 @@ function AdminModals() {
           onChange={handlers.onArticleToAddChange}
         />
       </EditModal>
+
+      <EditModal
+        title={'Добавление нового города'}
+        isOpen={options.isModalAddCityActive}
+        isBtnsDisabled={false}
+        isSubmitDisabled={options.isSubmitDisabledAddCityModal}
+        submitText={'Добавить'}
+        onCancel={callbacks.closeModalAddCity}
+        onOk={callbacks.addCity}
+      >
+        <FormEditCity
+          data={values.cityToAdd || ({} as TCity)}
+          onChange={handlers.onCityToAddChange}
+        />
+      </EditModal>
     </>
   );
 }
