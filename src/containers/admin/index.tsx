@@ -1,5 +1,7 @@
 import React, { useState, memo, useEffect, createContext, useContext, useMemo } from 'react';
 
+import { Link, useLocation } from 'react-router-dom';
+
 import {
   DesktopOutlined,
   FileOutlined,
@@ -8,18 +10,19 @@ import {
   UserOutlined,
 } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
-import { Breadcrumb, Layout, Menu, theme } from 'antd';
+import { Layout, Menu, theme } from 'antd';
 
 import { useAppSelector } from '@src/hooks/use-selector';
 import useStore from '@src/hooks/use-store';
 
 import { TCatalogArticle } from '@src/store/catalog/types';
-import { TCity } from '@src/store/admin/types';
 
 import AdminTabs from './admin-tabs';
 import AdminModals from './admin-modals';
 import AdminCharts from './admin-charts';
-import { Link, useLocation } from 'react-router-dom';
+import AdminBreadcrumbs from './admin-breadcrumbs';
+
+import { TCity } from '@src/store/admin/types';
 
 const { Sider, Content, Footer, Header } = Layout;
 
@@ -250,12 +253,7 @@ function Admin(props: TProps) {
         <Layout>
           <Header style={{ padding: 0, background: colorBgContainer }} />
           <Content style={{ margin: '0 16px' }}>
-            <Breadcrumb style={{ margin: '16px 0' }}>
-              <Breadcrumb.Item>
-                <Link to='/'>Главная</Link>
-              </Breadcrumb.Item>
-              <Breadcrumb.Item>Админ-панель</Breadcrumb.Item>
-            </Breadcrumb>
+            <AdminBreadcrumbs />
             {children}
           </Content>
           <Footer style={{ textAlign: 'center' }}>Админ-панель {new Date().getFullYear()}</Footer>

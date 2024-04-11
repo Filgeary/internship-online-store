@@ -17,6 +17,7 @@ type TProps = {
   pageSize: number;
   page: number;
   loading?: boolean;
+  rowKey?: string;
 };
 
 function PaginationTable(props: TProps) {
@@ -63,6 +64,7 @@ function PaginationTable(props: TProps) {
       loading={props.loading || false}
       columns={extendedColumns}
       dataSource={extendedData}
+      rowKey={props.rowKey || '_id'}
       pagination={{
         total: props.totalPagination || data.length,
         current: props.page,

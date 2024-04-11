@@ -25,7 +25,7 @@ function AdminPanelTabs() {
         items={[
           {
             label: 'Товары',
-            key: '1',
+            key: 'articles',
             children: (
               <>
                 <PaginationTable
@@ -36,6 +36,7 @@ function AdminPanelTabs() {
                   pageSize={select.articlesLimitByPage}
                   page={select.articlesPage}
                   loading={select.articlesFetching}
+                  rowKey={'_id'}
                   columns={[
                     {
                       title: 'Название',
@@ -67,7 +68,7 @@ function AdminPanelTabs() {
           },
           {
             label: 'Города',
-            key: '2',
+            key: 'cities',
             children: (
               <>
                 <PaginationTable
@@ -78,6 +79,7 @@ function AdminPanelTabs() {
                   pageSize={select.citiesLimitByPage}
                   page={select.citiesPage}
                   loading={select.citiesFetching}
+                  rowKey={'_id'}
                   columns={[
                     {
                       title: 'Название',

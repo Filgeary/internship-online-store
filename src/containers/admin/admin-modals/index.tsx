@@ -3,10 +3,11 @@ import { memo } from 'react';
 import EditModal from '@src/components/edit-modal';
 import FormEditArticle from '@src/components/form-edit-article';
 import FormEditCity from '@src/components/form-edit-city';
-import { TCity } from '@src/store/admin/types';
-import { TCatalogArticle } from '@src/store/catalog/types';
 
 import { useAdminContext } from '..';
+
+import { TCity } from '@src/store/admin/types';
+import { TCatalogArticle } from '@src/store/catalog/types';
 
 function AdminModals() {
   const { select, handlers, options, callbacks, values } = useAdminContext();
