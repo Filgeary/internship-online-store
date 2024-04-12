@@ -57,13 +57,13 @@ function PaginationTable(props: TProps) {
       },
     },
   ];
-  const extendedData = [...Array(props.pageSize * (props.page - 1)).fill({}), ...data];
+  // const extendedData = [...Array(props.pageSize * (props.page - 1)).fill({}), ...data];
 
   return (
     <Table
       loading={props.loading || false}
       columns={extendedColumns}
-      dataSource={extendedData}
+      dataSource={data}
       rowKey={props.rowKey || '_id'}
       pagination={{
         total: props.totalPagination || data.length,

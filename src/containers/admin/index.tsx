@@ -10,7 +10,7 @@ import {
   UserOutlined,
 } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
-import { Layout, Menu, theme } from 'antd';
+import { Layout, Menu, theme, message } from 'antd';
 
 import { useAppSelector } from '@src/hooks/use-selector';
 import useStore from '@src/hooks/use-store';
@@ -20,7 +20,7 @@ import AdminModals from './admin-modals';
 import AdminCharts from './admin-charts';
 import AdminBreadcrumbs from './admin-breadcrumbs';
 
-import { TCatalogArticle } from '@src/store/catalog/types';
+import { TCatalogArticle, TCatalogEntities } from '@src/store/catalog/types';
 import { TCity } from '@src/store/admin/types';
 
 const { Sider, Content, Footer, Header } = Layout;
@@ -82,23 +82,23 @@ function Admin(props: TProps) {
   const store = useStore();
 
   const select = useAppSelector((state) => ({
-    articles: state.admin.articles.list,
     articlesFetching: state.admin.articles.fetching,
     activeArticleId: state.admin.articles.active,
     activeArticleFetching: state.admin.articles.activeFetching,
-    articlesLimitByPage: state.admin.articles.limit,
-    totalArticlesCount: state.admin.articles.count,
-    articlesPage: state.admin.articles.page,
 
-    cities: state.admin.cities.list,
     citiesFetching: state.admin.cities.fetching,
     activeCityId: state.admin.cities.active,
     activeCityFetching: state.admin.cities.activeFetching,
-    citiesPage: state.admin.cities.page,
-    citiesLimitByPage: state.admin.cities.limit,
-    totalCitiesCount: state.admin.cities.count,
 
     categories: state.categories.list,
+
+    catalogPage: state.catalog.params.page,
+    catalogItems: state.catalog.list,
+    catalogWaiting: state.catalog.waiting,
+    limitByPage: state.catalog.params.limit,
+    totalPagination: state.catalog.count,
+
+    activeCatalogEntity: state.catalog.params.activeEntity,
   }));
 
   const [activeArticle, setActiveArticle] = useState<TCatalogArticle>(null);
@@ -132,8 +132,22 @@ function Admin(props: TProps) {
   };
 
   const handlers = {
-    onDeleteArticle: (id: string) => store.actions.admin.removeArticle(id),
-    onDeleteCity: (id: string) => store.actions.admin.removeCity(id),
+    onDeleteArticle: async (id: string) => {
+      try {
+        await store.actions.admin.removeArticle(id);
+        message.success('Удалено успешно!');
+      } catch (err) {
+        message.error(err.message);
+      }
+    },
+    onDeleteCity: async (id: string) => {
+      try {
+        await store.actions.admin.removeCity(id);
+        message.success('Удалено успешно!');
+      } catch (err) {
+        message.error(err.message);
+      }
+    },
     onEditArticle: (id: string) => store.actions.admin.setActiveArticle(id),
     onEditCity: (id: string) => store.actions.admin.setActiveCity(id),
 
@@ -142,19 +156,17 @@ function Admin(props: TProps) {
     onArticleToAddChange: helpers.keyValueChanger(setArticleToAdd, ['category']),
     onCityToAddChange: helpers.keyValueChanger(setCityToAdd),
 
-    onArticlesPaginationChange: (page: number, pageSize: number) => {
-      store.actions.admin.setArticlesPage(page);
-      store.actions.admin.setArticlesLimit(pageSize);
-    },
-    onCitiesPaginationChange: (page: number, pageSize: number) => {
-      store.actions.admin.setCitiesPage(page);
-      store.actions.admin.setCitiesLimit(pageSize);
+    onPaginationChange: (page: number, pageSize: number) => {
+      store.actions.catalog.setParams({ page, limit: pageSize }, false);
     },
     onAddArticleBtnClick: () => {
       setArticleToAdd({ title: '', price: 0, category: { _id: null } } as TCatalogArticle);
     },
     onAddCityBtnClick: () => {
       setCityToAdd({ title: '', population: 0 } as TCity);
+    },
+    onTabKeyChange: (keyStr: TCatalogEntities) => {
+      store.actions.catalog.setParams({ activeEntity: keyStr });
     },
   };
 
@@ -208,23 +220,19 @@ function Admin(props: TProps) {
 
   // Поиск активного товара
   useEffect(() => {
-    setActiveArticle(select.articles.find((article) => article._id === select.activeArticleId));
+    const activeArticle = select.catalogItems.find(
+      (article) => article._id === select.activeArticleId
+    );
+    setActiveArticle(activeArticle);
   }, [select.activeArticleId]);
 
   // Поиск активного города
   useEffect(() => {
-    setActiveCity(select.cities.find((city) => city._id === select.activeCityId));
+    const activeCity = select.catalogItems.find(
+      (city) => city._id === select.activeCityId
+    ) as unknown as TCity;
+    setActiveCity(activeCity);
   }, [select.activeCityId]);
-
-  // Синхронизация текущих продуктов с текущей страницей
-  useEffect(() => {
-    store.actions.admin.fetchArticles();
-  }, [select.articlesPage, select.articlesLimitByPage]);
-
-  // Синхронизация городов с текущей страницей
-  useEffect(() => {
-    store.actions.admin.fetchCities();
-  }, [select.citiesPage, select.citiesLimitByPage]);
 
   const ctxValue = useMemo(
     () => ({

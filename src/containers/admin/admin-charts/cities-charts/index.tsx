@@ -25,7 +25,7 @@ function CitiesCharts() {
       <XAxis dataKey='title' scale='point' padding={{ left: 10, right: 10 }} />
       <YAxis />
       <Tooltip labelFormatter={() => 'Население'} />
-      <Legend content={<div>Население</div>} />
+      <Legend content={() => <div>Население</div>} />
       <CartesianGrid strokeDasharray='3 3' />
       <Bar dataKey='population' fill='#8884d8' background={{ fill: '#eee' }} />
     </BarChart>

@@ -30,7 +30,7 @@ export default function useInit(
   }
 
   useEffect(() => {
-    if (!window.__SSR_REQUESTS__.includes(promiseId)) {
+    if (!window.__SSR_REQUESTS__?.includes(promiseId)) {
       initFunc(false);
     }
 

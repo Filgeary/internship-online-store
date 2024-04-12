@@ -1,6 +1,7 @@
 import StoreModule from '../module';
 import exclude from '@src/utils/exclude';
-import { TCatalogConfig, TCatalogState } from './types';
+import { TCatalogArticle, TCatalogConfig, TCatalogEntities, TCatalogState } from './types';
+import { TCity } from '../admin/types';
 
 /**
  * Состояние каталога - параметры фильтра и список товаров
@@ -16,6 +17,7 @@ class CatalogState extends StoreModule<TCatalogState, TCatalogConfig> {
     return {
       list: [],
       params: {
+        activeEntity: 'articles',
         page: 1,
         limit: 10,
         sort: 'order',
@@ -47,6 +49,9 @@ class CatalogState extends StoreModule<TCatalogState, TCatalogConfig> {
       if (urlParams.has('countries')) {
         const countries = urlParams.get('countries').split(',');
         validParams.countries = countries.length > 1 ? countries : countries[0];
+      }
+      if (urlParams.has('activeEntity')) {
+        validParams.activeEntity = urlParams.get('activeEntity');
       }
     }
     await this.setParams({ ...this.initState().params, ...validParams, ...newParams }, true);
@@ -103,7 +108,7 @@ class CatalogState extends StoreModule<TCatalogState, TCatalogConfig> {
       {
         limit: params.limit,
         skip: (params.page - 1) * params.limit,
-        fields: 'items(*),count',
+        fields: 'items(*,category(_id, title)),count',
         sort: params.sort,
         'search[query]': params.query,
         'search[category]': params.category,
@@ -121,12 +126,14 @@ class CatalogState extends StoreModule<TCatalogState, TCatalogConfig> {
         : params.countries;
     }
 
+    const { activeEntity } = this.getState().params;
+
     try {
       const res = await this.services.api.request<{
         items: TArticle[];
         count: number;
       }>({
-        url: `/api/v1/articles?${new URLSearchParams(apiParams)}`,
+        url: `/api/v1/${activeEntity}?${new URLSearchParams(apiParams)}`,
         timeout: 5000,
       });
       const newState = {
@@ -158,6 +165,54 @@ class CatalogState extends StoreModule<TCatalogState, TCatalogConfig> {
     this.setState({
       ...this.getState(),
       list,
+    });
+  }
+
+  /**
+   * Установить список
+   */
+  setList(list: TCatalogArticle[], count: number) {
+    this.setState({
+      ...this.getState(),
+      list: list,
+      count,
+    });
+  }
+
+  /**
+   * Добавить в список
+   */
+  append(article: TCatalogArticle | TCity) {
+    this.setState({
+      ...this.getState(),
+      list: [...this.getState().list, article],
+    });
+  }
+
+  /**
+   * Удалить из списка
+   */
+  remove(id: string) {
+    this.setState({
+      ...this.getState(),
+      list: this.getState().list.filter((article) => article._id !== id),
+      count: this.getState().count - 1,
+    });
+  }
+
+  /**
+   * Изменить содержимое в списке по id
+   */
+  edit(id: TCatalogArticle['_id'], article: TCatalogArticle | TCity) {
+    this.setState({
+      ...this.getState(),
+      list: this.getState().list.map((existArticle) => {
+        if (existArticle._id === id) {
+          return article;
+        }
+
+        return existArticle;
+      }),
     });
   }
 }

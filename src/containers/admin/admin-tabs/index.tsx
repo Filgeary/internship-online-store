@@ -22,7 +22,8 @@ function AdminPanelTabs() {
       }}
     >
       <Tabs
-        defaultActiveKey='1'
+        activeKey={select.activeCatalogEntity}
+        onChange={handlers.onTabKeyChange}
         items={[
           {
             label: 'Товары',
@@ -32,11 +33,11 @@ function AdminPanelTabs() {
                 <PaginationTable
                   onDelete={handlers.onDeleteArticle}
                   onEdit={handlers.onEditArticle}
-                  onPaginationChange={handlers.onArticlesPaginationChange}
-                  totalPagination={select.totalArticlesCount}
-                  pageSize={select.articlesLimitByPage}
-                  page={select.articlesPage}
-                  loading={select.articlesFetching}
+                  onPaginationChange={handlers.onPaginationChange}
+                  totalPagination={select.totalPagination}
+                  pageSize={select.limitByPage}
+                  page={select.catalogPage}
+                  loading={select.catalogWaiting}
                   rowKey={'_id'}
                   columns={[
                     {
@@ -58,7 +59,7 @@ function AdminPanelTabs() {
                       key: 'category.title',
                     },
                   ]}
-                  data={select.articles}
+                  data={select.catalogItems}
                 />
 
                 <Button type='primary' onClick={handlers.onAddArticleBtnClick}>
@@ -75,11 +76,11 @@ function AdminPanelTabs() {
                 <PaginationTable
                   onDelete={handlers.onDeleteCity}
                   onEdit={handlers.onEditCity}
-                  onPaginationChange={handlers.onCitiesPaginationChange}
-                  totalPagination={select.totalCitiesCount}
-                  pageSize={select.citiesLimitByPage}
-                  page={select.citiesPage}
-                  loading={select.citiesFetching}
+                  onPaginationChange={handlers.onPaginationChange}
+                  totalPagination={select.totalPagination}
+                  pageSize={select.limitByPage}
+                  page={select.catalogPage}
+                  loading={select.catalogWaiting}
                   rowKey={'_id'}
                   columns={[
                     {
@@ -96,7 +97,7 @@ function AdminPanelTabs() {
                       sorter: (a, b) => a.population - b.population,
                     },
                   ]}
-                  data={select.cities}
+                  data={select.catalogItems}
                 />
 
                 <Button type='primary' onClick={handlers.onAddCityBtnClick}>

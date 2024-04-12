@@ -15,7 +15,6 @@ const LazyArticle = withLoader(lazy(() => import('./article')));
 const LazyLogin = withLoader(lazy(() => import('./login')));
 const LazyProfile = withLoader(lazy(() => import('./profile')));
 const LazyArt = withLoader(lazy(() => import('./art')));
-
 const LazyAdmin = withLoader(lazy(() => import('./admin')));
 const LazyAdminCharts = withLoader(lazy(() => import('./admin-charts')));
 

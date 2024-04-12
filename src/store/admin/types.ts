@@ -1,23 +1,18 @@
 import { TCatalogArticle } from '../catalog/types';
-import { TCountry } from '../countries/types';
 
 export type TAdminState = {
   articles: {
-    list: TCatalogArticle[];
     fetching: boolean;
+    active: string | null;
+    list: TCatalogArticle[];
     count: number;
-    active: string;
-    limit: number;
-    page: number;
     activeFetching: boolean;
   };
   cities: {
-    list: TCity[];
     fetching: boolean;
+    active: string | null;
+    list: TCity[];
     count: number;
-    active: string;
-    limit: number;
-    page: number;
     activeFetching: boolean;
   };
 };

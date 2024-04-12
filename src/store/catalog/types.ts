@@ -3,6 +3,7 @@ export type TCatalogArticle = TArticle & { count?: number; amount?: number };
 export type TCatalogState = {
   list: TCatalogArticle[];
   params: {
+    activeEntity: TCatalogEntities;
     page: number;
     limit: number;
     sort: string;
@@ -18,3 +19,5 @@ export type TCatalogConfig = {
   ignoreUrlOnInit: boolean;
   ignoreUrl: boolean;
 };
+
+export type TCatalogEntities = 'articles' | 'cities';

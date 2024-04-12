@@ -5,7 +5,11 @@ import { Tabs, theme } from 'antd';
 import CitiesCharts from './cities-charts';
 import ArticlesCharts from './articles-charts';
 
+import { useAdminContext } from '..';
+
 function AdminCharts() {
+  const { select, handlers } = useAdminContext();
+
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
@@ -20,9 +24,15 @@ function AdminCharts() {
       }}
     >
       <Tabs
+        activeKey={select.activeCatalogEntity}
+        onChange={handlers.onTabKeyChange}
         items={[
-          { label: 'Товары', key: '1', children: <ArticlesCharts /> },
-          { label: 'Города', key: '2', children: <CitiesCharts /> },
+          {
+            label: 'Товары',
+            key: 'articles',
+            children: <ArticlesCharts />,
+          },
+          { label: 'Города', key: 'cities', children: <CitiesCharts /> },
         ]}
       />
     </div>
