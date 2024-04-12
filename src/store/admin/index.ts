@@ -235,13 +235,13 @@ class AdminStore extends StoreModule<TAdminState> {
    */
   async removeArticle(id: string) {
     try {
-      const response = await this.services.api.request({
+      const res = await this.services.api.request({
         url: `/api/v1/articles/${id}`,
         method: 'DELETE',
         timeout: 5000,
       });
 
-      if (response.status === 200) {
+      if (res.status === 200) {
         this.setState({
           ...this.getState(),
           articles: {

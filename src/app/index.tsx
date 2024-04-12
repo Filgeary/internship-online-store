@@ -26,9 +26,13 @@ function App() {
   const store = useStore();
   const contentRef = useRef(null);
 
-  useInit(async () => {
-    await store.actions.session.remind();
-  });
+  useInit(
+    async () => {
+      await store.actions.session.remind();
+    },
+    [],
+    { clientSide: true }
+  );
 
   return (
     <>
@@ -54,7 +58,14 @@ function App() {
             }
           />
           <Route path={'/art'} element={<LazyArt />} />
-          <Route path={'/admin'} element={<LazyAdmin />} />
+          <Route
+            path={'/admin'}
+            element={
+              <Protected redirect='/login'>
+                <LazyAdmin />
+              </Protected>
+            }
+          />
           <Route path={'/admin/charts'} element={<LazyAdminCharts />} />
         </Routes>
       </div>

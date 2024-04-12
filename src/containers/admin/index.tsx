@@ -15,13 +15,12 @@ import { Layout, Menu, theme } from 'antd';
 import { useAppSelector } from '@src/hooks/use-selector';
 import useStore from '@src/hooks/use-store';
 
-import { TCatalogArticle } from '@src/store/catalog/types';
-
 import AdminTabs from './admin-tabs';
 import AdminModals from './admin-modals';
 import AdminCharts from './admin-charts';
 import AdminBreadcrumbs from './admin-breadcrumbs';
 
+import { TCatalogArticle } from '@src/store/catalog/types';
 import { TCity } from '@src/store/admin/types';
 
 const { Sider, Content, Footer, Header } = Layout;
@@ -250,6 +249,7 @@ function Admin(props: TProps) {
       </Sider>
       <AdminContext.Provider value={ctxValue}>
         <AdminModals />
+
         <Layout>
           <Header style={{ padding: 0, background: colorBgContainer }} />
           <Content style={{ margin: '0 16px' }}>

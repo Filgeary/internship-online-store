@@ -2,6 +2,7 @@ import { memo } from 'react';
 
 import { useAdminContext } from '..';
 import { Button, Tabs, theme } from 'antd';
+
 import PaginationTable from '@src/components/pagination-table';
 
 function AdminPanelTabs() {
