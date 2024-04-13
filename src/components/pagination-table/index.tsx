@@ -3,7 +3,7 @@ import { memo } from 'react';
 import { Button, Popconfirm, Space, Table, Tooltip } from 'antd';
 
 import type { TableColumnsType } from 'antd';
-import { QuestionCircleOutlined } from '@ant-design/icons';
+import { EyeOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 
@@ -12,6 +12,7 @@ type TProps = {
   data: any;
   onDelete: (id: string) => void;
   onEdit: (id: string) => void;
+  onLook?: (id: string) => void;
   onPaginationChange: (page: number, pageSize: number) => void;
   totalPagination?: number;
   pageSize: number;
@@ -51,6 +52,19 @@ function PaginationTable(props: TProps) {
                   onClick={() => props.onEdit(value._id)}
                 />
               </Tooltip>
+
+              {props.onLook && (
+                <div style={{ marginLeft: '15px' }}>
+                  <Tooltip title='Показать'>
+                    <Button
+                      type='default'
+                      shape='circle'
+                      icon={<EyeOutlined />}
+                      onClick={() => props.onLook(value._id)}
+                    />
+                  </Tooltip>
+                </div>
+              )}
             </Space>
           </>
         );

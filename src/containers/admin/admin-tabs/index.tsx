@@ -33,6 +33,7 @@ function AdminPanelTabs() {
                 <PaginationTable
                   onDelete={handlers.onDeleteArticle}
                   onEdit={handlers.onEditArticle}
+                  onLook={handlers.onLookArticle}
                   onPaginationChange={handlers.onPaginationChange}
                   totalPagination={select.totalPagination}
                   pageSize={select.limitByPage}

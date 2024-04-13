@@ -4,6 +4,7 @@ export type TAdminState = {
   articles: {
     fetching: boolean;
     active: string | null;
+    actionWithActive: TActionsWithActive;
     list: TCatalogArticle[];
     count: number;
     activeFetching: boolean;
@@ -11,6 +12,7 @@ export type TAdminState = {
   cities: {
     fetching: boolean;
     active: string | null;
+    actionWithActive: TActionsWithActive;
     list: TCity[];
     count: number;
     activeFetching: boolean;
@@ -22,3 +24,5 @@ export type TCity = {
   title: string;
   population: number;
 };
+
+export type TActionsWithActive = 'edit' | 'look' | '';

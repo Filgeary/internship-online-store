@@ -1,7 +1,7 @@
 import { TCatalogArticle, TCatalogEntities } from '../catalog/types';
 import StoreModule from '../module';
 
-import { TAdminState, TCity } from './types';
+import { TActionsWithActive, TAdminState, TCity } from './types';
 
 class AdminStore extends StoreModule<TAdminState> {
   initState(): TAdminState {
@@ -9,6 +9,7 @@ class AdminStore extends StoreModule<TAdminState> {
       articles: {
         fetching: false,
         active: null,
+        actionWithActive: '',
         list: [],
         count: 0,
         activeFetching: false,
@@ -16,6 +17,7 @@ class AdminStore extends StoreModule<TAdminState> {
       cities: {
         fetching: false,
         active: null,
+        actionWithActive: '',
         list: [],
         count: 0,
         activeFetching: false,
@@ -175,8 +177,6 @@ class AdminStore extends StoreModule<TAdminState> {
    * Добавить город в БД
    */
   async addCity(city: TCity) {
-    console.log('Добавляю в БД:', city);
-
     try {
       const res = await this.services.api.request<TCity>({
         url: `/api/v1/cities`,
@@ -219,13 +219,13 @@ class AdminStore extends StoreModule<TAdminState> {
   /**
    * Установить активный товар
    */
-  async setActiveArticle(id: string) {
-    console.log('Делаю товар активным:', id);
+  async setActiveArticle(id: string, action: TActionsWithActive = '') {
     this.setState({
       ...this.getState(),
       articles: {
         ...this.getState().articles,
         active: id,
+        actionWithActive: action,
       },
     });
   }
@@ -307,13 +307,13 @@ class AdminStore extends StoreModule<TAdminState> {
   /**
    * Установить активный город
    */
-  async setActiveCity(id: string) {
-    console.log('Делаю город активным:', id);
+  async setActiveCity(id: string, action: TActionsWithActive = '') {
     this.setState({
       ...this.getState(),
       cities: {
         ...this.getState().cities,
         active: id,
+        actionWithActive: action,
       },
     });
   }

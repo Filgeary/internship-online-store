@@ -22,6 +22,7 @@ import AdminBreadcrumbs from './admin-breadcrumbs';
 
 import { TCatalogArticle, TCatalogEntities } from '@src/store/catalog/types';
 import { TCity } from '@src/store/admin/types';
+import AdminDrawers from './admin-drawers';
 
 const { Sider, Content, Footer, Header } = Layout;
 
@@ -99,6 +100,9 @@ function Admin(props: TProps) {
     totalPagination: state.catalog.count,
 
     activeCatalogEntity: state.catalog.params.activeEntity,
+
+    actionWithActiveArticle: state.admin.articles.actionWithActive,
+    actionWithActiveCity: state.admin.cities.actionWithActive,
   }));
 
   const [activeArticle, setActiveArticle] = useState<TCatalogArticle>(null);
@@ -148,8 +152,10 @@ function Admin(props: TProps) {
         message.error(err.message);
       }
     },
-    onEditArticle: (id: string) => store.actions.admin.setActiveArticle(id),
-    onEditCity: (id: string) => store.actions.admin.setActiveCity(id),
+    onEditArticle: (id: string) => store.actions.admin.setActiveArticle(id, 'edit'),
+    onEditCity: (id: string) => store.actions.admin.setActiveCity(id, 'edit'),
+
+    onLookArticle: (id: string) => store.actions.admin.setActiveArticle(id, 'look'),
 
     onActiveArticleChange: helpers.keyValueChanger(setActiveArticle, ['category']),
     onActiveCityChange: helpers.keyValueChanger(setActiveCity),
@@ -175,6 +181,7 @@ function Admin(props: TProps) {
     closeModalEditCity: () => store.actions.admin.setActiveCity(null),
     closeModalAddArticle: () => setArticleToAdd(null),
     closeModalAddCity: () => setCityToAdd(null),
+    closeDrawerLookArticle: () => store.actions.admin.setActiveArticle(null),
     editArticle: async () => {
       await store.actions.admin.editArticle(activeArticle);
       store.actions.admin.setActiveArticle(null);
@@ -197,8 +204,9 @@ function Admin(props: TProps) {
   };
 
   const options = {
-    isModalEditArticleActive: Boolean(select.activeArticleId),
-    isModalEditCityActive: Boolean(select.activeCityId),
+    isModalEditArticleActive:
+      Boolean(select.activeArticleId) && select.actionWithActiveArticle === 'edit',
+    isModalEditCityActive: Boolean(select.activeCityId) && select.actionWithActiveCity === 'edit',
 
     isModalAddArticleActive: Boolean(articleToAdd),
     isSubmitDisabledAddArticleModal: articleToAdd
@@ -209,7 +217,12 @@ function Admin(props: TProps) {
     isSubmitDisabledAddCityModal: cityToAdd
       ? cityToAdd.title.length < 4 || cityToAdd.population <= 0
       : true,
+
+    isLookArticleDrawerActive:
+      Boolean(select.activeArticleId) && select.actionWithActiveArticle === 'look',
   };
+
+  console.log({ drawerArticle: options.isLookArticleDrawerActive });
 
   const values = {
     activeArticle,
@@ -257,6 +270,7 @@ function Admin(props: TProps) {
       </Sider>
       <AdminContext.Provider value={ctxValue}>
         <AdminModals />
+        <AdminDrawers />
 
         <Layout>
           <Header style={{ padding: 0, background: colorBgContainer }} />
