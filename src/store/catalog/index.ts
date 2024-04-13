@@ -146,6 +146,76 @@ class CatalogState extends StoreModule<InitialCatalogState, CatalogConfig> {
       );
     }
   }
+
+  async updateArticle(id: string, data: IArticle) {
+    this.setState({
+      ...this.getState(),
+      waiting: true,
+    });
+
+    try {
+      const res = await this.services.api.request<IArticle>({
+        url: `/api/v1/articles/${id}`,
+        method: 'PUT',
+        body: JSON.stringify(data),
+      });
+
+      if (isSuccessResponse(res.data)) {
+        const editedArticle = res.data.result;
+
+        this.setState(
+          {
+            ...this.getState(),
+            list: this.getState().list.map(article => {
+              if (article._id === editedArticle._id) {
+                return editedArticle;
+              }
+              return article;
+            }),
+            waiting: false,
+          },
+          'Товар отредактирован',
+        );
+      }
+    } catch (e) {
+      console.error(e);
+      this.setState({
+        ...this.getState(),
+        waiting: false,
+      });
+    }
+  }
+
+  async deleteArticle(id: string) {
+    this.setState({
+      ...this.getState(),
+      waiting: true,
+    });
+
+    try {
+      const res = await this.services.api.request<IArticle>({
+        url: `/api/v1/articles/${id}`,
+        method: 'DELETE',
+      });
+
+      if (isSuccessResponse(res.data)) {
+        this.setState(
+          {
+            ...this.getState(),
+            list: this.getState().list.filter(article => article._id !== id),
+            waiting: false,
+          },
+          'Товар удален',
+        );
+      }
+    } catch (e) {
+      console.error(e);
+      this.setState({
+        ...this.getState(),
+        waiting: false,
+      });
+    }
+  }
 }
 
 export default CatalogState;
