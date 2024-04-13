@@ -45,6 +45,7 @@ function AdminPanelTabs() {
                       title: 'Название',
                       dataIndex: 'title',
                       key: 'title',
+                      render: (text: string) => <b>{text}</b>,
                       fixed: 'left',
                     },
                     {
@@ -58,6 +59,12 @@ function AdminPanelTabs() {
                       title: 'Категория',
                       dataIndex: ['category', 'title'],
                       key: 'category.title',
+                    },
+                    {
+                      title: 'Страна',
+                      dataIndex: ['madeIn', 'title'],
+                      key: 'madeIn.title',
+                      sorter: (a, b) => a.madeIn.title.localeCompare(b.madeIn.title),
                     },
                   ]}
                   data={select.catalogItems}
@@ -88,6 +95,7 @@ function AdminPanelTabs() {
                       title: 'Название',
                       dataIndex: 'title',
                       key: 'title',
+                      render: (text: string) => <b>{text}</b>,
                       fixed: 'left',
                     },
                     {

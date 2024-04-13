@@ -1,6 +1,7 @@
 import StoreModule from '../module';
 import exclude from '@src/utils/exclude';
-import { TCatalogArticle, TCatalogConfig, TCatalogEntities, TCatalogState } from './types';
+
+import { TCatalogArticle, TCatalogConfig, TCatalogState } from './types';
 import { TCity } from '../admin/types';
 
 /**
@@ -108,7 +109,7 @@ class CatalogState extends StoreModule<TCatalogState, TCatalogConfig> {
       {
         limit: params.limit,
         skip: (params.page - 1) * params.limit,
-        fields: 'items(*,category(_id, title)),count',
+        fields: 'items(*,madeIn(_id,title,code),category(_id,title)),count',
         sort: params.sort,
         'search[query]': params.query,
         'search[category]': params.category,
@@ -185,8 +186,16 @@ class CatalogState extends StoreModule<TCatalogState, TCatalogConfig> {
   append(article: TCatalogArticle | TCity) {
     this.setState({
       ...this.getState(),
-      list: [...this.getState().list, article],
+      list: [...this.getState().list, article as TCatalogArticle],
+      count: this.getState().count + 1,
     });
+
+    const currentPage = Math.ceil(this.getState().count / this.getState().params.limit);
+    console.log({ currentPage, page: this.getState().params.page });
+
+    if (currentPage !== this.getState().params.page) {
+      this.setParams({ page: currentPage });
+    }
   }
 
   /**
@@ -198,6 +207,13 @@ class CatalogState extends StoreModule<TCatalogState, TCatalogConfig> {
       list: this.getState().list.filter((article) => article._id !== id),
       count: this.getState().count - 1,
     });
+
+    const currentPage = Math.ceil(this.getState().count / this.getState().params.limit);
+    console.log({ currentPage, page: this.getState().params.page });
+
+    if (currentPage !== this.getState().params.page) {
+      this.setParams({ page: currentPage });
+    }
   }
 
   /**
@@ -208,7 +224,8 @@ class CatalogState extends StoreModule<TCatalogState, TCatalogConfig> {
       ...this.getState(),
       list: this.getState().list.map((existArticle) => {
         if (existArticle._id === id) {
-          return article;
+          console.log('Я меняю', existArticle, 'на:', article);
+          return article as TCatalogArticle;
         }
 
         return existArticle;

@@ -1,11 +1,11 @@
 import { memo } from 'react';
 
-import ArticlesDrawer from './articles-drawer';
+import ArticlesDrawers from './articles-drawers';
 
 function AdminDrawers() {
   return (
     <>
-      <ArticlesDrawer />
+      <ArticlesDrawers />
     </>
   );
 }

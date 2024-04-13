@@ -17,6 +17,7 @@ const LazyProfile = withLoader(lazy(() => import('./profile')));
 const LazyArt = withLoader(lazy(() => import('./art')));
 const LazyAdmin = withLoader(lazy(() => import('./admin')));
 const LazyAdminCharts = withLoader(lazy(() => import('./admin-charts')));
+const LazyAdminNotes = withLoader(lazy(() => import('./admin-notes')));
 
 /**
  * Приложение
@@ -66,6 +67,7 @@ function App() {
             }
           />
           <Route path={'/admin/charts'} element={<LazyAdminCharts />} />
+          <Route path={'/admin/notes'} element={<LazyAdminNotes />} />
         </Routes>
       </div>
 

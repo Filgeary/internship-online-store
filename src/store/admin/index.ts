@@ -132,6 +132,10 @@ class AdminStore extends StoreModule<TAdminState> {
         _id: article.category._id,
         _type: 'category',
       },
+      madeIn: {
+        _id: article.madeIn._id,
+        _type: 'category',
+      },
     };
 
     try {
@@ -143,7 +147,8 @@ class AdminStore extends StoreModule<TAdminState> {
       });
 
       if (res.status === 200) {
-        this.store.actions.catalog.append(res.data.result);
+        // this.store.actions.catalog.append(res.data.result);
+        this.store.actions.catalog.initParams();
       }
     } catch (err) {
       alert(err.message);
@@ -242,7 +247,7 @@ class AdminStore extends StoreModule<TAdminState> {
       },
     });
 
-    console.log('Получил:', article);
+    console.log('Получил:', JSON.parse(JSON.stringify(article)));
     try {
       const response = await this.services.api.request({
         url: `/api/v1/articles/${article._id}`,
@@ -252,7 +257,8 @@ class AdminStore extends StoreModule<TAdminState> {
       });
 
       if (response.status === 200) {
-        this.store.actions.catalog.edit(article._id, article);
+        // this.store.actions.catalog.edit(article._id, article);
+        this.store.actions.catalog.initParams();
       }
     } catch (err) {
       alert(err.message);

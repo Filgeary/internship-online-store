@@ -24,6 +24,7 @@ function AdminModals() {
         <FormEditArticle
           data={values.activeArticle || ({} as TCatalogArticle)}
           categories={select.categories}
+          countries={select.countries}
           onChange={handlers.onActiveArticleChange}
         />
       </EditModal>
@@ -53,6 +54,7 @@ function AdminModals() {
         <FormEditArticle
           data={values.articleToAdd || ({} as TCatalogArticle)}
           categories={select.categories}
+          countries={select.countries}
           onChange={handlers.onArticleToAddChange}
         />
       </EditModal>

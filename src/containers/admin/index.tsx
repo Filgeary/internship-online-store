@@ -1,4 +1,6 @@
 import React, { useState, memo, useEffect, createContext, useContext, useMemo } from 'react';
+import Lottie from 'react-lottie';
+import logoAnimation from './assets/logo-animation.json';
 
 import { Link, useLocation } from 'react-router-dom';
 
@@ -51,7 +53,7 @@ const items: MenuItem[] = [
     getItem('Alex', '5'),
   ]),
   getItem('Работники', 'sub2', <TeamOutlined />, [getItem('Team 1', '6'), getItem('Team 2', '8')]),
-  getItem('Примечания', '9', <FileOutlined />),
+  getItem(<Link to='/admin/notes'>Примечания</Link>, '9', <FileOutlined />),
 ];
 
 const AdminContext = createContext(null);
@@ -92,6 +94,7 @@ function Admin(props: TProps) {
     activeCityFetching: state.admin.cities.activeFetching,
 
     categories: state.categories.list,
+    countries: state.countries.list,
 
     catalogPage: state.catalog.params.page,
     catalogItems: state.catalog.list,
@@ -157,16 +160,22 @@ function Admin(props: TProps) {
 
     onLookArticle: (id: string) => store.actions.admin.setActiveArticle(id, 'look'),
 
-    onActiveArticleChange: helpers.keyValueChanger(setActiveArticle, ['category']),
+    onActiveArticleChange: helpers.keyValueChanger(setActiveArticle, ['category', 'madeIn']),
     onActiveCityChange: helpers.keyValueChanger(setActiveCity),
-    onArticleToAddChange: helpers.keyValueChanger(setArticleToAdd, ['category']),
+    onArticleToAddChange: helpers.keyValueChanger(setArticleToAdd, ['category', 'madeIn']),
     onCityToAddChange: helpers.keyValueChanger(setCityToAdd),
 
     onPaginationChange: (page: number, pageSize: number) => {
+      console.log({ page, pageSize });
       store.actions.catalog.setParams({ page, limit: pageSize }, false);
     },
     onAddArticleBtnClick: () => {
-      setArticleToAdd({ title: '', price: 0, category: { _id: null } } as TCatalogArticle);
+      setArticleToAdd({
+        title: '',
+        price: 0,
+        category: { _id: null },
+        madeIn: { _id: null },
+      } as TCatalogArticle);
     },
     onAddCityBtnClick: () => {
       setCityToAdd({ title: '', population: 0 } as TCity);
@@ -183,6 +192,7 @@ function Admin(props: TProps) {
     closeModalAddCity: () => setCityToAdd(null),
     closeDrawerLookArticle: () => store.actions.admin.setActiveArticle(null),
     editArticle: async () => {
+      console.log('editArticle:', activeArticle);
       await store.actions.admin.editArticle(activeArticle);
       store.actions.admin.setActiveArticle(null);
     },
@@ -202,6 +212,8 @@ function Admin(props: TProps) {
     setActiveArticle,
     setActiveCity,
   };
+
+  console.log({ activeArticle, articleToAdd });
 
   const options = {
     isModalEditArticleActive:
@@ -266,6 +278,7 @@ function Admin(props: TProps) {
     <Layout style={{ minHeight: '100vh' }}>
       <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
         <div className='demo-logo-vertical' />
+
         <Menu theme='dark' selectedKeys={system.activeMenuItem} mode='inline' items={items} />
       </Sider>
       <AdminContext.Provider value={ctxValue}>
@@ -273,7 +286,19 @@ function Admin(props: TProps) {
         <AdminDrawers />
 
         <Layout>
-          <Header style={{ padding: 0, background: colorBgContainer }} />
+          <Header style={{ padding: 0, background: colorBgContainer }}>
+            <Lottie
+              options={{
+                loop: true,
+                autoplay: true,
+                animationData: logoAnimation,
+                rendererSettings: {
+                  preserveAspectRatio: 'xMidYMid slice',
+                },
+              }}
+              width={300}
+            />
+          </Header>
           <Content style={{ margin: '0 16px' }}>
             <AdminBreadcrumbs />
             {children}

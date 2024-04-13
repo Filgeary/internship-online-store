@@ -4,9 +4,9 @@ import { Drawer } from 'antd';
 
 import { useAdminContext } from '../..';
 
-import ArticleCard from '@src/components/article-card';
+import ArticleInfo from '@src/components/article-info';
 
-function ArticlesDrawer() {
+function ArticlesDrawers() {
   const { values, callbacks, options } = useAdminContext();
 
   return (
@@ -17,14 +17,10 @@ function ArticlesDrawer() {
         onClose={callbacks.closeDrawerLookArticle}
         open={options.isLookArticleDrawerActive}
       >
-        {values.activeArticle ? (
-          <ArticleCard article={values.activeArticle} onAdd={() => {}} t={() => {}} />
-        ) : (
-          <></>
-        )}
+        {values.activeArticle && <ArticleInfo article={values.activeArticle} />}
       </Drawer>
     </>
   );
 }
 
-export default memo(ArticlesDrawer);
+export default memo(ArticlesDrawers);
