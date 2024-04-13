@@ -21,10 +21,11 @@ import AdminTabs from './admin-tabs';
 import AdminModals from './admin-modals';
 import AdminCharts from './admin-charts';
 import AdminBreadcrumbs from './admin-breadcrumbs';
+import AdminDrawers from './admin-drawers';
+import AdminNotes from './admin-notes';
 
 import { TCatalogArticle, TCatalogEntities } from '@src/store/catalog/types';
 import { TCity } from '@src/store/admin/types';
-import AdminDrawers from './admin-drawers';
 
 const { Sider, Content, Footer, Header } = Layout;
 
@@ -44,16 +45,18 @@ function getItem(
   } as MenuItem;
 }
 
+const routes = ['/admin', '/admin/charts', '/admin/notes'];
+
 const items: MenuItem[] = [
-  getItem(<Link to='/admin'>Общее</Link>, '1', <PieChartOutlined />),
-  getItem(<Link to='/admin/charts'>Статистика</Link>, '2', <DesktopOutlined />),
+  getItem(<Link to={routes[0]}>Общее</Link>, '1', <PieChartOutlined />),
+  getItem(<Link to={routes[1]}>Статистика</Link>, '2', <DesktopOutlined />),
+  getItem(<Link to={routes[2]}>Примечания</Link>, '3', <FileOutlined />),
   getItem('Администраторы', 'sub1', <UserOutlined />, [
     getItem('Tom', '3'),
     getItem('Bill', '4'),
     getItem('Alex', '5'),
   ]),
   getItem('Работники', 'sub2', <TeamOutlined />, [getItem('Team 1', '6'), getItem('Team 2', '8')]),
-  getItem(<Link to='/admin/notes'>Примечания</Link>, '9', <FileOutlined />),
 ];
 
 const AdminContext = createContext(null);
@@ -271,7 +274,7 @@ function Admin(props: TProps) {
   );
 
   const system = {
-    activeMenuItem: [String(['/admin', '/admin/charts'].indexOf(location.pathname) + 1)],
+    activeMenuItem: [String(routes.indexOf(location.pathname) + 1)],
   };
 
   return (
@@ -314,4 +317,5 @@ export default {
   Root: memo(Admin),
   Tabs: memo(AdminTabs),
   Charts: memo(AdminCharts),
+  Notes: memo(AdminNotes),
 };

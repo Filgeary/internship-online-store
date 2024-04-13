@@ -1,3 +1,5 @@
+import 'antd/dist/reset.css';
+
 import { memo } from 'react';
 
 import Admin from '@src/containers/admin';
@@ -5,7 +7,7 @@ import Admin from '@src/containers/admin';
 function AdminNotesPage() {
   return (
     <Admin.Root>
-      <div>AdminNotesPage</div>
+      <Admin.Notes />
     </Admin.Root>
   );
 }

@@ -1,4 +1,4 @@
-import '../reset.css';
+import 'antd/dist/reset.css';
 
 import { memo } from 'react';
 
