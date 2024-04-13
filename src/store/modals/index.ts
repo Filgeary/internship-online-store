@@ -24,12 +24,11 @@ class ModalsState extends StoreModule<InitialStateModals> {
     });
   }
 
-  close(id: number, data?: string[] | string | number) {
+  close(id: number, data?: any) {
     if (data) {
       const modal = this.getState().list.find((item) => item.id === id);
       modal?.resolve(data);
     }
-
     const list = this.getState().list.filter((item) => item.id !== id);
 
     this.setState(

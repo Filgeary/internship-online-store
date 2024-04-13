@@ -60,5 +60,17 @@
   },
   "worker": {
     "title": "Web Workers"
+  },
+  "admin": {
+    "title": "Dashboard",
+    "products": "Products",
+    "users": "Users",
+    "countries": "Countries",
+    "categories": "Categories",
+    "settings": "Settings",
+    "overview": "Overview",
+    "newUsers": "New Users",
+    "sumProd": "Names of goods",
+    "comments": "Comments"
   }
 }

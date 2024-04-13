@@ -1,7 +1,8 @@
 import {useMemo} from "react";
 import useTranslate from "@src/hooks/use-translate";
-import Select from "@src/components/select";
+// import Select from "@src/components/select";
 import { Lang } from "@src/i18n/type";
+import { Select} from 'antd';
 
 function LocaleSelect() {
 

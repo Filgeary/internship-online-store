@@ -11,10 +11,10 @@ export interface InitialStateCatalog {
 export interface Params {
   page: number;
   limit: number;
-  sort: string;
+  sort: string | React.Key | readonly React.Key[];
   query: string;
   category: string;
-  madeIn: string
+  madeIn: string;
 }
 
 export type InitConfigCatalog = {

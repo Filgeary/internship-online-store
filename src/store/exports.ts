@@ -8,3 +8,5 @@ export { default as session } from './session';
 export { default as profile } from './profile';
 export {default as countries} from './countries';
 export {default as chat} from './chat';
+export {default as users} from './users';
+export { default as comments } from "./comments";

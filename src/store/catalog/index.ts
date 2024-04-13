@@ -19,7 +19,7 @@ class CatalogState extends StoreModule<InitialStateCatalog, InitConfigCatalog> {
         sort: "order",
         query: "",
         category: "",
-        madeIn: ""
+        madeIn: "",
       },
       count: 0,
       selected: [],
@@ -38,7 +38,11 @@ class CatalogState extends StoreModule<InitialStateCatalog, InitConfigCatalog> {
    * @return {Promise<void>}
    */
   async initParams(newParams: Partial<Params> = {}): Promise<void> {
-    const urlParams = new URLSearchParams(import.meta.env.SSR ? this.services.ssr.searchPath : window.location.search);
+    const urlParams = new URLSearchParams(
+      import.meta.env.SSR
+        ? this.services.ssr.searchPath
+        : window.location.search
+    );
     let validParams: Partial<Params> = {};
 
     if (!this.config.ignoreURL) {
@@ -103,8 +107,8 @@ class CatalogState extends StoreModule<InitialStateCatalog, InitConfigCatalog> {
         (import.meta.env.SSR ? "" : window.location.pathname) +
         (urlSearch ? `?${urlSearch}` : "") +
         (import.meta.env.SSR ? "" : window.location?.hash);
-        if (replaceHistory) {
-          window.history?.replaceState({}, "", url);
+      if (replaceHistory) {
+        window.history?.replaceState({}, "", url);
       } else {
         window.history?.pushState({}, "", url);
       }
@@ -122,6 +126,7 @@ class CatalogState extends StoreModule<InitialStateCatalog, InitConfigCatalog> {
       },
       {
         skip: 0,
+        sort: "-undefined",
         "search[query]": "",
         "search[category]": "",
         "search[madeIn]": "",
@@ -141,7 +146,7 @@ class CatalogState extends StoreModule<InitialStateCatalog, InitConfigCatalog> {
           waiting: false,
         },
         "Загружен список товаров из АПИ"
-        );
+      );
     }
   }
 
@@ -178,6 +183,58 @@ class CatalogState extends StoreModule<InitialStateCatalog, InitConfigCatalog> {
       { ...this.getState(), selected: [] },
       "Сброс выбранных товаров"
     );
+  }
+
+  async delete(_id: string) {
+    await this.services.api.request({
+      url: `/api/v1/articles/${_id}`,
+      method: "DELETE",
+    });
+
+    this.setState({
+      ...this.getState(),
+      list: this.getState().list.filter((item) => item._id !== _id),
+      count: this.getState().count - 1,
+    });
+  }
+
+  async edit(_id: string, body: string) {
+    console.log(body)
+    const res = await this.services.api.request({
+      url: `/api/v1/articles/${_id}`,
+      method: "PUT",
+      //@ts-ignore
+      body,
+    });
+
+    if(res.status === 200) {
+      this.setState({
+        ...this.getState(),
+        list: this.getState().list.map(el => {
+          if(el._id === _id) {
+            return res.data.result
+          }
+          return el
+        })
+      })
+    }
+  }
+
+  async create(body: string) {
+    const res = await this.services.api.request({
+      url: `/api/v1/articles`,
+      method: "POST",
+      //@ts-ignore
+      body,
+    });
+
+    if(res.status === 200) {
+      this.setState({
+        ...this.getState(),
+        list: [...this.getState().list, res.data.result],
+        count: this.getState().count + 1
+      })
+    }
   }
 }
 

@@ -2,7 +2,6 @@ import { useCallback, memo } from "react";
 import useStore from "@src/hooks/use-store";
 import useSelector from "@src/hooks/use-selector";
 import Pagination from "@src/components/pagination";
-import { AllStoreNames } from "@src/store/type";
 
 function Paginator(props: { storeName: string }) {
   const store = useStore();

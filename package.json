@@ -26,8 +26,10 @@
   },
   "homepage": "https://github.com/ylabio/react-webinar-3#readme",
   "dependencies": {
+    "@ant-design/icons": "^5.3.6",
     "@bem-react/classname": "^1.6.0",
     "@vitejs/plugin-react": "^4.2.1",
+    "antd": "^5.16.1",
     "compression": "^1.7.4",
     "dompurify": "^3.0.9",
     "emoji-picker-react": "^4.8.0",

@@ -62,5 +62,17 @@
   },
   "worker": {
     "title": "Воркеры"
+  },
+  "admin": {
+    "title": "Панель",
+    "products": "Товары",
+    "users": "Пользователи",
+    "countries": "Страны",
+    "categories": "Категории",
+    "settings": "Настройки",
+    "overview": "Обзор",
+    "newUsers": "Новые пользователи",
+    "sumProd": "Наименование товаров",
+    "comments": "Комментарии"
   }
 }

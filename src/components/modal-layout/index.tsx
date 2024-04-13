@@ -2,6 +2,7 @@ import {memo, useEffect, useRef} from "react";
 import {cn as bem} from '@bem-react/classname';
 import type { ModalLayoutProps } from "./type";
 import './style.css';
+import { Button } from "antd";
 
 function ModalLayout(props: ModalLayoutProps) {
 
@@ -34,7 +35,7 @@ function ModalLayout(props: ModalLayoutProps) {
       <div className={cn('frame')} ref={frame}>
         <div className={cn('head')}>
           <h1 className={cn('title')}>{props.title}</h1>
-          {props.isClose && <button className={cn('close')} onClick={props.onClose}>{props.labelClose}</button>}
+          {props.isClose && <Button className={cn('close')} onClick={props.onClose}>{props.labelClose}</Button>}
         </div>
         <div className={cn('content')}>
           {props.children}

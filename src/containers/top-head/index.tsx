@@ -4,6 +4,7 @@ import {Link, useLocation, useNavigate} from "react-router-dom";
 import useTranslate from "@src/hooks/use-translate";
 import useSelector from "@src/hooks/use-selector";
 import useStore from "@src/hooks/use-store";
+import { Button } from "antd";
 
 function TopHead() {
 
@@ -33,6 +34,7 @@ function TopHead() {
     <SideLayout side="end" padding="small">
       {select.exists ? (
         <SideLayout>
+          <Link to="/admin">Admin</Link>
           <Link to="/chat">{t('chat.title')}</Link>
           <Link to="/profile">{select.user.profile?.name}</Link>
         </SideLayout>
@@ -40,9 +42,9 @@ function TopHead() {
         ""
       )}
       {select.exists ? (
-        <button onClick={callbacks.onSignOut}>{t("session.signOut")}</button>
+        <Button onClick={callbacks.onSignOut}>{t("session.signOut")}</Button>
       ) : (
-        <button onClick={callbacks.onSignIn}>{t("session.signIn")}</button>
+        <Button onClick={callbacks.onSignIn}>{t("session.signIn")}</Button>
       )}
     </SideLayout>
   );
