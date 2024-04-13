@@ -92,7 +92,7 @@ class AdminStore extends StoreModule<TAdminState> {
     });
 
     try {
-      const limit = 100;
+      const limit = 30;
       const res = await this.services.api.request<{
         items: any[];
         count: number;

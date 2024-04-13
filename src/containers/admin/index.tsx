@@ -1,15 +1,15 @@
 import React, { useState, memo, useEffect, createContext, useContext, useMemo } from 'react';
 import Lottie from 'react-lottie';
-import logoAnimation from './assets/logo-animation.json';
 
 import { Link, useLocation } from 'react-router-dom';
 
+import logoAnimation from './assets/logo-animation.json';
+
 import {
+  BranchesOutlined,
   DesktopOutlined,
   FileOutlined,
   PieChartOutlined,
-  TeamOutlined,
-  UserOutlined,
 } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { Layout, Menu, theme, message } from 'antd';
@@ -23,6 +23,7 @@ import AdminCharts from './admin-charts';
 import AdminBreadcrumbs from './admin-breadcrumbs';
 import AdminDrawers from './admin-drawers';
 import AdminNotes from './admin-notes';
+import AdminResults from './admin-results';
 
 import { TCatalogArticle, TCatalogEntities } from '@src/store/catalog/types';
 import { TCity } from '@src/store/admin/types';
@@ -45,18 +46,13 @@ function getItem(
   } as MenuItem;
 }
 
-const routes = ['/admin', '/admin/charts', '/admin/notes'];
+const routes = ['/admin', '/admin/charts', '/admin/notes', '/admin/results'];
 
 const items: MenuItem[] = [
   getItem(<Link to={routes[0]}>Общее</Link>, '1', <PieChartOutlined />),
   getItem(<Link to={routes[1]}>Статистика</Link>, '2', <DesktopOutlined />),
   getItem(<Link to={routes[2]}>Примечания</Link>, '3', <FileOutlined />),
-  getItem('Администраторы', 'sub1', <UserOutlined />, [
-    getItem('Tom', '3'),
-    getItem('Bill', '4'),
-    getItem('Alex', '5'),
-  ]),
-  getItem('Работники', 'sub2', <TeamOutlined />, [getItem('Team 1', '6'), getItem('Team 2', '8')]),
+  getItem(<Link to={routes[3]}>Итоги</Link>, '4', <BranchesOutlined />),
 ];
 
 const AdminContext = createContext(null);
@@ -109,6 +105,9 @@ function Admin(props: TProps) {
 
     actionWithActiveArticle: state.admin.articles.actionWithActive,
     actionWithActiveCity: state.admin.cities.actionWithActive,
+
+    totalArticlesCount: state.admin.articles.count,
+    totalCitiesCount: state.admin.cities.count,
   }));
 
   const [activeArticle, setActiveArticle] = useState<TCatalogArticle>(null);
@@ -195,7 +194,6 @@ function Admin(props: TProps) {
     closeModalAddCity: () => setCityToAdd(null),
     closeDrawerLookArticle: () => store.actions.admin.setActiveArticle(null),
     editArticle: async () => {
-      console.log('editArticle:', activeArticle);
       await store.actions.admin.editArticle(activeArticle);
       store.actions.admin.setActiveArticle(null);
     },
@@ -216,8 +214,6 @@ function Admin(props: TProps) {
     setActiveCity,
   };
 
-  console.log({ activeArticle, articleToAdd });
-
   const options = {
     isModalEditArticleActive:
       Boolean(select.activeArticleId) && select.actionWithActiveArticle === 'edit',
@@ -236,8 +232,6 @@ function Admin(props: TProps) {
     isLookArticleDrawerActive:
       Boolean(select.activeArticleId) && select.actionWithActiveArticle === 'look',
   };
-
-  console.log({ drawerArticle: options.isLookArticleDrawerActive });
 
   const values = {
     activeArticle,
@@ -293,12 +287,12 @@ function Admin(props: TProps) {
             <Lottie
               options={{
                 loop: true,
-                autoplay: true,
                 animationData: logoAnimation,
                 rendererSettings: {
                   preserveAspectRatio: 'xMidYMid slice',
                 },
               }}
+              isClickToPauseDisabled={true}
               width={300}
             />
           </Header>
@@ -318,4 +312,5 @@ export default {
   Tabs: memo(AdminTabs),
   Charts: memo(AdminCharts),
   Notes: memo(AdminNotes),
+  Results: memo(AdminResults),
 };

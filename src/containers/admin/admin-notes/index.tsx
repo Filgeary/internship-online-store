@@ -6,9 +6,11 @@ import { FormItem } from 'react-hook-form-antd';
 import { zodResolver } from '@hookform/resolvers/zod';
 import z from 'zod';
 
-import { Col, Divider, Row, Typography, Form, Input, Button, Space, Tooltip, Flex } from 'antd';
+import { Col, Divider, Row, Typography, Form, Input, Button, Space, Tooltip } from 'antd';
 import NoteCard from '@src/components/note-card';
 import { ClearOutlined } from '@ant-design/icons';
+
+import { motion, AnimatePresence } from 'framer-motion';
 
 import {
   DndContext,
@@ -43,24 +45,24 @@ const schema = z.object({
 function AdminNotes() {
   const [notes, setNotes] = useState<TNote[]>([
     {
-      id: '123123',
-      title: 'hello world',
-      description: 'description here',
+      id: '1',
+      title: 'Выучить JS',
+      description: 'Таким образом новая модель организационной деятельности',
     },
     {
-      id: 'gfdgfdgfdg',
-      title: 'all title',
-      description: '123123description here',
+      id: '2',
+      title: 'Выучить TS',
+      description: 'Задача организации, в особенности же постоянное',
     },
     {
-      id: 'fdssdf',
-      title: 'gf dddddddddd',
-      description: 'descrip12312312bfdgftion here',
+      id: '3',
+      title: 'Выучить React',
+      description: 'Значимость этих проблем настолько очевидна',
     },
   ]);
   const [dragStatus, setDragStatus] = useState<'grab' | 'grabbing' | null>(null);
 
-  const { control, handleSubmit, reset } = useForm<TNote>({
+  const { control, handleSubmit, reset, watch } = useForm<TNote>({
     defaultValues: { title: '', description: '' },
     resolver: zodResolver(schema),
   });
@@ -74,10 +76,14 @@ function AdminNotes() {
 
   const options = {
     isSubmitDisabled: false,
+    isClearBtnDisabled: !watch('title').length && !watch('description').length,
   };
 
   const callbacks = {
     resetForm: () => reset(),
+    deleteNote: (id: string) => {
+      setNotes(notes.filter((note) => note.id !== id));
+    },
   };
 
   const handlers = {
@@ -90,7 +96,7 @@ function AdminNotes() {
       setNotes((prevNotes) => [...prevNotes, newNote]);
     },
     onPointerEnter: () => !dragStatus && setDragStatus('grab'),
-    onPointerLeave: () => !dragStatus && setDragStatus(null),
+    onPointerLeave: () => dragStatus === 'grab' && setDragStatus(null),
     onDragStart: () => setDragStatus('grabbing'),
     onDragEnd: (event: DragEndEvent) => {
       setDragStatus(null);
@@ -135,7 +141,11 @@ function AdminNotes() {
             <Row justify={'end'}>
               <Space>
                 <Tooltip title={'Стереть'}>
-                  <Button onClick={callbacks.resetForm} icon={<ClearOutlined />} />
+                  <Button
+                    disabled={options.isClearBtnDisabled}
+                    onClick={callbacks.resetForm}
+                    icon={<ClearOutlined />}
+                  />
                 </Tooltip>
                 <Button disabled={options.isSubmitDisabled} htmlType={'submit'} type={'primary'}>
                   Создать
@@ -158,7 +168,14 @@ function AdminNotes() {
         </Col>
       </Row>
 
-      <Flex justify='space-between' wrap='wrap' gap={30}>
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fill, 300px)',
+          gridGap: '1rem',
+          justifyContent: 'space-between',
+        }}
+      >
         <DndContext
           sensors={sensors}
           collisionDetection={closestCenter}
@@ -166,19 +183,28 @@ function AdminNotes() {
           onDragEnd={handlers.onDragEnd}
         >
           <SortableContext items={notes} strategy={rectSortingStrategy}>
-            {notes.map((note) => (
-              <NoteCard
-                onPointerEnter={handlers.onPointerEnter}
-                onPointerLeave={handlers.onPointerLeave}
-                key={note.id}
-                id={note.id}
-                title={note.title}
-                description={note.description}
-              />
-            ))}
+            <AnimatePresence>
+              {notes.map((note) => (
+                <motion.div
+                  initial={{ opacity: 0, x: -50 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -50 }}
+                  key={note.id}
+                >
+                  <NoteCard
+                    onPointerEnter={handlers.onPointerEnter}
+                    onPointerLeave={handlers.onPointerLeave}
+                    onDelete={() => callbacks.deleteNote(note.id)}
+                    id={note.id}
+                    title={note.title}
+                    description={note.description}
+                  />
+                </motion.div>
+              ))}
+            </AnimatePresence>
           </SortableContext>
         </DndContext>
-      </Flex>
+      </div>
     </>
   );
 }

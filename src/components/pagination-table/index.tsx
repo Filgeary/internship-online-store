@@ -29,7 +29,7 @@ function PaginationTable(props: TProps) {
       title: 'Действие',
       key: 'operation',
       fixed: 'right',
-      render: (value, record, index) => {
+      render: (value) => {
         return (
           <>
             <Space size={'middle'}>
@@ -39,9 +39,7 @@ function PaginationTable(props: TProps) {
                 onConfirm={() => props.onDelete(value._id)}
                 icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
               >
-                <Tooltip title='Удалить'>
-                  <Button type='default' shape='circle' icon={<DeleteOutlined />} />
-                </Tooltip>
+                <Button danger type='default' shape='circle' icon={<DeleteOutlined />} />
               </Popconfirm>
 
               <Tooltip title='Изменить'>
