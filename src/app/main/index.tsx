@@ -1,4 +1,4 @@
-import { memo, useEffect } from 'react';
+import { memo } from 'react';
 
 import useTranslate from '@src/hooks/use-translate';
 import Navigation from '@src/containers/navigation';
@@ -35,7 +35,6 @@ function Main() {
       <Catalog stateName={options.stateName as 'catalog'}>
         <CatalogFilter />
         <CatalogList />
-        <CatalogFilter />
       </Catalog>
     </PageLayout>
   );

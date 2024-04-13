@@ -17,6 +17,10 @@ export type TAdminState = {
     count: number;
     activeFetching: boolean;
   };
+  notes: {
+    list: TNote[];
+    count: number;
+  };
 };
 
 export type TCity = {
@@ -25,4 +29,9 @@ export type TCity = {
   population: number;
 };
 
+export type TNote = {
+  _id: string;
+  title: string;
+  description: string;
+};
 export type TActionsWithActive = 'edit' | 'look' | '';

@@ -1,7 +1,7 @@
 import { TCatalogArticle, TCatalogEntities } from '../catalog/types';
 import StoreModule from '../module';
 
-import { TActionsWithActive, TAdminState, TCity } from './types';
+import { TActionsWithActive, TAdminState, TCity, TNote } from './types';
 
 class AdminStore extends StoreModule<TAdminState> {
   initState(): TAdminState {
@@ -21,6 +21,26 @@ class AdminStore extends StoreModule<TAdminState> {
         list: [],
         count: 0,
         activeFetching: false,
+      },
+      notes: {
+        list: [
+          {
+            _id: '1',
+            title: 'Выучить JS',
+            description: 'Таким образом новая модель организационной деятельности',
+          },
+          {
+            _id: '2',
+            title: 'Выучить TS',
+            description: 'Задача организации, в особенности же постоянное',
+          },
+          {
+            _id: '3',
+            title: 'Выучить React',
+            description: 'Значимость этих проблем настолько очевидна',
+          },
+        ],
+        count: 3,
       },
     };
   }
@@ -320,6 +340,50 @@ class AdminStore extends StoreModule<TAdminState> {
         ...this.getState().cities,
         active: id,
         actionWithActive: action,
+      },
+    });
+  }
+
+  /**
+   * Удалить заметку
+   */
+  deleteNote(id: string) {
+    const newList = this.getState().notes.list.filter((note) => note._id !== id);
+
+    this.setState({
+      ...this.getState(),
+      notes: {
+        ...this.getState().notes,
+        list: newList,
+        count: this.getState().notes.count - 1,
+      },
+    });
+  }
+
+  /**
+   * Добавить заметку
+   */
+  appendNote(note: TNote) {
+    this.setState({
+      ...this.getState(),
+      notes: {
+        ...this.getState().notes,
+        list: [...this.getState().notes.list, note],
+        count: this.getState().notes.count + 1,
+      },
+    });
+  }
+
+  /**
+   * Установить список заметок
+   */
+  setNotesList(notesList: TNote[]) {
+    this.setState({
+      ...this.getState(),
+      notes: {
+        ...this.getState().notes,
+        list: notesList,
+        count: notesList.length,
       },
     });
   }

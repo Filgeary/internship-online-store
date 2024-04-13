@@ -13,6 +13,7 @@
     "esModuleInterop": true,
     "noImplicitAny": true,
     "resolveJsonModule": true,
+    "lib": ["DOM", "ES2023"],
     "paths": {
       "@src/*": ["./src/*"],
       "*": ["./types/*.d.ts"]

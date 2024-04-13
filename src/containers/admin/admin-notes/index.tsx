@@ -27,15 +27,12 @@ import {
   sortableKeyboardCoordinates,
   rectSortingStrategy,
 } from '@dnd-kit/sortable';
+import { TNote } from '@src/store/admin/types';
+import { useAppSelector } from '@src/hooks/use-selector';
+import useStore from '@src/hooks/use-store';
 
 const { Title } = Typography;
 const { TextArea } = Input;
-
-type TNote = {
-  id: string;
-  title: string;
-  description: string;
-};
 
 const schema = z.object({
   title: z.string().min(1, { message: 'Обязательное поле' }),
@@ -43,23 +40,12 @@ const schema = z.object({
 });
 
 function AdminNotes() {
-  const [notes, setNotes] = useState<TNote[]>([
-    {
-      id: '1',
-      title: 'Выучить JS',
-      description: 'Таким образом новая модель организационной деятельности',
-    },
-    {
-      id: '2',
-      title: 'Выучить TS',
-      description: 'Задача организации, в особенности же постоянное',
-    },
-    {
-      id: '3',
-      title: 'Выучить React',
-      description: 'Значимость этих проблем настолько очевидна',
-    },
-  ]);
+  const store = useStore();
+
+  const select = useAppSelector((state) => ({
+    notesList: state.admin.notes.list,
+  }));
+
   const [dragStatus, setDragStatus] = useState<'grab' | 'grabbing' | null>(null);
 
   const { control, handleSubmit, reset, watch } = useForm<TNote>({
@@ -81,19 +67,16 @@ function AdminNotes() {
 
   const callbacks = {
     resetForm: () => reset(),
-    deleteNote: (id: string) => {
-      setNotes(notes.filter((note) => note.id !== id));
-    },
+    deleteNote: (id: string) => store.actions.admin.deleteNote(id),
   };
 
   const handlers = {
     onFormSubmit: (data: TNote) => {
       const newNote = {
         ...data,
-        id: crypto.randomUUID(),
+        _id: crypto.randomUUID(),
       };
-      console.log('@', newNote);
-      setNotes((prevNotes) => [...prevNotes, newNote]);
+      store.actions.admin.appendNote(newNote);
     },
     onPointerEnter: () => !dragStatus && setDragStatus('grab'),
     onPointerLeave: () => dragStatus === 'grab' && setDragStatus(null),
@@ -105,19 +88,18 @@ function AdminNotes() {
       console.log({ active, over });
 
       if (active.id !== over.id) {
-        setNotes((prevNotes) => {
-          const oldIndex = prevNotes.findIndex((note) => note.id === active.id);
-          const newIndex = prevNotes.findIndex((note) => note.id === over.id);
+        const oldIndex = select.notesList.findIndex((note) => note._id === active.id);
+        const newIndex = select.notesList.findIndex((note) => note._id === over.id);
 
-          return arrayMove(prevNotes, oldIndex, newIndex);
-        });
+        const result = arrayMove(select.notesList, oldIndex, newIndex);
+        store.actions.admin.setNotesList(result);
       }
     },
   };
 
   useEffect(() => {
-    if (notes.length) callbacks.resetForm();
-  }, [notes]);
+    if (select.notesList.length) callbacks.resetForm();
+  }, [select.notesList]);
 
   useEffect(() => {
     document.body.style.setProperty('cursor', dragStatus);
@@ -160,7 +142,7 @@ function AdminNotes() {
 
       <Row>
         <Col span={24}>
-          {notes.length ? (
+          {select.notesList.length ? (
             <Title level={3}>Все заметки</Title>
           ) : (
             <Title level={3}>Заметок пока нет...</Title>
@@ -182,20 +164,23 @@ function AdminNotes() {
           onDragStart={handlers.onDragStart}
           onDragEnd={handlers.onDragEnd}
         >
-          <SortableContext items={notes} strategy={rectSortingStrategy}>
+          <SortableContext
+            items={select.notesList.map((note) => note._id)}
+            strategy={rectSortingStrategy}
+          >
             <AnimatePresence>
-              {notes.map((note) => (
+              {select.notesList.map((note) => (
                 <motion.div
                   initial={{ opacity: 0, x: -50 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -50 }}
-                  key={note.id}
+                  key={note._id}
                 >
                   <NoteCard
                     onPointerEnter={handlers.onPointerEnter}
                     onPointerLeave={handlers.onPointerLeave}
-                    onDelete={() => callbacks.deleteNote(note.id)}
-                    id={note.id}
+                    onDelete={() => callbacks.deleteNote(note._id)}
+                    id={note._id}
                     title={note.title}
                     description={note.description}
                   />

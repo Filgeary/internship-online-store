@@ -108,6 +108,7 @@ function Admin(props: TProps) {
 
     totalArticlesCount: state.admin.articles.count,
     totalCitiesCount: state.admin.cities.count,
+    totalNotesCount: state.admin.notes.count,
   }));
 
   const [activeArticle, setActiveArticle] = useState<TCatalogArticle>(null);

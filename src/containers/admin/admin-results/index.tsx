@@ -48,7 +48,7 @@ function AdminResults() {
 
       <Col span={4}>
         <Card bordered={false}>
-          <Statistic title='Заметок' value={3} prefix={<ProfileOutlined />} />
+          <Statistic title='Заметок' value={select.totalNotesCount} prefix={<ProfileOutlined />} />
         </Card>
       </Col>
     </Row>
