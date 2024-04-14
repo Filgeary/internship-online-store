@@ -4,11 +4,12 @@ import Basket from "../../app/basket";
 import CountItemModal from "@src/containers/count-item-modal";
 import ModalCatalog from "../modal-catalog";
 import { ModalsName } from "@src/store/modals/type";
-import { ModalCreateProduct } from "@src/admin/layout/modal-create";
-import { ModalEdit } from "@src/admin/layout/modal-edit";
+import { ModalProduct } from "@src/admin/layout/modal";
+import useTranslate from "@src/hooks/use-translate";
 
 function Modals() {
   const activeModals = useSelector((state) => state.modals.list);
+  const {t} = useTranslate();
 
   const modals = (name: ModalsName) => {
     switch (name) {
@@ -19,9 +20,9 @@ function Modals() {
       case "catalog_modal":
         return <ModalCatalog />;
       case "add_product":
-        return <ModalCreateProduct />;
+        return <ModalProduct title={t("admin.addRecord")} />;
       case "edit_product":
-        return <ModalEdit />;
+        return <ModalProduct title={t("admin.editRecord")} isEditModal={true} />;
     }
   };
 

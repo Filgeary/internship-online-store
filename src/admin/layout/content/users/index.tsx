@@ -3,7 +3,7 @@ import LocaleSelect from "@src/containers/locale-select";
 import useSelector from "@src/hooks/use-selector";
 import useStore from "@src/hooks/use-store";
 import useTranslate from "@src/hooks/use-translate";
-import { Modal, Space, Table, TableProps } from "antd";
+import { App, Modal, Space, Table, TableProps } from "antd";
 import { useEffect, useState } from "react";
 import { TableParams } from "./type";
 import { CardTemplate } from "@src/admin/components/card-template";
@@ -23,12 +23,11 @@ export const Users = () => {
     waiting: state.users.waiting,
   }));
   const { t } = useTranslate();
-
   const onDelete = (_id: string) =>
     Modal.confirm({
       title: "Are you sure, you want to delete this user record?",
       okType: "danger",
-      onOk: () => {
+      onOk: (_id) => {
         store.actions.users.delete(_id);
       },
     });
@@ -59,9 +58,20 @@ export const Users = () => {
       <Head title={t("admin.users")}>
         <LocaleSelect />
       </Head>
-      <Space direction="horizontal" size="middle" style={{marginBottom: "20px"}}>
-        {userCards.map(card => (
-          <CardTemplate key={card.title} title={card.title} prefix={card.prefix} icon={card.icon} color={card.color} count={card.count}/>
+      <Space
+        direction="horizontal"
+        size="middle"
+        style={{ marginBottom: "20px" }}
+      >
+        {userCards.map((card) => (
+          <CardTemplate
+            key={card.title}
+            title={card.title}
+            prefix={card.prefix}
+            icon={card.icon}
+            color={card.color}
+            count={card.count}
+          />
         ))}
       </Space>
       <Table

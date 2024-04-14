@@ -26,14 +26,14 @@ const ROOT = () => (
   </ServicesContext.Provider>
 );
 // Первый рендер приложения
-  // hydrateRoot(
-  //   root,
-  //   <ServicesContext.Provider value={services}>
-  //     <I18nProvider>
-  //       <BrowserRouter>
-  //         <App />
-  //       </BrowserRouter>
-  //     </I18nProvider>
-  //   </ServicesContext.Provider>
-  // );
-  createRoot(root).render(<ROOT />)
+  hydrateRoot(
+    root,
+    <ServicesContext.Provider value={services}>
+      <I18nProvider>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </I18nProvider>
+    </ServicesContext.Provider>
+  );
+  // createRoot(root).render(<ROOT />)

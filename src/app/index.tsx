@@ -55,7 +55,7 @@ function App(): React.ReactElement {
         <Route
           path={"/admin"}
           element={
-            <Protected redirect="/login">
+            // <Protected redirect="/login">
               <Suspense fallback={<div>loading...</div>}>
                 <ConfigProvider
                   theme={{
@@ -67,7 +67,7 @@ function App(): React.ReactElement {
                   <AdminPanel />
                 </ConfigProvider>
               </Suspense>
-            </Protected>
+            // </Protected>
           }
         >
           <Route path="" element={<Overview />} />

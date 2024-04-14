@@ -4,17 +4,22 @@ import useSelector from "@src/hooks/use-selector";
 import useStore from "@src/hooks/use-store";
 import useTranslate from "@src/hooks/use-translate";
 import { Button, DatePicker, Form, Input, InputNumber, Select } from "antd";
+import dayjs from "dayjs";
 import { useCallback, useMemo } from "react";
 
-export const ModalCreateProduct = () => {
+export const ModalProduct = ({title, isEditModal}: {title: string, isEditModal?: boolean}) => {
   const store = useStore();
   const select = useSelector((state) => ({
     countries: state["countries_admin"]?.list,
     countriesWaiting: state["countries_admin"]?.waiting,
     categories: state["categories_admin"]?.list,
     categoriesWaiting: state["categories_admin"]?.waiting,
+    modals: state.modals.list
   }));
   const modalId = useModalId();
+
+  const article = useSelector((state) => state.article.data);
+
   const options = {
     countries: useMemo(
       () =>
@@ -36,7 +41,6 @@ export const ModalCreateProduct = () => {
 
   const callbacks = {
     onClose: useCallback(() => {
-      console.log(modalId);
       store.actions.modals.close(modalId!);
     }, [store, modalId]),
     onSubmit: useCallback(
@@ -50,7 +54,7 @@ export const ModalCreateProduct = () => {
 
   return (
     <ModalLayout
-      title={"Add new product"}
+      title={title}
       isClose={true}
       labelClose={t("modal.close")}
       onClose={callbacks.onClose}
@@ -66,38 +70,46 @@ export const ModalCreateProduct = () => {
       >
         <Form.Item
           hasFeedback
-          label="Name"
+          label={t("admin.table.name")}
           name="name"
           validateTrigger="onBlur"
-          rules={[{ min: 2, required: true }]}
+          rules={[{ min: 2, required: isEditModal ? false : true }]}
+          initialValue={isEditModal ? article.name : ""}
         >
-          <Input placeholder="Validate required onBlur" />
+          <Input placeholder="Enter name" />
         </Form.Item>
         <Form.Item
           hasFeedback
-          label="Title"
+          label={t("admin.table.title")}
           name="title"
           validateTrigger="onBlur"
-          rules={[{ min: 2, required: true }]}
+          rules={[{ min: 2, required: isEditModal ? false : true }]}
+          initialValue={isEditModal ? article.title : ""}
         >
-          <Input placeholder="Validate required onBlur" />
-        </Form.Item>
-        <Form.Item label="Description" name="description">
-          <Input.TextArea />
+          <Input placeholder="Enter title" />
         </Form.Item>
         <Form.Item
-          label="Price"
+          label={t("admin.table.description")}
+          name="description"
+          initialValue={isEditModal ? article.description : ""}
+        >
+          <Input.TextArea placeholder="Enter description" />
+        </Form.Item>
+        <Form.Item
+          label={t("admin.table.price")}
           name="price"
           validateTrigger="onBlur"
-          rules={[{ required: true }]}
+          rules={[{ required: isEditModal ? false : true }]}
+          initialValue={isEditModal ? article.price : ""}
         >
-          <InputNumber addonAfter="₽" />
+          <InputNumber addonAfter="₽" placeholder="Enter price" />
         </Form.Item>
         <Form.Item
-          label="Edition"
+          label={t("admin.table.edition")}
           name="edition"
           validateTrigger="onBlur"
-          rules={[{ required: true }]}
+          rules={[{ required: isEditModal ? false : true }]}
+          initialValue={isEditModal ? dayjs().year(article.edition) : ""}
         >
           <DatePicker
             picker="year"
@@ -107,12 +119,18 @@ export const ModalCreateProduct = () => {
           />
         </Form.Item>
         <Form.Item
-          label="Country"
-          name="country"
+          label={t("admin.table.country")}
+          name="madeIn"
           validateTrigger="onBlur"
-          rules={[{ required: true }]}
+          rules={[{ required: isEditModal ? false : true }]}
+          initialValue={isEditModal ? article.madeIn._id : ""}
         >
           <Select
+            showSearch
+            optionFilterProp="children"
+            filterOption={(input, option) =>
+              (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
+            }
             options={options.countries}
             placeholder="Please select a country"
             loading={select.countriesWaiting}
@@ -122,10 +140,11 @@ export const ModalCreateProduct = () => {
           />
         </Form.Item>
         <Form.Item
-          label="Category"
+          label={t("admin.table.category")}
           name="category"
           validateTrigger="onBlur"
-          rules={[{ required: true }]}
+          rules={[{ required: isEditModal ? false : true }]}
+          initialValue={isEditModal ? article.category._id : ""}
         >
           <Select
             placeholder="Please select a category"
@@ -138,7 +157,7 @@ export const ModalCreateProduct = () => {
         </Form.Item>
         <Form.Item label=" " colon={false}>
           <Button type="primary" htmlType="submit">
-            Submit
+            {t("admin.submit")}
           </Button>
         </Form.Item>
       </Form>

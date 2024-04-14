@@ -7,10 +7,12 @@ export const columns = (onDelete: (_id: string) => void) => [
     title: "Username",
     dataIndex: "username",
     sorter: true,
+    width: 150
   },
   {
     title: "Email",
     dataIndex: "email",
+    width: 200
   },
   {
     title: "Status",
@@ -32,11 +34,13 @@ export const columns = (onDelete: (_id: string) => void) => [
         </Tag>
       );
     },
+    width: 200
   },
   {
     title: "Date Create",
     sorter: true,
     dataIndex: "dateCreate",
+    width: 200
   },
   {
     title: "Actions",
@@ -49,5 +53,6 @@ export const columns = (onDelete: (_id: string) => void) => [
         />
       </Flex>
     ),
+    width: 80
   },
 ];

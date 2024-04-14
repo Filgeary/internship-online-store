@@ -71,6 +71,22 @@
     "overview": "Overview",
     "newUsers": "New Users",
     "sumProd": "Names of goods",
-    "comments": "Comments"
+    "comments": "Comments",
+    "table": {
+      "title": "Title",
+      "country": "Country",
+      "category": "Category",
+      "price": "Price",
+      "actions": "Actions",
+      "edition": "Edition",
+      "username": "Username",
+      "status": "Status",
+      "email": "Email",
+      "name": "Name",
+      "description": "Description"
+    },
+    "addRecord": "Add new record",
+    "editRecord": "Edit product's information",
+    "submit": "Submit"
   }
 }

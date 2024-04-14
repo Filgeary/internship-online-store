@@ -13,7 +13,7 @@ export const cards = (
   count3: number
 ) => [
   {
-    title: title1,
+    title: 'New',
     icon: <UserAddOutlined style={{ fontSize: 28 }} />,
     count: count1,
     color: "green",

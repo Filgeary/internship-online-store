@@ -126,13 +126,12 @@ class CatalogState extends StoreModule<InitialStateCatalog, InitConfigCatalog> {
       },
       {
         skip: 0,
-        sort: "-undefined",
+        sort: "-undefined" || '',
         "search[query]": "",
         "search[category]": "",
         "search[madeIn]": "",
       }
     );
-
     const res = await this.services.api.request({
       url: `/api/v1/articles?${new URLSearchParams(apiParams)}`,
     });
@@ -199,7 +198,6 @@ class CatalogState extends StoreModule<InitialStateCatalog, InitConfigCatalog> {
   }
 
   async edit(_id: string, body: string) {
-    console.log(body)
     const res = await this.services.api.request({
       url: `/api/v1/articles/${_id}`,
       method: "PUT",
