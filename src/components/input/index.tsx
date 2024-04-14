@@ -1,6 +1,6 @@
 import { cn as bem } from '@bem-react/classname';
 import debounce from 'lodash.debounce';
-import React, { memo, useCallback, useLayoutEffect, useState } from 'react';
+import { memo, useCallback, useLayoutEffect, useState } from 'react';
 
 import './style.css';
 

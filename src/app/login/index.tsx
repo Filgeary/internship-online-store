@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useState } from 'react';
+import { memo, useCallback, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import Field from '@src/components/field';
