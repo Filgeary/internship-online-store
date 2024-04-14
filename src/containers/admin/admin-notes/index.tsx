@@ -27,7 +27,7 @@ import {
   sortableKeyboardCoordinates,
   rectSortingStrategy,
 } from '@dnd-kit/sortable';
-import { TNote } from '@src/store/admin/types';
+import { TNote } from '@src/store/notes/types';
 import { useAppSelector } from '@src/hooks/use-selector';
 import useStore from '@src/hooks/use-store';
 
@@ -43,7 +43,7 @@ function AdminNotes() {
   const store = useStore();
 
   const select = useAppSelector((state) => ({
-    notesList: state.admin.notes.list,
+    notesList: state.notes.list,
   }));
 
   const [dragStatus, setDragStatus] = useState<'grab' | 'grabbing' | null>(null);
@@ -67,7 +67,7 @@ function AdminNotes() {
 
   const callbacks = {
     resetForm: () => reset(),
-    deleteNote: (id: string) => store.actions.admin.deleteNote(id),
+    deleteNote: (id: string) => store.actions.notes.deleteNote(id),
   };
 
   const handlers = {
@@ -76,7 +76,7 @@ function AdminNotes() {
         ...data,
         _id: crypto.randomUUID(),
       };
-      store.actions.admin.appendNote(newNote);
+      store.actions.notes.appendNote(newNote);
     },
     onPointerEnter: () => !dragStatus && setDragStatus('grab'),
     onPointerLeave: () => dragStatus === 'grab' && setDragStatus(null),
@@ -85,14 +85,13 @@ function AdminNotes() {
       setDragStatus(null);
 
       const { active, over } = event;
-      console.log({ active, over });
 
       if (active.id !== over.id) {
         const oldIndex = select.notesList.findIndex((note) => note._id === active.id);
         const newIndex = select.notesList.findIndex((note) => note._id === over.id);
 
         const result = arrayMove(select.notesList, oldIndex, newIndex);
-        store.actions.admin.setNotesList(result);
+        store.actions.notes.setNotesList(result);
       }
     },
   };

@@ -51,7 +51,7 @@ const routes = ['/admin', '/admin/charts', '/admin/notes', '/admin/results'];
 const items: MenuItem[] = [
   getItem(<Link to={routes[0]}>Общее</Link>, '1', <PieChartOutlined />),
   getItem(<Link to={routes[1]}>Статистика</Link>, '2', <DesktopOutlined />),
-  getItem(<Link to={routes[2]}>Примечания</Link>, '3', <FileOutlined />),
+  getItem(<Link to={routes[2]}>Заметки</Link>, '3', <FileOutlined />),
   getItem(<Link to={routes[3]}>Итоги</Link>, '4', <BranchesOutlined />),
 ];
 
@@ -108,7 +108,7 @@ function Admin(props: TProps) {
 
     totalArticlesCount: state.admin.articles.count,
     totalCitiesCount: state.admin.cities.count,
-    totalNotesCount: state.admin.notes.count,
+    totalNotesCount: state.notes.count,
   }));
 
   const [activeArticle, setActiveArticle] = useState<TCatalogArticle>(null);
@@ -141,105 +141,145 @@ function Admin(props: TProps) {
     },
   };
 
-  const handlers = {
-    onDeleteArticle: async (id: string) => {
-      try {
-        await store.actions.admin.removeArticle(id);
-        message.success('Удалено успешно!');
-      } catch (err) {
-        message.error(err.message);
-      }
-    },
-    onDeleteCity: async (id: string) => {
-      try {
-        await store.actions.admin.removeCity(id);
-        message.success('Удалено успешно!');
-      } catch (err) {
-        message.error(err.message);
-      }
-    },
-    onEditArticle: (id: string) => store.actions.admin.setActiveArticle(id, 'edit'),
-    onEditCity: (id: string) => store.actions.admin.setActiveCity(id, 'edit'),
+  const handlers = useMemo(
+    () => ({
+      onDeleteArticle: async (id: string) => {
+        try {
+          await store.actions.admin.removeArticle(id);
+          message.success('Удалено успешно!');
+        } catch (err) {
+          message.error(err.message);
+        }
+      },
+      onDeleteCity: async (id: string) => {
+        try {
+          await store.actions.admin.removeCity(id);
+          message.success('Удалено успешно!');
+        } catch (err) {
+          message.error(err.message);
+        }
+      },
+      onEditArticle: (id: string) => store.actions.admin.setActiveArticle(id, 'edit'),
+      onEditCity: (id: string) => store.actions.admin.setActiveCity(id, 'edit'),
 
-    onLookArticle: (id: string) => store.actions.admin.setActiveArticle(id, 'look'),
+      onLookArticle: (id: string) => store.actions.admin.setActiveArticle(id, 'look'),
 
-    onActiveArticleChange: helpers.keyValueChanger(setActiveArticle, ['category', 'madeIn']),
-    onActiveCityChange: helpers.keyValueChanger(setActiveCity),
-    onArticleToAddChange: helpers.keyValueChanger(setArticleToAdd, ['category', 'madeIn']),
-    onCityToAddChange: helpers.keyValueChanger(setCityToAdd),
+      onActiveArticleChange: helpers.keyValueChanger(setActiveArticle, ['category', 'madeIn']),
+      onActiveCityChange: helpers.keyValueChanger(setActiveCity),
+      onArticleToAddChange: helpers.keyValueChanger(setArticleToAdd, ['category', 'madeIn']),
+      onCityToAddChange: helpers.keyValueChanger(setCityToAdd),
 
-    onPaginationChange: (page: number, pageSize: number) => {
-      console.log({ page, pageSize });
-      store.actions.catalog.setParams({ page, limit: pageSize }, false);
-    },
-    onAddArticleBtnClick: () => {
-      setArticleToAdd({
-        title: '',
-        price: 0,
-        category: { _id: null },
-        madeIn: { _id: null },
-      } as TCatalogArticle);
-    },
-    onAddCityBtnClick: () => {
-      setCityToAdd({ title: '', population: 0 } as TCity);
-    },
-    onTabKeyChange: (keyStr: TCatalogEntities) => {
-      store.actions.catalog.setParams({ activeEntity: keyStr });
-    },
-  };
+      onPaginationChange: (page: number, pageSize: number) => {
+        console.log({ page, pageSize });
+        store.actions.catalog.setParams({ page, limit: pageSize }, false);
+      },
+      onAddArticleBtnClick: () => {
+        setArticleToAdd({
+          title: '',
+          price: 0,
+          category: { _id: null },
+          madeIn: { _id: null },
+        } as TCatalogArticle);
+      },
+      onAddCityBtnClick: () => {
+        setCityToAdd({ title: '', population: 0 } as TCity);
+      },
+      onTabKeyChange: (keyStr: TCatalogEntities) => {
+        store.actions.catalog.setParams({ activeEntity: keyStr });
+      },
+    }),
+    [store]
+  );
 
-  const callbacks = {
-    closeModalEditArticle: () => store.actions.admin.setActiveArticle(null),
-    closeModalEditCity: () => store.actions.admin.setActiveCity(null),
-    closeModalAddArticle: () => setArticleToAdd(null),
-    closeModalAddCity: () => setCityToAdd(null),
-    closeDrawerLookArticle: () => store.actions.admin.setActiveArticle(null),
-    editArticle: async () => {
-      await store.actions.admin.editArticle(activeArticle);
-      store.actions.admin.setActiveArticle(null);
-    },
-    editCity: async () => {
-      await store.actions.admin.editCity(activeCity);
-      store.actions.admin.setActiveCity(null);
-    },
-    addArticle: async () => {
-      await store.actions.admin.addArticle(articleToAdd);
-      setArticleToAdd(null);
-    },
-    addCity: async () => {
-      await store.actions.admin.addCity(cityToAdd);
-      setCityToAdd(null);
-    },
+  const callbacks = useMemo(
+    () => ({
+      closeModalEditArticle: () => store.actions.admin.setActiveArticle(null),
+      closeModalEditCity: () => store.actions.admin.setActiveCity(null),
+      closeModalAddArticle: () => setArticleToAdd(null),
+      closeModalAddCity: () => setCityToAdd(null),
+      closeDrawerLookArticle: () => store.actions.admin.setActiveArticle(null),
+      editArticle: async () => {
+        try {
+          await store.actions.admin.editArticle(activeArticle);
+          store.actions.admin.setActiveArticle(null);
+          message.success('Изменено успешно!');
+        } catch (err) {
+          message.error(err.message);
+        }
+      },
+      editCity: async () => {
+        try {
+          await store.actions.admin.editCity(activeCity);
+          store.actions.admin.setActiveCity(null);
+          message.success('Изменено успешно!');
+        } catch (err) {
+          message.error(err.message);
+        }
+      },
+      addArticle: async () => {
+        try {
+          await store.actions.admin.addArticle(articleToAdd);
+          setArticleToAdd(null);
+          message.success('Добавлено успешно!');
+        } catch (err) {
+          message.error(err.message);
+        }
+      },
+      addCity: async () => {
+        try {
+          await store.actions.admin.addCity(cityToAdd);
+          setCityToAdd(null);
+          message.success('Добавлено успешно!');
+        } catch (err) {
+          message.error(err.message);
+        }
+      },
 
-    setActiveArticle,
-    setActiveCity,
-  };
+      setActiveArticle,
+      setActiveCity,
+    }),
+    [store, activeArticle, activeCity, articleToAdd, cityToAdd]
+  );
 
-  const options = {
-    isModalEditArticleActive:
-      Boolean(select.activeArticleId) && select.actionWithActiveArticle === 'edit',
-    isModalEditCityActive: Boolean(select.activeCityId) && select.actionWithActiveCity === 'edit',
+  const options = useMemo(
+    () => ({
+      isModalEditArticleActive:
+        Boolean(select.activeArticleId) && select.actionWithActiveArticle === 'edit',
+      isModalEditCityActive: Boolean(select.activeCityId) && select.actionWithActiveCity === 'edit',
 
-    isModalAddArticleActive: Boolean(articleToAdd),
-    isSubmitDisabledAddArticleModal: articleToAdd
-      ? articleToAdd.title.length < 4 || articleToAdd.price <= 0 || !articleToAdd.category._id
-      : true,
+      isModalAddArticleActive: Boolean(articleToAdd),
+      isSubmitDisabledAddArticleModal: articleToAdd
+        ? articleToAdd.title.length < 4 || articleToAdd.price <= 0 || !articleToAdd.category._id
+        : true,
 
-    isModalAddCityActive: Boolean(cityToAdd),
-    isSubmitDisabledAddCityModal: cityToAdd
-      ? cityToAdd.title.length < 4 || cityToAdd.population <= 0
-      : true,
+      isModalAddCityActive: Boolean(cityToAdd),
+      isSubmitDisabledAddCityModal: cityToAdd
+        ? cityToAdd.title.length < 4 || cityToAdd.population <= 0
+        : true,
 
-    isLookArticleDrawerActive:
-      Boolean(select.activeArticleId) && select.actionWithActiveArticle === 'look',
-  };
+      isLookArticleDrawerActive:
+        Boolean(select.activeArticleId) && select.actionWithActiveArticle === 'look',
+    }),
+    [
+      store,
+      select.activeArticleId,
+      select.actionWithActiveArticle,
+      select.activeCityId,
+      select.actionWithActiveCity,
+      articleToAdd,
+      cityToAdd,
+    ]
+  );
 
-  const values = {
-    activeArticle,
-    activeCity,
-    articleToAdd,
-    cityToAdd,
-  };
+  const values = useMemo(
+    () => ({
+      activeArticle,
+      activeCity,
+      articleToAdd,
+      cityToAdd,
+    }),
+    [activeArticle, activeCity, articleToAdd, cityToAdd]
+  );
 
   // Поиск активного товара
   useEffect(() => {

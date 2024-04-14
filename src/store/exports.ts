@@ -9,3 +9,4 @@ export { default as profile } from './profile';
 export { default as countries } from './countries';
 export { default as art } from './art';
 export { default as admin } from './admin';
+export { default as notes } from './notes';

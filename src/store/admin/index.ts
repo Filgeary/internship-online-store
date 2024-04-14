@@ -1,7 +1,7 @@
 import { TCatalogArticle, TCatalogEntities } from '../catalog/types';
 import StoreModule from '../module';
 
-import { TActionsWithActive, TAdminState, TCity, TNote } from './types';
+import { TActionsWithActive, TAdminState, TCity } from './types';
 
 class AdminStore extends StoreModule<TAdminState> {
   initState(): TAdminState {
@@ -21,26 +21,6 @@ class AdminStore extends StoreModule<TAdminState> {
         list: [],
         count: 0,
         activeFetching: false,
-      },
-      notes: {
-        list: [
-          {
-            _id: '1',
-            title: 'Выучить JS',
-            description: 'Таким образом новая модель организационной деятельности',
-          },
-          {
-            _id: '2',
-            title: 'Выучить TS',
-            description: 'Задача организации, в особенности же постоянное',
-          },
-          {
-            _id: '3',
-            title: 'Выучить React',
-            description: 'Значимость этих проблем настолько очевидна',
-          },
-        ],
-        count: 3,
       },
     };
   }
@@ -166,12 +146,16 @@ class AdminStore extends StoreModule<TAdminState> {
         body: JSON.stringify(extendedArticle),
       });
 
+      if (res.status === 403) {
+        throw new Error('Недостаточно прав!');
+      }
+
       if (res.status === 200) {
         // this.store.actions.catalog.append(res.data.result);
         this.store.actions.catalog.initParams();
       }
     } catch (err) {
-      alert(err.message);
+      throw err;
     }
   }
 
@@ -210,11 +194,15 @@ class AdminStore extends StoreModule<TAdminState> {
         body: JSON.stringify(city),
       });
 
+      if (res.status === 403) {
+        throw new Error('Недостаточно прав!');
+      }
+
       if (res.status === 200) {
         this.store.actions.catalog.append(res.data.result);
       }
     } catch (err) {
-      alert(err.message);
+      throw err;
     }
   }
 
@@ -267,7 +255,6 @@ class AdminStore extends StoreModule<TAdminState> {
       },
     });
 
-    console.log('Получил:', JSON.parse(JSON.stringify(article)));
     try {
       const response = await this.services.api.request({
         url: `/api/v1/articles/${article._id}`,
@@ -276,12 +263,16 @@ class AdminStore extends StoreModule<TAdminState> {
         timeout: 5000,
       });
 
+      if (response.status === 403) {
+        throw new Error('Недостаточно прав!');
+      }
+
       if (response.status === 200) {
         // this.store.actions.catalog.edit(article._id, article);
         this.store.actions.catalog.initParams();
       }
     } catch (err) {
-      alert(err.message);
+      throw err;
     } finally {
       this.setState({
         ...this.getState(),
@@ -314,11 +305,15 @@ class AdminStore extends StoreModule<TAdminState> {
         timeout: 5000,
       });
 
+      if (response.status === 403) {
+        throw new Error('Недостаточно прав!');
+      }
+
       if (response.status === 200) {
         this.store.actions.catalog.edit(city._id, city);
       }
     } catch (err) {
-      alert(err.message);
+      throw err;
     } finally {
       this.setState({
         ...this.getState(),
@@ -340,50 +335,6 @@ class AdminStore extends StoreModule<TAdminState> {
         ...this.getState().cities,
         active: id,
         actionWithActive: action,
-      },
-    });
-  }
-
-  /**
-   * Удалить заметку
-   */
-  deleteNote(id: string) {
-    const newList = this.getState().notes.list.filter((note) => note._id !== id);
-
-    this.setState({
-      ...this.getState(),
-      notes: {
-        ...this.getState().notes,
-        list: newList,
-        count: this.getState().notes.count - 1,
-      },
-    });
-  }
-
-  /**
-   * Добавить заметку
-   */
-  appendNote(note: TNote) {
-    this.setState({
-      ...this.getState(),
-      notes: {
-        ...this.getState().notes,
-        list: [...this.getState().notes.list, note],
-        count: this.getState().notes.count + 1,
-      },
-    });
-  }
-
-  /**
-   * Установить список заметок
-   */
-  setNotesList(notesList: TNote[]) {
-    this.setState({
-      ...this.getState(),
-      notes: {
-        ...this.getState().notes,
-        list: notesList,
-        count: notesList.length,
       },
     });
   }
