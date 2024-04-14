@@ -12,8 +12,8 @@ const { Header, Content, Footer, Sider } = Layout;
 const menuRoutesWithIcons = [
   { label: 'Home', icon: HomeOutlined },
   { label: 'Profile', icon: UserOutlined },
-  { label: 'users', icon: NumberOutlined },
   { label: 'articles', icon: NumberOutlined },
+  { label: 'users', icon: NumberOutlined },
 ];
 
 const items: MenuProps['items'] = menuRoutesWithIcons.map((item, index) => ({
@@ -57,7 +57,7 @@ const Admin = () => {
             level={3}
             style={{ color: token.colorTextLightSolid, textAlign: 'center', margin: 0 }}
           >
-            AntD
+            YLab
           </Typography.Title>
         </Flex>
 

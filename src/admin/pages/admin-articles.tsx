@@ -1,9 +1,9 @@
 import { Row, Typography } from 'antd';
 
-import CatalogFilter from '@src/containers/catalog-filter';
 import useInit from '@src/hooks/use-init';
 import useStore from '@src/hooks/use-store';
 import AdminCatalogArticles from '../components/admin-catalog-articles';
+import AdminCatalogFilter from '../components/admin-catalog-filter';
 
 // import type { IArticle } from '@src/types/IArticle';
 
@@ -46,7 +46,7 @@ const AdminArticles = () => {
       >
         Articles
       </Typography.Title>
-      <CatalogFilter />
+      <AdminCatalogFilter />
       <AdminCatalogArticles />
     </Row>
   );
