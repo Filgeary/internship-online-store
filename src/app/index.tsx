@@ -4,6 +4,7 @@ import useInit from "../hooks/use-init";
 import Protected from "../containers/protected";
 import Modals from '../containers/modals';
 import { Suspense, lazy } from 'react';
+import { Spin } from 'antd';
 
 // import Main from "./main";
 // import Article from "./article";
@@ -19,6 +20,7 @@ const Profile = lazy(() => import('./profile'));
 const Chat = lazy(() => import('./chat'));
 const Canvas = lazy(() => import('./canvas'));
 const Webworker = lazy(() => import('./webworker'));
+const CMSLayout = lazy(() => import('./cms-layout'));
 
 /**
  * Приложение
@@ -35,7 +37,7 @@ function App() {
 
   return (
     <>
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<Spin fullscreen={true} />}>
         <Routes>
           <Route path={''} element={<Main/>}/>
           <Route path={'/articles/:id'} element={<Article/>}/>
@@ -44,6 +46,7 @@ function App() {
           <Route path={"/chat"} element={<Protected redirect='/login'><Chat/></Protected>}/>
           <Route path={"/canvas"} element={<Canvas/>}/>
           <Route path={"/webworker"} element={<Webworker/>}/>
+          <Route path={"/admin/*"} element={<Protected redirect='/login'><CMSLayout /></Protected>} />
         </Routes>
       </Suspense>
 

@@ -27,7 +27,7 @@ export default function useInit(initFunc, depends = [], ssr = undefined, backFor
           window.removeEventListener("popstate", initFunc);
         };
       }
-     // throw(pr);
+      //throw(pr);
     } else {
       services.promises.delete(ssr)
     }

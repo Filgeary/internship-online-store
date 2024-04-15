@@ -24,9 +24,11 @@
   "homepage": "https://github.com/ylabio/react-webinar-3#readme",
   "type": "module",
   "dependencies": {
+    "@ant-design/icons": "^5.3.6",
     "@bem-react/classname": "^1.6.0",
     "@types/dompurify": "^3.0.5",
     "@types/rc-slider": "^9.3.1",
+    "antd": "^5.16.1",
     "dompurify": "^3.0.9",
     "dotenv": "^16.4.5",
     "express": "^4.19.1",
