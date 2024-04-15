@@ -3,20 +3,22 @@ import { memo, useState } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 
-import { Button, Card, Popconfirm, Tooltip } from 'antd';
+import { Button, Card, Divider, Popconfirm, Typography } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 
 type TProps = {
   id: string;
   title: string;
   description: string;
+  renderDeadline?: () => React.ReactNode | string;
   onPointerEnter?: () => void;
   onPointerLeave?: () => void;
   onDelete?: () => void;
 };
 
 function NoteCard(props: TProps) {
-  const { id, title, description, onPointerEnter, onPointerLeave, onDelete } = props;
+  const { id, title, description, renderDeadline, onPointerEnter, onPointerLeave, onDelete } =
+    props;
   const [isPopConfirmVisible, setIsPopConfirmVisible] = useState(false);
 
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
@@ -66,7 +68,13 @@ function NoteCard(props: TProps) {
       {...attributes}
       {...listeners}
     >
-      {description}
+      <Typography.Paragraph>{description}</Typography.Paragraph>
+      {renderDeadline && (
+        <>
+          <Divider />
+          <Typography.Text>Дедлайн: {renderDeadline()}</Typography.Text>
+        </>
+      )}
     </Card>
   );
 }

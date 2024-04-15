@@ -1,14 +1,28 @@
 import { memo, useEffect, useState } from 'react';
 
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { FormItem } from 'react-hook-form-antd';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import z from 'zod';
 
-import { Col, Divider, Row, Typography, Form, Input, Button, Space, Tooltip } from 'antd';
+import {
+  Col,
+  Divider,
+  Row,
+  Typography,
+  Form,
+  Input,
+  Button,
+  Space,
+  Tooltip,
+  DatePicker,
+} from 'antd';
 import NoteCard from '@src/components/note-card';
 import { ClearOutlined } from '@ant-design/icons';
+
+import dayjs, { Dayjs } from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
 
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -31,12 +45,15 @@ import { TNote } from '@src/store/notes/types';
 import { useAppSelector } from '@src/hooks/use-selector';
 import useStore from '@src/hooks/use-store';
 
+dayjs.extend(customParseFormat);
+
 const { Title } = Typography;
 const { TextArea } = Input;
 
 const schema = z.object({
   title: z.string().min(1, { message: 'Обязательное поле' }),
   description: z.string().min(5, { message: 'Минимум 5 символов!' }),
+  deadline: z.number().optional().nullable(),
 });
 
 function AdminNotes() {
@@ -48,10 +65,12 @@ function AdminNotes() {
 
   const [dragStatus, setDragStatus] = useState<'grab' | 'grabbing' | null>(null);
 
-  const { control, handleSubmit, reset, watch } = useForm<TNote>({
-    defaultValues: { title: '', description: '' },
+  const { control, handleSubmit, reset, watch, setValue } = useForm<TNote>({
+    defaultValues: { title: '', description: '', deadline: null },
     resolver: zodResolver(schema),
   });
+
+  const dateFormat = 'DD.MM.YYYY';
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -62,7 +81,9 @@ function AdminNotes() {
 
   const options = {
     isSubmitDisabled: false,
-    isClearBtnDisabled: !watch('title').length && !watch('description').length,
+    isClearBtnDisabled:
+      !watch('title').length && !watch('description').length && !watch('deadline'),
+    minDate: dayjs(dayjs().format(dateFormat), dateFormat),
   };
 
   const callbacks = {
@@ -76,6 +97,7 @@ function AdminNotes() {
         ...data,
         _id: crypto.randomUUID(),
       };
+      console.log(newNote);
       store.actions.notes.appendNote(newNote);
     },
     onPointerEnter: () => !dragStatus && setDragStatus('grab'),
@@ -93,6 +115,10 @@ function AdminNotes() {
         const result = arrayMove(select.notesList, oldIndex, newIndex);
         store.actions.notes.setNotesList(result);
       }
+    },
+    onDateChange: (val: Dayjs) => {
+      const timestamp = val?.valueOf();
+      setValue('deadline', timestamp);
     },
   };
 
@@ -118,6 +144,23 @@ function AdminNotes() {
             <FormItem control={control} name='description' label={'Описание'}>
               <TextArea placeholder={'Далеко-далеко за словесными горами...'} rows={3} />
             </FormItem>
+
+            <Form.Item name='deadline' label={'Дедлайн'}>
+              <Controller
+                control={control}
+                render={({ field }) => (
+                  <DatePicker
+                    ref={field.ref}
+                    name={field.name}
+                    value={field.value ? dayjs(dayjs(field.value).format(dateFormat)) : null}
+                    onBlur={field.onBlur}
+                    minDate={options.minDate}
+                    onChange={(date) => field.onChange(date ? date.valueOf() : null)}
+                  />
+                )}
+                name='deadline'
+              />
+            </Form.Item>
 
             <Row justify={'end'}>
               <Space>
@@ -182,6 +225,9 @@ function AdminNotes() {
                     id={note._id}
                     title={note.title}
                     description={note.description}
+                    renderDeadline={
+                      note.deadline && (() => dayjs(note.deadline).format(dateFormat))
+                    }
                   />
                 </motion.div>
               ))}

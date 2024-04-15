@@ -9,6 +9,7 @@ class NotesStore extends StoreModule<TNotesState> {
           _id: '1',
           title: 'Выучить JS',
           description: 'Таким образом новая модель организационной деятельности',
+          deadline: '2024-04-02',
         },
         {
           _id: '2',
