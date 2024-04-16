@@ -2,10 +2,11 @@ import { memo } from 'react';
 
 import { Button, Popconfirm, Space, Table, Tooltip } from 'antd';
 
-import type { TableColumnsType } from 'antd';
+import type { TableColumnsType, TablePaginationConfig } from 'antd';
 import { EyeOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { FilterValue, SorterResult } from 'antd/es/table/interface';
 
 type TProps = {
   columns: TableColumnsType<any>;
@@ -13,6 +14,11 @@ type TProps = {
   onDelete: (id: string) => void;
   onEdit: (id: string) => void;
   onLook?: (id: string) => void;
+  onTableChange?: (
+    pagination: TablePaginationConfig,
+    filters: Record<string, FilterValue>,
+    sorter: SorterResult<any> | SorterResult<any>[]
+  ) => void;
   onPaginationChange: (page: number, pageSize: number) => void;
   totalPagination?: number;
   pageSize: number;
@@ -71,12 +77,16 @@ function PaginationTable(props: TProps) {
   ];
   // const extendedData = [...Array(props.pageSize * (props.page - 1)).fill({}), ...data];
 
+  console.log(props.onTableChange);
+
   return (
     <Table
       loading={props.loading || false}
       columns={extendedColumns}
       dataSource={data}
       rowKey={props.rowKey || '_id'}
+      // onChange={(pagination, filters, sorter) => console.log({ pagination, filters, sorter })}
+      onChange={props.onTableChange}
       pagination={{
         total: props.totalPagination || data.length,
         current: props.page,

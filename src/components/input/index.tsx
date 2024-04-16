@@ -12,7 +12,7 @@ type InputProps = {
   onChange?: (value: string, name: any) => void;
   theme?: string;
   delay?: number;
-};
+} & Omit<React.ComponentProps<'input'>, 'onChange'>;
 
 Input.defaultProps = {
   onChange: () => {},
@@ -41,6 +41,7 @@ function Input(props: InputProps) {
   const cn = bem('Input');
   return (
     <input
+      {...props}
       className={cn({ theme: props.theme })}
       value={value}
       type={props.type}

@@ -68,10 +68,16 @@ function Login() {
         <form onSubmit={callbacks.onSubmit}>
           <h2>{t('auth.title')}</h2>
           <Field label={t('auth.login')} error={select.errors?.login}>
-            <Input name='login' value={data.login} onChange={callbacks.onChange} />
+            <Input
+              data-testid='login-input'
+              name='login'
+              value={data.login}
+              onChange={callbacks.onChange}
+            />
           </Field>
           <Field label={t('auth.password')} error={select.errors?.password}>
             <Input
+              data-testid='password-input'
               name='password'
               type='password'
               value={data.password}
@@ -80,7 +86,9 @@ function Login() {
           </Field>
           <Field error={select.errors?.other} />
           <Field>
-            <button type='submit'>{t('auth.signIn')}</button>
+            <button data-testid='auth-submit-btn' type='submit'>
+              {t('auth.signIn')}
+            </button>
           </Field>
         </form>
       </SideLayout>

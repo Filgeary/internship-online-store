@@ -63,7 +63,6 @@ class APIService {
         headers: res.headers,
       };
     } catch (err) {
-      console.log(err);
       throw new Error(`Ошибка на сервере, попробуйте позже...`);
     }
   }

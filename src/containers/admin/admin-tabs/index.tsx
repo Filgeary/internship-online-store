@@ -1,12 +1,12 @@
 import { memo } from 'react';
 
 import { useAdminContext } from '..';
-import { Button, Tabs, theme } from 'antd';
+import { Button, Input, Space, Tabs, theme } from 'antd';
 
 import PaginationTable from '@src/components/pagination-table';
 
 function AdminPanelTabs() {
-  const { select, handlers } = useAdminContext();
+  const { select, handlers, values, callbacks } = useAdminContext();
 
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -35,6 +35,7 @@ function AdminPanelTabs() {
                   onEdit={handlers.onEditArticle}
                   onLook={handlers.onLookArticle}
                   onPaginationChange={handlers.onPaginationChange}
+                  onTableChange={handlers.onTableChange}
                   totalPagination={select.totalPagination}
                   pageSize={select.limitByPage}
                   page={select.catalogPage}
@@ -47,6 +48,35 @@ function AdminPanelTabs() {
                       key: 'title',
                       render: (text: string) => <b>{text}</b>,
                       fixed: 'left',
+                      filterDropdown: ({ confirm }) => (
+                        <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
+                          <Input
+                            value={values.searchQuery}
+                            onChange={(e) => callbacks.setSearchQuery(e.target.value)}
+                            onPressEnter={() => {
+                              callbacks.filterBySearch();
+                              confirm({ closeDropdown: true });
+                            }}
+                            placeholder={`Фильтр по названию`}
+                            style={{ marginBottom: 8, display: 'block' }}
+                          />
+                          <Space>
+                            <Button
+                              type={'primary'}
+                              size={'small'}
+                              onClick={() => {
+                                callbacks.filterBySearch();
+                                confirm({ closeDropdown: true });
+                              }}
+                            >
+                              Отфильтровать
+                            </Button>
+                            <Button size={'small'} onClick={() => callbacks.setSearchQuery('')}>
+                              Сброс
+                            </Button>
+                          </Space>
+                        </div>
+                      ),
                     },
                     {
                       title: 'Цена',

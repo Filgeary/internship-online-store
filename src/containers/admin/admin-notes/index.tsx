@@ -70,7 +70,7 @@ function AdminNotes() {
     resolver: zodResolver(schema),
   });
 
-  const dateFormat = 'DD.MM.YYYY';
+  const dateFormat = 'YYYY-MM-DD';
 
   const sensors = useSensors(
     useSensor(PointerSensor),

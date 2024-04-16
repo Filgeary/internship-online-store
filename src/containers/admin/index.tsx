@@ -1,4 +1,12 @@
-import React, { useState, memo, useEffect, createContext, useContext, useMemo } from 'react';
+import React, {
+  useState,
+  memo,
+  useEffect,
+  createContext,
+  useContext,
+  useMemo,
+  useRef,
+} from 'react';
 import Lottie from 'react-lottie';
 
 import { Link, useLocation } from 'react-router-dom';
@@ -11,7 +19,7 @@ import {
   FileOutlined,
   PieChartOutlined,
 } from '@ant-design/icons';
-import type { MenuProps } from 'antd';
+import type { MenuProps, TablePaginationConfig } from 'antd';
 import { Layout, Menu, theme, message } from 'antd';
 
 import { useAppSelector } from '@src/hooks/use-selector';
@@ -27,6 +35,7 @@ import AdminResults from './admin-results';
 
 import { TCatalogArticle, TCatalogEntities } from '@src/store/catalog/types';
 import { TCity } from '@src/store/admin/types';
+import { FilterValue, SorterResult } from 'antd/es/table/interface';
 
 const { Sider, Content, Footer, Header } = Layout;
 
@@ -96,8 +105,10 @@ function Admin(props: TProps) {
     countries: state.countries.list,
 
     catalogPage: state.catalog.params.page,
+    catalogSearch: state.catalog.params.query,
     catalogItems: state.catalog.list,
     catalogWaiting: state.catalog.waiting,
+
     limitByPage: state.catalog.params.limit,
     totalPagination: state.catalog.count,
 
@@ -110,6 +121,8 @@ function Admin(props: TProps) {
     totalCitiesCount: state.admin.cities.count,
     totalNotesCount: state.notes.count,
   }));
+
+  const [searchQuery, setSearchQuery] = useState(() => select.catalogSearch);
 
   const [activeArticle, setActiveArticle] = useState<TCatalogArticle>(null);
   const [activeCity, setActiveCity] = useState<TCity>(null);
@@ -170,8 +183,24 @@ function Admin(props: TProps) {
       onCityToAddChange: helpers.keyValueChanger(setCityToAdd),
 
       onPaginationChange: (page: number, pageSize: number) => {
-        console.log({ page, pageSize });
         store.actions.catalog.setParams({ page, limit: pageSize }, false);
+      },
+      onTableChange: (
+        pagination: TablePaginationConfig,
+        filters: Record<string, FilterValue>,
+        sorter: { field: string; order: string }
+      ) => {
+        console.log({ filters, sorter });
+        switch (sorter.field) {
+          case 'price': {
+            let priceValue = 'price';
+            if (sorter.order === 'descend') {
+              priceValue = '-price';
+            }
+            store.actions.catalog.setParams({ sort: priceValue });
+            break;
+          }
+        }
       },
       onAddArticleBtnClick: () => {
         setArticleToAdd({
@@ -198,6 +227,10 @@ function Admin(props: TProps) {
       closeModalAddArticle: () => setArticleToAdd(null),
       closeModalAddCity: () => setCityToAdd(null),
       closeDrawerLookArticle: () => store.actions.admin.setActiveArticle(null),
+      filterBySearch: () => {
+        console.log('@', searchQuery);
+        store.actions.catalog.setParams({ query: searchQuery });
+      },
       editArticle: async () => {
         try {
           await store.actions.admin.editArticle(activeArticle);
@@ -237,8 +270,9 @@ function Admin(props: TProps) {
 
       setActiveArticle,
       setActiveCity,
+      setSearchQuery,
     }),
-    [store, activeArticle, activeCity, articleToAdd, cityToAdd]
+    [store, activeArticle, activeCity, articleToAdd, cityToAdd, searchQuery]
   );
 
   const options = useMemo(
@@ -277,8 +311,9 @@ function Admin(props: TProps) {
       activeCity,
       articleToAdd,
       cityToAdd,
+      searchQuery,
     }),
-    [activeArticle, activeCity, articleToAdd, cityToAdd]
+    [activeArticle, activeCity, articleToAdd, cityToAdd, searchQuery]
   );
 
   // Поиск активного товара
