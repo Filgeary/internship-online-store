@@ -13,6 +13,7 @@ import Modals from '@src/containers/modals'
 import Chat from './chat'
 import LeafFall from './leaf-fall'
 import Drawing from './drawing'
+import Admin from './admin'
 import {useSelector as useSelectorRedux} from 'react-redux'
 
 /**
@@ -38,6 +39,7 @@ function App() {
         <Route path={"/drawing"} element={<Drawing/>}/>
         <Route path={"/profile"} element={<Protected redirect='/login'><Profile/></Protected>}/>
         <Route path={"/chat"} element={<Protected redirect='/login'><Chat/></Protected>}/>
+        <Route path={"/admin"} element={<Protected redirect='/login'><Admin/></Protected>}/>
       </Routes>
 
       {activeModal && <Modals/>}

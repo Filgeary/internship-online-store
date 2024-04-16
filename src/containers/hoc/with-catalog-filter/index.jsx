@@ -50,7 +50,7 @@ const CatalogFilterContent = ({ sort, query, category, onSort, onSearch, onReset
           { value: item._id, title: '- '.repeat(level) + item.title }
         ))
       ]
-    }), [select.categories]);
+    }), [select.categories])
 
     const { t } = useTranslate();
 

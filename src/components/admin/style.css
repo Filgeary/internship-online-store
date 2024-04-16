@@ -1,0 +1,14 @@
+.AdminLayout-header {
+  display: flex;
+  align-items: center;
+}
+
+.AdminLayout-demo-logo {
+  width: 50px;
+  margin-right: 40px;
+}
+
+:where(.css-dev-only-do-not-override-1kuana8).ant-menu-dark.ant-menu-horizontal >.ant-menu-item-selected {
+    background-color: rgb(136, 127, 255) !important;
+  }
+

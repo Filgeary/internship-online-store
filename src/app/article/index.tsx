@@ -23,7 +23,7 @@ function Article() {
   const params = useParams() 
 
   useInit(() => {
-    dispatch(articleActions.load(params.id))
+    dispatch(articleActions.load(params.id) as any)
   }, [params.id as never])
 
   const select = useSelector((state: any) => ({

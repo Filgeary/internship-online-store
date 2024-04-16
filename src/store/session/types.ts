@@ -3,7 +3,7 @@ import { IUser } from "../profile/types"
 export interface ISessionInitState {
       user: IUser | Object
       token: string | null
-      errors: string | null
+      errors: string | null | {}
       waiting: boolean
       exists: boolean
   }
