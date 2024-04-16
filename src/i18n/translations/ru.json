@@ -8,7 +8,7 @@
   "admin.catalog.description": "Описание",
   "admin.catalog.price": "Цена",
   "admin.catalog.category": "Категория",
-  "admin.catalog.madeIn": "Страна",
+  "admin.catalog.madeIn": "Страна производства",
   "admin.catalog.edition": "Год выпуска",
   "admin.catalog.actions": "Действия",
   "admin.catalog.edit": "Редактировать",

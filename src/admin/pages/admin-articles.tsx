@@ -5,7 +5,7 @@ import useStore from '@src/hooks/use-store';
 import AdminCatalogArticles from '../components/admin-catalog-articles';
 import AdminCatalogFilter from '../components/admin-catalog-filter';
 
-// import type { IArticle } from '@src/types/IArticle';
+import type { IArticle } from '@src/types/IArticle';
 
 const AdminArticles = () => {
   const store = useStore();
@@ -26,14 +26,13 @@ const AdminArticles = () => {
     true,
   );
 
-  // TODO: implement
-  // const handleUpdateArticle = (id: string, article: IArticle) => {
-  //   store.actions.catalog.updateArticle(id, article);
-  // };
+  const handleUpdateArticle = (id: string, article: IArticle) => {
+    store.actions.catalog.updateArticle(id, article);
+  };
 
-  // const handleDeleteArticle = (id: string) => {
-  //   store.actions.catalog.deleteArticle(id);
-  // };
+  const handleDeleteArticle = (id: string) => {
+    store.actions.catalog.deleteArticle(id);
+  };
 
   return (
     <Row
@@ -46,8 +45,12 @@ const AdminArticles = () => {
       >
         Articles
       </Typography.Title>
+
       <AdminCatalogFilter />
-      <AdminCatalogArticles />
+      <AdminCatalogArticles
+        onEditArticle={handleUpdateArticle}
+        onDeleteArticle={handleDeleteArticle}
+      />
     </Row>
   );
 };

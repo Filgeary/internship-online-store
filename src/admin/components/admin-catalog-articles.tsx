@@ -1,21 +1,32 @@
 import type { TableProps } from 'antd';
 import { Button, Pagination, Popconfirm, Row, Space, Spin, Table, Typography } from 'antd';
-import { memo, useCallback } from 'react';
+import { memo, useCallback, useState } from 'react';
 
 import useSelector from '@src/hooks/use-selector';
 import useStore from '@src/hooks/use-store';
 import useTranslate from '@src/hooks/use-translate';
 import numberFormat from '@src/utils/number-format';
+import AdminEditableArticle from './admin-editable-article';
 
 import type { IArticle } from '@src/types/IArticle';
 
 type Props = {
+  onEditArticle: (id: string, article: IArticle) => void;
+  onDeleteArticle: (id: string) => void;
   catalogSliceName?: 'catalog' | `catalog${number}`;
 };
 
-function AdminCatalogArticles({ catalogSliceName = 'catalog' }: Props) {
+function AdminCatalogArticles({
+  onEditArticle,
+  onDeleteArticle,
+  catalogSliceName = 'catalog',
+}: Props) {
   const store = useStore();
   const { t } = useTranslate();
+  const [editableArticle, setEditableArticle] = useState({
+    isEditing: false,
+    id: '',
+  });
 
   const select = useSelector(state => ({
     list: state[catalogSliceName].list,
@@ -140,14 +151,16 @@ function AdminCatalogArticles({ catalogSliceName = 'catalog' }: Props) {
         <Space size='middle'>
           <Button
             type='primary'
-            onClick={() => console.log('edit', record._id)} // TODO: edit
+            onClick={() => {
+              setEditableArticle({ isEditing: true, id: record._id });
+            }}
           >
             {t('admin.catalog.edit')}
           </Button>
 
           <Popconfirm
             title={t('admin.catalog.confirmDelete')}
-            onConfirm={() => console.log('delete', record._id)} // TODO: delete
+            onConfirm={() => onDeleteArticle(record._id)}
           >
             <Button
               type='primary'
@@ -182,6 +195,15 @@ function AdminCatalogArticles({ catalogSliceName = 'catalog' }: Props) {
           hideOnSinglePage
         />
       </Row>
+
+      {editableArticle.isEditing && (
+        <AdminEditableArticle
+          isOpen={editableArticle.isEditing}
+          onClose={() => setEditableArticle({ isEditing: false, id: '' })}
+          onSubmit={onEditArticle}
+          articleId={editableArticle.id}
+        />
+      )}
     </Spin>
   );
 }
