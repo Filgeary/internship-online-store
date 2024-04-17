@@ -175,3 +175,7 @@ Rewrite from `webpack` to `vite`.
 ## Admin (`/admin`)
 
 - add Admin panel with Ant Design
+
+## Playwright (`/playwright`)
+
+- add e2e tests with Playwright

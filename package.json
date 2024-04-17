@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Example project for Ylab React Internship",
   "scripts": {
-    "start": "vite serve --open --port 8010",
+    "start": "vite serve --port 8010",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
     "test": "jest",
@@ -30,6 +30,7 @@
     "shallowequal": "^1.1.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.43.1",
     "@tsconfig/vite-react": "^3.0.1",
     "@types/jest": "29.5.x",
     "@types/lodash.debounce": "^4.0.9",
