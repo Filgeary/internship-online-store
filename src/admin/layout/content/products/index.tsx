@@ -5,7 +5,7 @@ import useStore from "@src/hooks/use-store";
 import useTranslate from "@src/hooks/use-translate";
 import { Button, Space } from "antd";
 import { useCallback } from "react";
-import { ProductsTable } from "./table/index.tsx";
+import {ProductsTable} from "./table/index.tsx";
 
 export const Products = () => {
   const { t } = useTranslate();

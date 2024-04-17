@@ -13,6 +13,7 @@ class CatalogState extends StoreModule<InitialStateCatalog, InitConfigCatalog> {
   initState(): InitialStateCatalog {
     return {
       list: [],
+      all: [],
       params: {
         page: 1,
         limit: 10,
@@ -126,12 +127,13 @@ class CatalogState extends StoreModule<InitialStateCatalog, InitConfigCatalog> {
       },
       {
         skip: 0,
-        sort: "-undefined" || '',
+        sort: "",
         "search[query]": "",
         "search[category]": "",
         "search[madeIn]": "",
       }
     );
+
     const res = await this.services.api.request({
       url: `/api/v1/articles?${new URLSearchParams(apiParams)}`,
     });
@@ -232,6 +234,19 @@ class CatalogState extends StoreModule<InitialStateCatalog, InitConfigCatalog> {
         list: [...this.getState().list, res.data.result],
         count: this.getState().count + 1
       })
+    }
+  }
+
+  async getAllArticles() {
+    const res = await this.services.api.request({
+      url: "/api/v1/articles?limit=800"
+    });
+
+    if (res.status === 200) {
+      this.setState({
+        ...this.getState(),
+        all: res.data.result.items,
+      });
     }
   }
 }

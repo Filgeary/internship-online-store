@@ -14,7 +14,7 @@ import { Suspense, lazy } from "react";
 import { Overview } from "@src/admin/layout/content/overview";
 import { Users } from "@src/admin/layout/content/users";
 import { Products } from "@src/admin/layout/content/products";
-import { ConfigProvider } from "antd";
+import { Loader } from "@src/admin/layout/spin";
 
 const AdminPanel = lazy(() => import("./admin"));
 
@@ -26,7 +26,7 @@ function App(): React.ReactElement {
   const store = useStore();
   useInit(async () => {
     await store.actions.session.remind();
-  }, []);
+  }, [], {ssrKey: "init"});
 
   return (
     <>
@@ -55,19 +55,11 @@ function App(): React.ReactElement {
         <Route
           path={"/admin"}
           element={
-            // <Protected redirect="/login">
-              <Suspense fallback={<div>loading...</div>}>
-                <ConfigProvider
-                  theme={{
-                    token: {
-                      colorPrimary: "#6366f1",
-                    },
-                  }}
-                >
-                  <AdminPanel />
-                </ConfigProvider>
+            <Protected redirect="/login">
+              <Suspense fallback={<Loader minHeight="100vh"/>}>
+                <AdminPanel />
               </Suspense>
-            // </Protected>
+            </Protected>
           }
         >
           <Route path="" element={<Overview />} />

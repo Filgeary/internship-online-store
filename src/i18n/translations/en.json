@@ -87,6 +87,7 @@
     },
     "addRecord": "Add new record",
     "editRecord": "Edit product's information",
-    "submit": "Submit"
+    "submit": "Submit",
+    "pie": "Distribution of goods by category"
   }
 }

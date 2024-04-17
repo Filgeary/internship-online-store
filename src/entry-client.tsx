@@ -16,15 +16,7 @@ delete window.__PRELOADED_STATE__;
 
 const root = document.getElementById("root") as HTMLElement;
 if(!root) throw new Error("Failed to find the root element");
-const ROOT = () => (
-  <ServicesContext.Provider value={services}>
-    <I18nProvider>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </I18nProvider>
-  </ServicesContext.Provider>
-);
+
 // Первый рендер приложения
   hydrateRoot(
     root,
@@ -36,4 +28,3 @@ const ROOT = () => (
       </I18nProvider>
     </ServicesContext.Provider>
   );
-  // createRoot(root).render(<ROOT />)

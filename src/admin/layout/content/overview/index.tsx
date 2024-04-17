@@ -8,6 +8,9 @@ import UsergroupAddOutlined from "@ant-design/icons/UsergroupAddOutlined";
 import useTranslate from "@src/hooks/use-translate";
 import Head from "@src/components/head";
 import LocaleSelect from "@src/containers/locale-select";
+import { Suspense, lazy } from "react";
+import { Loader } from "../../spin";
+const PieCategory = lazy(() => import("./pie"));
 
 export const Overview = () => {
   const select = useSelector((state) => ({
@@ -46,7 +49,7 @@ export const Overview = () => {
       <Head title={t("admin.title")}>
         <LocaleSelect />
       </Head>
-      <Space direction="horizontal" size={"middle"}>
+      <Space direction="horizontal" size={"middle"} style={{marginBottom: 20}}>
         {cards.map((card) => (
           <CardTemplate
             key={card.title}
@@ -60,6 +63,9 @@ export const Overview = () => {
           />
         ))}
       </Space>
+      <Suspense fallback={<Loader minHeight={'20vh'}/>}>
+        <PieCategory />
+      </Suspense>
     </>
   );
 };

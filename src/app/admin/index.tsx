@@ -2,10 +2,11 @@ import { Sidebar } from "@src/admin/layout/sidebar";
 import TopHead from "@src/containers/top-head";
 import useInit from "@src/hooks/use-init";
 import useStore from "@src/hooks/use-store";
+import { App, ConfigProvider } from "antd";
 import Layout, { Content, Header } from "antd/es/layout/layout";
 import { Outlet } from "react-router-dom";
 
-function AdminPanel () {
+function Admin () {
   const store = useStore();
 
   useInit(() => {
@@ -15,6 +16,7 @@ function AdminPanel () {
     Promise.all([
       store.actions.users.load(),
       store.actions["catalog_admin"]?.initParams(),
+      store.actions["catalog_admin"]?.getAllArticles(),
       store.actions["categories_admin"]?.load(),
       store.actions["countries_admin"]?.load(),
       store.actions.comments.load(),
@@ -24,7 +26,7 @@ function AdminPanel () {
       store.delete("categories_admin");
       store.delete("countries_admin");
     }
-  }, [])
+  }, [], {ssrKey: "admin.load"})
 
   return (
     <Layout>
@@ -54,4 +56,16 @@ function AdminPanel () {
   );
 }
 
-export default AdminPanel;
+export default () => (
+  <ConfigProvider
+    theme={{
+      token: {
+        colorPrimary: "#6366f1",
+      },
+    }}
+  >
+    <App>
+      <Admin />
+    </App>
+  </ConfigProvider>
+);

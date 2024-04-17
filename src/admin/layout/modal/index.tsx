@@ -123,7 +123,7 @@ export const ModalProduct = ({title, isEditModal}: {title: string, isEditModal?:
           name="madeIn"
           validateTrigger="onBlur"
           rules={[{ required: isEditModal ? false : true }]}
-          initialValue={isEditModal ? article.madeIn._id : ""}
+          initialValue={isEditModal && article.madeIn ? article.madeIn._id : ""}
         >
           <Select
             showSearch
@@ -144,7 +144,9 @@ export const ModalProduct = ({title, isEditModal}: {title: string, isEditModal?:
           name="category"
           validateTrigger="onBlur"
           rules={[{ required: isEditModal ? false : true }]}
-          initialValue={isEditModal ? article.category._id : ""}
+          initialValue={
+            isEditModal && article.category ? article.category._id : ""
+          }
         >
           <Select
             placeholder="Please select a category"

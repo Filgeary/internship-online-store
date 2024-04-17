@@ -26,7 +26,9 @@
   },
   "homepage": "https://github.com/ylabio/react-webinar-3#readme",
   "dependencies": {
+    "@ant-design/charts": "^2.0.3",
     "@ant-design/icons": "^5.3.6",
+    "@ant-design/plots": "^2.1.15",
     "@bem-react/classname": "^1.6.0",
     "@vitejs/plugin-react": "^4.2.1",
     "antd": "^5.16.1",
