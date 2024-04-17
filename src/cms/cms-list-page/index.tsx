@@ -1,12 +1,15 @@
+import { List } from "antd";
+import { PaginationConfig } from "antd/es/pagination";
 import { memo, useCallback, useMemo } from "react";
 import useInit from "../../hooks/use-init";
-import useStore from "../../hooks/use-store";
-import { List } from "antd";
 import useSelector from "../../hooks/use-selector";
-import { PaginationConfig } from "antd/es/pagination";
+import useStore from "../../hooks/use-store";
 import { CatalogArticleType } from "../../store/catalog/types";
+import CmsLayout from "../cms-layout";
+import CmsSider from "../cms-sider";
+import TopHead from "../../containers/top-head";
 
-function CmsCatalog() {
+function CMSListPage() {
   const store = useStore();
   useInit(async () => {
       await Promise.all([
@@ -46,15 +49,18 @@ function CmsCatalog() {
   ), [])
 
   return (
-    <List dataSource={select.articles}
-      renderItem={itemRender}
-      pagination={paginationConfig}
-      size="small"
-      loading={select.loading}
-    >
+    <CmsLayout>
+      <CmsSider/>
+      <TopHead />
+      <List dataSource={select.articles}
+            renderItem={itemRender}
+            pagination={paginationConfig}
+            size="small"
+            loading={select.loading} />
+    </CmsLayout>
 
-    </List>
+
   )
 }
 
-export default memo(CmsCatalog);
+export default memo(CMSListPage);

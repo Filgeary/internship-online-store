@@ -2,7 +2,7 @@ import { Spin } from "antd";
 import { memo } from "react";
 import s from './styles.module.css'
 
-function CmsSpinner() {
+function SpinnerLayout() {
   return (
     <div className={s.Wrapper}>
       <Spin size="large" tip="Загрузка...">
@@ -13,4 +13,4 @@ function CmsSpinner() {
 }
 
 
-export default memo(CmsSpinner);
+export default memo(SpinnerLayout);

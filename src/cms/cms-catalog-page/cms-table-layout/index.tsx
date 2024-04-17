@@ -1,6 +1,6 @@
 import { Button, Input, Popconfirm, Space, Table, TablePaginationConfig, Tooltip, message } from "antd";
 import { ChangeEvent, memo, useCallback, useState } from "react"
-import { TableArticleType } from "../../utils/cms/table-data-format";
+import { TableArticleType } from "../../../utils/cms/table-data-format";
 import Column from "antd/es/table/Column";
 import { FilterDropdownProps, SorterResult } from "antd/es/table/interface";
 import { DeleteOutlined, FormOutlined, MoreOutlined, SearchOutlined } from "@ant-design/icons";
@@ -12,7 +12,9 @@ type CmsTableLayoutPropsType = {
   loading: boolean;
   onSorting?: (s: SorterResult<TableArticleType> | SorterResult<TableArticleType>[]) => void;
   onFiltering?: (value: string) => void;
-  drawerDetails: (id: string) => void
+  drawerDetails: (id: string) => void;
+  editArticle: (id: string) => void;
+  deleteArticle: (id: string) => Promise<void>;
 }
 
 function CmsTableLayout(props: CmsTableLayoutPropsType) {
@@ -30,18 +32,15 @@ function CmsTableLayout(props: CmsTableLayoutPropsType) {
       if(props.onSorting !== undefined)
         props?.onSorting(s)
     },
-    deleteArticle: (title: string) => {
-      const pr = new Promise((res, rej) => {
-        setTimeout(() => {
-          rej(title);
-        }, 2000)
-      })
-      pr.then(result => message.success(`Resolve промиса товар - ${result} "удален"`))
-        .catch(result => message.error(`Reject промиса что то пошло не так с - ${result}`))
+    deleteArticle: (id: string) => {
+      const pr = props.deleteArticle(id);
+      pr.then(result => message.success(`Товар успешно удален`))
+        .catch(result => message.error(`При удалении возникла ошибка`))
 
       return pr;
     },
-    openDrawer: (id: string) => props.drawerDetails(id)
+    openDrawer: (id: string) => props.drawerDetails(id),
+    openEditAtricle: (id: string) => props.editArticle(id),
   }
 
   // Article title filter
@@ -66,7 +65,6 @@ function CmsTableLayout(props: CmsTableLayoutPropsType) {
            loading={props.loading}
            onChange={(p, f, s) => callbacks.sortChanged(s)}
     >
-      {/* {keys.map(i => <Column key={i} dataIndex={i} title={i} sorter/>)} */}
       <Column key="title" dataIndex="title" title="Название"
               filterDropdown={filterDropdown}
               filterSearch={true}
@@ -79,7 +77,7 @@ function CmsTableLayout(props: CmsTableLayoutPropsType) {
               align="right"
               render={(_: any, record: TableArticleType) => (
                 <Space size="small">
-                  <Button onClick={() => alert(`${record.title} - ${record.price}`)}
+                  <Button onClick={() => callbacks.openEditAtricle(record.key.toString())}
                           type="primary"
                           size="small"
                           icon={<FormOutlined />}
@@ -92,7 +90,7 @@ function CmsTableLayout(props: CmsTableLayoutPropsType) {
                   <Tooltip placement="top" title="Удалить">
                     <Popconfirm title="Вы уверены что хотите удалить товар?"
                                 placement="left"
-                                onConfirm={() => callbacks.deleteArticle(record.title)}>
+                                onConfirm={() => callbacks.deleteArticle(record.key.toString())}>
                       <Button type="primary" icon={<DeleteOutlined />} size="small"/>
                     </Popconfirm>
                   </Tooltip>

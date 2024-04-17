@@ -7,6 +7,7 @@ import useStore from "../../hooks/use-store";
 import CatalogModal from "../../app/catalog-modal";
 import codeGenerator from "../../utils/code-generator";
 import { ExtendedModulesKeys } from "../../store/types";
+import CmsArticleModal from "../../cms/cms-article-modal";
 
 function Modals() {
   const store = useStore();
@@ -39,6 +40,11 @@ function Modals() {
                                   store.actions.modals.close(key, data);
                                   store.deleteModule(module);
                                 } } />);
+          break;
+        case "cmsArticleModal":
+          arr.push(<CmsArticleModal key={key}
+                                    data={select.modals[key].initialData}
+                                    close={(data) => store.actions.modals.close(key, data)}/>);
           break;
         default:
           break;

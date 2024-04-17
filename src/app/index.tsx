@@ -20,7 +20,7 @@ const Profile = lazy(() => import('./profile'));
 const Chat = lazy(() => import('./chat'));
 const Canvas = lazy(() => import('./canvas'));
 const Webworker = lazy(() => import('./webworker'));
-const CMSLayout = lazy(() => import('./cms-layout'));
+const CMSRouter = lazy(() => import('../cms/cms-router'));
 
 /**
  * Приложение
@@ -46,7 +46,7 @@ function App() {
           <Route path={"/chat"} element={<Protected redirect='/login'><Chat/></Protected>}/>
           <Route path={"/canvas"} element={<Canvas/>}/>
           <Route path={"/webworker"} element={<Webworker/>}/>
-          <Route path={"/admin/*"} element={<Protected redirect='/login'><CMSLayout /></Protected>} />
+          <Route path={"/admin/*"} element={<Protected redirect='/login'><CMSRouter /></Protected>} />
         </Routes>
       </Suspense>
 

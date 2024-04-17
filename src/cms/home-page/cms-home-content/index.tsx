@@ -5,7 +5,7 @@ import {  Typography } from 'antd';
 
 const { Text} = Typography;
 
-function CmsHome() {
+function CmsHomeContent() {
   return (
     <div className={s.Container}>
       <Title>Это админка</Title>
@@ -23,4 +23,4 @@ function CmsHome() {
   )
 }
 
-export default memo(CmsHome)
+export default memo(CmsHomeContent)

@@ -8,3 +8,4 @@ export { default as session } from './session';
 export { default as profile } from './profile';
 export { default as countries } from './countries';
 export { default as chat } from './chat';
+export { default as cmsArticle } from './cms-article';
