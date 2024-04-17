@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Тестирование главной страницы', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('http://localhost:5000');
+    await page.goto('/');
   });
 
   test('Показывается заголовок', async ({ page }) => {
@@ -12,7 +12,7 @@ test.describe('Тестирование главной страницы', () => 
   test('Админка - защищённый роут', async ({ page }) => {
     await page.getByRole('link', { name: 'админка' }).click();
 
-    await expect(page).toHaveURL('http://localhost:5000/login');
+    await expect(page).toHaveURL('/login');
   });
 
   test('Поиск товаров работает корректно', async ({ page }) => {
@@ -27,7 +27,48 @@ test.describe('Тестирование главной страницы', () => 
   });
 
   test('Авторизация работает корректно', async ({ page }) => {
-    await page.goto('http://localhost:5000/login');
+    await page.goto('/login');
+
+    await page.route('*/**/sign', async (route) => {
+      const json = {
+        result: {
+          token: '46db0ceeac4824a48321ef2510e3ea4a1091d5dfcb4c30fa3bc3710ccc4bd3f2',
+          user: {
+            _id: '65f8321af3360f03347a5fe2',
+            _key: 'test-1',
+            username: 'test_1',
+            email: 'test_1@example.com',
+            roles: [
+              {
+                _id: '65f8321af3360f03347a5fd9',
+                _type: 'role',
+              },
+            ],
+            profile: {
+              name: 'User №1',
+              surname: 'UserSurname1',
+              phone: '+70000000001',
+              middlename: '',
+              avatar: {},
+              birthday: '',
+              position: '',
+              country: {},
+              city: {},
+              street: '',
+            },
+            status: 'confirm',
+            isNew: false,
+            order: 3,
+            proto: {},
+            _type: 'user',
+            dateCreate: '2024-03-18T12:22:50.502Z',
+            dateUpdate: '2024-03-18T12:22:50.502Z',
+            isDeleted: false,
+          },
+        },
+      };
+      await route.fulfill({ json });
+    });
 
     const loginInput = page.getByTestId('login-input');
     const passwordInput = page.getByTestId('password-input');
@@ -37,6 +78,7 @@ test.describe('Тестирование главной страницы', () => 
     await passwordInput.fill('123456');
     await submitBtn.click();
 
-    await page.waitForTimeout(5000);
+    await page.waitForURL('**/');
+    await expect(page).toHaveURL('/');
   });
 });
