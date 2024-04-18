@@ -47,7 +47,7 @@ export const Sidebar = () => {
         theme="dark"
         onClick={(item) => {
           navigate(item.key);
-          store.actions["catalog_admin"]?.initParams()
+          store.actions["catalog_admin"]?.resetParams()
         }}
       />
     </Sider>

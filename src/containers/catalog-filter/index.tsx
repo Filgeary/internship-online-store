@@ -94,11 +94,11 @@ function CatalogFilter(props: StoreNames) {
       />
       <Select
         options={options.sort}
-        value={select.sort}
+        value={select.sort as string}
         onChange={callbacks.onSort}
       />
       <Input
-        value={select.query}
+        value={select.query as string}
         onChange={callbacks.onSearch}
         placeholder={"Поиск"}
         name={""}

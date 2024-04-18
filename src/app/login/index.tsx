@@ -71,6 +71,7 @@ function Login() {
           <Field label={t("auth.login")} error={select.errors?.login}>
             <Input
               name="login"
+              type='text'
               value={data.login}
               onChange={callbacks.onChange}
             />

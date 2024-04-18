@@ -9,3 +9,10 @@
 .env.test.local
 .env.production.local
 .env.local
+
+# tests
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/
