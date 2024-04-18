@@ -35,6 +35,8 @@ function Input(props: Props) {
 
   return (
     <input
+      data-testid='input-search'
+      name={props.name}
       className={cn({ theme: props.theme || '' })}
       value={internalInputValue}
       type={props.type || 'text'}

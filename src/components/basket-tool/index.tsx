@@ -20,7 +20,10 @@ function BasketTool({ onOpen, t, sum = 0, amount = 0 }: Props) {
   return (
     <div className={cn()}>
       <span className={cn('label')}>{t('basket.inBasket')}</span>
-      <span className={cn('total')}>
+      <span
+        className={cn('total')}
+        data-testid='basket-tool-total'
+      >
         {amount
           ? `${amount} ${t('basket.articles', amount)} / ${numberFormat(sum)} ₽`
           : t('basket.empty')}

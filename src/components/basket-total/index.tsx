@@ -18,7 +18,12 @@ function BasketTotal({ sum, t }: Props) {
   return (
     <div className={cn()}>
       <span className={cn('cell')}>{t('basket.total')}</span>
-      <span className={cn('cell')}> {numberFormat(sum)} ₽</span>
+      <span
+        className={cn('cell')}
+        data-testid='basket-total'
+      >
+        {numberFormat(sum)} ₽
+      </span>
       <span className={cn('cell')}></span>
     </div>
   );
