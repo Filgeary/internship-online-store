@@ -10,6 +10,8 @@ import treeToList from '@src/utils/tree-to-list';
 import SelectFieldOptionCountry from '../ui/select-field-option-country';
 import SelectFieldTagCountry from '../ui/select-field-tag-country';
 
+const IS_TEST = process.env.NODE_ENV === 'test';
+
 type Props = {
   catalogSliceName?: 'catalog' | `catalog${number}`;
 };
@@ -41,7 +43,7 @@ function AdminCatalogFilter({ catalogSliceName = 'catalog' }: Props) {
     onSearchDebounced: useCallback(
       debounce(
         (query: string) => store.actions[catalogSliceName].setParams({ query, page: 1 }),
-        500,
+        IS_TEST ? 0 : 500,
       ),
       [catalogSliceName, store],
     ),

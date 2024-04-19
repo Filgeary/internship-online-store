@@ -17,10 +17,20 @@ function ProfileCard({ data }: Props) {
 
   return (
     <div className={cn()}>
-      <h3 className={cn('title')}>Профиль</h3>
+      <h3
+        data-testid='profile-title'
+        className={cn('title')}
+      >
+        Профиль
+      </h3>
       <div className={cn('prop')}>
         <div className={cn('label')}>Имя:</div>
-        <div className={cn('value')}>{data.profile?.name}</div>
+        <div
+          data-testid='profile-name'
+          className={cn('value')}
+        >
+          {data.profile?.name}
+        </div>
       </div>
       <div className={cn('prop')}>
         <div className={cn('label')}>Телефон:</div>

@@ -4,6 +4,8 @@ import { memo, useCallback, useLayoutEffect, useState } from 'react';
 
 import './style.css';
 
+const IS_TEST = process.env.NODE_ENV === 'test';
+
 type Props = {
   value: string;
   name: string;
@@ -18,10 +20,10 @@ function Input(props: Props) {
   const cn = bem('Input');
   const [internalInputValue, setInternalInputValue] = useState(props.value);
 
-  // FIXME: check debounce usage with useCallback
+  // TODO: check debounce usage with useCallback
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const onChangeDebounce = useCallback(
-    debounce(value => props.onChange(value, props.name), props.delay || 500),
+    debounce(value => props.onChange(value, props.name), (IS_TEST ? 0 : props.delay) || 0),
     [props.onChange, props.name],
   );
 

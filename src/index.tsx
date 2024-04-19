@@ -8,6 +8,9 @@ import { ServicesContext } from './context';
 import { I18nProvider } from './i18n/context';
 import Services from './services';
 
+// TODO: remove later
+console.log(process.env.NODE_ENV);
+
 const services = new Services(config);
 
 const root = createRoot(document.getElementById('root') as HTMLElement);

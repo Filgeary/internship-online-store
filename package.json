@@ -7,6 +7,7 @@
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
     "test": "jest",
+    "test:e2e:testserver": "cross-env NODE_ENV=test npm run start",
     "test:e2e": "npx playwright test",
     "test:e2e:codegen": "npx playwright codegen",
     "format": "prettier . --write",

@@ -34,6 +34,8 @@ const ChatInput = ({ onSubmit, error }: Props) => {
     <form onSubmit={handleSubmit}>
       <Field>
         <input
+          data-testid='input-chat'
+          type='text'
           ref={inputRef}
           name='input-chat'
           placeholder='Write a message...'
