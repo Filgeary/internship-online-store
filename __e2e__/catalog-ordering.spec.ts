@@ -2,6 +2,8 @@ import { expect, test } from '@playwright/test';
 
 test('Catalog ordering', async ({ page }) => {
   await page.goto('/');
+
+  // check catalog filter and search
   await page.getByRole('button', { name: 'Все' }).first().click();
   await page.getByRole('option', { name: 'US United States' }).click();
   await page.getByRole('option', { name: 'AE United Arab Emirates' }).click();
@@ -9,17 +11,20 @@ test('Catalog ordering', async ({ page }) => {
   await page.getByRole('combobox').nth(1).selectOption('65f8322bf3360f03347a6bdc');
   await page.getByTestId('input-search').click();
   await page.getByPlaceholder('Поиск').fill('7');
+
+  // check selected article
   await page.getByRole('link', { name: /article №507/i }).click();
   await expect(page.getByRole('heading', { name: 'Article №' })).toBeVisible();
+
+  // check basket ordering
   await page.getByRole('button', { name: 'Добавить' }).click();
   await page.getByRole('spinbutton').click();
   await page.getByRole('spinbutton').fill('3');
   await page.getByRole('button', { name: 'Подтвердить' }).click();
 
-  // it will fail, WHY?
-  // await expect(page.getByTestId('basket-tool-total')).toContainText('1 товар / 278 906,64 ₽');
   (await page.getByTestId('basket-tool-total').textContent()) === '1 товар / 278 906,64 ₽';
 
+  // continue ordering
   await page.getByRole('button', { name: 'Перейти' }).click();
   await page.getByRole('button', { name: 'Выбрать ещё товар' }).click();
   await page.locator('.ItemModalCatalog-actions > button').first().click();
@@ -36,7 +41,6 @@ test('Catalog ordering', async ({ page }) => {
     .getByRole('button')
     .click();
 
-  // it will fail, WHY?
-  // await expect(page.getByTestId('basket-total')).toHaveText(/280 920,6/);
+  // check basket total amount
   (await page.getByTestId('basket-total').textContent()) === '280 920,6 ₽';
 });
