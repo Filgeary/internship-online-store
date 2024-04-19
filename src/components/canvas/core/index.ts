@@ -62,7 +62,6 @@ class Core {
       this.ctx.imageSmoothingEnabled = false;
       this.resize();
       this.reDraw();
-      this.generate();
       // this.resizeObserver = new ResizeObserver(this.resize);
       // this.resizeObserver.observe(this.root, {box: "content-box"});
     }

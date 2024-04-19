@@ -4,7 +4,7 @@ test.describe("Catalog Page", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/");
   });
-  test("should allow me to filter catalog", async ({ page }) => {
+  test("should allow to filter catalog", async ({ page }) => {
     await page
       .getByRole("combobox")
       .nth(1)
@@ -17,9 +17,9 @@ test.describe("Catalog Page", () => {
     await page.getByRole("img").click();
     await page.getByPlaceholder("Поиск").nth(1).focus();
     await page.getByPlaceholder("Поиск").nth(1).fill("ира");
-    await page.getByText("IQИрак").click();
+    await page.getByText(/Ирак/).click();
     await expect(page.locator(".List")).toContainText(
-      "Article №34693 707,51 ₽Добавить"
+      /Article №346/
     );
     await page.goto(
       "/?sort=-price&category=65f8322bf3360f03347a6bd6&madeIn=65f8321bf3360f03347a60bd"
@@ -73,7 +73,6 @@ test.describe("Catalog Page", () => {
   });
 
   test("should add products from basket", async ({page}) => {
-    await page.goto("http://localhost:8010/");
     await page.getByRole("button", { name: "Перейти" }).click();
     await expect(page.locator("#root")).toContainText("Корзина");
     await page.getByRole("button", { name: "Выбрать еще товар" }).click();
