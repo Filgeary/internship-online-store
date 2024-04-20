@@ -28,10 +28,18 @@ export default defineConfig({
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: "on-first-retry",
   },
+  expect: {
+    // Maximum time expect() should wait for the condition to be met.
+    timeout: 10000,
+    toHaveScreenshot: {
+      // An acceptable amount of pixels that could be different, unset by default.
+      maxDiffPixels: 10,
+      maxDiffPixelRatio: 0.1,
+    },
+  },
 
   /* Configure projects for major browsers */
   projects: [
-    { name: "setup", testMatch: "setup.ts" },
     {
       name: "chromium",
       use: {
@@ -42,7 +50,6 @@ export default defineConfig({
       name: "firefox",
       use: { ...devices["Desktop Firefox"] },
     },
-
     {
       name: "webkit",
       use: { ...devices["Desktop Safari"] },

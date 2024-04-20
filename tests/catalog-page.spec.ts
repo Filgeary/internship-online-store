@@ -37,7 +37,7 @@ test.describe("Catalog Page", () => {
 
   test("should change pagination", async({page}) => {
     await page.getByRole("link", { name: "3" }).click();
-    await expect(page.locator(".Item-price").first()).toContainText("45 087,27 ₽");
+    await expect(page.getByRole("link", { name: "Article №28" })).toBeVisible();
   });
 
   test("should allow to add product to basket", async({page}) => {

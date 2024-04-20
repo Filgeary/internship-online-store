@@ -17,5 +17,5 @@ test('Canvas page', async ({ page }) => {
       y: 261,
     },
   });
-  await expect(page).toHaveScreenshot("canvas.png");
+  await expect(page).toHaveScreenshot();
 });
