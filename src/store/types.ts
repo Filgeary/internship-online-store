@@ -17,14 +17,14 @@ export interface IResult {
   isNew: boolean
   madeIn: ImadeIn
   name: string
-  order: number
+  order: number | string
   price: number
   proto: any
   title: string
   _id: string
-  _key: string
+  _key?: string
   _type: string
-  selectedGoods: boolean
+  selectedGoods?: boolean
 }
 
 export type ImportModules = typeof modules

@@ -1,6 +1,14 @@
-import StoreModule from "../module"
-import exclude from "@src/utils/exclude"
-import { IIinitCatalogState, IValidParams, ISelected, IApiResponseCatalog, IParams } from "./types"
+import StoreModule from '../module'
+import exclude from '@src/utils/exclude'
+import {
+  IIinitCatalogState,
+  IValidParams,
+  ISelected,
+  IApiResponseCatalog,
+  IParams,
+  IProduct,
+  IApiResponseProduct,
+} from './types'
 
 /**
  * Состояние каталога - параметры фильтра исписок товара
@@ -16,14 +24,14 @@ class CatalogState extends StoreModule<IIinitCatalogState> {
       params: {
         page: 1,
         limit: 10,
-        sort: "order",
-        query: "",
-        category: "",
-        madeIn: ""
+        sort: 'order',
+        query: '',
+        category: '',
+        madeIn: '',
       },
       count: 0,
       waiting: false,
-    };
+    }
   }
 
   /**
@@ -34,25 +42,19 @@ class CatalogState extends StoreModule<IIinitCatalogState> {
    */
   async initParams(newParams: object = {}): Promise<void> {
     let urlParams
-    if (typeof window !== "undefined") {
+    if (typeof window !== 'undefined') {
       urlParams = new URLSearchParams(window.location?.search)
     } else urlParams = new URLSearchParams('')
 
-    let validParams: IValidParams = {};
-    if (urlParams.has("page"))
-      validParams.page = Number(urlParams.get("page")) || 1;
-    if (urlParams.has("limit"))
-      validParams.limit = Math.min(Number(urlParams.get("limit")) || 10, 50);
-    if (urlParams.has("sort")) validParams.sort = urlParams.get("sort");
-    if (urlParams.has("query")) validParams.query = urlParams.get("query");
-    if (urlParams.has("category"))
-      validParams.category = urlParams.get("category");
-      if (urlParams.has("madeIn"))
-      validParams.madeIn = urlParams.get("madeIn");
-    await this.setParams(
-      { ...this.initState().params, ...validParams, ...newParams },
-      true
-    )
+    let validParams: IValidParams = {}
+    if (urlParams.has('page')) validParams.page = Number(urlParams.get('page')) || 1
+    if (urlParams.has('limit'))
+      validParams.limit = Math.min(Number(urlParams.get('limit')) || 10, 50)
+    if (urlParams.has('sort')) validParams.sort = urlParams.get('sort')
+    if (urlParams.has('query')) validParams.query = urlParams.get('query')
+    if (urlParams.has('category')) validParams.category = urlParams.get('category')
+    if (urlParams.has('madeIn')) validParams.madeIn = urlParams.get('madeIn')
+    await this.setParams({ ...this.initState().params, ...validParams, ...newParams }, true)
   }
 
   /**
@@ -62,9 +64,9 @@ class CatalogState extends StoreModule<IIinitCatalogState> {
    */
   async resetParams(newParams: object = {}): Promise<void> {
     // Итоговые параметры из начальных, из URL и из переданных явно
-    const params = { ...this.initState().params, ...newParams };
+    const params = { ...this.initState().params, ...newParams }
     // Установка параметров и загрузка данных
-    await this.setParams(params);
+    await this.setParams(params)
   }
 
   /**
@@ -77,7 +79,7 @@ class CatalogState extends StoreModule<IIinitCatalogState> {
     newParams: object = {},
     replaceHistory: boolean = false,
     hide = false,
-    selected: ISelected[] = []
+    selected: ISelected[] = [],
   ): Promise<void> {
     const params: IParams = { ...this.getState().params, ...newParams }
 
@@ -85,64 +87,58 @@ class CatalogState extends StoreModule<IIinitCatalogState> {
     this.setState(
       {
         ...this.getState(),
-        params
+        params,
       },
-      "Установлены параметры каталога"
+      'Установлены параметры каталога',
     )
 
     // Сохранить параметры в адрес страницы
-    let urlSearch = new URLSearchParams(
-      exclude(params, this.initState().params)
-    ).toString()
-    if (typeof window !== "undefined") {
-    const url =
-      window?.location.pathname +
-      (urlSearch ? `?${urlSearch}` : "") +
-      window?.location.hash;
+    let urlSearch = new URLSearchParams(exclude(params, this.initState().params) as any).toString()
+    if (typeof window !== 'undefined') {
+      const url =
+        window?.location.pathname + (urlSearch ? `?${urlSearch}` : '') + window?.location.hash
 
-    if (!hide) {
-      if (replaceHistory) {
-        window?.history.replaceState({}, "", url);
-      } else {
-        window?.history.pushState({}, "", url);
+      if (!hide) {
+        if (replaceHistory) {
+          window?.history.replaceState({}, '', url)
+        } else {
+          window?.history.pushState({}, '', url)
+        }
       }
     }
-  }
 
     const apiParams = exclude(
       {
         limit: params.limit,
         skip: (params.page - 1) * params.limit,
-        fields: "items(*),count",
+        fields: 'items(*),count',
         sort: params.sort,
-        "search[query]": params.query,
-        "search[category]": params.category,
-        "search[madeIn]": params.madeIn
+        'search[query]': params.query,
+        'search[category]': params.category,
+        'search[madeIn]': params.madeIn,
       },
       {
         skip: 0,
-        "search[query]": "",
-        "search[category]": "",
-        "search[madeIn]": ""
-      }
+        'search[query]': '',
+        'search[category]': '',
+        'search[madeIn]': '',
+      },
     )
 
     const res: IApiResponseCatalog = await this.services.api.request({
-      url: `/api/v1/articles?${new URLSearchParams(apiParams)}`,
-    });
+      url: `/api/v1/articles?${new URLSearchParams(apiParams as any)}`,
+    })
 
     if (selected.length > 0) {
-      res.data.result.items.map((product) => {
-        const filteredProduct = selected.some(
-          (item) => product._id === item.id
-        );
+      res.data.result.items.map(product => {
+        const filteredProduct = selected.some(item => product._id === item.id)
 
         if (filteredProduct) {
-          return (product.selectedGoods = true);
+          return (product.selectedGoods = true)
         } else {
-          return product;
+          return product
         }
-      });
+      })
     }
 
     this.setState(
@@ -152,9 +148,53 @@ class CatalogState extends StoreModule<IIinitCatalogState> {
         count: res.data.result.count,
         waiting: false,
       },
-      "Загружен список товаров из АПИ"
-    );
+      'Загружен список товаров из АПИ',
+    )
+  }
+
+  /**
+   * Редактирование товара
+   */
+  async productEditing(product: IProduct) {
+    
+    const res: IApiResponseProduct = await this.services.api.request({
+      url: `/api/v1/articles/${product.id}?fields=*&lang=ru`,
+      method: 'PUT',
+      body: JSON.stringify({
+        order: 8,
+        isDeleted: true,
+        proto: {},
+        name: 'string',
+        title: product.title,
+        description: product.description,
+        price: product.price,
+        madeIn: {
+          _id: '65f8321bf3360f03347a60b1',
+          _type: 'country',
+        },
+        edition: 2012,
+        photo: {},
+        category: {
+          _id: '65f8322bf3360f03347a6bd5',
+          _type: 'category',
+        },
+        favorites: [],
+      }),
+    })
+    const index = this.getState().list.findIndex((item) => item._id === product.id)
+
+    const copyList = this.getState().list
+
+    if(index !== -1) copyList[index] = res.data.result
+
+    this.setState(
+      {
+        ...this.getState(),
+        list: copyList
+      },
+      'Товар отредактирован',
+    )
   }
 }
 
-export default CatalogState;
+export default CatalogState

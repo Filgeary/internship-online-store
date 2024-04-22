@@ -9,17 +9,17 @@ declare global {
   }
 }
 
-// let composeEnhancers: (arg0: StoreEnhancer<{ dispatch: ThunkDispatch<any, Services, AnyAction> }, {}>) => StoreEnhancer<unknown, {}> | undefined
+ let composeEnhancers: (arg0: StoreEnhancer<{ dispatch: ThunkDispatch<any, Services, AnyAction> }, {}>) => StoreEnhancer<unknown, {}> | undefined
 
-// if (window) {
-//   composeEnhancers = window?.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
-// } else {
-//   composeEnhancers = compose
-// }
+if (process.env.IS_SERVER !== 'true') {
+  composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
+} else {
+  composeEnhancers = compose
+}
 
-// const composeEnhancers = window?.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
+//  const composeEnhancers = window?.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 
- const composeEnhancers = compose
+//  const composeEnhancers = compose
 
 // export default function createStoreRedux(services: Services, config = {}){
 //   return createStore(combineReducers(reducers), undefined, composeEnhancers(applyMiddleware(thunk.withExtraArgument(services))))
