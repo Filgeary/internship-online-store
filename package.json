@@ -11,7 +11,8 @@
     "build:client": "vite build --outDir ../dist/client --ssrManifest",
     "build:server": "vite build --outDir ../dist/server --ssr entry-server.tsx",
     "prod": "cross-env NODE_ENV=production node ./server/server.js",
-    "test": "jest"
+    "test": "jest",
+    "playwright": "npx playwright test"
   },
   "repository": {
     "type": "git",
@@ -49,6 +50,8 @@
     "@babel/preset-env": "^7.22.5",
     "@babel/preset-react": "^7.22.5",
     "@babel/preset-typescript": "^7.23.3",
+    "@playwright/test": "^1.43.1",
+    "@types/node": "^20.12.7",
     "@types/react": "^18.2.53",
     "@types/react-dom": "^18.2.18",
     "@vitejs/plugin-react": "^4.2.1",
