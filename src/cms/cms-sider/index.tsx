@@ -26,6 +26,8 @@ function CMSSider() {
     { key: "test", label: "Test" },
   ];
 
+  const path = location.pathname.split("/")
+
   return (
     <Sider
       style={{
@@ -43,7 +45,7 @@ function CMSSider() {
       <NavLink to="/admin" style={{ display: "flex", justifyContent: "center", margin: "10px 0" }} >
         <Image src={logo} preview={false} height={64} width={64} />
       </NavLink>
-      <Menu theme="dark" mode="inline" items={items} onClick={callbacks.onClick}/>
+      <Menu theme="dark" mode="inline" items={items} onSelect={callbacks.onClick} selectedKeys={path}/>
     </Sider>
   );
 }
