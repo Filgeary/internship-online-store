@@ -1,3 +1,0 @@
-# Список категорий
-
-GET {{baseUrl}}/comments?fields=items(_id,text,dateCreate,author(profile(name)),parent(_id,_type),isDeleted),count&limit=*&search[parent]=648047125240ea36e36989ed
