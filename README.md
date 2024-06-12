@@ -53,7 +53,7 @@ Recommend: _Nodejs v20_ (смотри файл _node-version_)
 
 ### (`/worker`) Создание GitHub мини-бота на WebWorker
 
-![worker-ui](previews/worker-1.webp)
+![worker-ui](previews/worker-1a.webp)
 
 ![worker-code](previews/worker-2.webp)
 
