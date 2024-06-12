@@ -58,7 +58,7 @@ socket.send(
   JSON.stringify({
     method: 'auth',
     payload: {
-      token: '5c78262cf7ad6812fa74b6c8e99aac2e30babf2387e15156b6794125c46cb5fc',
+      token: 'some-token',
     },
   }),
 );
