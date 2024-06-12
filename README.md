@@ -25,7 +25,7 @@ Recommend: _Nodejs v20_ (смотри файл _node-version_)
 
 ### (`/modals`) Создание менеджера модальных окон
 
-![modals](previews/modals.webp)
+![modals](previews/modals-1.webp)
 
 ### (`/typescript`) Проведение полной миграции проекта на TypeScript
 
